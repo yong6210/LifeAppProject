@@ -1,0 +1,3 @@
+#include "AppInfo.xcconfig"
+PRODUCT_BUNDLE_IDENTIFIER = com.ymcompany.lifeapp.dev
+PRODUCT_NAME = life_app_dev

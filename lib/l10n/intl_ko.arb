@@ -1,0 +1,844 @@
+{
+  "@@locale": "ko",
+  "app_title": "Life App",
+  "home_greeting": "오늘도 반가워요",
+  "home_routine_focus_title": "집중 루틴",
+  "home_routine_focus_body": "일·휴식 사이 균형을 잡아주는 포모도로 패턴입니다.",
+  "home_routine_rest_title": "회복 루틴",
+  "home_routine_rest_body": "짧은 스트레칭과 호흡으로 에너지를 다시 채워보세요.",
+  "home_routine_workout_title": "파워 인터벌",
+  "home_routine_workout_body": "짧고 강한 운동과 휴식 반복으로 활력을 높이세요.",
+  "home_routine_sleep_title": "숙면 준비",
+  "home_routine_sleep_body": "잔잔한 사운드와 스마트 알람으로 숙면을 돕습니다.",
+  "home_routine_card_hint": "루틴 타이머 열기",
+  "home_daily_totals_title": "오늘 누적 기록",
+  "home_daily_totals_empty": "아직 기록이 없어요. 루틴을 시작해 보세요.",
+  "home_quick_actions_title": "빠른 실행",
+  "home_quick_focus": "집중 시작",
+  "home_quick_sleep": "숙면 시작",
+  "home_quick_backup": "지금 백업",
+  "home_quick_stats": "통계 보기",
+  "home_quick_focus_semantics": "집중 타이머 시작",
+  "home_quick_sleep_semantics": "수면 루틴 시작",
+  "home_quick_backup_semantics": "백업 화면 열기",
+  "home_quick_stats_semantics": "통계 화면 열기",
+  "home_sync_in_progress": "최신 변경 사항을 동기화하는 중입니다...",
+  "home_sync_error": "동기화가 일시 중지되었어요. 네트워크를 확인한 뒤 다시 시도하세요.",
+  "home_sync_signed_out": "기기 간 동기화를 위해 로그인하세요.",
+  "home_backup_status": "마지막 백업: {timestamp}",
+  "@home_backup_status": {
+    "placeholders": {
+      "timestamp": {}
+    }
+  },
+  "home_backup_hint": "암호화된 백업이 여러분의 클라우드 저장소에 안전하게 보관돼요.",
+  "home_backup_never": "아직 백업이 없습니다. 데이터를 안전하게 보관해 보세요.",
+  "home_backup_backup_now": "지금 백업",
+  "home_backup_view_account": "상세 보기",
+  "home_backup_streak_badge": "연속 {count}주 백업 달성!",
+  "@home_backup_streak_badge": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "home_premium_cta_title": "프리미엄으로 루틴을 완성하세요",
+  "home_premium_cta_body": "스마트 알람, 자동 백업, 상세 통계를 한 번에.",
+  "home_premium_cta_button": "프리미엄 알아보기",
+  "home_recent_sessions_title": "최근 세션",
+  "home_recent_empty": "기록이 없습니다. 첫 루틴을 시작해 보세요.",
+  "home_view_stats": "자세히 보기",
+  "home_recent_error": "최근 세션을 불러오지 못했어요. 잠시 후 다시 시도해주세요.",
+  "onboarding_appbar_title": "시작하기",
+  "onboarding_progress": "{current} / {total}",
+  "@onboarding_progress": {
+    "placeholders": {
+      "current": {},
+      "total": {}
+    }
+  },
+  "onboarding_start_button": "시작하기",
+  "onboarding_next_button": "다음",
+  "onboarding_intro_focus_title": "루틴을 한 곳에서",
+  "onboarding_intro_focus_body": "집중·휴식·운동·수면 루틴을 하나의 타이머 안에서 관리하고, 오프라인에서도 끊김 없이 사용하세요.",
+  "onboarding_intro_backup_title": "안전한 데이터",
+  "onboarding_intro_backup_body": "필요할 때만 전체 백업하고, 로그인하면 라이트 동기화로 다른 기기에서도 바로 이어집니다.",
+  "onboarding_persona_heading": "시작 루틴을 선택하세요",
+  "onboarding_persona_subtitle": "초기값만 설정됩니다. 이후 언제든지 원하는 대로 바꿀 수 있어요.",
+  "onboarding_preset_error": "프리셋 적용에 실패했어요: {error}",
+  "@onboarding_preset_error": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "onboarding_persona_student_title": "집중 학습 루틴",
+  "onboarding_persona_student_body": "포모도로 25분 집중, 5분 휴식 패턴으로 공부에 최적화되어 있어요.",
+  "onboarding_persona_knowledge_title": "지식 노동자 루틴",
+  "onboarding_persona_knowledge_body": "긴 집중 시간과 짧은 리프레시, 스트레칭 알림으로 생산성을 유지하세요.",
+  "onboarding_persona_wellbeing_title": "웰빙 스타터 루틴",
+  "onboarding_persona_wellbeing_body": "균형 잡힌 집중·휴식·운동·숙면 루틴으로 건강하게 시작하세요.",
+  "account_title": "계정 & 구독",
+  "account_status_title": "계정 상태",
+  "account_uid_label": "UID: {uid}",
+  "account_status_anonymous": "익명 사용자입니다.",
+  "account_status_logged_in": "로그인 상태입니다.",
+  "account_status_logged_out": "로그인되어 있지 않습니다.",
+  "account_login_button": "익명 로그인",
+  "account_logout_button": "로그아웃",
+  "account_processing": "처리 중...",
+  "account_upgrade_hint": "향후 이메일 연동 등 업그레이드 옵션을 추가할 수 있습니다.",
+  "account_language_title": "앱 언어",
+  "account_language_description": "언제든 언어를 바꿀 수 있어요. 화면이 즉시 갱신됩니다.",
+  "account_language_system": "시스템 기본값",
+  "account_language_english": "영어",
+  "account_language_korean": "한국어",
+  "account_language_updated": "언어가 {language}(으)로 변경되었어요.",
+  "@account_language_updated": {
+    "placeholders": {
+      "language": {}
+    }
+  },
+  "subscription_title": "구독 상태",
+  "subscription_premium": "프리미엄 활성화됨",
+  "subscription_free": "무료 사용자",
+  "subscription_checking": "구독 상태를 확인하는 중입니다...",
+  "subscription_offline_notice": "RevenueCat 응답이 지연되어 마지막으로 확인된 구독 정보를 표시합니다.",
+  "subscription_manage": "구독 관리",
+  "subscription_explore": "프리미엄 살펴보기",
+  "subscription_grace_notice": "결제가 보류 상태입니다. {date}까지 결제가 완료되지 않으면 프리미엄 권한이 중단됩니다.",
+  "@subscription_grace_notice": {
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "subscription_expired_notice": "{date} 부로 프리미엄 구독이 만료되었습니다. 갱신하여 기능을 다시 이용하세요.",
+  "@subscription_expired_notice": {
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "backup_history_title": "백업/복원 기록",
+  "backup_preferred_label": "선호 저장소: {provider}",
+  "backup_premium_header": "프리미엄 기능",
+  "backup_premium_message": "자동 백업과 복원 기록은 프리미엄에서 전체 제공됩니다. 업그레이드 후 모든 기기에서 기록을 확인하세요.",
+  "backup_upgrade_button": "프리미엄 알아보기",
+  "backup_upgrade_semantics_label": "프리미엄 업그레이드로 전체 백업 기록 보기",
+  "backup_upgrade_semantics_hint": "프리미엄 옵션 화면으로 이동하여 구독하고 전체 백업 로그를 확인합니다.",
+  "backup_history_recent_only": "가장 최근 백업 정보만 표시됩니다.",
+  "backup_history_empty": "기록이 없습니다. 백업을 실행해 보세요.",
+  "backup_loading_title": "백업 정보 조회 중",
+  "backup_error_title": "백업 정보 오류",
+  "backup_entry_backup": "백업",
+  "backup_entry_restore": "복원",
+  "backup_entry_storage": "저장소: {provider}",
+  "backup_entry_size": "크기: {size}",
+  "backup_entry_error": "오류: {message}",
+  "data_disclosure_title": "데이터 사용 및 보존 안내",
+  "data_disclosure_subtitle": "어떤 데이터가 로컬·클라우드에 저장되는지 확인하세요.",
+  "privacy_policy_title": "프라이버시 정책 초안",
+  "privacy_policy_subtitle": "최신 개인정보 처리 방침 요약을 확인하세요.",
+  "licenses_title": "오픈소스 라이선스",
+  "licenses_subtitle": "사용 중인 패키지 및 라이선스를 확인하세요.",
+  "account_delete_card_title": "계정 삭제",
+  "account_delete_card_body": "계정을 삭제하면 로컬 데이터와 클라우드 동기화 정보가 영구 삭제되며 복구할 수 없습니다.",
+  "account_delete_requires_reauth": "계정 삭제를 완료하려면 최근 로그인 후 다시 시도하세요.",
+  "account_delete_error": "계정 삭제 실패: {error}",
+  "account_delete_button": "계정 삭제",
+  "account_delete_processing": "삭제 중...",
+  "account_delete_success": "계정과 모든 데이터가 삭제되었습니다.",
+  "account_delete_requires_reauth_snackbar": "로컬 데이터가 삭제되었습니다. 다시 로그인한 뒤 계정 삭제를 완료하세요.",
+  "account_accessibility_title": "접근성",
+  "account_accessibility_body": "애니메이션과 햅틱을 줄이고 싶은 경우 감속 모드를 사용하세요.",
+  "account_accessibility_reduced_motion": "애니메이션/햅틱 최소화",
+  "account_diagnostics_title": "타이머 정확도 샘플",
+  "account_diagnostics_body": "최근 측정값은 예약된 세그먼트 종료 시점과 실제 알림 실행 시점을 비교합니다. 양수는 알림이 늦게 울렸음을 의미합니다.",
+  "account_diagnostics_no_samples": "기록된 샘플이 없습니다. 타이머를 실행하면 정확도 데이터가 수집됩니다.",
+  "account_diagnostics_clear": "샘플 지우기",
+  "account_diagnostics_share": "CSV 내보내기",
+  "account_diagnostics_entry": "{timestamp} · {mode} ({segment})",
+  "@account_diagnostics_entry": {
+    "placeholders": {
+      "timestamp": {},
+      "mode": {},
+      "segment": {}
+    }
+  },
+  "account_diagnostics_summary_heading": "요약 (최근 {count}건)",
+  "@account_diagnostics_summary_heading": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "account_diagnostics_summary_avg": "평균 오차: {value}",
+  "@account_diagnostics_summary_avg": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "account_diagnostics_summary_max": "최대 오차: {value}",
+  "@account_diagnostics_summary_max": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "account_diagnostics_summary_within_target": "±60초 이내: {percent}%",
+  "@account_diagnostics_summary_within_target": {
+    "placeholders": {
+      "percent": {}
+    }
+  },
+  "account_diagnostics_value_seconds": "{seconds}초",
+  "@account_diagnostics_value_seconds": {
+    "placeholders": {
+      "seconds": {}
+    }
+  },
+  "account_diagnostics_value_millis": "{millis}ms",
+  "@account_diagnostics_value_millis": {
+    "placeholders": {
+      "millis": {}
+    }
+  },
+  "account_diagnostics_value_zero": "0ms",
+  "account_diagnostics_skew_late": "{value} 만큼 늦게 울림",
+  "@account_diagnostics_skew_late": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "account_diagnostics_skew_early": "{value} 만큼 빠르게 울림",
+  "@account_diagnostics_skew_early": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "account_diagnostics_more_available": "추가 {count}건 저장됨",
+  "@account_diagnostics_more_available": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "account_diagnostics_share_empty": "내보낼 샘플이 아직 없습니다.",
+  "account_diagnostics_share_subject": "Life App 타이머 정확도 샘플",
+  "account_diagnostics_share_body": "Life App에서 내보낸 타이머 정확도 샘플입니다.",
+  "backup_reminder_title": "백업할 시간입니다",
+  "backup_reminder_body": "마지막 백업 이후 시간이 지났어요. 계정 ▸ 백업 메뉴에서 데이터를 안전하게 보관하세요.",
+  "backup_summary_last_backup": "마지막 백업: {date}",
+  "@backup_summary_last_backup": {
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "backup_summary_never": "아직 백업 기록이 없습니다. 데이터를 안전하게 보관해 보세요.",
+  "backup_summary_streak": "연속 백업 {count}주",
+  "@backup_summary_streak": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "backup_summary_streak_single": "연속 백업 1주",
+  "backup_summary_badge": "연속 {count}주 백업 달성!",
+  "@backup_summary_badge": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "backup_summary_badge_semantics": "연속 백업 달성 배지",
+  "backup_banner_title": "지금 백업해서 데이터를 지키세요",
+  "backup_banner_body": "집중·운동·수면 기록을 안전하게 보관하려면 지금 백업을 실행하세요.",
+  "backup_banner_button": "백업 실행",
+  "backup_banner_dismiss": "나중에 알림 받기",
+  "backup_banner_dismissed": "몇 일 동안 백업 알림이 일시 중지되었습니다.",
+  "error_login_failed": "로그인 실패: {error}",
+  "error_logout_failed": "로그아웃 실패: {error}",
+  "data_retention_heading": "데이터 보존 정책",
+  "data_retention_local": "• 로컬 데이터: 세션, 루틴, 설정, 백업 로그는 기기에만 저장되며 계정 삭제 시 즉시 삭제됩니다.",
+  "data_retention_light_sync": "• 라이트 동기화: 테마/프리셋과 일일 합계만 Firestore에 저장되며 계정 삭제 시 제거됩니다.",
+  "data_retention_backup": "• 전체 백업: 암호화된 파일은 사용자의 Drive/iCloud에 저장되며 사용자가 직접 삭제해야 합니다.",
+  "data_retention_telemetry": "• 진단 데이터: 크래시/분석 수집은 동의한 경우에만 진행되며 언제든지 비활성화할 수 있습니다.",
+  "data_retention_footer": "자세한 내용은 docs/privacy_data_retention.md를 참고하세요.",
+  "privacy_summary_heading": "프라이버시 정책 요약",
+  "privacy_summary_data": "Life App은 대부분의 데이터를 로컬에 저장하고 최소한의 정보만 Firestore에 동기화합니다.",
+  "privacy_summary_telemetry": "Crashlytics와 Analytics는 사용자가 동의한 경우에만 실행됩니다.",
+  "privacy_summary_backup": "전체 백업은 AES-256-GCM으로 암호화되어 사용자의 클라우드에 저장됩니다.",
+  "privacy_summary_more": "전체 정책 초안은 docs/privacy_policy_draft.md에서 확인할 수 있습니다.",
+  "dialog_cancel": "취소",
+  "dialog_confirm_delete": "계정 삭제",
+  "dialog_delete_title": "계정 삭제",
+  "dialog_delete_body": "계정을 삭제하면 모든 데이터가 제거되며 되돌릴 수 없습니다. 사용자가 업로드한 전체 백업은 직접 삭제해야 합니다.",
+  "dialog_delete_checkbox": "위 내용을 이해했고 계정을 삭제하겠습니다.",
+  "sessions_title": "세션",
+  "session_filter_all": "전체",
+  "session_filter_today": "오늘",
+  "session_filter_week": "이번 주",
+  "session_filter_month": "이번 달",
+  "tooltip_timer": "타이머",
+  "tooltip_account": "계정",
+  "tooltip_premium_active": "프리미엄 활성화됨",
+  "tooltip_premium": "프리미엄",
+  "tooltip_stats_premium": "프리미엄 통계",
+  "tooltip_stats": "통계",
+  "tooltip_backup": "백업/복원",
+  "tooltip_login": "익명 로그인",
+  "tooltip_logout": "로그아웃",
+  "tooltip_add_dummy": "더미 추가",
+  "session_type_focus": "집중",
+  "session_type_rest": "휴식",
+  "session_type_workout": "운동",
+  "session_type_sleep": "숙면",
+  "session_duration_minutes": "{minutes}분",
+  "@session_duration_minutes": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "session_empty_hint": "세션이 없습니다. 오른쪽 위 + 로 추가해보세요.",
+  "session_deleted": "삭제됨",
+  "timer_title": "타이머",
+  "timer_mode_focus": "집중",
+  "timer_mode_rest": "휴식",
+  "timer_mode_workout": "운동",
+  "timer_mode_sleep": "숙면",
+  "timer_permission_notification_title": "알림 권한이 필요합니다",
+  "timer_permission_notification_message": "타이머 완료 알림을 받으려면 알림을 허용해주세요.",
+  "timer_permission_notification_action": "알림 허용 요청",
+  "timer_permission_exact_title": "정확한 알람 권한 필요",
+  "timer_permission_exact_message": "타이머가 정확한 시각에 울리도록 설정 화면에서 권한을 허용하세요.",
+  "timer_permission_action_open_settings": "설정 열기",
+  "timer_permission_dnd_title": "방해 금지 접근 허용",
+  "timer_permission_dnd_message": "방해 금지 모드에서도 알림을 받으려면 접근 권한을 허용해주세요.",
+  "timer_permission_microphone_title": "마이크 접근 허용",
+  "timer_permission_microphone_message": "수면 모드가 활성화된 동안 주변 소리를 저해상도로 녹음하여 수면 리포트를 만듭니다. 야간 요약을 위해 마이크 접근을 허용해 주세요.",
+  "timer_permission_microphone_action": "마이크 허용",
+  "timer_permission_microphone_denied": "수면 소리 분석을 위해서는 마이크 접근 권한이 필요합니다.",
+  "timer_permission_microphone_settings": "수면 소리 분석을 계속 사용하려면 시스템 설정에서 마이크 접근을 켜 주세요.",
+  "timer_permission_microphone_success": "수면 소리 분석용 마이크 접근이 활성화되었습니다.",
+  "timer_permission_error": "권한 상태를 불러오지 못했습니다: {error}",
+  "timer_progress_overall": "세션 전체 진행률",
+  "timer_button_previous": "이전",
+  "timer_button_next": "다음",
+  "timer_button_start": "시작",
+  "timer_button_pause": "일시정지",
+  "timer_button_reset": "리셋",
+  "timer_sound_switch_title": "백그라운드 사운드",
+  "timer_sound_switch_enabled": "현재 프로필: {profile}",
+  "timer_sound_switch_disabled": "사운드 끔",
+  "timer_sound_profile_default": "기본",
+  "timer_sleep_title": "스마트 기상 윈도우",
+  "timer_sleep_edit_button": "설정 변경",
+  "timer_sleep_window_disabled": "현재 스마트 기상 윈도우가 비활성화되어 있습니다.",
+  "timer_sleep_window_length": "윈도우 길이: {minutes}분",
+  "timer_sleep_interval": "프롬프트 간격: {minutes}분",
+  "timer_sleep_fallback_on": "기본 알람 시각에 정확한 알림을 추가로 보냅니다.",
+  "timer_sleep_fallback_off": "정확한 알림 없이 부드러운 알림만 전송합니다.",
+  "timer_sleep_premium_title": "프리미엄 사운드 믹서",
+  "timer_sleep_premium_message": "화이트/핑크/브라운 노이즈 믹싱은 프리미엄에서 이용할 수 있습니다.",
+  "timer_sleep_premium_button": "업그레이드",
+  "timer_sleep_sound_mix_label": "사운드 믹스",
+  "timer_sleep_sound_mix_off": "믹서가 꺼져 있어 기본 수면 톤이 재생됩니다.",
+  "timer_sleep_sound_mix_ratio": "화이트 {white}% • 핑크 {pink}% • 브라운 {brown}%",
+  "timer_sleep_sound_preset_label": "프리셋: {preset}",
+  "timer_sleep_sound_layers_label": "구성: {layers}",
+  "timer_sleep_update_success": "스마트 알람 설정이 업데이트되었습니다.",
+  "timer_sleep_edit_sheet_title": "스마트 알람 설정",
+  "timer_sleep_edit_enable": "스마트 기상 윈도우 사용",
+  "timer_sleep_edit_enable_subtitle": "타겟 기상 시각 전 윈도우 동안 부드러운 알림을 보냅니다.",
+  "timer_sleep_edit_window_length": "윈도우 길이: {minutes}분",
+  "timer_sleep_edit_interval": "알림 간격: {minutes}분",
+  "timer_sleep_edit_fallback": "정확한 알람 추가",
+  "timer_sleep_edit_fallback_subtitle": "윈도우 종료 시각에 정확한 알림을 추가로 표시합니다.",
+  "timer_sleep_edit_mix_title": "수면 사운드 믹서",
+  "timer_sleep_edit_mix_body": "프리셋을 선택하거나 '사용자 믹스'로 전환해 화이트·핑크·브라운 노이즈를 조절하세요.",
+  "timer_sleep_noise_white": "화이트 노이즈",
+  "timer_sleep_noise_pink": "핑크 노이즈",
+  "timer_sleep_noise_brown": "브라운 노이즈",
+  "timer_sleep_noise_rain_light": "잔잔한 비",
+  "timer_sleep_noise_rain_heavy": "강한 비",
+  "timer_sleep_noise_forest_birds": "숲의 새소리",
+  "timer_sleep_noise_ocean_waves": "파도 소리",
+  "timer_sleep_noise_fireplace": "모닥불 소리",
+  "timer_sleep_mix_off_status": "현재 믹서는 비활성화되어 기본 수면 톤이 재생됩니다.",
+  "timer_sleep_mix_status_format": "현재 믹스 비율 • 화이트 {white}% • 핑크 {pink}% • 브라운 {brown}%",
+  "timer_sleep_edit_preset_layers": "믹스: {layers}",
+  "timer_sleep_edit_mix_locked": "프리셋 레벨은 고정되어 있습니다. 슬라이더를 조절하려면 '사용자 믹스'를 선택하세요.",
+  "timer_sleep_preset_custom_mix": "사용자 믹스",
+  "timer_sleep_preset_custom_mix_desc": "화이트·핑크·브라운 노이즈 비율을 직접 조절합니다.",
+  "timer_sleep_preset_rain_light": "잔잔한 비",
+  "timer_sleep_preset_rain_light_desc": "배경 잡음을 덮어주는 부드러운 빗소리와 화이트 노이즈 조합.",
+  "timer_sleep_preset_rain_heavy": "폭우의 밤",
+  "timer_sleep_preset_rain_heavy_desc": "저음의 브라운 노이즈와 묵직한 빗소리가 어우러진 폭우 사운드.",
+  "timer_sleep_preset_forest_birds": "숲속 아침",
+  "timer_sleep_preset_forest_birds_desc": "차분한 브라운 노이즈 위에 겹쳐지는 새들의 아침 합창.",
+  "timer_sleep_preset_ocean_waves": "바닷가 파도",
+  "timer_sleep_preset_ocean_waves_desc": "핑크 노이즈와 잔잔한 파도 소리가 만드는 해안 분위기.",
+  "timer_sleep_preset_fireplace_cozy": "따뜻한 벽난로",
+  "timer_sleep_preset_fireplace_cozy_desc": "부드러운 브라운 노이즈와 모닥불 타는 소리로 포근한 밤을 연출합니다.",
+  "dialog_confirm_save": "저장",
+  "generic_save_error": "저장 실패: {error}",
+  "generic_settings_error": "설정 로드 오류: {error}",
+  "timer_preset_dialog_title": "{label} 분 설정",
+  "timer_preset_dialog_hint": "분(숫자) 입력",
+  "timer_preset_label": "{label} {minutes}분",
+  "timer_preset_selector_label": "프리셋",
+  "timer_status_segment_remaining": "남은 시간",
+  "timer_segment_progress_label": "단계 진행률",
+  "timer_segment_timeline_title": "루틴 단계",
+  "timer_announcer_segment": "{segment}, {time} 남았습니다.",
+  "timer_announcer_minutes_seconds": "{minutes}분 {seconds}초",
+  "timer_announcer_seconds_only": "{seconds}초",
+  "@timer_permission_error": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "@timer_sleep_window_length": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "@timer_sleep_interval": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "@timer_sleep_sound_mix_ratio": {
+    "placeholders": {
+      "white": {},
+      "pink": {},
+      "brown": {}
+    }
+  },
+  "@timer_sleep_edit_window_length": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "@timer_sleep_edit_interval": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "@timer_sleep_mix_status_format": {
+    "placeholders": {
+      "white": {},
+      "pink": {},
+      "brown": {}
+    }
+  },
+  "@generic_save_error": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "@generic_settings_error": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "@timer_preset_dialog_title": {
+    "placeholders": {
+      "label": {}
+    }
+  },
+  "@timer_preset_label": {
+    "placeholders": {
+      "label": {},
+      "minutes": {}
+    }
+  },
+  "@timer_announcer_segment": {
+    "placeholders": {
+      "segment": {},
+      "time": {}
+    }
+  },
+  "@timer_announcer_minutes_seconds": {
+    "placeholders": {
+      "minutes": {},
+      "seconds": {}
+    }
+  },
+  "@timer_announcer_seconds_only": {
+    "placeholders": {
+      "seconds": {}
+    }
+  },
+  "@timer_sound_switch_enabled": {
+    "placeholders": {
+      "profile": {}
+    }
+  },
+  "stats_weekly_title": "이번 주 합계",
+  "stats_total_label": "총합 {duration}",
+  "stats_streak_title": "연속 집중 일수",
+  "stats_streak_subtitle": "오늘 포함 {days}일째",
+  "stats_error_message": "데이터를 불러오지 못했습니다\n{error}",
+  "duration_minutes_only": "{minutes}분",
+  "duration_hours_only": "{hours}시간",
+  "duration_hours_minutes": "{hours}시간 {minutes}분",
+  "stats_appbar_title": "통계",
+  "stats_tab_daily": "일간",
+  "stats_tab_weekly": "주간",
+  "stats_tab_monthly": "월간",
+  "stats_totals_title": "기간 합계",
+  "stats_totals_overall": "총합 {duration}",
+  "stats_loading_totals": "합계 불러오는 중",
+  "stats_loading_trend": "추이 불러오는 중",
+  "stats_error_totals_title": "합계를 가져오지 못했습니다",
+  "stats_error_trend_title": "추이 데이터를 가져오지 못했습니다",
+  "stats_trend_empty_title": "아직 누적 데이터가 없습니다",
+  "stats_trend_empty_body": "타이머를 실행하면 그래프가 채워집니다.",
+  "stats_trend_title_daily": "최근 일간 추이",
+  "stats_trend_title_weekly": "최근 주간 추이",
+  "stats_trend_title_monthly": "최근 월간 추이",
+  "stats_label_daily": "{month}/{day} ({weekday})",
+  "stats_label_weekly": "{startMonth}/{startDay}~{endMonth}/{endDay}",
+  "stats_label_monthly": "{year}.{month}",
+  "stats_trend_row_semantics": "{label}, 총 {value}",
+  "weekday_mon": "월",
+  "weekday_tue": "화",
+  "weekday_wed": "수",
+  "weekday_thu": "목",
+  "weekday_fri": "금",
+  "weekday_sat": "토",
+  "weekday_sun": "일",
+  "stats_trend_toggle_chart": "차트 보기",
+  "stats_trend_toggle_table": "표로 보기",
+  "stats_table_period": "기간",
+  "stats_table_total": "총합",
+  "@stats_total_label": {
+    "placeholders": {
+      "duration": {}
+    }
+  },
+  "@stats_streak_subtitle": {
+    "placeholders": {
+      "days": {}
+    }
+  },
+  "@stats_error_message": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "@stats_totals_overall": {
+    "placeholders": {
+      "duration": {}
+    }
+  },
+  "@stats_label_daily": {
+    "placeholders": {
+      "month": {},
+      "day": {},
+      "weekday": {}
+    }
+  },
+  "@stats_label_weekly": {
+    "placeholders": {
+      "startMonth": {},
+      "startDay": {},
+      "endMonth": {},
+      "endDay": {}
+    }
+  },
+  "@stats_label_monthly": {
+    "placeholders": {
+      "year": {},
+      "month": {}
+    }
+  },
+  "@stats_trend_row_semantics": {
+    "placeholders": {
+      "label": {},
+      "value": {}
+    }
+  },
+  "@duration_minutes_only": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "@duration_hours_only": {
+    "placeholders": {
+      "hours": {}
+    }
+  },
+  "@duration_hours_minutes": {
+    "placeholders": {
+      "hours": {},
+      "minutes": {}
+    }
+  },
+  "paywall_title": "프리미엄",
+  "paywall_restore_tooltip": "구매 복원",
+  "paywall_restore_success": "구매 내역을 복원했습니다.",
+  "paywall_restore_error": "복원 실패: {error}",
+  "paywall_missing_key_message": "RevenueCat SDK 키가 설정되지 않았습니다. `lib/core/subscriptions/revenuecat_keys.dart`에서 키를 교체하거나 --dart-define 으로 주입한 뒤 다시 시도하세요.",
+  "paywall_unsupported_platform": "구매 기능은 iOS와 Android 빌드에서만 지원됩니다.",
+  "paywall_info_unavailable": "구독 정보를 불러올 수 없습니다. 잠시 후 다시 시도하세요.",
+  "paywall_no_products": "판매 가능한 구독 상품이 없습니다. 콘솔 구성을 확인하세요.",
+  "paywall_error_message": "페이월 정보를 불러오지 못했습니다: {error}",
+  "paywall_fetch_error": "구독 정보를 불러오지 못했습니다: {error}",
+  "paywall_active_title": "프리미엄 활성화됨",
+  "paywall_active_body": "현재 프리미엄 권한이 활성화되어 모든 기능을 사용할 수 있습니다.",
+  "paywall_focus_title": "집중 루틴을 한 단계 끌어올리세요",
+  "paywall_focus_body": "고급 통계와 스마트 알람으로 루틴의 완주율을 높이고 더 오래 집중하세요.",
+  "paywall_backup_title": "데이터를 안전하게 지키는 방법",
+  "paywall_backup_body": "자동 백업과 교차 기기 권한으로 언제든 손쉽게 복원하고 이어서 사용하세요.",
+  "paywall_focus_benefit_1": "세션 및 루틴별 상세 통계 제공",
+  "paywall_focus_benefit_2": "집중·수면 루틴에 스마트 알람 & 믹서",
+  "paywall_focus_benefit_3": "무제한 프리셋 저장 및 기기에 동기화",
+  "paywall_backup_benefit_1": "자동 주간 백업 및 복원 히스토리",
+  "paywall_backup_benefit_2": "기기간 데이터 이전을 위한 라이트 동기화",
+  "paywall_backup_benefit_3": "프리미엄 서포트 및 신규 기능 우선 접근",
+  "paywall_package_semantics_label": "구독 옵션 {product}, 가격 {price}",
+  "@paywall_package_semantics_label": {
+    "placeholders": {
+      "product": {},
+      "price": {}
+    }
+  },
+  "paywall_package_semantics_hint": "혜택을 확인한 뒤 더블 탭하여 상세 정보 또는 결제를 진행하세요.",
+  "paywall_purchase_success": "{product} 구매가 완료되었습니다.",
+  "paywall_purchase_error": "구매 실패: {error}",
+  "paywall_purchase_processing": "처리 중...",
+  "paywall_purchase_button": "구매하기",
+  "paywall_purchase_semantics_label": "{product} 구독 시작",
+  "@paywall_purchase_semantics_label": {
+    "placeholders": {
+      "product": {}
+    }
+  },
+  "paywall_purchase_semantics_hint": "{price} 금액이 앱 스토어를 통해 결제됩니다.",
+  "@paywall_purchase_semantics_hint": {
+    "placeholders": {
+      "price": {}
+    }
+  },
+  "@paywall_restore_error": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "@paywall_error_message": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "@paywall_fetch_error": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "@paywall_purchase_success": {
+    "placeholders": {
+      "product": {}
+    }
+  },
+  "@paywall_purchase_error": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "timer_session_label_from": "{start} ~ {end}",
+  "@timer_session_label_from": {
+    "placeholders": {
+      "start": {},
+      "end": {}
+    }
+  },
+  "timer_session_label_open": "{start} ~ --",
+  "@timer_session_label_open": {
+    "placeholders": {
+      "start": {}
+    }
+  },
+  "common_later": "나중에",
+  "common_open_settings": "설정 열기",
+  "common_cancel": "취소",
+  "common_save": "저장",
+  "permission_notification_required": "알림 권한을 허용해야 타이머 알림을 받을 수 있어요.",
+  "permission_exact_title": "정확한 알람 권한 필요",
+  "permission_exact_message": "정확한 알람을 허용하면 예약된 타이머가 정확히 울려요. 설정으로 이동할까요?",
+  "permission_dnd_title": "방해 금지 접근 허용",
+  "permission_dnd_message": "방해 금지 모드에서도 타이머 알림을 받으려면 권한을 허용해주세요.",
+  "permission_notification_denied": "알림 권한이 꺼져 있습니다. 설정에서 직접 허용해주세요.",
+  "foreground_notification_running_title": "타이머 진행 중",
+  "foreground_notification_almost_done": "곧 완료됩니다",
+  "foreground_notification_mode_progress": "{mode} 진행 중",
+  "foreground_notification_segment_remaining": "{segment} • 남은 시간 {time}",
+  "foreground_notification_default_segment": "진행 중",
+  "foreground_channel_name": "타이머 상태",
+  "foreground_channel_description": "루틴 타이머를 유지하기 위한 포그라운드 알림입니다.",
+  "foreground_sleep_sound_notification": "수면 소리 분석 진행 중 ({elapsed})",
+  "@foreground_sleep_sound_notification": {
+    "placeholders": {
+      "elapsed": {}
+    }
+  },
+  "foreground_sleep_sound_notification_idle": "수면 소리 분석 진행 중",
+  "duration_minutes_seconds": "{minutes}분 {seconds}초",
+  "duration_seconds_only": "{seconds}초",
+  "notification_timer_channel_name": "타이머 완료",
+  "notification_timer_channel_description": "루틴 세그먼트가 끝날 때 알림을 보냅니다.",
+  "notification_timer_done_title": "타이머 완료",
+  "notification_timer_done_body": "{mode} 루틴이 완료되었습니다.",
+  "notification_backup_channel_name": "백업 리마인더",
+  "notification_backup_channel_description": "주기적으로 백업을 안내합니다.",
+  "notification_timer_schedule_channel_name": "예약된 타이머",
+  "notification_timer_schedule_channel_description": "다가오는 루틴 세그먼트를 알려줍니다.",
+  "notification_sleep_channel_name": "스마트 기상",
+  "notification_sleep_channel_description": "부드러운 기상 창과 최종 알람을 제공합니다.",
+  "notification_sleep_final_title": "기상 시간입니다",
+  "notification_sleep_final_body": "{routine} 루틴이 끝났어요. 천천히 일어나 볼까요?",
+  "notification_sleep_gentle_title": "부드러운 기상 시작",
+  "notification_sleep_gentle_body": "{routine} 기상 윈도우가 시작되었습니다. 가볍게 몸을 깨워보세요.",
+  "notification_timer_generic_title": "타이머 알림",
+  "notification_timer_segment_body": "{segment} 단계가 곧 완료됩니다.",
+  "timer_plan_focus_segment_label": "집중 {number}",
+  "timer_plan_focus_long_break_label": "긴 휴식",
+  "timer_plan_focus_short_break_label": "짧은 휴식",
+  "timer_plan_rest_stretch_label": "스트레칭",
+  "timer_plan_rest_breath_label": "호흡",
+  "timer_plan_rest_reflect_label": "마음 정리",
+  "timer_plan_workout_active_label": "라운드 {number}",
+  "timer_plan_workout_rest_label": "휴식",
+  "timer_plan_sleep_prepare_label": "취침 준비",
+  "timer_plan_sleep_relax_label": "이완",
+  "timer_plan_sleep_main_label": "숙면",
+  "timer_init_title": "타이머 기본 설정",
+  "timer_init_focus_label": "집중 (분)",
+  "timer_init_rest_label": "휴식 (분)",
+  "timer_init_workout_label": "운동 (분)",
+  "timer_init_sleep_label": "수면 (분)",
+  "timer_init_save_error": "저장 실패: {error}",
+  "backup_title": "백업 & 복원",
+  "backup_error_message": "실패: {error}",
+  "backup_success_toast": "완료되었습니다.",
+  "backup_settings_error": "설정을 불러오지 못했습니다: {error}",
+  "backup_last_backup_never": "백업 기록 없음",
+  "backup_last_backup": "마지막 백업: {timestamp}",
+  "backup_action_backup": "원탭 백업",
+  "backup_action_restore": "백업 복원",
+  "backup_preferred_storage_title": "선호 백업 저장소",
+  "backup_preferred_storage_help": "기본으로 안내할 저장소를 선택하세요. 공유 시트에서 원하는 저장소를 다시 선택할 수 있습니다.",
+  "backup_preferred_updated": "선호 저장소를 {provider}(으)로 변경했어요.",
+  "backup_preferred_update_error": "저장 실패: {error}",
+  "backup_share_subject": "Life App 백업",
+  "backup_share_text": "Life App 암호화 백업 파일입니다.",
+  "backup_picker_title": "백업 파일 선택",
+  "backup_picker_path_error": "선택한 파일 경로를 읽을 수 없습니다.",
+  "backup_provider_auto": "자동",
+  "backup_provider_auto_description": "공유 시트에서 최근 사용한 저장소를 우선 추천합니다.",
+  "backup_provider_google_drive": "Google Drive",
+  "backup_provider_icloud_drive": "iCloud Drive",
+  "backup_provider_dropbox": "Dropbox",
+  "backup_provider_onedrive": "OneDrive",
+  "backup_provider_other": "기타",
+  "backup_provider_other_description": "매번 저장소를 직접 선택하도록 안내합니다.",
+  "backup_help_title": "백업 안내",
+  "backup_help_encrypted": "• 백업 파일은 암호화되어 저장되며 확장자는 .lifeappbackup 입니다.",
+  "backup_help_choose_storage": "• 공유 시트에서 Google Drive, iCloud, Dropbox 등 원하는 저장소를 선택할 수 있습니다.",
+  "backup_help_restore_notice": "• 복원 시 선택한 백업 파일로 현재 기기 데이터가 교체됩니다.",
+  "backup_history_empty": "아직 백업/복원 기록이 없습니다.",
+  "backup_history_action_backup": "백업",
+  "backup_history_action_restore": "복원",
+  "backup_history_entry_header": "{action} • {timestamp}",
+  "backup_history_entry_size": "크기 {size}",
+  "backup_history_entry_destination": "대상: {provider}",
+  "backup_history_entry_error": "오류: {error}",
+  "backup_history_status_success": "성공",
+  "backup_history_status_failure": "실패",
+  "today_summary_total_label": "총합",
+  "@foreground_notification_mode_progress": {
+    "placeholders": {
+      "mode": {}
+    }
+  },
+  "@foreground_notification_segment_remaining": {
+    "placeholders": {
+      "segment": {},
+      "time": {}
+    }
+  },
+  "@notification_timer_done_body": {
+    "placeholders": {
+      "mode": {}
+    }
+  },
+  "@notification_sleep_final_body": {
+    "placeholders": {
+      "routine": {}
+    }
+  },
+  "@notification_sleep_gentle_body": {
+    "placeholders": {
+      "routine": {}
+    }
+  },
+  "@notification_timer_segment_body": {
+    "placeholders": {
+      "segment": {}
+    }
+  },
+  "@timer_plan_focus_segment_label": {
+    "placeholders": {
+      "number": {}
+    }
+  },
+  "@timer_plan_workout_active_label": {
+    "placeholders": {
+      "number": {}
+    }
+  },
+  "@backup_error_message": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "@backup_settings_error": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "@backup_last_backup": {
+    "placeholders": {
+      "timestamp": {}
+    }
+  },
+  "@backup_preferred_updated": {
+    "placeholders": {
+      "provider": {}
+    }
+  },
+  "@backup_preferred_update_error": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "@backup_history_entry_header": {
+    "placeholders": {
+      "action": {},
+      "timestamp": {}
+    }
+  },
+  "@backup_history_entry_size": {
+    "placeholders": {
+      "size": {}
+    }
+  },
+  "@backup_history_entry_destination": {
+    "placeholders": {
+      "provider": {}
+    }
+  },
+  "@backup_history_entry_error": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "@timer_init_save_error": {
+    "placeholders": {
+      "error": {}
+    }
+  }
+}

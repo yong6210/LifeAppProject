@@ -1,0 +1,53 @@
+name: Flutter CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  analyze_test:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.3'
+          channel: 'stable'
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Verify formatting
+        run: dart format --output=none --set-exit-if-changed .
+      - name: Flutter analyze
+        run: flutter analyze
+      - name: Flutter tests
+        run: flutter test --no-pub
+
+  build_android:
+    runs-on: macos-latest
+    needs: analyze_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.3'
+          channel: 'stable'
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Build debug APK
+        run: flutter build apk --debug --dart-define=FLAVOR=dev
+
+  build_ios:
+    runs-on: macos-latest
+    needs: analyze_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.3'
+          channel: 'stable'
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Build iOS (no codesign)
+        run: flutter build ios --no-codesign --dart-define=FLAVOR=dev

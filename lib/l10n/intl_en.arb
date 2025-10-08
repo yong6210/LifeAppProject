@@ -1,0 +1,884 @@
+{
+  "@@locale": "en",
+  "app_title": "Life App",
+  "home_greeting": "Hello again",
+  "home_routine_focus_title": "Deep focus",
+  "home_routine_focus_body": "Stay in flow with balanced work and break intervals.",
+  "home_routine_rest_title": "Active rest",
+  "home_routine_rest_body": "Stretch, breathe, and reset between intense sessions.",
+  "home_routine_workout_title": "Power intervals",
+  "home_routine_workout_body": "High-energy bursts with guided recovery.",
+  "home_routine_sleep_title": "Wind down",
+  "home_routine_sleep_body": "Prepare for better sleep with calming sounds and smart alarms.",
+  "home_routine_card_hint": "Tap to open routine timer",
+  "home_daily_totals_title": "Today so far",
+  "home_daily_totals_empty": "No sessions tracked yet. Start a routine to build momentum.",
+  "home_quick_actions_title": "Quick actions",
+  "home_quick_focus": "Start focus",
+  "home_quick_sleep": "Start sleep",
+  "home_quick_backup": "Backup now",
+  "home_quick_stats": "View stats",
+  "home_quick_focus_semantics": "Start focus timer",
+  "home_quick_sleep_semantics": "Start sleep routine",
+  "home_quick_backup_semantics": "Open backup screen",
+  "home_quick_stats_semantics": "Open statistics",
+  "home_sync_in_progress": "Syncing latest changes...",
+  "home_sync_error": "Sync paused. Check your connection and try again.",
+  "home_sync_signed_out": "Sign in to keep data backed up across devices.",
+  "home_backup_status": "Last backup: {timestamp}",
+  "@home_backup_status": {
+    "placeholders": {
+      "timestamp": {}
+    }
+  },
+  "home_backup_hint": "Encrypted backups live safely in your own cloud storage.",
+  "home_backup_never": "No backups yet. Create one to secure your data.",
+  "home_backup_backup_now": "Backup now",
+  "home_backup_view_account": "Details",
+  "home_backup_streak_badge": "{count}-week backup streak!",
+  "@home_backup_streak_badge": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "home_premium_cta_title": "Unlock the full routine experience",
+  "home_premium_cta_body": "Premium adds smart alarms, automated backups, and detailed insights.",
+  "home_premium_cta_button": "Explore Premium",
+  "home_recent_sessions_title": "Recent sessions",
+  "home_recent_empty": "No sessions recorded. Start your first routine today.",
+  "home_view_stats": "See full stats",
+  "home_recent_error": "Unable to load recent sessions. Try again soon.",
+  "onboarding_appbar_title": "Get Started",
+  "onboarding_progress": "{current} / {total}",
+  "@onboarding_progress": {
+    "placeholders": {
+      "current": {},
+      "total": {}
+    }
+  },
+  "onboarding_start_button": "Start",
+  "onboarding_next_button": "Next",
+  "onboarding_intro_focus_title": "Bring every routine together",
+  "onboarding_intro_focus_body": "Manage focus, rest, movement, and sleep timers in one offline-first flow.",
+  "onboarding_intro_backup_title": "Keep data lightweight & safe",
+  "onboarding_intro_backup_body": "Use light sync to restore essentials in seconds and encrypted full backups when you choose.",
+  "onboarding_persona_heading": "Pick a starter routine",
+  "onboarding_persona_subtitle": "Customize later — we will set up baseline timers for you now.",
+  "onboarding_preset_error": "Failed to apply preset: {error}",
+  "@onboarding_preset_error": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "onboarding_persona_student_title": "Focused study routine",
+  "onboarding_persona_student_body": "Classic Pomodoro intervals for deep study with quick breaks and light wind-down.",
+  "onboarding_persona_knowledge_title": "Knowledge worker routine",
+  "onboarding_persona_knowledge_body": "Longer focus blocks with short refreshes and a mobility reminder.",
+  "onboarding_persona_wellbeing_title": "Wellbeing starter routine",
+  "onboarding_persona_wellbeing_body": "Balanced focus, mindful breaks, movement, and restful sleep guidance.",
+  "account_title": "Account & Subscription",
+  "account_status_title": "Account Status",
+  "account_uid_label": "UID: {uid}",
+  "@account_uid_label": {
+    "placeholders": {
+      "uid": {}
+    }
+  },
+  "account_status_anonymous": "You are using an anonymous account.",
+  "account_status_logged_in": "You are signed in.",
+  "account_status_logged_out": "You are not signed in.",
+  "account_login_button": "Anonymous Sign-In",
+  "account_logout_button": "Sign Out",
+  "account_processing": "Processing...",
+  "account_upgrade_hint": "Email and other sign-in upgrades will be added later.",
+  "account_language_title": "App language",
+  "account_language_description": "Switch languages any time. Content updates instantly.",
+  "account_language_system": "System default",
+  "account_language_english": "English",
+  "account_language_korean": "Korean",
+  "account_language_updated": "Language updated to {language}.",
+  "@account_language_updated": {
+    "placeholders": {
+      "language": {}
+    }
+  },
+  "subscription_title": "Subscription Status",
+  "subscription_premium": "Premium Active",
+  "subscription_free": "Free User",
+  "subscription_checking": "Checking subscription status...",
+  "subscription_offline_notice": "Showing last known subscription because RevenueCat is offline.",
+  "subscription_manage": "Manage Subscription",
+  "subscription_explore": "Explore Premium",
+  "subscription_grace_notice": "Payment is pending. Premium access will pause if payment is not completed by {date}.",
+  "@subscription_grace_notice": {
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "subscription_expired_notice": "Premium subscription expired on {date}. Renew to continue using premium features.",
+  "@subscription_expired_notice": {
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "backup_history_title": "Backup & Restore History",
+  "backup_preferred_label": "Preferred provider: {provider}",
+  "@backup_preferred_label": {
+    "placeholders": {
+      "provider": {}
+    }
+  },
+  "backup_premium_header": "Premium Feature",
+  "backup_premium_message": "Automatic backups and full history are available with Premium. Upgrade to view the complete log on every device.",
+  "backup_upgrade_button": "See Premium Options",
+  "backup_upgrade_semantics_label": "Upgrade to unlock full backup history",
+  "backup_upgrade_semantics_hint": "Opens the premium options screen to subscribe and access complete backup history.",
+  "backup_history_recent_only": "Showing only the most recent backup.",
+  "backup_history_empty": "No history yet. Try creating a backup.",
+  "backup_loading_title": "Loading backup info...",
+  "backup_error_title": "Backup info error",
+  "backup_entry_backup": "Backup",
+  "backup_entry_restore": "Restore",
+  "backup_entry_storage": "Provider: {provider}",
+  "@backup_entry_storage": {
+    "placeholders": {
+      "provider": {}
+    }
+  },
+  "backup_entry_size": "Size: {size}",
+  "@backup_entry_size": {
+    "placeholders": {
+      "size": {}
+    }
+  },
+  "backup_entry_error": "Error: {message}",
+  "@backup_entry_error": {
+    "placeholders": {
+      "message": {}
+    }
+  },
+  "data_disclosure_title": "Data Usage & Retention",
+  "data_disclosure_subtitle": "Review how your data is stored locally and in the cloud.",
+  "privacy_policy_title": "Privacy Policy (Draft)",
+  "privacy_policy_subtitle": "Read the latest privacy policy summary.",
+  "licenses_title": "Open Source Licenses",
+  "licenses_subtitle": "See packages and license information.",
+  "account_delete_card_title": "Delete Account",
+  "account_delete_card_body": "Deleting your account permanently removes local data and cloud sync information. This cannot be undone.",
+  "account_delete_requires_reauth": "To finish account deletion, sign in again and retry.",
+  "account_delete_error": "Account deletion failed: {error}",
+  "@account_delete_error": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "account_delete_button": "Delete Account",
+  "account_delete_processing": "Deleting...",
+  "account_delete_success": "Your account and all data have been deleted.",
+  "account_delete_requires_reauth_snackbar": "Local data deleted. Sign in again to finish account deletion.",
+  "account_accessibility_title": "Accessibility",
+  "account_accessibility_body": "Adjust reduced motion to limit animations and haptic feedback across the app.",
+  "account_accessibility_reduced_motion": "Reduce motion & haptics",
+  "account_diagnostics_title": "Timer accuracy samples",
+  "account_diagnostics_body": "Recent measurements compare scheduled segment completions with actual delivery. Positive skew means the alarm fired late.",
+  "account_diagnostics_no_samples": "No samples recorded yet. Start a timer to capture accuracy data.",
+  "account_diagnostics_clear": "Clear samples",
+  "account_diagnostics_share": "Export CSV",
+  "account_diagnostics_entry": "{timestamp} · {mode} ({segment})",
+  "@account_diagnostics_entry": {
+    "placeholders": {
+      "timestamp": {},
+      "mode": {},
+      "segment": {}
+    }
+  },
+  "account_diagnostics_summary_heading": "Summary (last {count})",
+  "@account_diagnostics_summary_heading": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "account_diagnostics_summary_avg": "Average skew: {value}",
+  "@account_diagnostics_summary_avg": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "account_diagnostics_summary_max": "Max deviation: {value}",
+  "@account_diagnostics_summary_max": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "account_diagnostics_summary_within_target": "Within ±60s: {percent}%",
+  "@account_diagnostics_summary_within_target": {
+    "placeholders": {
+      "percent": {}
+    }
+  },
+  "account_diagnostics_value_seconds": "{seconds}s",
+  "@account_diagnostics_value_seconds": {
+    "placeholders": {
+      "seconds": {}
+    }
+  },
+  "account_diagnostics_value_millis": "{millis}ms",
+  "@account_diagnostics_value_millis": {
+    "placeholders": {
+      "millis": {}
+    }
+  },
+  "account_diagnostics_value_zero": "0ms",
+  "account_diagnostics_skew_late": "Late by {value}",
+  "@account_diagnostics_skew_late": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "account_diagnostics_skew_early": "Early by {value}",
+  "@account_diagnostics_skew_early": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "account_diagnostics_more_available": "+{count} more stored",
+  "@account_diagnostics_more_available": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "account_diagnostics_share_empty": "There are no samples to export yet.",
+  "account_diagnostics_share_subject": "Life App timer accuracy samples",
+  "account_diagnostics_share_body": "Timer accuracy samples exported from Life App.",
+  "backup_reminder_title": "Time to back up",
+  "backup_reminder_body": "It’s been a while since your last backup. Open Account ▸ Backup to keep your data safe.",
+  "backup_summary_last_backup": "Last backup: {date}",
+  "@backup_summary_last_backup": {
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "backup_summary_never": "No backups yet. Start a backup to protect your progress.",
+  "backup_summary_streak": "Backup streak: {count} consecutive weeks",
+  "@backup_summary_streak": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "backup_summary_streak_single": "Backup streak: 1 week",
+  "backup_summary_badge": "{count}-week backup streak!",
+  "@backup_summary_badge": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "backup_summary_badge_semantics": "Backup streak achievement",
+  "backup_banner_title": "Keep your backups fresh",
+  "backup_banner_body": "Back up now to protect your focus, workout, and sleep history across devices.",
+  "backup_banner_button": "Back up now",
+  "backup_banner_dismiss": "Remind me later",
+  "backup_banner_dismissed": "Backup reminder snoozed for a few days.",
+  "error_login_failed": "Login failed: {error}",
+  "@error_login_failed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "error_logout_failed": "Logout failed: {error}",
+  "@error_logout_failed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "data_retention_heading": "Data Retention Policy",
+  "data_retention_local": "• Local data: sessions, routines, settings, and backup logs stay on-device and are erased when you delete the account.",
+  "data_retention_light_sync": "• Light sync: only theme, presets, and daily totals are stored in Firestore and deleted with your account.",
+  "data_retention_backup": "• Full backups: encrypted archives remain in your Drive/iCloud until you delete them.",
+  "data_retention_telemetry": "• Diagnostics: crash reports and analytics are collected only with consent and can be disabled anytime.",
+  "data_retention_footer": "See docs/privacy_data_retention.md for full details.",
+  "privacy_summary_heading": "Privacy Policy (Summary)",
+  "privacy_summary_data": "Life App stores most data locally and only minimal sync data in Firestore.",
+  "privacy_summary_telemetry": "Crashlytics and Analytics run only when you enable telemetry.",
+  "privacy_summary_backup": "Full backups are AES-256-GCM encrypted and saved to your own cloud storage.",
+  "privacy_summary_more": "Full policy draft is available in docs/privacy_policy_draft.md.",
+  "dialog_cancel": "Cancel",
+  "dialog_confirm_delete": "Delete Account",
+  "dialog_delete_title": "Delete Account",
+  "dialog_delete_body": "Deleting your account removes all data and cannot be undone. Full backups stored in your cloud account must be deleted manually.",
+  "dialog_delete_checkbox": "I understand and want to delete my account.",
+  "sessions_title": "Sessions",
+  "session_filter_all": "All",
+  "session_filter_today": "Today",
+  "session_filter_week": "This Week",
+  "session_filter_month": "This Month",
+  "tooltip_timer": "Timer",
+  "tooltip_account": "Account",
+  "tooltip_premium_active": "Premium active",
+  "tooltip_premium": "Premium",
+  "tooltip_stats_premium": "Premium stats (Pro)",
+  "tooltip_stats": "Stats",
+  "tooltip_backup": "Backup & Restore",
+  "tooltip_login": "Anonymous Sign-In",
+  "tooltip_logout": "Sign Out",
+  "tooltip_add_dummy": "Add demo session",
+  "session_type_focus": "Focus",
+  "session_type_rest": "Rest",
+  "session_type_workout": "Workout",
+  "session_type_sleep": "Sleep",
+  "session_duration_minutes": "{minutes} min",
+  "@session_duration_minutes": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "session_empty_hint": "No sessions yet. Tap + in the top right to add one.",
+  "session_deleted": "Deleted",
+  "timer_title": "Timer",
+  "timer_mode_focus": "Focus",
+  "timer_mode_rest": "Rest",
+  "timer_mode_workout": "Workout",
+  "timer_mode_sleep": "Sleep",
+  "timer_permission_notification_title": "Notification permission required",
+  "timer_permission_notification_message": "Allow notifications to receive timer completion alerts.",
+  "timer_permission_notification_action": "Request notification access",
+  "timer_permission_exact_title": "Exact alarm permission required",
+  "timer_permission_exact_message": "Grant the permission so timers fire at the exact scheduled time.",
+  "timer_permission_action_open_settings": "Open settings",
+  "timer_permission_dnd_title": "Allow Do Not Disturb access",
+  "timer_permission_dnd_message": "Enable access so alerts can ring during Do Not Disturb.",
+  "timer_permission_microphone_title": "Allow microphone access",
+  "timer_permission_microphone_message": "Sleep sound analysis records a low-resolution audio stream while Sleep mode is active. Grant microphone access to capture ambient noise and summarize your night.",
+  "timer_permission_microphone_action": "Allow microphone",
+  "timer_permission_microphone_denied": "Microphone access is required to analyze sleep sounds.",
+  "timer_permission_microphone_settings": "Enable microphone access in system settings to keep sleep sound analysis running.",
+  "timer_permission_microphone_success": "Microphone access enabled for sleep sound analysis.",
+  "timer_permission_error": "Unable to load permission state: {error}",
+  "timer_progress_overall": "Session progress",
+  "timer_button_previous": "Previous",
+  "timer_button_next": "Next",
+  "timer_button_start": "Start",
+  "timer_button_pause": "Pause",
+  "timer_button_reset": "Reset",
+  "timer_sound_switch_title": "Background sound",
+  "timer_sound_switch_enabled": "Current profile: {profile}",
+  "timer_sound_switch_disabled": "Sound off",
+  "timer_sound_profile_default": "Default",
+  "timer_sleep_title": "Smart wake window",
+  "timer_sleep_edit_button": "Edit",
+  "timer_sleep_window_disabled": "Smart wake window is disabled.",
+  "timer_sleep_window_length": "Window length: {minutes} min",
+  "timer_sleep_interval": "Prompt interval: {minutes} min",
+  "timer_sleep_fallback_on": "An exact alarm will also fire at the target time.",
+  "timer_sleep_fallback_off": "Only gentle prompts will be sent (no exact alarm).",
+  "timer_sleep_premium_title": "Premium sound mixer",
+  "timer_sleep_premium_message": "Mix white/pink/brown noise with Premium to personalize sleep audio.",
+  "timer_sleep_premium_button": "Upgrade",
+  "timer_sleep_sound_mix_label": "Sound mix",
+  "timer_sleep_sound_mix_off": "Mixer disabled. Default sleep tone will play.",
+  "timer_sleep_sound_mix_ratio": "White {white}% • Pink {pink}% • Brown {brown}%",
+  "timer_sleep_sound_preset_label": "Preset: {preset}",
+  "timer_sleep_sound_layers_label": "Layers: {layers}",
+  "timer_sleep_update_success": "Smart alarm settings updated.",
+  "timer_sleep_edit_sheet_title": "Smart alarm settings",
+  "timer_sleep_edit_enable": "Use smart wake window",
+  "timer_sleep_edit_enable_subtitle": "Send gentle prompts before the target wake time.",
+  "timer_sleep_edit_window_length": "Window length: {minutes} min",
+  "timer_sleep_edit_interval": "Prompt interval: {minutes} min",
+  "timer_sleep_edit_fallback": "Add exact alarm",
+  "timer_sleep_edit_fallback_subtitle": "Include an exact alarm at the end of the window.",
+  "timer_sleep_edit_mix_title": "Sleep sound mixer",
+  "timer_sleep_edit_mix_body": "Pick an ambience preset or switch to Custom mix to fine-tune white, pink, and brown noise.",
+  "timer_sleep_noise_white": "White noise",
+  "timer_sleep_noise_pink": "Pink noise",
+  "timer_sleep_noise_brown": "Brown noise",
+  "timer_sleep_noise_rain_light": "Light rain",
+  "timer_sleep_noise_rain_heavy": "Heavy rain",
+  "timer_sleep_noise_forest_birds": "Forest birds",
+  "timer_sleep_noise_ocean_waves": "Ocean waves",
+  "timer_sleep_noise_fireplace": "Crackling fireplace",
+  "timer_sleep_mix_off_status": "Mixer disabled. Default sleep tone will play.",
+  "timer_sleep_mix_status_format": "White {white}% • Pink {pink}% • Brown {brown}%",
+  "timer_sleep_edit_preset_layers": "Mix: {layers}",
+  "timer_sleep_edit_mix_locked": "Preset levels are locked. Switch to Custom mix to tweak sliders.",
+  "timer_sleep_preset_custom_mix": "Custom mix",
+  "timer_sleep_preset_custom_mix_desc": "Control white, pink, and brown noise levels manually.",
+  "timer_sleep_preset_rain_light": "Gentle rain",
+  "timer_sleep_preset_rain_light_desc": "Soft rainfall with a touch of white noise to mask background hum.",
+  "timer_sleep_preset_rain_heavy": "Stormy night",
+  "timer_sleep_preset_rain_heavy_desc": "Distant thunderstorm ambience with heavier rain and low brown noise.",
+  "timer_sleep_preset_forest_birds": "Forest morning",
+  "timer_sleep_preset_forest_birds_desc": "Warm brown noise layered with dawn chorus birds.",
+  "timer_sleep_preset_ocean_waves": "Ocean waves",
+  "timer_sleep_preset_ocean_waves_desc": "Rolling surf blended with pink noise for a coastal vibe.",
+  "timer_sleep_preset_fireplace_cozy": "Cozy fireplace",
+  "timer_sleep_preset_fireplace_cozy_desc": "Crackling fire with gentle brown noise for a snug night in.",
+  "dialog_confirm_save": "Save",
+  "generic_save_error": "Failed to save: {error}",
+  "generic_settings_error": "Failed to load settings: {error}",
+  "timer_preset_dialog_title": "Set {label} minutes",
+  "timer_preset_dialog_hint": "Enter minutes",
+  "timer_preset_label": "{label} {minutes} min",
+  "timer_preset_selector_label": "Preset",
+  "timer_status_segment_remaining": "Time remaining",
+  "timer_segment_progress_label": "Segment progress",
+  "timer_segment_timeline_title": "Routine segments",
+  "timer_announcer_segment": "{segment}, {time} remaining.",
+  "timer_announcer_minutes_seconds": "{minutes} minutes {seconds} seconds",
+  "timer_announcer_seconds_only": "{seconds} seconds",
+  "@timer_permission_error": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "@timer_sleep_window_length": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "@timer_sleep_interval": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "@timer_sleep_sound_mix_ratio": {
+    "placeholders": {
+      "white": {},
+      "pink": {},
+      "brown": {}
+    }
+  },
+  "@timer_sleep_edit_window_length": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "@timer_sleep_edit_interval": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "@timer_sleep_mix_status_format": {
+    "placeholders": {
+      "white": {},
+      "pink": {},
+      "brown": {}
+    }
+  },
+  "@generic_save_error": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "@generic_settings_error": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "@timer_preset_dialog_title": {
+    "placeholders": {
+      "label": {}
+    }
+  },
+  "@timer_preset_label": {
+    "placeholders": {
+      "label": {},
+      "minutes": {}
+    }
+  },
+  "@timer_announcer_segment": {
+    "placeholders": {
+      "segment": {},
+      "time": {}
+    }
+  },
+  "@timer_announcer_minutes_seconds": {
+    "placeholders": {
+      "minutes": {},
+      "seconds": {}
+    }
+  },
+  "@timer_announcer_seconds_only": {
+    "placeholders": {
+      "seconds": {}
+    }
+  },
+  "@timer_sound_switch_enabled": {
+    "placeholders": {
+      "profile": {}
+    }
+  },
+  "stats_weekly_title": "This week total",
+  "stats_total_label": "Total {duration}",
+  "stats_streak_title": "Focus streak",
+  "stats_streak_subtitle": "Including today: {days} day(s)",
+  "stats_error_message": "Failed to load data\n{error}",
+  "duration_minutes_only": "{minutes} min",
+  "duration_hours_only": "{hours} hr",
+  "duration_hours_minutes": "{hours} hr {minutes} min",
+  "stats_appbar_title": "Statistics",
+  "stats_tab_daily": "Daily",
+  "stats_tab_weekly": "Weekly",
+  "stats_tab_monthly": "Monthly",
+  "stats_totals_title": "Totals",
+  "stats_totals_overall": "Overall {duration}",
+  "stats_loading_totals": "Loading totals...",
+  "stats_loading_trend": "Loading trends...",
+  "stats_error_totals_title": "Totals unavailable",
+  "stats_error_trend_title": "Trend unavailable",
+  "stats_trend_empty_title": "No data yet",
+  "stats_trend_empty_body": "Start a routine to see your trend chart fill in.",
+  "stats_trend_title_daily": "Recent daily trend",
+  "stats_trend_title_weekly": "Recent weekly trend",
+  "stats_trend_title_monthly": "Recent monthly trend",
+  "stats_label_daily": "{month}/{day} ({weekday})",
+  "stats_label_weekly": "{startMonth}/{startDay}–{endMonth}/{endDay}",
+  "stats_label_monthly": "{year}.{month}",
+  "stats_trend_row_semantics": "{label}, total {value}",
+  "weekday_mon": "Mon",
+  "weekday_tue": "Tue",
+  "weekday_wed": "Wed",
+  "weekday_thu": "Thu",
+  "weekday_fri": "Fri",
+  "weekday_sat": "Sat",
+  "weekday_sun": "Sun",
+  "stats_trend_toggle_chart": "Show chart",
+  "stats_trend_toggle_table": "Show table",
+  "stats_table_period": "Period",
+  "stats_table_total": "Total",
+  "@stats_total_label": {
+    "placeholders": {
+      "duration": {}
+    }
+  },
+  "@stats_streak_subtitle": {
+    "placeholders": {
+      "days": {}
+    }
+  },
+  "@stats_error_message": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "@stats_totals_overall": {
+    "placeholders": {
+      "duration": {}
+    }
+  },
+  "@stats_label_daily": {
+    "placeholders": {
+      "month": {},
+      "day": {},
+      "weekday": {}
+    }
+  },
+  "@stats_label_weekly": {
+    "placeholders": {
+      "startMonth": {},
+      "startDay": {},
+      "endMonth": {},
+      "endDay": {}
+    }
+  },
+  "@stats_label_monthly": {
+    "placeholders": {
+      "year": {},
+      "month": {}
+    }
+  },
+  "@stats_trend_row_semantics": {
+    "placeholders": {
+      "label": {},
+      "value": {}
+    }
+  },
+  "@duration_minutes_only": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "@duration_hours_only": {
+    "placeholders": {
+      "hours": {}
+    }
+  },
+  "@duration_hours_minutes": {
+    "placeholders": {
+      "hours": {},
+      "minutes": {}
+    }
+  },
+  "paywall_title": "Premium",
+  "paywall_restore_tooltip": "Restore purchases",
+  "paywall_restore_success": "Purchases restored.",
+  "paywall_restore_error": "Restore failed: {error}",
+  "paywall_missing_key_message": "RevenueCat SDK key is not configured. Update `lib/core/subscriptions/revenuecat_keys.dart` or supply keys via --dart-define and try again.",
+  "paywall_unsupported_platform": "Purchases are only supported on iOS and Android builds.",
+  "paywall_info_unavailable": "Unable to load subscription info. Please try again later.",
+  "paywall_no_products": "No subscription products available. Check the RevenueCat/Firebase configuration.",
+  "paywall_error_message": "Failed to load paywall: {error}",
+  "paywall_fetch_error": "Failed to load subscription info: {error}",
+  "paywall_active_title": "Premium active",
+  "paywall_active_body": "Premium access is active on this account.",
+  "paywall_focus_title": "Level up your focus routine",
+  "paywall_focus_body": "Unlock detailed stats, smart alarms, and multi-mode presets to stay on track longer.",
+  "paywall_backup_title": "Keep your data safe everywhere",
+  "paywall_backup_body": "Automated backups and cross-device restores ensure you never lose progress.",
+  "paywall_focus_benefit_1": "Detailed session & routine insights",
+  "paywall_focus_benefit_2": "Smart alarms and sleep mixer for focus & rest modes",
+  "paywall_focus_benefit_3": "Unlimited presets synced across devices",
+  "paywall_backup_benefit_1": "Automatic weekly backups with restore history",
+  "paywall_backup_benefit_2": "Light sync to move between devices quickly",
+  "paywall_backup_benefit_3": "Priority support and early access to new features",
+  "paywall_package_semantics_label": "Subscription option {product} for {price}",
+  "@paywall_package_semantics_label": {
+    "placeholders": {
+      "product": {},
+      "price": {}
+    }
+  },
+  "paywall_package_semantics_hint": "Swipe right to review benefits, double-tap to explore or purchase.",
+  "paywall_purchase_success": "Purchase completed: {product}",
+  "paywall_purchase_error": "Purchase failed: {error}",
+  "paywall_purchase_processing": "Processing...",
+  "paywall_purchase_button": "Buy",
+  "paywall_purchase_semantics_label": "Start subscription: {product}",
+  "@paywall_purchase_semantics_label": {
+    "placeholders": {
+      "product": {}
+    }
+  },
+  "paywall_purchase_semantics_hint": "Confirms the purchase. {price} billed through your app store.",
+  "@paywall_purchase_semantics_hint": {
+    "placeholders": {
+      "price": {}
+    }
+  },
+  "@paywall_restore_error": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "@paywall_error_message": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "@paywall_fetch_error": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "@paywall_purchase_success": {
+    "placeholders": {
+      "product": {}
+    }
+  },
+  "@paywall_purchase_error": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "timer_session_label_from": "{start} ~ {end}",
+  "@timer_session_label_from": {
+    "placeholders": {
+      "start": {},
+      "end": {}
+    }
+  },
+  "timer_session_label_open": "{start} ~ --",
+  "@timer_session_label_open": {
+    "placeholders": {
+      "start": {}
+    }
+  },
+  "common_later": "Later",
+  "common_open_settings": "Open settings",
+  "common_cancel": "Cancel",
+  "common_save": "Save",
+  "permission_notification_required": "Notification permission is required to deliver timer alerts.",
+  "permission_exact_title": "Allow exact alarms",
+  "permission_exact_message": "Enable exact alarms so scheduled timers fire precisely. Open settings?",
+  "permission_dnd_title": "Allow Do Not Disturb access",
+  "permission_dnd_message": "Grant access so timer alerts can break through Do Not Disturb when needed.",
+  "permission_notification_denied": "Notifications are disabled. Please enable them from system settings.",
+  "foreground_notification_running_title": "Timer in progress",
+  "foreground_notification_almost_done": "Wrapping up soon",
+  "foreground_notification_mode_progress": "{mode} in progress",
+  "foreground_notification_segment_remaining": "{segment} • {time} remaining",
+  "foreground_notification_default_segment": "In progress",
+  "foreground_channel_name": "Timer status",
+  "foreground_channel_description": "Foreground notification that keeps the routine timer active.",
+  "foreground_sleep_sound_notification": "Sleep sound analysis running ({elapsed})",
+  "@foreground_sleep_sound_notification": {
+    "placeholders": {
+      "elapsed": {}
+    }
+  },
+  "foreground_sleep_sound_notification_idle": "Sleep sound analysis running",
+  "duration_minutes_seconds": "{minutes} min {seconds} sec",
+  "duration_seconds_only": "{seconds} sec",
+  "notification_timer_channel_name": "Timer finished",
+  "notification_timer_channel_description": "Alerts when a routine segment completes.",
+  "notification_timer_done_title": "Timer complete",
+  "notification_timer_done_body": "{mode} routine is finished.",
+  "notification_backup_channel_name": "Backup reminder",
+  "notification_backup_channel_description": "Periodic reminder to back up your data.",
+  "notification_timer_schedule_channel_name": "Scheduled timer",
+  "notification_timer_schedule_channel_description": "Alerts for upcoming routine segments.",
+  "notification_sleep_channel_name": "Smart wake",
+  "notification_sleep_channel_description": "Gentle prompts and final alarm for the smart wake window.",
+  "notification_sleep_final_title": "Wake up",
+  "notification_sleep_final_body": "{routine} routine is done. Let's start the day.",
+  "notification_sleep_gentle_title": "Gentle wake window",
+  "notification_sleep_gentle_body": "{routine} wake window has started. Stretch and ease into the day.",
+  "notification_timer_generic_title": "Timer alert",
+  "notification_timer_segment_body": "{segment} segment will complete soon.",
+  "timer_plan_focus_segment_label": "Focus {number}",
+  "timer_plan_focus_long_break_label": "Long break",
+  "timer_plan_focus_short_break_label": "Short break",
+  "timer_plan_rest_stretch_label": "Stretch",
+  "timer_plan_rest_breath_label": "Breathing",
+  "timer_plan_rest_reflect_label": "Reset",
+  "timer_plan_workout_active_label": "Round {number}",
+  "timer_plan_workout_rest_label": "Rest",
+  "timer_plan_sleep_prepare_label": "Wind down",
+  "timer_plan_sleep_relax_label": "Relax",
+  "timer_plan_sleep_main_label": "Sleep",
+  "timer_init_title": "Timer defaults",
+  "timer_init_focus_label": "Focus (min)",
+  "timer_init_rest_label": "Rest (min)",
+  "timer_init_workout_label": "Workout (min)",
+  "timer_init_sleep_label": "Sleep (min)",
+  "timer_init_save_error": "Failed to save: {error}",
+  "backup_title": "Backup & Restore",
+  "backup_error_message": "Failed: {error}",
+  "backup_success_toast": "Finished.",
+  "backup_settings_error": "Unable to load settings: {error}",
+  "backup_last_backup_never": "No backups yet",
+  "backup_last_backup": "Last backup: {timestamp}",
+  "backup_action_backup": "One-tap backup",
+  "backup_action_restore": "Restore backup",
+  "backup_preferred_storage_title": "Preferred backup location",
+  "backup_preferred_storage_help": "Choose the default suggestion. You can pick any storage from the share sheet when exporting.",
+  "backup_preferred_updated": "Preferred storage updated to {provider}.",
+  "backup_preferred_update_error": "Unable to save: {error}",
+  "backup_share_subject": "Life App backup",
+  "backup_share_text": "Encrypted Life App backup file.",
+  "backup_picker_title": "Select backup file",
+  "backup_picker_path_error": "Unable to read the selected file path.",
+  "backup_provider_auto": "Auto",
+  "backup_provider_auto_description": "Suggests your recently used storage from the share sheet.",
+  "backup_provider_google_drive": "Google Drive",
+  "backup_provider_icloud_drive": "iCloud Drive",
+  "backup_provider_dropbox": "Dropbox",
+  "backup_provider_onedrive": "OneDrive",
+  "backup_provider_other": "Other",
+  "backup_provider_other_description": "We will prompt you to pick a storage option each time.",
+  "backup_help_title": "Backup tips",
+  "backup_help_encrypted": "• Backup files are encrypted and saved with the .lifeappbackup extension.",
+  "backup_help_choose_storage": "• Choose Google Drive, iCloud, Dropbox, or any other storage from the share sheet.",
+  "backup_help_restore_notice": "• Restoring replaces the current device data with the backup file you select.",
+  "backup_history_empty": "No backup or restore history yet.",
+  "backup_history_action_backup": "Backup",
+  "backup_history_action_restore": "Restore",
+  "backup_history_entry_header": "{action} • {timestamp}",
+  "backup_history_entry_size": "Size {size}",
+  "backup_history_entry_destination": "Destination: {provider}",
+  "backup_history_entry_error": "Error: {error}",
+  "backup_history_status_success": "Success",
+  "backup_history_status_failure": "Failed",
+  "today_summary_total_label": "Total",
+  "@foreground_notification_mode_progress": {
+    "placeholders": {
+      "mode": {}
+    }
+  },
+  "@foreground_notification_segment_remaining": {
+    "placeholders": {
+      "segment": {},
+      "time": {}
+    }
+  },
+  "@notification_timer_done_body": {
+    "placeholders": {
+      "mode": {}
+    }
+  },
+  "@notification_sleep_final_body": {
+    "placeholders": {
+      "routine": {}
+    }
+  },
+  "@notification_sleep_gentle_body": {
+    "placeholders": {
+      "routine": {}
+    }
+  },
+  "@notification_timer_segment_body": {
+    "placeholders": {
+      "segment": {}
+    }
+  },
+  "@timer_plan_focus_segment_label": {
+    "placeholders": {
+      "number": {}
+    }
+  },
+  "@timer_plan_workout_active_label": {
+    "placeholders": {
+      "number": {}
+    }
+  },
+  "@backup_error_message": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "@backup_settings_error": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "@backup_last_backup": {
+    "placeholders": {
+      "timestamp": {}
+    }
+  },
+  "@backup_preferred_updated": {
+    "placeholders": {
+      "provider": {}
+    }
+  },
+  "@backup_preferred_update_error": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "@backup_history_entry_header": {
+    "placeholders": {
+      "action": {},
+      "timestamp": {}
+    }
+  },
+  "@backup_history_entry_size": {
+    "placeholders": {
+      "size": {}
+    }
+  },
+  "@backup_history_entry_destination": {
+    "placeholders": {
+      "provider": {}
+    }
+  },
+  "@backup_history_entry_error": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "@timer_init_save_error": {
+    "placeholders": {
+      "error": {}
+    }
+  }
+}
