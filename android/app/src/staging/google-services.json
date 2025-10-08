@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "233339081421",
+    "project_id": "life-app-ed218",
+    "storage_bucket": "life-app-ed218.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:233339081421:android:ea078bbfdd0ec460564f84",
+        "android_client_info": {
+          "package_name": "com.ymcompany.lifeapp.staging"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvRZLL5oSOX6nuPgEbV0qrgT5AeJQjbXQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

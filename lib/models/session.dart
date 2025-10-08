@@ -7,13 +7,25 @@ class Session {
   Id id = Isar.autoIncrement;
 
   /// 'focus' | 'rest' | 'workout' | 'sleep'
-  late String mode;
+  @Index()
+  late String type;
 
-  /// 초 단위 기록 (예: 1500 = 25분)
-  late int durationSeconds;
+  @Index()
+  late DateTime startedAt;
 
-  late DateTime startTime;
-  late DateTime endTime;
+  DateTime? endedAt;
+
+  @Index()
+  late DateTime localDate;
+
+  @Index(type: IndexType.hash)
+  late String deviceId;
+
+  List<String> tags = [];
 
   String? note;
+
+  DateTime createdAt = DateTime.now().toUtc();
+
+  DateTime updatedAt = DateTime.now().toUtc();
 }
