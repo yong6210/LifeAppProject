@@ -21,8 +21,8 @@ android {
     defaultConfig {
         applicationId = "com.ymcompany.lifeapp"
 
-        // Android 7.0 (API 24) 이상 공식 지원
-        minSdk = 24
+        // Android 8.0 (API 26) 이상 공식 지원 (health 플러그인 요구사항)
+        minSdk = 26
         targetSdk = 36
 
         versionCode = 1
