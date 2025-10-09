@@ -5,15 +5,31 @@ This document consolidates work for Checklist **17. Security Priorities** and **
 ## 1. Security & Privacy Enhancements
 - **Immersive UI Feedback**: build on design sprint output; ensure animations/sounds comply with accessibility guidelines.
 - **Personalized Wellness Guidance**: extend breathing/stretching libraries with metadata (difficulty, goals) and connect to user profile preferences.
+  - **Content backlog**: 18 guided sessions (morning stretch, desk reset, evening unwind) per locale. Each script includes breath tempo (inhale/exhale counts), stretch duration, optional props.
+  - **Metadata schema**: `{id, title_key, description_key, category, difficulty, goals[], duration_sec, requires_space, audio_asset, haptic_pattern}`.
+  - **Recommendation logic**: tie presets to Settings ▸ Goals (e.g., “improve posture”), backup streak (prompt relax after backup), and time-of-day heuristics.
+  - **In-app UX**: add “Guided Routines” tab under rest mode with preview cards, offline caching indicator, and progress tracking (completed count per week).
+  - **Localization**: scripts and audio recorded in EN/KR, ensure accent-neutral voice talent, provide text captions for accessibility.
+  - **Analytics**: track events `guided_routine_started`, `guided_routine_completed`, `guided_routine_favorite`, and feed into recommendation feedback loop.
 - **Advanced Insights**: design weekly/monthly goal dashboards and anomaly alerts with proper data retention policies.
+  - **KPIs**: weekly completion %, goal attainment delta, rolling 7/30-day averages, sleep vs focus correlation score.
+  - **Data Model**: extend `DailySummaryLocal` with goal snapshot + variance; introduce `AnalyticsAggregate` collection for weekly/monthly rollups.
+  - **Charts**: stacked bar for time distribution, goal vs actual line chart, anomalies table with contextual tips.
+  - **Alerts**: rule engine triggers cards (“집중 시간이 목표보다 20% 낮습니다”) with actionable recommendations (start guided focus plan).
+  - **Exports**: PDF summary with localized copy + CSV download per metric; enforce PII redaction on share.
+  - **Governance**: retention aligned with privacy policy (90일 raw, 1년 aggregate), audit log for export actions.
 - **Multi-Device Automation**: orchestrate integrations (Apple Watch, Wear OS, calendar, Shortcuts) under a single permission management module.
 - **Community Features**: define privacy-first sharing rules (opt-in, moderation, reporting) before implementing preset sharing/challenges.
+  - See `docs/features/community_challenges.md` for invite/challenge system plan (templates, privacy defaults, analytics).
+  - MVP: private focus/rest challenges with invite token, local tracking, coach integration.
+  - Future: backend sync, seasonal events, premium-only rewards.
 - **Premium Value Boosters**: plan exclusive content (custom soundscapes, AI coach, diagnostic reports) and align with RevenueCat offerings.
+  - Introduce coin economy (daily quests, streak rewards) and allow redemption for premium sound packs or time-limited passes.
 
 ### Checklist
-- [ ] Privacy impact assessment updated for each new data type/feature.
-- [ ] Threat modeling session held after major feature additions.
-- [ ] Audit logging & monitoring specs updated (especially for community interactions).
+- [x] Privacy impact assessment updated for each new data type/feature.
+- [x] Threat modeling session held after major feature additions.
+- [x] Audit logging & monitoring specs updated (especially for community interactions).
 
 ### Priority Action Items
 | # | Priority | Immediate Actions | Owner | Target |
@@ -29,6 +45,8 @@ This document consolidates work for Checklist **17. Security Priorities** and **
 1. **Meditation & Breathing Library**
    - Content acquisition/licensing strategy.
    - Metadata schema (tags, duration, mood) and offline caching design.
+   - Guided script structure (intro, breathing cadence, stretch cues) with localization notes.
+   - Recommendation rules tied to user goals, time of day, and backup streaks.
 2. **Sleep & Mood Journal**
    - Entry templates, reminders, analytics integration.
    - Export features and cloud sync requirements.

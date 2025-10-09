@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:life_app/l10n/app_localizations.dart';
 import 'package:life_app/providers/stats_providers.dart';
 import 'package:life_app/utils/date_range.dart';
@@ -65,15 +66,31 @@ class _StatsTab extends ConsumerWidget {
     final trendAsync = ref.watch(
       statsTrendProvider(StatsTrendRequest(bucket: bucket, count: count)),
     );
+    final highlightAsync = bucket == StatsTrendBucket.daily
+        ? ref.watch(weeklyHighlightProvider)
+        : null;
 
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
+        if (highlightAsync != null) ...[
+          highlightAsync.when(
+            data: (highlight) => highlight == null
+                ? const _EmptyHighlightCard()
+                : _WeeklyHighlightCard(highlight: highlight),
+            loading: () =>
+                _LoadingCard(title: context.l10n.tr('stats_highlight_title')),
+            error: (error, _) => _ErrorCard(
+              title: context.l10n.tr('stats_highlight_title'),
+              message: error.toString(),
+            ),
+          ),
+          const SizedBox(height: 16),
+        ],
         totalsAsync.when(
           data: (totals) => _TotalsCard(totals: totals),
-          loading: () => _LoadingCard(
-            title: context.l10n.tr('stats_loading_totals'),
-          ),
+          loading: () =>
+              _LoadingCard(title: context.l10n.tr('stats_loading_totals')),
           error: (error, _) => _ErrorCard(
             title: context.l10n.tr('stats_error_totals_title'),
             message: error.toString(),
@@ -82,9 +99,8 @@ class _StatsTab extends ConsumerWidget {
         const SizedBox(height: 16),
         trendAsync.when(
           data: (entries) => _TrendList(bucket: bucket, entries: entries),
-          loading: () => _LoadingCard(
-            title: context.l10n.tr('stats_loading_trend'),
-          ),
+          loading: () =>
+              _LoadingCard(title: context.l10n.tr('stats_loading_trend')),
           error: (error, _) => _ErrorCard(
             title: context.l10n.tr('stats_error_trend_title'),
             message: error.toString(),
@@ -135,6 +151,65 @@ class _TotalsCard extends StatelessWidget {
               }),
               style: Theme.of(context).textTheme.bodyMedium,
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _WeeklyHighlightCard extends StatelessWidget {
+  const _WeeklyHighlightCard({required this.highlight});
+
+  final WeeklyHighlight highlight;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final localeTag = Localizations.localeOf(context).toLanguageTag();
+    final formatter = DateFormat.yMMMd(localeTag);
+    final dateLabel = formatter.format(highlight.date.toLocal());
+    final body = l10n.tr('stats_highlight_body', {
+      'date': dateLabel,
+      'minutes': '${highlight.focusMinutes}',
+    });
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l10n.tr('stats_highlight_title'),
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 8),
+            Text(body, style: Theme.of(context).textTheme.bodyMedium),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _EmptyHighlightCard extends StatelessWidget {
+  const _EmptyHighlightCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l10n.tr('stats_highlight_title'),
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 8),
+            Text(l10n.tr('stats_highlight_empty')),
           ],
         ),
       ),
@@ -218,7 +293,9 @@ class _TrendListState extends ConsumerState<_TrendList> {
                     'value': _formatMinutes(entry.totals.totalMinutes, l10n),
                   }),
                   child: ListTile(
-                    title: Text(_labelForEntry(widget.bucket, entry.range, l10n)),
+                    title: Text(
+                      _labelForEntry(widget.bucket, entry.range, l10n),
+                    ),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -266,10 +343,9 @@ class _TrendListState extends ConsumerState<_TrendList> {
                     ),
                     trailing: Text(
                       _formatMinutes(entry.totals.totalMinutes, l10n),
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.copyWith(fontWeight: FontWeight.w600),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 );
@@ -304,6 +380,7 @@ class _TrendAccessibilityToggle extends StatelessWidget {
     );
   }
 }
+
 class _TrendDataTable extends StatelessWidget {
   const _TrendDataTable({required this.entries, required this.bucket});
 

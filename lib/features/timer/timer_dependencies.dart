@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:life_app/services/audio/timer_audio_service.dart';
+import 'package:life_app/services/audio/workout_cue_service.dart';
 import 'package:life_app/services/background/foreground_timer_service.dart';
 import 'package:life_app/services/background/workmanager_scheduler.dart';
 import 'package:life_app/services/notification_service.dart';
@@ -44,10 +45,7 @@ abstract class TimerForegroundBridge {
     DateTime? smartWindowStart,
     Duration? smartInterval,
   });
-  Future<void> setSleepSoundActive({
-    required bool active,
-    DateTime? startedAt,
-  });
+  Future<void> setSleepSoundActive({required bool active, DateTime? startedAt});
   Future<void> stop();
 }
 
@@ -190,15 +188,18 @@ class TimerDependencies {
     TimerNotificationBridge? notifications,
     TimerForegroundBridge? foreground,
     TimerBackgroundBridge? background,
-  })  : audio = audio ?? TimerAudioService(),
-        notifications = notifications ?? DefaultTimerNotificationBridge(),
-        foreground = foreground ?? DefaultTimerForegroundBridge(),
-        background = background ?? DefaultTimerBackgroundBridge();
+    WorkoutCueService? workoutCues,
+  }) : audio = audio ?? TimerAudioService(),
+       notifications = notifications ?? DefaultTimerNotificationBridge(),
+       foreground = foreground ?? DefaultTimerForegroundBridge(),
+       background = background ?? DefaultTimerBackgroundBridge(),
+       workoutCues = workoutCues ?? WorkoutCueService();
 
   final TimerAudioEngine audio;
   final TimerNotificationBridge notifications;
   final TimerForegroundBridge foreground;
   final TimerBackgroundBridge background;
+  final WorkoutCueService workoutCues;
 }
 
 final timerDependenciesProvider = Provider<TimerDependencies>((ref) {

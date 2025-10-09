@@ -8,13 +8,18 @@ import 'package:life_app/features/timer/timer_controller.dart';
 import 'package:life_app/features/timer/timer_state.dart';
 import 'package:life_app/features/timer/timer_plan.dart';
 import 'package:life_app/models/settings.dart';
+import 'package:life_app/providers/session_providers.dart';
 import 'package:life_app/providers/settings_providers.dart';
 import 'package:life_app/providers/accessibility_providers.dart';
 import 'package:life_app/services/accessibility/timer_announcer.dart';
 import 'package:life_app/services/permission_service.dart';
 import 'package:life_app/services/subscription/revenuecat_service.dart';
 import 'package:life_app/services/analytics/analytics_service.dart';
+import 'package:life_app/features/backup/backup_page.dart';
+import 'package:life_app/features/community/community_challenges_page.dart';
+import 'package:life_app/features/stats/stats_page.dart';
 import 'package:life_app/features/subscription/paywall_page.dart';
+import 'package:life_app/features/wearable/wearable_insights_page.dart';
 import 'package:life_app/l10n/app_localizations.dart';
 import 'package:life_app/services/audio/sleep_sound_catalog.dart';
 
@@ -26,6 +31,26 @@ const _sleepPresetOrder = <String>[
   'ocean_waves',
   'fireplace_cozy',
 ];
+
+enum CoachAction { backup, startFocus, startRest, viewStats, none }
+
+class CoachNudge {
+  CoachNudge({
+    required this.title,
+    required this.message,
+    required this.icon,
+    required this.action,
+    this.actionLabel,
+  });
+
+  final String title;
+  final String message;
+  final IconData icon;
+  final CoachAction action;
+  final String? actionLabel;
+
+  bool get hasAction => action != CoachAction.none;
+}
 
 String _sleepPresetLabel(AppLocalizations l10n, String id) {
   final key = 'timer_sleep_preset_$id';
@@ -120,7 +145,26 @@ class TimerPage extends ConsumerStatefulWidget {
 
 class _TimerPageState extends ConsumerState<TimerPage> {
   bool _initialModeApplied = false;
+  bool _showingFocusDndDialog = false;
   late final TimerAnnouncer _announcer = ref.read(timerAnnouncerProvider);
+
+  @override
+  void initState() {
+    super.initState();
+    ref.listen<TimerState>(timerControllerProvider, (previous, next) {
+      final previousMode = previous?.mode ?? '';
+      if (next.mode == 'focus' && previousMode != 'focus') {
+        _handleFocusModeEntered();
+      }
+    });
+    Future.microtask(() {
+      if (!mounted) return;
+      final current = ref.read(timerControllerProvider);
+      if (current.mode == 'focus') {
+        _handleFocusModeEntered();
+      }
+    });
+  }
 
   @override
   void dispose() {
@@ -155,6 +199,163 @@ class _TimerPageState extends ConsumerState<TimerPage> {
     });
   }
 
+  Future<void> _handleFocusModeEntered() async {
+    if (!mounted || _showingFocusDndDialog) {
+      return;
+    }
+    if (!Platform.isAndroid) {
+      return;
+    }
+    _showingFocusDndDialog = true;
+    var promptDisplayed = false;
+    try {
+      final shouldShow =
+          await TimerPermissionService.shouldShowFocusDndPrompt();
+      if (!shouldShow || !mounted) {
+        return;
+      }
+      promptDisplayed = true;
+      AnalyticsService.logEvent('focus_dnd_prompt', {'state': 'shown'});
+      final openSettings = await showDialog<bool>(
+        context: context,
+        builder: (dialogContext) {
+          final l10n = dialogContext.l10n;
+          return AlertDialog(
+            icon: const Icon(Icons.do_not_disturb_on, size: 32),
+            title: Text(l10n.tr('timer_focus_dnd_prompt_title')),
+            content: Text(l10n.tr('timer_focus_dnd_prompt_message')),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(dialogContext, false),
+                child: Text(l10n.tr('timer_focus_dnd_prompt_later')),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.pop(dialogContext, true),
+                child: Text(l10n.tr('timer_focus_dnd_prompt_action')),
+              ),
+            ],
+          );
+        },
+      );
+      if (!mounted) {
+        return;
+      }
+      if (openSettings == true) {
+        AnalyticsService.logEvent('focus_dnd_prompt', {
+          'state': 'open_settings',
+        });
+        await TimerPermissionService.openNotificationPolicySettings();
+      } else {
+        AnalyticsService.logEvent('focus_dnd_prompt', {'state': 'dismissed'});
+      }
+    } finally {
+      if (promptDisplayed) {
+        await TimerPermissionService.markFocusDndPromptAcknowledged();
+        if (mounted) {
+          ref.invalidate(timerPermissionStatusProvider);
+        }
+      }
+      _showingFocusDndDialog = false;
+    }
+  }
+
+  CoachNudge? _buildCoachNudge({
+    required AppLocalizations l10n,
+    required Settings settings,
+    TodaySummary? summary,
+  }) {
+    final now = DateTime.now();
+    final lastBackup = settings.lastBackupAt;
+    final backupDays = lastBackup == null
+        ? 7
+        : now.difference(lastBackup).inDays;
+    if (backupDays >= 7) {
+      final daysLabel = backupDays.toString();
+      return CoachNudge(
+        title: l10n.tr('timer_coach_backup_title'),
+        message: l10n.tr('timer_coach_backup_message', {'days': daysLabel}),
+        icon: Icons.cloud_upload,
+        action: CoachAction.backup,
+        actionLabel: l10n.tr('timer_coach_backup_action'),
+      );
+    }
+
+    if (summary != null) {
+      final focusGoal = settings.focusMinutes.clamp(10, 240);
+      if (summary.focus < focusGoal) {
+        final remaining = (focusGoal - summary.focus).clamp(1, 240);
+        return CoachNudge(
+          title: l10n.tr('timer_coach_focus_title'),
+          message: l10n.tr('timer_coach_focus_message', {
+            'minutes': '$remaining',
+          }),
+          icon: Icons.timer,
+          action: CoachAction.startFocus,
+          actionLabel: l10n.tr('timer_coach_focus_action'),
+        );
+      }
+
+      final restGoal = settings.restMinutes.clamp(3, 30);
+      if (summary.rest < restGoal) {
+        final remaining = (restGoal - summary.rest).clamp(3, 45);
+        return CoachNudge(
+          title: l10n.tr('timer_coach_rest_title'),
+          message: l10n.tr('timer_coach_rest_message', {
+            'minutes': '$remaining',
+          }),
+          icon: Icons.self_improvement,
+          action: CoachAction.startRest,
+          actionLabel: l10n.tr('timer_coach_rest_action'),
+        );
+      }
+    }
+
+    return CoachNudge(
+      title: l10n.tr('timer_coach_default_title'),
+      message: l10n.tr('timer_coach_default_message'),
+      icon: Icons.insights,
+      action: CoachAction.viewStats,
+      actionLabel: l10n.tr('timer_coach_default_action'),
+    );
+  }
+
+  Future<void> _handleCoachAction(CoachAction action) async {
+    AnalyticsService.logEvent('coach_action', {'action': action.name});
+    final controller = ref.read(timerControllerProvider.notifier);
+    switch (action) {
+      case CoachAction.backup:
+        if (!mounted) return;
+        await Navigator.push<void>(
+          context,
+          MaterialPageRoute<void>(builder: (_) => const BackupPage()),
+        );
+        break;
+      case CoachAction.startFocus:
+        await controller.selectMode('focus');
+        final current = ref.read(timerControllerProvider);
+        if (!current.isRunning) {
+          await controller.toggleStartStop();
+        }
+        break;
+      case CoachAction.startRest:
+        await controller.selectMode('rest');
+        final current = ref.read(timerControllerProvider);
+        if (!current.isRunning) {
+          await controller.toggleStartStop();
+        }
+        break;
+      case CoachAction.viewStats:
+        if (!mounted) return;
+        await Navigator.push<void>(
+          context,
+          MaterialPageRoute<void>(builder: (_) => const StatsPage()),
+        );
+        break;
+      case CoachAction.none:
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final ref = this.ref;
@@ -165,6 +366,21 @@ class _TimerPageState extends ConsumerState<TimerPage> {
     final permissionStatus = ref.watch(timerPermissionStatusProvider);
     final isPremium = ref.watch(isPremiumProvider);
     final announcer = ref.watch(timerAnnouncerProvider);
+    final todaySummaryAsync = ref.watch(todaySummaryProvider);
+    final TodaySummary? todaySummary = todaySummaryAsync.maybeWhen(
+      data: (value) => value,
+      orElse: () => null,
+    );
+    final settingsAsync = ref.watch(settingsFutureProvider);
+    final coachNudge = settingsAsync.when<CoachNudge?>(
+      data: (settings) => _buildCoachNudge(
+        l10n: l10n,
+        settings: settings,
+        summary: todaySummary,
+      ),
+      loading: () => null,
+      error: (_, __) => null,
+    );
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
@@ -267,7 +483,35 @@ class _TimerPageState extends ConsumerState<TimerPage> {
 
     return WithForegroundTask(
       child: Scaffold(
-        appBar: AppBar(title: Text(l10n.tr('timer_title'))),
+        appBar: AppBar(
+          title: Text(l10n.tr('timer_title')),
+          actions: [
+            IconButton(
+              tooltip: l10n.tr('wearable_title'),
+              icon: const Icon(Icons.watch_rounded),
+              onPressed: () async {
+                await Navigator.push<void>(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (_) => const WearableInsightsPage(),
+                  ),
+                );
+              },
+            ),
+            IconButton(
+              tooltip: l10n.tr('community_title'),
+              icon: const Icon(Icons.groups_rounded),
+              onPressed: () async {
+                await Navigator.push<void>(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (_) => const CommunityChallengesPage(),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
         body: SafeArea(
           child: Column(
             children: [
@@ -284,6 +528,13 @@ class _TimerPageState extends ConsumerState<TimerPage> {
                     if (permissionTiles != null) ...[
                       const SizedBox(height: 12),
                       permissionTiles,
+                    ],
+                    if (coachNudge != null) ...[
+                      const SizedBox(height: 16),
+                      _CoachCard(
+                        nudge: coachNudge,
+                        onAction: (action) => _handleCoachAction(action),
+                      ),
                     ],
                     if (state.mode == 'sleep') ...[
                       const SizedBox(height: 16),
@@ -395,6 +646,68 @@ class _PermissionTile extends StatelessWidget {
                 label: Text(actionLabel),
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CoachCard extends StatelessWidget {
+  const _CoachCard({required this.nudge, required this.onAction});
+
+  final CoachNudge nudge;
+  final ValueChanged<CoachAction> onAction;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  padding: const EdgeInsets.all(10),
+                  child: Icon(nudge.icon, color: theme.colorScheme.primary),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        nudge.title,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(nudge.message, style: theme.textTheme.bodyMedium),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            if (nudge.hasAction && nudge.actionLabel != null) ...[
+              const SizedBox(height: 12),
+              Align(
+                alignment: Alignment.centerRight,
+                child: FilledButton.icon(
+                  onPressed: () => onAction(nudge.action),
+                  icon: const Icon(Icons.arrow_forward_rounded),
+                  label: Text(nudge.actionLabel!),
+                ),
+              ),
+            ],
           ],
         ),
       ),
@@ -1000,7 +1313,8 @@ class _SleepSmartAlarmCard extends ConsumerWidget {
                 const SizedBox(height: 4),
                 Text(
                   l10n.tr('timer_sleep_interval', {
-                    'minutes': settings.sleepSmartAlarmIntervalMinutes.toString(),
+                    'minutes': settings.sleepSmartAlarmIntervalMinutes
+                        .toString(),
                   }),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),

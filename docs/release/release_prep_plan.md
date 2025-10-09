@@ -13,6 +13,8 @@ This document captures concrete steps and owners required to complete Checklist 
 | Generate or refresh provisioning profiles per flavor (automatic provisioning preferred) | iOS dev | Above | Confirm the proper bundle IDs exist in App Store Connect; regenerate if identifiers changed. |
 | Register physical test devices (at least one per flavor) | QA | Above | Needed only if on-device tests will run before release. |
 | Clear build caches when disk space is tight before running flavor builds | iOS dev | Above | `rm -rf build/` frees >30 GB locally; run again if Xcode reports “No space left on device”. |
+| Capture Team IDs with `xcodebuild -showBuildSettings` and archive them in the shared password manager | iOS dev | Team already mapped in Xcode | Keeps Team IDs accessible for CI automation and future onboarding. |
+| Export provisioning profile UUIDs to `docs/release/ios_signing_matrix.md` | iOS dev | Profiles created | Use Xcode ➜ Preferences ➜ Accounts ➜ Download Manual Profiles, then `profiles export`.
 
 ### Flavor → Bundle/App Mapping
 | Flavor | Bundle Identifier | Firebase Project | Suggested App Store Connect App | Notes |
@@ -29,8 +31,10 @@ This document captures concrete steps and owners required to complete Checklist 
    - Set `Team` to your Apple Developer Team
    - If manual signing is used, point to the correct provisioning profile
 4. Repeat for the `RunnerTests` target if UI tests will be signed.
+5. Run `xcodebuild -scheme Runner -configuration Release -showBuildSettings | rg "DEVELOPMENT_TEAM"` to verify that each flavor resolves to the expected Team ID.
 
 > Tip: `xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner -showBuildSettings | rg "DEVELOPMENT_TEAM"` can be used to verify the configured Team IDs from the command line.
+> Save the command output to `docs/release/ios_signing_matrix.md` whenever the Team assignments change so CI automation can re-use the IDs.
 
 ### Validation Command
 ```bash

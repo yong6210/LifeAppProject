@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:life_app/l10n/app_localizations.dart';
 import 'package:life_app/services/analytics/analytics_service.dart';
@@ -31,6 +32,7 @@ class TimerPermissionService {
   TimerPermissionService._();
 
   static const _channel = MethodChannel('dev.life_app/permissions');
+  static const _focusDndPromptKey = 'focus_dnd_prompt_ack';
 
   static Future<TimerPermissionStatus> queryStatus() async {
     var notificationGranted = true;
@@ -152,9 +154,7 @@ class TimerPermissionService {
     return ensureSleepSoundPermissions(context);
   }
 
-  static Future<bool> ensureSleepSoundPermissions(
-    BuildContext context,
-  ) async {
+  static Future<bool> ensureSleepSoundPermissions(BuildContext context) async {
     final l10n = context.l10n;
     final messenger = ScaffoldMessenger.of(context);
     final status = await Permission.microphone.status;
@@ -176,9 +176,7 @@ class TimerPermissionService {
             ),
             TextButton(
               onPressed: () => Navigator.pop(dialogContext, true),
-              child: Text(
-                localL10n.tr('timer_permission_microphone_action'),
-              ),
+              child: Text(localL10n.tr('timer_permission_microphone_action')),
             ),
           ],
         );
@@ -197,10 +195,7 @@ class TimerPermissionService {
       return false;
     }
     if (requested.isGranted || requested.isLimited) {
-      _showSnack(
-        messenger,
-        l10n.tr('timer_permission_microphone_success'),
-      );
+      _showSnack(messenger, l10n.tr('timer_permission_microphone_success'));
       return true;
     }
 
@@ -221,10 +216,7 @@ class TimerPermissionService {
         return false;
       }
     } else {
-      _showSnack(
-        messenger,
-        l10n.tr('timer_permission_microphone_denied'),
-      );
+      _showSnack(messenger, l10n.tr('timer_permission_microphone_denied'));
     }
     return false;
   }
@@ -243,6 +235,25 @@ class TimerPermissionService {
     } else {
       await openAppSettings();
     }
+  }
+
+  /// Indicates whether we should surface the focus-mode DND educational prompt.
+  static Future<bool> shouldShowFocusDndPrompt() async {
+    if (!Platform.isAndroid) {
+      return false;
+    }
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool(_focusDndPromptKey) == true) {
+      return false;
+    }
+    final status = await queryStatus();
+    return !status.dndAccessGranted;
+  }
+
+  /// Records that the user saw (and acted on) the focus-mode DND prompt.
+  static Future<void> markFocusDndPromptAcknowledged() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_focusDndPromptKey, true);
   }
 
   static Future<bool?> _showDialog(
@@ -274,10 +285,7 @@ class TimerPermissionService {
     );
   }
 
-  static void _showSnack(
-    ScaffoldMessengerState messenger,
-    String message,
-  ) {
+  static void _showSnack(ScaffoldMessengerState messenger, String message) {
     messenger.showSnackBar(SnackBar(content: Text(message)));
   }
 }

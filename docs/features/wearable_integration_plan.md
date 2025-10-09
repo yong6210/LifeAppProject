@@ -7,14 +7,32 @@ Covers Checklist **21. Wearable Integration**.
 - Provide a seamless permission flow that respects privacy and explains value.
 - Ensure QA coverage on Apple Watch and Wear OS devices.
 
+### Permission & Onboarding UX (New)
+- **Entry points**: Sleep dashboard CTA, Account ▸ Data Integrations, onboarding “connect your wearable” step.
+- **Copy guidelines** (localized into `intl_en.arb` / `intl_ko.arb` when implemented):
+  - *Headline*: “연결된 기기로 더 정확한 수면 리포트를 받아보세요” / “Connect your wearable for richer insights”.
+  - *Value bullets*:
+    1. “수면 단계와 HRV 변화를 자동으로 불러옵니다.” / “Automatically import sleep stages and HRV trends.”
+    2. “집중/휴식 루틴에 맞춘 맞춤 추천을 제공합니다.” / “Get routine recommendations tailored to your day.”
+    3. “데이터는 암호화되어 저장되며 언제든 연결 해제할 수 있습니다.” / “Data stays encrypted and you can disconnect anytime.”
+  - *Permission prompt microcopy*:
+    - HealthKit usage string: “수면 분석과 심박 정보를 불러와 맞춤 리포트를 제공합니다.”
+    - Google Fit scope dialog helper text: “Google Fit에서 수면·심박·활동 데이터를 읽어 Life App 리포트를 향상시킵니다.”
+- **Flow**:
+  1. Inline value screen with toggle chips for “Sleep”, “Heart”, “Activity” scopes (all default on).
+  2. Tap “Continue” → native permission dialogs (HealthKit/Google Fit). Provide “Learn more” link to privacy policy section.
+  3. Success state summarises enabled scopes + “Manage permissions” shortcut.
+  4. Failure/denied state offers retry + “Continue without wearable” option.
+- **Accessibility**: Ensure captions and VoiceOver labels explain each scope; minimum contrast ratio 4.5:1. Motion sparingly.
+
 ## 2. Scope Breakdown
 1. **Product & UX**
    - Define use cases (e.g., richer sleep insights, smarter routine recommendations, anomaly alerts).
    - Produce permission/onboarding mockups (value proposition, data usage, opt-out).
 2. **iOS HealthKit Pipeline**
-   - Create HealthKit capability, entitlements, and Info.plist usage descriptions.
-   - Implement queries for `HKCategoryTypeIdentifier.sleepAnalysis`, `HKQuantityTypeIdentifier.heartRate`, `HKQuantityTypeIdentifier.heartRateVariabilitySDNN`.
-   - Set up background delivery or periodic sync with throttling.
+  - Create HealthKit capability, entitlements, and Info.plist usage descriptions.
+  - Implement queries for `HKCategoryTypeIdentifier.sleepAnalysis`, `HKQuantityTypeIdentifier.heartRate`, `HKQuantityTypeIdentifier.heartRateVariabilitySDNN`.
+  - Set up background delivery or periodic sync with throttling.
 3. **Android Google Fit Pipeline**
    - Register OAuth client, configure scopes (sleep, heartrate, activity).
    - Implement `GoogleSignIn` + `Fitness.getHistoryClient` flows.
@@ -31,7 +49,8 @@ Covers Checklist **21. Wearable Integration**.
    - Monitoring alerts if wearable sync fails.
 
 ## 3. Checklist
-- [ ] UX copy and permission screens approved.
+- [x] UX copy and permission screens approved.
+- [x] Create Flutter-side mock integration surface (`WearableRepository`) and insights UI to prepare for real HealthKit/Google Fit wiring.
 - [ ] HealthKit entitlements, queries, and background delivery in place.
 - [ ] Google Fit OAuth client configured and tested.
 - [ ] Data pipeline persists wearable metrics and feeds analytics/recommendations.
@@ -42,8 +61,8 @@ Covers Checklist **21. Wearable Integration**.
 | Phase | Owner | Duration |
 |-------|-------|----------|
 | UX + legal prep | PM/UX | 1 week |
-| HealthKit implementation | iOS dev | 1–2 weeks |
-| Google Fit implementation | Android dev | 1–2 weeks |
+| HealthKit implementation (live data) | iOS dev | 1–2 weeks |
+| Google Fit implementation (live data) | Android dev | 1–2 weeks |
 | Data integration & analytics updates | Backend/Mobile | 1–2 weeks |
 | QA & monitoring setup | QA/DevOps | 1 week |
 

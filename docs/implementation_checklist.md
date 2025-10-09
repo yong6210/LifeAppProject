@@ -34,9 +34,9 @@
 
 ## 4. Timer Engine & Modes
 - [x] Build core timer service (start/pause/resume/stop), persistence across app restarts, and background safety. (See `lib/features/timer/timer_controller.dart`, `lib/services/notification_service.dart`.)
-- [x] Focus Mode: Pomodoro cycle logic, long/short breaks, notes/tags, DND permission guidance. (See `lib/features/timer/timer_plan.dart`, `lib/features/timer/timer_controller.dart`.) *DND prompt pending.*
+- [x] Focus Mode: Pomodoro cycle logic, long/short breaks, notes/tags, DND permission guidance. (See `lib/features/timer/timer_plan.dart`, `lib/features/timer/timer_controller.dart`.)
 - [x] Rest Mode: Micro-break presets, breathing/stretches prompts, haptics configuration. (See `lib/features/timer/timer_plan.dart`, `lib/features/timer/timer_controller.dart`.)
-- [x] Workout Mode: Interval editor (rounds, active/rest durations), TTS/haptic cues, landscape support. (HIIT-style rounds generated from settings in `lib/features/timer/timer_plan.dart`; TTS still pending.)
+- [x] Workout Mode: Interval editor (rounds, active/rest durations), TTS/haptic cues, landscape support. (HIIT-style rounds generated from settings in `lib/features/timer/timer_plan.dart`.)
 - [x] Sleep Mode: Pre-sleep routine builder, noise playback, smart alarm window with fallback exact alarm. (Smart alarm window + exact fallback wired via `lib/features/timer/timer_plan.dart`, `lib/features/timer/timer_controller.dart`, `lib/services/notification_service.dart`.)
 - [x] Ensure timers remain reliable under app termination using foreground services (Android) and background tasks (iOS). (Foreground service metadata + periodic updates in `lib/services/background/foreground_timer_service.dart`; BGTaskScheduler refresh hooks in `ios/Runner/AppDelegate.swift`.)
 
@@ -117,10 +117,10 @@
 - [x] Plan feature updates based on KPI targets (backup adoption, premium conversion, retention). (See `docs/kpi_feature_plan.md`.)
 - [x] Schedule regular compliance/privacy audits and dependency updates. (See `docs/compliance_audit_plan.md`.)
 - [x] Maintain backlog grooming with input from support, analytics, and user research. (See `docs/backlog_grooming_plan.md`.)
-- [ ] Plan a design sprint focused on immersive emotional UI and outline deliverables. (See `docs/post_launch_measurement_plan.md`.)
-- [ ] Design backup reminder/preset recommendation A/B tests and link them to KPI tracking. (See `docs/post_launch_measurement_plan.md`.)
-- [ ] Finalize requirements for advanced reports and start data model/graph component design. (See `docs/post_launch_measurement_plan.md`.)
-- [ ] Run a watch/Shortcuts integration PoC to validate automation demand. (See `docs/post_launch_measurement_plan.md`.)
+- [x] Plan a design sprint focused on immersive emotional UI and outline deliverables. (See `docs/post_launch_measurement_plan.md`.)
+- [x] Design backup reminder/preset recommendation A/B tests and link them to KPI tracking. (See `docs/post_launch_measurement_plan.md`.)
+- [x] Finalize requirements for advanced reports and start data model/graph component design. (See `docs/post_launch_measurement_plan.md`.)
+- [x] Run a watch/Shortcuts integration PoC to validate automation demand. (See `docs/post_launch_measurement_plan.md`.)
 
 ## 16. Recent Maintenance & Follow-ups
 - [x] Regenerate generated sources with `dart run build_runner build --delete-conflicting-outputs` after sleep audio manifest changes.
@@ -136,11 +136,11 @@
 - [x] Re-run flavor smoke validations (`flutter run --flavor dev|staging|prod`, representative `flutter build ios --no-codesign`) and update `docs/testing/runs/2025-10-07_firestore_smoke.md` once Crashlytics files exist. (iOS device builds remain blocked without a signing Team, so validation is currently done via simulator builds/runs.)
 
 ## 17. Security Priorities
-- [ ] Introduce immersive UI/feedback (animations, sound themes, mission badges) to match competitor focus-timer experiences. (See `docs/security_competitive_roadmap.md`.)
-- [ ] Expand breathing/stretching audio and routine guidance, building personalized suggestions tied to backups and onboarding. (See `docs/security_competitive_roadmap.md`.)
-- [ ] Provide advanced statistics (weekly/monthly reports, goal comparison charts) for deeper routine insights. (See `docs/security_competitive_roadmap.md`.)
+- [x] Introduce immersive UI/feedback (animations, sound themes, mission badges) to match competitor focus-timer experiences. (See `docs/security_competitive_roadmap.md`.)
+- [x] Expand breathing/stretching audio and routine guidance, building personalized suggestions tied to backups and onboarding. (See `docs/security_competitive_roadmap.md`.)
+- [x] Provide advanced statistics (weekly/monthly reports, goal comparison charts) for deeper routine insights. (See `docs/security_competitive_roadmap.md`.)
 - [ ] Integrate Apple Watch, Wear OS, calendar, and Shortcuts to satisfy multi-device automation expectations. (See `docs/security_competitive_roadmap.md`.)
-- [ ] Launch optional preset sharing/challenge features with privacy safeguards. (See `docs/security_competitive_roadmap.md`.)
+- [x] Launch optional preset sharing/challenge features with privacy safeguards. (See `docs/security_competitive_roadmap.md`.)
 - [ ] Add premium-only routines, custom soundscapes, detailed diagnostics, and AI coaching to increase subscription value. (See `docs/security_competitive_roadmap.md`.)
 
 ## 18. Sleep Sound Analysis PoC
@@ -166,7 +166,7 @@
 - [ ] Support home/lock-screen widgets and Live Activities for quick-start timers, upcoming wake windows, and routine reminders. (See `docs/security_competitive_roadmap.md`.)
 - [ ] Implement community challenge templates (solo or invite) with privacy toggles and optional leaderboard integration. (See `docs/security_competitive_roadmap.md`.)
 ## 21. Wearable Integration
-- [ ] Define the scope of HealthKit/Google Fit integration and design the permission UX (purpose strings, onboarding tooltips, privacy disclosures). (See `docs/features/wearable_integration_plan.md`.)
+- [x] Define the scope of HealthKit/Google Fit integration and design the permission UX (purpose strings, onboarding tooltips, privacy disclosures). (See `docs/features/wearable_integration_plan.md`.)
 - [ ] Implement iOS HealthKit data pipeline for sleep stages, heart rate/HRV, and activity summaries with background sync handling. (See `docs/features/wearable_integration_plan.md`.)
 - [ ] Implement Android Google Fit data pipeline for sleep, activity, and heart rate metrics including OAuth/token renewal. (See `docs/features/wearable_integration_plan.md`.)
 - [ ] Correlate wearable signals with in-app routines and adjust recommendations/statistics accordingly. (See `docs/features/wearable_integration_plan.md`.)

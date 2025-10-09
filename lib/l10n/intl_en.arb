@@ -346,6 +346,157 @@
   "timer_permission_action_open_settings": "Open settings",
   "timer_permission_dnd_title": "Allow Do Not Disturb access",
   "timer_permission_dnd_message": "Enable access so alerts can ring during Do Not Disturb.",
+  "timer_coach_backup_title": "Protect your progress",
+  "timer_coach_backup_message": "It's been over {days} days since your last backup. Secure your routines now.",
+  "@timer_coach_backup_message": {
+    "placeholders": {
+      "days": {}
+    }
+  },
+  "timer_coach_backup_action": "Open backup",
+  "timer_coach_focus_title": "Time for deep focus",
+  "timer_coach_focus_message": "You're {minutes} minutes away from today's focus goal.",
+  "@timer_coach_focus_message": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "timer_coach_focus_action": "Start focus session",
+  "timer_coach_rest_title": "Reset your body",
+  "timer_coach_rest_message": "Take a {minutes}-minute stretch break to stay energised.",
+  "@timer_coach_rest_message": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "timer_coach_rest_action": "Start stretch",
+  "timer_coach_default_title": "Keep the streak alive",
+  "timer_coach_default_message": "Great work today! Review your stats to plan tomorrow.",
+  "timer_coach_default_action": "View stats",
+  "community_title": "Community Challenges",
+  "community_my_challenges": "My challenges",
+  "community_empty_state": "Invite friends to start your first challenge.",
+  "community_new_challenge": "New challenge",
+  "community_create_title": "Create a challenge",
+  "community_create_description": "Choose a template to stay accountable with friends. Customization coming soon.",
+  "community_create_placeholder_action": "Got it",
+  "community_status_active": "Active",
+  "community_status_upcoming": "Upcoming",
+  "community_status_completed": "Completed",
+  "community_goal_minutes": "Goal {minutes} min/day",
+  "@community_goal_minutes": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "community_days_remaining": "{days} days left",
+  "@community_days_remaining": {
+    "placeholders": {
+      "days": {}
+    }
+  },
+  "community_member_count": "{count} members",
+  "@community_member_count": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "community_focus_average": "Group average focus: {minutes} min",
+  "@community_focus_average": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "community_leave": "Leave",
+  "community_log_focus_action": "Log +15 min",
+  "community_template_focus": "Focus sprint",
+  "community_template_rest": "Rest reset",
+  "community_template_sleep": "Sleep wind-down",
+  "community_balance_title": "Daily quest & rewards",
+  "community_coin_balance": "{coins} coins",
+  "@community_coin_balance": {
+    "placeholders": {
+      "coins": {}
+    }
+  },
+  "community_streak_days": "{days}-day streak",
+  "@community_streak_days": {
+    "placeholders": {
+      "days": {}
+    }
+  },
+  "community_daily_complete": "Complete daily quest",
+  "community_daily_completed": "Quest completed",
+  "community_daily_reward": "+25 coins added to your balance",
+  "community_store_button": "Rewards",
+  "community_coin_label": "coins",
+  "community_buy": "Buy",
+  "community_store_music_pack": "Unlock premium sound pack",
+  "community_store_premium_month": "Redeem Premium month",
+  "community_purchase_music": "Unlocked a premium sound pack!",
+  "community_purchase_premium_month": "Premium month pass granted. Enjoy!",
+  "community_purchase_insufficient": "Not enough coins yet. Keep going!",
+  "wearable_title": "Wearable insights",
+  "wearable_connected": "Connected to {source}",
+  "@wearable_connected": {
+    "placeholders": {
+      "source": {}
+    }
+  },
+  "wearable_disconnected": "No wearable connected",
+  "wearable_never_synced": "No sync attempts yet. Connect your device to get started.",
+  "wearable_last_sync": "Last sync {timestamp}",
+  "@wearable_last_sync": {
+    "placeholders": {
+      "timestamp": {}
+    }
+  },
+  "wearable_sleep_duration": "Sleep duration",
+  "wearable_resting_hr": "Resting heart rate",
+  "wearable_hrv": "HRV score",
+  "wearable_steps": "Steps",
+  "wearable_minutes": "{value} min",
+  "@wearable_minutes": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "wearable_hours_minutes": "{hours} hr {minutes} min",
+  "@wearable_hours_minutes": {
+    "placeholders": {
+      "hours": {},
+      "minutes": {}
+    }
+  },
+  "wearable_bpm": "{value} bpm",
+  "@wearable_bpm": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "wearable_ms": "{value} ms",
+  "@wearable_ms": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "wearable_not_available": "—",
+  "wearable_connect": "Connect wearable",
+  "wearable_refresh": "Refresh data",
+  "wearable_disconnect": "Disconnect",
+  "wearable_connected_toast": "Demo data synced. Replace with HealthKit/Google Fit integration next.",
+  "wearable_disconnect_toast": "Wearable disconnected.",
+  "wearable_disclaimer": "Demo data shown. Replace with live HealthKit or Google Fit metrics when integrations are ready.",
+  "wearable_error": "Unable to load wearable data: {error}",
+  "@wearable_error": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "timer_focus_dnd_prompt_title": "Keep focus sessions uninterrupted",
+  "timer_focus_dnd_prompt_message": "Let Life App override Do Not Disturb so focus timers can notify you when breaks start and finish.",
+  "timer_focus_dnd_prompt_action": "Open settings",
+  "timer_focus_dnd_prompt_later": "Not now",
   "timer_permission_microphone_title": "Allow microphone access",
   "timer_permission_microphone_message": "Sleep sound analysis records a low-resolution audio stream while Sleep mode is active. Grant microphone access to capture ambient noise and summarize your night.",
   "timer_permission_microphone_action": "Allow microphone",
@@ -527,6 +678,15 @@
   "stats_error_trend_title": "Trend unavailable",
   "stats_trend_empty_title": "No data yet",
   "stats_trend_empty_body": "Start a routine to see your trend chart fill in.",
+  "stats_highlight_title": "Weekly highlight",
+  "stats_highlight_body": "{date}: {minutes} min focus — best this week!",
+  "@stats_highlight_body": {
+    "placeholders": {
+      "date": {},
+      "minutes": {}
+    }
+  },
+  "stats_highlight_empty": "Complete more sessions to unlock weekly highlights.",
   "stats_trend_title_daily": "Recent daily trend",
   "stats_trend_title_weekly": "Recent weekly trend",
   "stats_trend_title_monthly": "Recent monthly trend",

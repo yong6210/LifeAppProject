@@ -306,6 +306,157 @@
   "timer_permission_action_open_settings": "설정 열기",
   "timer_permission_dnd_title": "방해 금지 접근 허용",
   "timer_permission_dnd_message": "방해 금지 모드에서도 알림을 받으려면 접근 권한을 허용해주세요.",
+  "timer_coach_backup_title": "기록을 안전하게 지키세요",
+  "timer_coach_backup_message": "마지막 백업 이후 {days}일이 지났어요. 지금 바로 데이터를 보호하세요.",
+  "@timer_coach_backup_message": {
+    "placeholders": {
+      "days": {}
+    }
+  },
+  "timer_coach_backup_action": "백업 열기",
+  "timer_coach_focus_title": "이제 집중할 시간",
+  "timer_coach_focus_message": "오늘 집중 목표까지 {minutes}분 남았습니다.",
+  "@timer_coach_focus_message": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "timer_coach_focus_action": "집중 타이머 시작",
+  "timer_coach_rest_title": "몸을 리셋하세요",
+  "timer_coach_rest_message": "{minutes}분 스트레칭으로 에너지를 채워보세요.",
+  "@timer_coach_rest_message": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "timer_coach_rest_action": "스트레칭 시작",
+  "timer_coach_default_title": "좋은 흐름을 이어가요",
+  "timer_coach_default_message": "오늘도 잘 하고 있어요! 통계를 확인해 내일을 준비해보세요.",
+  "timer_coach_default_action": "통계 보기",
+  "community_title": "커뮤니티 챌린지",
+  "community_my_challenges": "내 챌린지",
+  "community_empty_state": "친구를 초대해 첫 번째 챌린지를 시작해보세요.",
+  "community_new_challenge": "새 챌린지",
+  "community_create_title": "챌린지 만들기",
+  "community_create_description": "템플릿을 선택해 친구와 함께 책임감을 높여보세요. 커스터마이징은 곧 제공됩니다.",
+  "community_create_placeholder_action": "확인",
+  "community_status_active": "진행 중",
+  "community_status_upcoming": "예정",
+  "community_status_completed": "완료",
+  "community_goal_minutes": "목표 {minutes}분/일",
+  "@community_goal_minutes": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "community_days_remaining": "{days}일 남았습니다",
+  "@community_days_remaining": {
+    "placeholders": {
+      "days": {}
+    }
+  },
+  "community_member_count": "참가자 {count}명",
+  "@community_member_count": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "community_focus_average": "그룹 집중 평균 {minutes}분",
+  "@community_focus_average": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "community_leave": "나가기",
+  "community_log_focus_action": "+15분 기록",
+  "community_template_focus": "집중 스프린트",
+  "community_template_rest": "휴식 리셋",
+  "community_template_sleep": "숙면 준비",
+  "community_balance_title": "일일 퀘스트 & 보상",
+  "community_coin_balance": "코인 {coins}개",
+  "@community_coin_balance": {
+    "placeholders": {
+      "coins": {}
+    }
+  },
+  "community_streak_days": "{days}일 출석",
+  "@community_streak_days": {
+    "placeholders": {
+      "days": {}
+    }
+  },
+  "community_daily_complete": "일일 퀘스트 완료",
+  "community_daily_completed": "오늘은 완료했습니다",
+  "community_daily_reward": "코인 25개가 적립되었어요",
+  "community_store_button": "보상",
+  "community_coin_label": "코인",
+  "community_buy": "구매",
+  "community_store_music_pack": "프리미엄 사운드팩 해제",
+  "community_store_premium_month": "프리미엄 1달권 교환",
+  "community_purchase_music": "프리미엄 사운드를 잠금 해제했어요!",
+  "community_purchase_premium_month": "프리미엄 1달권이 지급되었습니다!",
+  "community_purchase_insufficient": "코인이 부족합니다. 조금만 더 모아보세요!",
+  "wearable_title": "웨어러블 연동",
+  "wearable_connected": "{source}와 연결됨",
+  "@wearable_connected": {
+    "placeholders": {
+      "source": {}
+    }
+  },
+  "wearable_disconnected": "연결된 웨어러블이 없습니다",
+  "wearable_never_synced": "아직 동기화가 이루어지지 않았습니다. 기기를 연결해주세요.",
+  "wearable_last_sync": "마지막 동기화 {timestamp}",
+  "@wearable_last_sync": {
+    "placeholders": {
+      "timestamp": {}
+    }
+  },
+  "wearable_sleep_duration": "수면 시간",
+  "wearable_resting_hr": "안정 시 심박수",
+  "wearable_hrv": "HRV 점수",
+  "wearable_steps": "걸음 수",
+  "wearable_minutes": "{value}분",
+  "@wearable_minutes": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "wearable_hours_minutes": "{hours}시간 {minutes}분",
+  "@wearable_hours_minutes": {
+    "placeholders": {
+      "hours": {},
+      "minutes": {}
+    }
+  },
+  "wearable_bpm": "분당 {value}회",
+  "@wearable_bpm": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "wearable_ms": "{value}ms",
+  "@wearable_ms": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "wearable_not_available": "—",
+  "wearable_connect": "웨어러블 연결",
+  "wearable_refresh": "데이터 새로고침",
+  "wearable_disconnect": "연결 해제",
+  "wearable_connected_toast": "데모 데이터가 동기화되었습니다. 실제 HealthKit/Google Fit 연동으로 교체하세요.",
+  "wearable_disconnect_toast": "웨어러블 연결이 해제되었습니다.",
+  "wearable_disclaimer": "현재는 데모 데이터가 표시됩니다. 향후 HealthKit 또는 Google Fit과 실제 연동할 수 있습니다.",
+  "wearable_error": "웨어러블 데이터를 불러오지 못했습니다: {error}",
+  "@wearable_error": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "timer_focus_dnd_prompt_title": "집중 세션을 방해 없이 유지하세요",
+  "timer_focus_dnd_prompt_message": "Life App이 방해 금지 모드를 넘어 휴식 알림을 전달할 수 있도록 권한을 허용해주세요.",
+  "timer_focus_dnd_prompt_action": "설정 열기",
+  "timer_focus_dnd_prompt_later": "나중에",
   "timer_permission_microphone_title": "마이크 접근 허용",
   "timer_permission_microphone_message": "수면 모드가 활성화된 동안 주변 소리를 저해상도로 녹음하여 수면 리포트를 만듭니다. 야간 요약을 위해 마이크 접근을 허용해 주세요.",
   "timer_permission_microphone_action": "마이크 허용",
@@ -487,6 +638,15 @@
   "stats_error_trend_title": "추이 데이터를 가져오지 못했습니다",
   "stats_trend_empty_title": "아직 누적 데이터가 없습니다",
   "stats_trend_empty_body": "타이머를 실행하면 그래프가 채워집니다.",
+  "stats_highlight_title": "이번 주 하이라이트",
+  "stats_highlight_body": "{date} · 집중 {minutes}분으로 최고 기록을 달성했습니다!",
+  "@stats_highlight_body": {
+    "placeholders": {
+      "date": {},
+      "minutes": {}
+    }
+  },
+  "stats_highlight_empty": "세션을 더 기록하면 주간 하이라이트가 표시됩니다.",
   "stats_trend_title_daily": "최근 일간 추이",
   "stats_trend_title_weekly": "최근 주간 추이",
   "stats_trend_title_monthly": "최근 월간 추이",

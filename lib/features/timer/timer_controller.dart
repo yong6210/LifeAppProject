@@ -19,6 +19,7 @@ import 'package:life_app/services/analytics/analytics_service.dart';
 import 'package:life_app/providers/accessibility_providers.dart';
 import 'package:life_app/services/audio/sleep_sound_catalog.dart';
 import 'package:life_app/services/audio/sleep_sound_analyzer.dart';
+import 'package:life_app/services/audio/workout_cue_service.dart';
 import 'package:life_app/providers/sleep_analysis_providers.dart';
 import 'package:life_app/services/audio/timer_audio_service.dart';
 import 'package:life_app/providers/diagnostics_providers.dart';
@@ -33,6 +34,7 @@ class TimerController extends Notifier<TimerState> {
   late TimerNotificationBridge _notifications;
   late TimerForegroundBridge _foreground;
   late TimerBackgroundBridge _background;
+  late WorkoutCueService _workoutCues;
   late TimerDependencies _deps;
   bool _allowHaptics = true;
   SharedPreferences? _prefs;
@@ -52,6 +54,7 @@ class TimerController extends Notifier<TimerState> {
     _notifications = _deps.notifications;
     _foreground = _deps.foreground;
     _background = _deps.background;
+    _workoutCues = _deps.workoutCues;
     _allowHaptics = !ref.read(reducedMotionProvider);
     ref.listen<bool>(reducedMotionProvider, (previous, next) {
       _allowHaptics = !next;
@@ -77,6 +80,7 @@ class TimerController extends Notifier<TimerState> {
       await _cancelScheduledNotifications();
       await _foreground.stop();
       await _disposeSleepSoundAnalyzer();
+      await _workoutCues.dispose();
     });
 
     return state;
@@ -360,6 +364,9 @@ class TimerController extends Notifier<TimerState> {
     await _persistState();
     await _background.scheduleGuard();
     await _startSleepSoundCaptureIfNeeded(state.currentSegment);
+    if (state.mode == 'workout') {
+      await _maybeSpeakWorkoutCue(state.currentSegment, l10n);
+    }
 
     final sessionStartedAt = state.sessionStartedAt ?? now;
     final elapsed = now.difference(sessionStartedAt).inSeconds;
@@ -490,6 +497,9 @@ class TimerController extends Notifier<TimerState> {
     });
 
     if (state.isLastSegment) {
+      if (state.mode == 'workout') {
+        await _workoutCues.speakComplete(l10n: l10n);
+      }
       await _notifications.showDone(mode: state.mode);
       await _audioService.setEnabled(false);
       final startedAt = state.sessionStartedAt;
@@ -530,6 +540,10 @@ class TimerController extends Notifier<TimerState> {
       await _audioService.setEnabled(false);
     }
 
+    if (state.mode == 'workout') {
+      await _maybeSpeakWorkoutCue(nextSegment, l10n);
+    }
+
     if (state.isRunning) {
       _segmentEndAt = DateTime.now().add(
         Duration(seconds: state.segmentRemainingSeconds),
@@ -563,6 +577,52 @@ class TimerController extends Notifier<TimerState> {
     await _persistState();
   }
 
+  Future<void> _maybeSpeakWorkoutCue(
+    TimerSegment segment,
+    AppLocalizations l10n,
+  ) async {
+    if (state.mode != 'workout') {
+      return;
+    }
+    final round = _workoutRoundFromSegment(segment);
+    if (round == null) {
+      return;
+    }
+    final totalRounds = _workoutRoundTotal();
+    if (totalRounds == 0) {
+      return;
+    }
+    if (segment.type == 'workout') {
+      await _workoutCues.speakRoundStart(
+        l10n: l10n,
+        round: round,
+        totalRounds: totalRounds,
+      );
+    } else if (segment.type == 'rest') {
+      await _workoutCues.speakRest(
+        l10n: l10n,
+        seconds: segment.duration.inSeconds,
+      );
+    }
+  }
+
+  int? _workoutRoundFromSegment(TimerSegment segment) {
+    if (!segment.id.startsWith('workout_')) {
+      return null;
+    }
+    final parts = segment.id.split('_');
+    if (parts.length < 3) {
+      return null;
+    }
+    return int.tryParse(parts.last);
+  }
+
+  int _workoutRoundTotal() {
+    return state.segments
+        .where((segment) => segment.id.startsWith('workout_active_'))
+        .length;
+  }
+
   Future<void> _startSleepSoundCaptureIfNeeded(TimerSegment segment) async {
     if (segment.type != 'sleep' || !segment.recordSession) {
       return;
@@ -571,8 +631,7 @@ class TimerController extends Notifier<TimerState> {
     final started = await _sleepSoundAnalyzer!.start();
     if (started) {
       _sleepCaptureActive = true;
-      if (Platform.isAndroid &&
-          ref.read(sleepSoundFeatureEnabledProvider)) {
+      if (Platform.isAndroid && ref.read(sleepSoundFeatureEnabledProvider)) {
         await _foreground.setSleepSoundActive(
           active: true,
           startedAt: DateTime.now(),

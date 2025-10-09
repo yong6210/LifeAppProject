@@ -22,6 +22,13 @@ class SummaryTotals {
       focusMinutes + restMinutes + workoutMinutes + sleepMinutes;
 }
 
+class WeeklyHighlight {
+  WeeklyHighlight({required this.date, required this.focusMinutes});
+
+  final DateTime date;
+  final int focusMinutes;
+}
+
 Future<DailySummaryRepository> _summaryRepo(Ref ref) async {
   final isar = await ref.watch(isarProvider.future);
   return DailySummaryRepository(isar);
@@ -155,3 +162,29 @@ final statsTrendProvider =
 
       return buckets;
     });
+
+final weeklyHighlightProvider = FutureProvider<WeeklyHighlight?>((ref) async {
+  final repo = await _summaryRepo(ref);
+  final settings = await ref.watch(settingsFutureProvider.future);
+  final todayStart = todayRange().start;
+  final start = todayStart.subtract(const Duration(days: 6));
+  final endExclusive = todayStart.add(const Duration(days: 1));
+  final summaries = await repo.fetchBetween(start, endExclusive);
+  final deviceSummaries = summaries.where(
+    (summary) => summary.deviceId == settings.deviceId,
+  );
+  if (deviceSummaries.isEmpty) {
+    return null;
+  }
+  DailySummaryLocal? best;
+  for (final summary in deviceSummaries) {
+    if (summary.focusMinutes <= 0) continue;
+    if (best == null || summary.focusMinutes > best!.focusMinutes) {
+      best = summary;
+    }
+  }
+  if (best == null) {
+    return null;
+  }
+  return WeeklyHighlight(date: best!.date, focusMinutes: best!.focusMinutes);
+});
