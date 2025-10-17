@@ -78,6 +78,52 @@ class WearableSyncService {
     return sum / values.length;
   }
 
+  /// Returns raw heart-rate samples for detailed analytics calculations.
+  Future<List<HealthDataPoint>> fetchHeartRateSamples(
+    DateTime start,
+    DateTime end,
+  ) async {
+    final points = await _health.getHealthDataFromTypes(
+      startTime: start,
+      endTime: end,
+      types: const [HealthDataType.HEART_RATE],
+    );
+    return _health.removeDuplicates(points);
+  }
+
+  /// Returns heart-rate variability samples (SDNN) for the provided window.
+  Future<List<HealthDataPoint>> fetchHrvSamples(
+    DateTime start,
+    DateTime end,
+  ) async {
+    final points = await _health.getHealthDataFromTypes(
+      startTime: start,
+      endTime: end,
+      types: const [HealthDataType.HEART_RATE_VARIABILITY_SDNN],
+    );
+    return _health.removeDuplicates(points);
+  }
+
+  /// Returns total step count between [start] and [end], if available.
+  Future<int?> fetchStepCount(DateTime start, DateTime end) async {
+    final points = await _health.getHealthDataFromTypes(
+      startTime: start,
+      endTime: end,
+      types: const [HealthDataType.STEPS],
+    );
+    if (points.isEmpty) {
+      return null;
+    }
+    final total = points
+        .map((point) => point.value)
+        .whereType<NumericHealthValue>()
+        .fold<double>(0, (sum, value) => sum + value.numericValue);
+    if (total == 0) {
+      return null;
+    }
+    return total.round();
+  }
+
   /// Revokes authorization where supported (Health Connect only).
   Future<void> revokePermissions() async {
     await _health.revokePermissions();

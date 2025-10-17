@@ -172,3 +172,48 @@
 - [ ] Correlate wearable signals with in-app routines and adjust recommendations/statistics accordingly. (See `docs/features/wearable_integration_plan.md`.)
 - [ ] Update privacy/security documentation (data retention, opt-out) and prepare App Store/Play Store review notes for wearable data usage. (See `docs/features/wearable_integration_plan.md`.)
 - [ ] Run QA with real devices (Apple Watch, Wear OS) and add regression coverage for wearable sync flows. (See `docs/features/wearable_integration_plan.md`.)
+
+------
+
+### Stage 0 — Prelaunch / MVP 준비 (안드로이드 단독)
+- [ ] Google Play 내부 테스트 트랙 준비: keystore/버전 코드/스토어 메타데이터 세팅. (See `docs/qa/android_internal_test_checklist.md`.)
+- [ ] 저널 30일 보존 정책, 텍스트 월간 리캡, 무료 플랜 범위 확정. (See `docs/features/journal_calendar.md`.)
+- [ ] Workout 타이머 기반 라이트 루틴(지도 없이) + 기본 사운드 4종 제공. (See `docs/features/premium_expansion_plan.md`.)
+- [ ] 라이프 버디 기본 애니메이션/커멘트 룰 구현, 무료 30일 TTL 적용. (See `docs/features/journal_calendar_implementation_plan.md`.)
+- [ ] Stage 0 QA 시나리오(타이머 4모드, 백업/복원, 페이월 가드) 완료 기록. (See `docs/qa_plan.md`.)
+- **매출 목표:** 출시 전이므로 0원 기준. 안정적 기능 완성 + 피드백 루프 확보가 핵심.
+
+### Stage 1 — Early Growth (MAU 2,000 / 유료 50명 / 월 순매출 ≥ 20만 원)
+- [ ] Workout Navigator MVP: GPS 거리 측정, 고정 코스 + 강도 선택, 지도 API는 정적/캐시 사용. (See `docs/features/premium_expansion_plan.md`.)
+- [ ] 무료 텍스트 월간 리캡 개선 + 프리미엄 그래프형 월간 리캡 도입. (See `docs/features/journal_calendar.md`.)
+- [ ] 라이프 버디 코멘트 시스템(무료 30일 / 프리미엄 1년 학습)과 저널 캘린더 UI 완성. (See `docs/features/journal_calendar_implementation_plan.md`.)
+- [ ] 프리미엄 체험 A/B(7일 vs 14일) 및 첫 달 할인 실험 세팅. (See `docs/features/premium_expansion_plan.md`.)
+- [ ] 콘텐츠 파이프라인 정착: 집중/수면/운동 루틴 +4, 사운드 +6 제작. (See `docs/features/content_roadmap.md`.)
+- **전환 조건:** MAU 2k / 순매출 20만 원 달성 시 Apple Developer 가입 및 iOS 준비 착수.
+
+### Stage 2 — Scaling (MAU 5,000 / 유료 150명 / 월 순매출 ≥ 70만 원)
+- [ ] iOS TestFlight → App Store 출시, 양 플랫폼 운영 플로우 정비. (See `docs/features/execution_roadmap.md`.)
+- [ ] Workout Navigator 고도화: 목적지 기반 경로 미리보기, 간단 음성 코칭. (See `docs/features/premium_expansion_plan.md`.)
+- [ ] 프리미엄 연간 리캡 + AI TTL 1년 적용, 연간 하이라이트 카드 제공. (See `docs/features/journal_calendar.md`.)
+- [ ] 캐릭터 스킨/앱 아이콘 커스터마이즈 분기별 업데이트. (See `docs/features/premium_expansion_plan.md`.)
+- [ ] 콘텐츠 번역(영어) 테스트 및 CDN/TTL 클린업 자동화. (See `docs/features/content_roadmap.md`.)
+- **전환 조건:** 월 순매출 70만 원 이상, 플랫폼 운영 안정화.
+
+### Stage 3 — Expansion (MAU 10,000 / 유료 300명 / 월 순매출 ≥ 140만 원)
+- [ ] 실시간 GPS 내비 + 웨어러블(HealthKit/Google Fit) 심박 기반 코칭 제공. (See `docs/features/premium_expansion_plan.md`, `docs/features/wearable_integration_plan.md`.)
+- [ ] 저널 ML 추천·감정 변화 리포트, 공유용 리캡 카드/라이브 세션 준비. (See `docs/features/journal_calendar.md`.)
+- [ ] 명상 팟캐스트/시즌 캠페인, 라이프 버디 스킨 월 1회 업데이트. (See `docs/features/content_roadmap.md`.)
+- [ ] 팀 계정/그룹 리포트 PoC, B2B 가격 정책 실험. (See `docs/features/execution_roadmap.md`.)
+- **전환 조건:** 월 순매출 140만 원 이상, 연간 구독 비중 30% 이상, churn ≤ 25%.
+
+### Stage 4 — Long-term Growth (MAU 20,000+ / B2B 진출)
+- [ ] 협업 루틴·파티 목표 시스템, 커뮤니티 챌린지 도입. (See `docs/features/execution_roadmap.md`.)
+- [ ] 기업/교육용 패키지: 관리자 대시보드, 커스텀 콘텐츠. (See `docs/features/execution_roadmap.md`.)
+- [ ] 3D 라이프 버디(glTF), CDN 온디맨드 다운로드, 글로벌 가격 정책. (See `docs/features/premium_expansion_plan.md`.)
+- [ ] 인플루언서/파트너십 마케팅, 해외 현지화 확장. (See `docs/features/life_app_market_positioning.md`.)
+- **성과 지표:** B2B 계약 ≥ 3건, 프리미엄 ARPU 상승, 신규 시장 진입 지표 확보.
+
+### 운영/비용 참고
+- Stage 0~1: 월 고정비 20만 원 내외(안드로이드 단독, 무료 티어 위주).
+- Stage 2: iOS, 지도 API, 콘텐츠 확장으로 월 60~80만 원 예상 → 예산 모니터링 필수.
+- Stage 3 이후: Firebase/지도 사용량 증가 가능 → TTL/캐싱 정책 및 유료 플랜 최적화 필요.

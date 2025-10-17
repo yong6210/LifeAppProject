@@ -14,6 +14,7 @@ _Last updated: 2025-10-03_
 - Onboarding flow variants (default vs persona-first via remote config stub).
 - Account page: premium gate states, backup preview for free users, account deletion confirmation.
 - Paywall: missing key placeholder, package list rendering, analytics event smoke.
+- Timer page: workout navigator entry (app bar & coach CTA) drives navigation + analytics guardrails.
 
 ## 2. Manual Test Matrix (pre-release)
 
@@ -22,6 +23,8 @@ _Last updated: 2025-10-03_
 | Offline start → timer session → background resume | Pixel 7 (Android 14), iPhone 14 (iOS 17) | Validate foreground service + iOS BG task scheduling. |
 | Account deletion flow | Same as above | Ensure local data cleared, Firestore docs deleted (verify via console), user signed out. |
 | Backup/restore across platforms | Pixel 7 → iPhone 14 | Export encrypted backup to Drive, import on iOS via Drive app. |
+| Lifestyle onboarding presets | Pixel 7, iPhone 14 | Select 0/1/2 lifestyles, confirm preview sheet, presets applied, SharedPreferences entries created. |
+| Workout Navigator access | Pixel 7, iPhone 14 | AppBar/coach entry → navigator page, verify GPS prompts, offline fallback instructions, analytics event logged. |
 | Subscription purchase & gate | iPhone 14 | Use sandbox RevenueCat keys, verify entitlement caching when offline. |
 | Remote-config onboarding variant | Pixel 7 (dev build) | Override RC doc to persona_first, confirm order update. |
 

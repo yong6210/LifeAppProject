@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -66,8 +67,7 @@ class NotificationService {
     final androidDetails = AndroidNotificationDetails(
       'timer_done_channel',
       l10n.tr('notification_timer_channel_name'),
-      channelDescription:
-          l10n.tr('notification_timer_channel_description'),
+      channelDescription: l10n.tr('notification_timer_channel_description'),
       importance: Importance.max,
       priority: Priority.high,
     );
@@ -94,8 +94,7 @@ class NotificationService {
     final androidDetails = AndroidNotificationDetails(
       'backup_reminder_channel',
       l10n.tr('notification_backup_channel_name'),
-      channelDescription:
-          l10n.tr('notification_backup_channel_description'),
+      channelDescription: l10n.tr('notification_backup_channel_description'),
       importance: Importance.defaultImportance,
       priority: Priority.defaultPriority,
     );
@@ -106,12 +105,7 @@ class NotificationService {
       macOS: darwinDetails,
     );
 
-    await _plugin.show(
-      1201,
-      title,
-      body,
-      details,
-    );
+    await _plugin.show(1201, title, body, details);
   }
 
   static Future<void> scheduleTimerEnd({
@@ -128,8 +122,9 @@ class NotificationService {
       android: AndroidNotificationDetails(
         'timer_schedule_channel',
         l10n.tr('notification_timer_schedule_channel_name'),
-        channelDescription:
-            l10n.tr('notification_timer_schedule_channel_description'),
+        channelDescription: l10n.tr(
+          'notification_timer_schedule_channel_description',
+        ),
         importance: Importance.max,
         priority: Priority.high,
       ),
@@ -201,8 +196,7 @@ class NotificationService {
         android: AndroidNotificationDetails(
           'sleep_smart_alarm_channel',
           l10n.tr('notification_sleep_channel_name'),
-          channelDescription:
-              l10n.tr('notification_sleep_channel_description'),
+          channelDescription: l10n.tr('notification_sleep_channel_description'),
           importance: isFinal ? Importance.max : Importance.defaultImportance,
           priority: isFinal ? Priority.high : Priority.defaultPriority,
           fullScreenIntent: isFinal,
@@ -244,6 +238,58 @@ class NotificationService {
     for (var i = 0; i < count; i++) {
       await _plugin.cancel(baseId + i);
     }
+  }
+
+  static const int _journalReminderId = 4301;
+
+  static Future<void> scheduleJournalReminder({
+    required TimeOfDay time,
+    required String title,
+    required String body,
+  }) async {
+    await init();
+    await _ensureTimeZoneInitialized();
+
+    final now = DateTime.now();
+    var scheduled = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      time.hour,
+      time.minute,
+    );
+    if (!scheduled.isAfter(now)) {
+      scheduled = scheduled.add(const Duration(days: 1));
+    }
+
+    final tzDateTime = tz.TZDateTime.from(scheduled, tz.local);
+    final details = NotificationDetails(
+      android: AndroidNotificationDetails(
+        'journal_reminder_channel',
+        'Journal Reminder',
+        channelDescription: 'Daily reminder to write your journal.',
+        importance: Importance.defaultImportance,
+        priority: Priority.defaultPriority,
+        category: AndroidNotificationCategory.reminder,
+      ),
+      iOS: const DarwinNotificationDetails(),
+      macOS: const DarwinNotificationDetails(),
+    );
+
+    await _plugin.zonedSchedule(
+      _journalReminderId,
+      title,
+      body,
+      tzDateTime,
+      details,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      matchDateTimeComponents: DateTimeComponents.time,
+    );
+  }
+
+  static Future<void> cancelJournalReminder() async {
+    await init();
+    await _plugin.cancel(_journalReminderId);
   }
 }
 

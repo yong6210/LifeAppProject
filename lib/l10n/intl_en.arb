@@ -370,6 +370,15 @@
     }
   },
   "timer_coach_rest_action": "Start stretch",
+  "timer_coach_workout_title": "Dial in your workout",
+  "timer_coach_workout_message": "You still have {minutes} min left on today's movement goal. Use Workout Navigator to choose a route.",
+  "@timer_coach_workout_message": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "timer_coach_workout_action": "Open Workout Navigator",
+  "timer_workout_navigator_button": "Open Workout Navigator",
   "timer_coach_default_title": "Keep the streak alive",
   "timer_coach_default_message": "Great work today! Review your stats to plan tomorrow.",
   "timer_coach_default_action": "View stats",

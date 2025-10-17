@@ -4,6 +4,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
+import 'package:meta/meta.dart';
 
 /// Lightweight consent container for analytics and diagnostics collection.
 class AnalyticsConsent {
@@ -50,6 +51,20 @@ class AnalyticsService {
 
   /// Queued events logged before Firebase initialises successfully.
   static final List<_PendingEvent> _pendingEvents = <_PendingEvent>[];
+  static void Function(String, Map<String, Object?> parameters)? _testObserver;
+
+  /// Allows tests to observe analytics traffic without touching Firebase.
+  @visibleForTesting
+  static void setTestObserver(
+    void Function(String, Map<String, Object?> parameters)? observer,
+  ) {
+    _testObserver = observer;
+  }
+
+  @visibleForTesting
+  static void setTestConsent(AnalyticsConsent consent) {
+    _consent = consent;
+  }
 
   /// Initializes Firebase Analytics/Crashlytics hooks. Call once on app start.
   static Future<void> init({AnalyticsConsent? initialConsent}) async {
@@ -126,6 +141,7 @@ class AnalyticsService {
     String name, [
     Map<String, Object?> parameters = const <String, Object?>{},
   ]) async {
+    _testObserver?.call(name, parameters);
     if (!_consent.analytics || name.trim().isEmpty) {
       return;
     }

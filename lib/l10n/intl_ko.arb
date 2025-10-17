@@ -330,6 +330,15 @@
     }
   },
   "timer_coach_rest_action": "스트레칭 시작",
+  "timer_coach_workout_title": "운동 루틴을 맞춰볼까요",
+  "timer_coach_workout_message": "오늘 목표까지 {minutes}분 남았어요. 워크아웃 내비게이터에서 코스를 골라보세요.",
+  "@timer_coach_workout_message": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "timer_coach_workout_action": "워크아웃 내비게이터 열기",
+  "timer_workout_navigator_button": "워크아웃 내비게이터 열기",
   "timer_coach_default_title": "좋은 흐름을 이어가요",
   "timer_coach_default_message": "오늘도 잘 하고 있어요! 통계를 확인해 내일을 준비해보세요.",
   "timer_coach_default_action": "통계 보기",

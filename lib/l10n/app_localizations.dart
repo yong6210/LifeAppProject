@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:meta/meta.dart';
 
 class AppLocalizations {
   AppLocalizations._(
@@ -30,9 +31,7 @@ class AppLocalizations {
 
   static Future<AppLocalizations> load(Locale locale) async {
     final fallback = await _loadLocale(const Locale('en'));
-    final overlays = await Future.wait(
-      _parentLocales(locale).map(_loadLocale),
-    );
+    final overlays = await Future.wait(_parentLocales(locale).map(_loadLocale));
     final combined = Map<String, String>.from(fallback);
     for (final overlay in overlays) {
       combined.addAll(overlay);
@@ -44,9 +43,11 @@ class AppLocalizations {
     final code = locale.languageCode;
     final script = locale.scriptCode;
     final country = locale.countryCode;
-    final name = [code, script, country]
-        .where((part) => part != null && part.isNotEmpty)
-        .join('_');
+    final name = [
+      code,
+      script,
+      country,
+    ].where((part) => part != null && part.isNotEmpty).join('_');
     final candidates = <String>{
       if (name.isNotEmpty) 'lib/l10n/intl_$name.arb',
       if (script != null && script.isNotEmpty)
@@ -110,6 +111,18 @@ class AppLocalizations {
     if (locale.languageCode != 'en') {
       yield Locale(locale.languageCode);
     }
+  }
+
+  @visibleForTesting
+  static AppLocalizations testing({
+    Locale locale = const Locale('en'),
+    Map<String, String> translations = const {},
+    Map<String, String>? fallback,
+  }) {
+    final fallbackStrings = Map<String, String>.from(fallback ?? translations);
+    final localized = Map<String, String>.from(fallbackStrings)
+      ..addAll(translations);
+    return AppLocalizations._(locale, localized, fallbackStrings);
   }
 
   String tr(String key, [Map<String, String>? params]) {

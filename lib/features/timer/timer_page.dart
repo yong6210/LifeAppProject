@@ -18,6 +18,7 @@ import 'package:life_app/services/analytics/analytics_service.dart';
 import 'package:life_app/features/backup/backup_page.dart';
 import 'package:life_app/features/community/community_challenges_page.dart';
 import 'package:life_app/features/stats/stats_page.dart';
+import 'package:life_app/features/workout/workout_navigator_page.dart';
 import 'package:life_app/features/subscription/paywall_page.dart';
 import 'package:life_app/features/wearable/wearable_insights_page.dart';
 import 'package:life_app/l10n/app_localizations.dart';
@@ -32,7 +33,14 @@ const _sleepPresetOrder = <String>[
   'fireplace_cozy',
 ];
 
-enum CoachAction { backup, startFocus, startRest, viewStats, none }
+enum CoachAction {
+  backup,
+  startFocus,
+  startRest,
+  openWorkoutNavigator,
+  viewStats,
+  none,
+}
 
 class CoachNudge {
   CoachNudge({
@@ -146,17 +154,22 @@ class TimerPage extends ConsumerStatefulWidget {
 class _TimerPageState extends ConsumerState<TimerPage> {
   bool _initialModeApplied = false;
   bool _showingFocusDndDialog = false;
-  late final TimerAnnouncer _announcer = ref.read(timerAnnouncerProvider);
+  TimerAnnouncer? _announcer;
+  ProviderSubscription<TimerState>? _focusSubscription;
 
   @override
   void initState() {
     super.initState();
-    ref.listen<TimerState>(timerControllerProvider, (previous, next) {
-      final previousMode = previous?.mode ?? '';
-      if (next.mode == 'focus' && previousMode != 'focus') {
-        _handleFocusModeEntered();
-      }
-    });
+    _announcer = ref.read(timerAnnouncerProvider);
+    _focusSubscription = ref.listenManual<TimerState>(
+      timerControllerProvider,
+      (previous, next) {
+        final previousMode = previous?.mode ?? '';
+        if (next.mode == 'focus' && previousMode != 'focus') {
+          _handleFocusModeEntered();
+        }
+      },
+    );
     Future.microtask(() {
       if (!mounted) return;
       final current = ref.read(timerControllerProvider);
@@ -168,7 +181,8 @@ class _TimerPageState extends ConsumerState<TimerPage> {
 
   @override
   void dispose() {
-    _announcer.reset();
+    _focusSubscription?.close();
+    _announcer?.reset();
     super.dispose();
   }
 
@@ -308,6 +322,20 @@ class _TimerPageState extends ConsumerState<TimerPage> {
           actionLabel: l10n.tr('timer_coach_rest_action'),
         );
       }
+
+      final workoutGoal = settings.workoutMinutes.clamp(10, 120);
+      if (summary.workout < workoutGoal) {
+        final remaining = (workoutGoal - summary.workout).clamp(5, 90);
+        return CoachNudge(
+          title: l10n.tr('timer_coach_workout_title'),
+          message: l10n.tr('timer_coach_workout_message', {
+            'minutes': '$remaining',
+          }),
+          icon: Icons.directions_run,
+          action: CoachAction.openWorkoutNavigator,
+          actionLabel: l10n.tr('timer_coach_workout_action'),
+        );
+      }
     }
 
     return CoachNudge(
@@ -343,6 +371,13 @@ class _TimerPageState extends ConsumerState<TimerPage> {
         if (!current.isRunning) {
           await controller.toggleStartStop();
         }
+        break;
+      case CoachAction.openWorkoutNavigator:
+        AnalyticsService.logEvent('workout_navigator_open', {
+          'source': 'coach_card',
+        });
+        if (!mounted) return;
+        await Navigator.push<void>(context, WorkoutNavigatorPage.route());
         break;
       case CoachAction.viewStats:
         if (!mounted) return;
@@ -495,6 +530,19 @@ class _TimerPageState extends ConsumerState<TimerPage> {
                   MaterialPageRoute<void>(
                     builder: (_) => const WearableInsightsPage(),
                   ),
+                );
+              },
+            ),
+            IconButton(
+              tooltip: l10n.tr('timer_workout_navigator_button'),
+              icon: const Icon(Icons.route_outlined),
+              onPressed: () async {
+                AnalyticsService.logEvent('workout_navigator_open', {
+                  'source': 'app_bar',
+                });
+                await Navigator.push<void>(
+                  context,
+                  WorkoutNavigatorPage.route(),
                 );
               },
             ),

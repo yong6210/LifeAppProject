@@ -37,4 +37,26 @@ class JournalEntry extends Equatable {
 
   @override
   List<Object?> get props => [id, date, mood, sleepHours, energyLevel, notes];
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'date': date.toIso8601String(),
+      'mood': mood,
+      'sleepHours': sleepHours,
+      'energyLevel': energyLevel,
+      'notes': notes,
+    };
+  }
+
+  factory JournalEntry.fromJson(Map<String, dynamic> json) {
+    return JournalEntry(
+      id: json['id'] as String? ?? '',
+      date: DateTime.tryParse(json['date'] as String? ?? '') ?? DateTime.now(),
+      mood: json['mood'] as String? ?? '',
+      sleepHours: (json['sleepHours'] as num?)?.toDouble() ?? 0,
+      energyLevel: json['energyLevel'] as String?,
+      notes: json['notes'] as String?,
+    );
+  }
 }
