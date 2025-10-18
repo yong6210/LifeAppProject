@@ -176,11 +176,11 @@
 ------
 
 ### Stage 0 — Prelaunch / MVP 준비 (안드로이드 단독)
-- [ ] Google Play 내부 테스트 트랙 준비: keystore/버전 코드/스토어 메타데이터 세팅. (See `docs/qa/android_internal_test_checklist.md`.)
+- [ ] Google Play 내부 테스트 트랙 준비: keystore/버전 코드/스토어 메타데이터 세팅. (See `docs/stage0_play_console_prep.md`, `docs/qa/android_internal_test_checklist.md`.)
 - [ ] 저널 30일 보존 정책, 텍스트 월간 리캡, 무료 플랜 범위 확정. (See `docs/features/journal_calendar.md`.)
 - [ ] Workout 타이머 기반 라이트 루틴(지도 없이) + 기본 사운드 4종 제공. (See `docs/features/premium_expansion_plan.md`.)
 - [ ] 라이프 버디 기본 애니메이션/커멘트 룰 구현, 무료 30일 TTL 적용. (See `docs/features/journal_calendar_implementation_plan.md`.)
-- [ ] Stage 0 QA 시나리오(타이머 4모드, 백업/복원, 페이월 가드) 완료 기록. (See `docs/qa_plan.md`.)
+- [ ] Stage 0 QA 시나리오(타이머 주요 모드 – 집중/운동/수면, 백업/복원, 페이월 가드) 완료 기록. (See `docs/qa_plan.md`.)
 - **매출 목표:** 출시 전이므로 0원 기준. 안정적 기능 완성 + 피드백 루프 확보가 핵심.
 
 ### Stage 1 — Early Growth (MAU 2,000 / 유료 50명 / 월 순매출 ≥ 20만 원)
@@ -202,7 +202,7 @@
 ### Stage 3 — Expansion (MAU 10,000 / 유료 300명 / 월 순매출 ≥ 140만 원)
 - [ ] 실시간 GPS 내비 + 웨어러블(HealthKit/Google Fit) 심박 기반 코칭 제공. (See `docs/features/premium_expansion_plan.md`, `docs/features/wearable_integration_plan.md`.)
 - [ ] 저널 ML 추천·감정 변화 리포트, 공유용 리캡 카드/라이브 세션 준비. (See `docs/features/journal_calendar.md`.)
-- [ ] 명상 팟캐스트/시즌 캠페인, 라이프 버디 스킨 월 1회 업데이트. (See `docs/features/content_roadmap.md`.)
+- [ ] 시즌 캠페인 진행 및 라이프 버디 스킨 월 1회 업데이트. (See `docs/features/content_roadmap.md`.)
 - [ ] 팀 계정/그룹 리포트 PoC, B2B 가격 정책 실험. (See `docs/features/execution_roadmap.md`.)
 - **전환 조건:** 월 순매출 140만 원 이상, 연간 구독 비중 30% 이상, churn ≤ 25%.
 

@@ -20,6 +20,10 @@ _Last updated: 2025-10-03_
 
 | Scenario | Devices | Notes |
 | --- | --- | --- |
+| Stage 0 sanity: 집중/운동/수면 모드 | Pixel 7 (Android 14) | Start/stop/skip/리셋 후 요약 카드/사운드 동작, Stage 0 무료 리캡 안내 확인. |
+| Stage 0 – 저널 30일 TTL | Pixel 7 | 31일 데이터 mock → 앱 실행 시 제거 확인, 월간 리캡 텍스트 정상 출력. |
+| Stage 0 – 백업/복원 | Pixel 7 | 암호화 백업 생성 → 파일 복원 → 30일 초과 데이터 미복원 확인. |
+| Stage 0 – 페이월 가드 | Pixel 7 | 프리미엄 CTA → 결제 비활성 알림, 복귀시 상태 유지. |
 | Offline start → timer session → background resume | Pixel 7 (Android 14), iPhone 14 (iOS 17) | Validate foreground service + iOS BG task scheduling. |
 | Account deletion flow | Same as above | Ensure local data cleared, Firestore docs deleted (verify via console), user signed out. |
 | Backup/restore across platforms | Pixel 7 → iPhone 14 | Export encrypted backup to Drive, import on iOS via Drive app. |
