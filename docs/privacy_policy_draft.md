@@ -20,11 +20,13 @@ Life App is an offline-first wellbeing timer. We minimise cloud storage to essen
 - **Encrypted full backups** – created only when the user exports them to Google Drive or iCloud; the file remains under the user’s cloud account.
 - **Crash reports & analytics** – collected only if the user enables telemetry in-app. Providers: Firebase Analytics and Crashlytics.
 - **Revenue events** – managed by RevenueCat to validate App Store / Play receipts. We do not store raw payment details.
+- **Location data (outdoor workouts)** – collected at 30분 간격으로 야외 운동 세션이 진행되는 동안에만 거리·페이스 계산을 위해 사용하며, 세션이 종료되면 즉시 수집을 중단합니다.
 
 ## 4. Purposes of Processing
 - Provide timer, backup and sync functionality.
 - Restore purchases across platforms via RevenueCat.
 - Monitor stability and improve UX when telemetry is enabled.
+- Provide 거리/페이스 기반 운동 통계와 위치 기반 루틴 추천(사용자가 야외 운동을 시작할 때 명시적으로 권한을 허용한 경우에 한함).
 - Respond to support requests (user-initiated log export only).
 
 ## 5. Legal Bases
@@ -44,6 +46,7 @@ Users can:
 - Export an encrypted backup at any time.
 - Delete the account from Settings → Account & Subscription → Account Deletion.
 - Toggle telemetry consent in Settings (planned UI toggle; currently telemetry is disabled by default).
+- Enable or disable outdoor workout location tracking at any time from Settings ▸ Privacy.
 - Contact privacy@lifeapp.example for data subject requests.
 
 ## 8. Data Sharing

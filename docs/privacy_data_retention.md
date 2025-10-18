@@ -4,7 +4,7 @@ This document summarizes how user data is handled to support privacy policy copy
 
 ## Storage Locations
 
-- **On-device (ISAR database):** Sessions, routines, settings, daily summaries, change logs, backup metadata. Removed when the user requests account deletion or reinstalls the app.
+- **On-device (ISAR database):** Sessions, routines, settings, daily summaries, change logs, backup metadata. 운동 세션 중에만 수집한 위치 스냅샷도 함께 저장되며, 세션이 삭제되면 위치 데이터도 함께 제거됩니다.
 - **Light Sync (Firestore):** Minimal profile (theme, presets) and per-device daily summaries. Data keys are namespaced by Firebase UID and device identifier. Retained only while the account exists.
 - **User-managed backups:** Encrypted ISAR archives that the user explicitly exports to Google Drive/iCloud. Removal is under the user’s control.
 - **Diagnostics (optional):** Crashlytics error reports and anonymized analytics are collected only when telemetry consent is granted in-app.
@@ -17,8 +17,8 @@ This document summarizes how user data is handled to support privacy policy copy
 
 ## Platform Disclosures
 
-- **iOS (App Store):** Data types listed under “Data Linked to You”: app usage (sessions/daily summaries), identifiers (deviceId), diagnostics (if consented). All entries are optional and tied to user consent.
-- **Google Play:** Data safety form should mark “Data deletion available” with link to in-app deletion flow. Sensitive permissions (exact alarm) already include a justification dialog.
+- **iOS (App Store):** Data types listed under “Data Linked to You”: app usage (sessions/daily summaries), 운동 중 수집되는 위치 기록(Outdoor Workout Sessions), identifiers (deviceId), diagnostics (if consented). 모든 항목은 사용자 동의 시에만 활성화됩니다.
+- **Google Play:** Data safety form should mark “Data deletion available” with link to in-app deletion flow. 위치 권한은 “야외 운동 거리/페이스 측정을 위한 용도”로 명시하고, exact alarm 등 다른 민감 권한과 동일하게 목적을 안내합니다.
 
 ## Exceptional Retention Cases
 
