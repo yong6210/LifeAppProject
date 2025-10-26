@@ -48,6 +48,36 @@ Covers Checklist **21. Wearable Integration**.
    - Regression tests for permission denial, revocation, limited data availability.
    - Monitoring alerts if wearable sync fails.
 
+### API Sketch (NEW)
+- **Fetch job**  
+  - Entry point: `WearableSyncService.sync({required WearableSource source})`.  
+  - Schedules platform-specific fetch (`HealthKitSyncDelegate`, `GoogleFitSyncDelegate`).  
+  - Merges results into `WearableMetricsStore` (Isar collection `WearableMetric` keyed by `date + metricType`).
+- **Data shape**  
+  ```dart
+  enum WearableMetricType { sleepStage, heartRate, hrv, steps }
+
+  class WearableMetric {
+    final DateTime start;
+    final DateTime end;
+    final WearableMetricType type;
+    final double value;
+    final Map<String, dynamic> metadata; // sourceId, confidence, etc.
+  }
+  ```
+- **Merge rules**  
+  - Convert all timestamps to UTC before persistence.  
+  - If multiple devices supply the same metric within a 5분 window, prefer the highest confidence (`metadata['confidence']`).  
+  - When in-app sleep logs overlap with wearable sleep stages, keep both but mark derived recommendations to favour wearable data (flag `sourcePriority`).
+- **Analytics integration**  
+  - `SleepInsightsRepository` consumes aggregated wearable metrics to render snore vs. HRV deltas.  
+  - `RoutineRecommendationEngine` receives `WearableSnapshot` combining previous-night HRV + focus streak to adjust suggested routines.
+- **Backfill**  
+  - First sync pulls the last 14 days per metric (HealthKit anchored object queries, Google Fit History API). Subsequent syncs fetch incremental deltas.
+- **Error handling**  
+  - Dedicate `WearableSyncFailure` model: contains scope, platform, error code, retryAfter.  
+  - Surface non-blocking toasts + Settings banner for revoked permissions.
+
 ## 3. Checklist
 - [x] UX copy and permission screens approved.
 - [x] Create Flutter-side mock integration surface (`WearableRepository`) and insights UI to prepare for real HealthKit/Google Fit wiring.

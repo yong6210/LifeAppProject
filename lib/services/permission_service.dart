@@ -98,14 +98,14 @@ class TimerPermissionService {
           'type': 'exact_alarm',
           'state_before': status.exactAlarmGranted ? 'granted' : 'denied',
         });
+        if (!context.mounted) {
+          return false;
+        }
         final open = await _showDialog(
           context,
           title: l10n.tr('permission_exact_title'),
           message: l10n.tr('permission_exact_message'),
         );
-        if (!context.mounted) {
-          return false;
-        }
         if (open == true) {
           await openExactAlarmSettings();
         }
@@ -116,14 +116,14 @@ class TimerPermissionService {
           'type': 'dnd_access',
           'state_before': status.dndAccessGranted ? 'granted' : 'denied',
         });
+        if (!context.mounted) {
+          return false;
+        }
         final open = await _showDialog(
           context,
           title: l10n.tr('permission_dnd_title'),
           message: l10n.tr('permission_dnd_message'),
         );
-        if (!context.mounted) {
-          return false;
-        }
         if (open == true) {
           await openNotificationPolicySettings();
         }
@@ -140,9 +140,6 @@ class TimerPermissionService {
     final l10n = context.l10n;
     final messenger = ScaffoldMessenger.of(context);
     final status = await Permission.notification.request();
-    if (!context.mounted) {
-      return;
-    }
     if (!status.isGranted && !status.isLimited) {
       _showSnack(messenger, l10n.tr('permission_notification_denied'));
     }
@@ -162,6 +159,9 @@ class TimerPermissionService {
       return true;
     }
 
+    if (!context.mounted) {
+      return false;
+    }
     final shouldRequest = await showDialog<bool>(
       context: context,
       builder: (dialogContext) {
@@ -186,14 +186,7 @@ class TimerPermissionService {
     if (shouldRequest != true) {
       return false;
     }
-    if (!context.mounted) {
-      return false;
-    }
-
     final requested = await Permission.microphone.request();
-    if (!context.mounted) {
-      return false;
-    }
     if (requested.isGranted || requested.isLimited) {
       _showSnack(messenger, l10n.tr('timer_permission_microphone_success'));
       return true;
@@ -212,9 +205,7 @@ class TimerPermissionService {
       if (open == true) {
         await openAppSettings();
       }
-      if (!context.mounted) {
-        return false;
-      }
+
     } else {
       _showSnack(messenger, l10n.tr('timer_permission_microphone_denied'));
     }

@@ -22,11 +22,28 @@ class SettingsRepository {
   Future<Settings> ensure() async {
     final existing = await isar.settings.get(0);
     if (existing != null) {
+      var needsUpdate = false;
       if (existing.deviceId.isEmpty) {
+        existing.deviceId = _generateDeviceId();
+        needsUpdate = true;
+      }
+      if (existing.schemaVersion < 2) {
+        existing.routinePersonalizationEnabled = true;
+        existing.routinePersonalizationSyncEnabled = false;
+        if (existing.lifeBuddyTone.isEmpty) {
+          existing.lifeBuddyTone = 'friend';
+        }
+        existing.schemaVersion = 2;
+        needsUpdate = true;
+      } else if (existing.lifeBuddyTone.isEmpty) {
+        existing.lifeBuddyTone = 'friend';
+        needsUpdate = true;
+      }
+      if (needsUpdate) {
         await isar.writeTxn(() async {
-          existing.deviceId = _generateDeviceId();
           existing.updatedAt = DateTime.now().toUtc();
           await isar.settings.put(existing);
+          await _insertChangeLog(isar);
         });
       }
       return existing;

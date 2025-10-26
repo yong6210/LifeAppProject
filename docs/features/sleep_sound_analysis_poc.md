@@ -126,6 +126,7 @@ Future<void> runSession() async {
 ## 11. Immediate Next Actions
 1. [x] **Permissions UX polish** (UX): finalize copy/screens for microphone + background usage, sync localization strings (`lib/l10n/intl_en.arb`, `intl_ko.arb`).
 2. [x] **Android foreground service PoC** (Mobile): implement the notification + lifecycle stop logic guarded by a feature flag (`sleep_sound_enabled`).
-3. [ ] **Amplitude labeling session** (QA): record 30 minutes of controlled snore/ambient samples to feed into threshold tuning spreadsheet (`docs/features/sleep_sound_analysis_samples.xlsx`).
-4. [ ] **Privacy policy update** (PM/Legal): merge the drafted audio-data section into `privacy_policy_draft.md` and schedule stakeholder review.
-5. [ ] **Wearable sync spike** (Mobile/Backend): produce API sketch for merging HealthKit/Google Fit data (even if execution is deferred) so roadmap estimates remain accurate.
+3. [ ] **Amplitude labeling session** (QA): record 30 minutes of controlled snore/ambient samples to feed into threshold tuning spreadsheet (`docs/features/sleep_sound_analysis_samples.xlsx`).  
+   - 2025-10-12: Generated rehearsal dataset (iPhone 13 / Pixel 7) at `artifacts/sleep_sound/2025-10-12/*` with matching label map for UI validation ahead of live capture (see `docs/testing/runs/2025-10-12_sleep_sound_rehearsal.md`).
+4. [x] **Privacy policy update** (PM/Legal): merge the drafted audio-data section into `privacy_policy_draft.md` and schedule stakeholder review.
+5. [x] **Wearable sync spike** (Mobile/Backend): produce API sketch for merging HealthKit/Google Fit data (even if execution is deferred) so roadmap estimates remain accurate.

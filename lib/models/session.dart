@@ -21,6 +21,15 @@ class Session {
   @Index(type: IndexType.hash)
   late String deviceId;
 
+  @Index(type: IndexType.hash)
+  String? navigatorRouteId;
+
+  String? navigatorTargetType;
+
+  double? navigatorTargetValue;
+
+  bool? navigatorVoiceEnabled;
+
   List<String> tags = [];
 
   String? note;

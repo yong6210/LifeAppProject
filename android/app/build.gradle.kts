@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     // START: FlutterFire Configuration
@@ -63,11 +66,50 @@ android {
     }
 
     // (선택) 릴리즈 빌드 서명 미설정 시 debug 키로 임시 서명
+    val releaseSigning = signingConfigs.create("release").apply {
+        val keystorePropsFile = rootProject.file("android/key.properties")
+        if (keystorePropsFile.exists()) {
+            val props = Properties().apply {
+                FileInputStream(keystorePropsFile).use { load(it) }
+            }
+            val store = props.getProperty("storeFile")?.let { rootProject.file(it) }
+            if (store != null && store.exists()) {
+                storeFile = store
+            }
+            storePassword = props.getProperty("storePassword")
+            keyAlias = props.getProperty("keyAlias")
+            keyPassword = props.getProperty("keyPassword")
+        }
+
+        val env = System.getenv()
+        val envStorePath = env["ANDROID_KEYSTORE_PATH"]?.takeIf { it.isNotBlank() }
+        if (storeFile == null && envStorePath != null) {
+            val envStore = rootProject.file(envStorePath)
+            if (envStore.exists()) {
+                storeFile = envStore
+            }
+        }
+
+        if (storePassword.isNullOrEmpty()) {
+            storePassword = env["ANDROID_KEYSTORE_PASSWORD"]
+        }
+        if (keyAlias.isNullOrEmpty()) {
+            keyAlias = env["ANDROID_KEY_ALIAS"]
+        }
+        if (keyPassword.isNullOrEmpty()) {
+            keyPassword = env["ANDROID_KEY_PASSWORD"]
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = true          // ← 코드 축소 ON (R8)
             isShrinkResources = true        // ← 리소스 축소 ON
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = if (releaseSigning.storeFile != null) {
+                releaseSigning
+            } else {
+                signingConfigs.getByName("debug")
+            }
         }
         debug {
             isMinifyEnabled = false

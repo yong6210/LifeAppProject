@@ -179,6 +179,18 @@
   "account_accessibility_title": "Accessibility",
   "account_accessibility_body": "Adjust reduced motion to limit animations and haptic feedback across the app.",
   "account_accessibility_reduced_motion": "Reduce motion & haptics",
+  "account_personalization_title": "Routine personalization",
+  "account_personalization_body": "Choose how Life Buddy tailors suggestions and whether to keep them on-device or sync across devices.",
+  "account_personalization_enabled_title": "Personalized suggestions",
+  "account_personalization_enabled_subtitle": "Use recent timer history to suggest routines. Data stays on-device by default.",
+  "account_personalization_sync_title": "Sync personalization across devices",
+  "account_personalization_sync_subtitle": "Upload anonymized scores so suggestions follow you when you sign in elsewhere.",
+  "account_personalization_sync_disabled": "Turn on personalized suggestions to enable sync.",
+  "account_personalization_tone_title": "Life Buddy tone",
+  "account_personalization_tone_friend": "Friend",
+  "account_personalization_tone_friend_description": "Warm encouragement and casual check-ins.",
+  "account_personalization_tone_coach": "Coach",
+  "account_personalization_tone_coach_description": "Direct guidance focused on goals and progress.",
   "account_diagnostics_title": "Timer accuracy samples",
   "account_diagnostics_body": "Recent measurements compare scheduled segment completions with actual delivery. Positive skew means the alarm fired late.",
   "account_diagnostics_no_samples": "No samples recorded yet. Start a timer to capture accuracy data.",
@@ -335,7 +347,7 @@
   "session_deleted": "Deleted",
   "timer_title": "Timer",
   "timer_mode_focus": "Focus",
-  "timer_mode_rest": "Rest",
+  "timer_mode_rest": "Break (auto)",
   "timer_mode_workout": "Workout",
   "timer_mode_sleep": "Sleep",
   "timer_permission_notification_title": "Notification permission required",
@@ -378,6 +390,66 @@
     }
   },
   "timer_coach_workout_action": "Open Workout Navigator",
+  "timer_workout_card_title": "Workout navigator",
+  "timer_workout_card_subtitle": "Plan your run or ride with cues and maps before heading out.",
+  "timer_workout_card_featured": "Featured route",
+  "timer_workout_card_distance": "{distance} km",
+  "@timer_workout_card_distance": {
+    "placeholders": {
+      "distance": {}
+    }
+  },
+  "timer_workout_card_duration": "{minutes} min",
+  "@timer_workout_card_duration": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "timer_workout_card_cta": "Open navigator",
+  "timer_focus_card_title": "Focus timer",
+  "timer_focus_card_subtitle": "{minutes}-minute focus block",
+  "@timer_focus_card_subtitle": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "timer_focus_card_break_hint": "Breaks auto-inserted: {minutes} min between sets.",
+  "@timer_focus_card_break_hint": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "timer_focus_card_open": "Open focus mode",
+  "timer_focus_card_view": "View active session",
+  "timer_focus_card_resume": "Resume focus",
+  "timer_focus_card_start": "Start focus",
+  "timer_sleep_card_title": "Sleep prep",
+  "timer_sleep_card_subtitle": "{minutes}-minute wind-down",
+  "@timer_sleep_card_subtitle": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "timer_sleep_card_window": "Smart alarm window {minutes} min",
+  "@timer_sleep_card_window": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "timer_sleep_card_window_off": "Smart alarm window off",
+  "timer_sleep_card_start": "Start sleep timer",
+  "timer_sleep_card_cta": "Open sleep mode",
+  "timer_sleep_card_view": "View sleep controls",
+  "timer_preset_section_focus": "Focus & breaks",
+  "timer_preset_section_workout": "Workout duration",
+  "timer_preset_section_sleep": "Sleep duration",
+  "timer_preset_break_label": "Break {minutes} min",
+  "@timer_preset_break_label": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "timer_preset_break_title": "Break length",
   "timer_workout_navigator_button": "Open Workout Navigator",
   "timer_coach_default_title": "Keep the streak alive",
   "timer_coach_default_message": "Great work today! Review your stats to plan tomorrow.",
@@ -940,13 +1012,15 @@
   "backup_provider_auto_description": "Suggests your recently used storage from the share sheet.",
   "backup_provider_google_drive": "Google Drive",
   "backup_provider_icloud_drive": "iCloud Drive",
-  "backup_provider_dropbox": "Dropbox",
-  "backup_provider_onedrive": "OneDrive",
+  "backup_provider_vault": "Life App Vault (encrypted)",
+  "backup_provider_vault_description": "Encrypted private vault hosted by Life App. Data stays in your account and can be deleted anytime.",
+  "backup_provider_device": "Device-only export",
+  "backup_provider_device_description": "Keep backups on this device or hand off to another app manually without cloud sync.",
   "backup_provider_other": "Other",
   "backup_provider_other_description": "We will prompt you to pick a storage option each time.",
   "backup_help_title": "Backup tips",
   "backup_help_encrypted": "• Backup files are encrypted and saved with the .lifeappbackup extension.",
-  "backup_help_choose_storage": "• Choose Google Drive, iCloud, Dropbox, or any other storage from the share sheet.",
+  "backup_help_choose_storage": "• Choose Google Drive, iCloud, or another storage provider from the share sheet.",
   "backup_help_restore_notice": "• Restoring replaces the current device data with the backup file you select.",
   "backup_history_empty": "No backup or restore history yet.",
   "backup_history_action_backup": "Backup",

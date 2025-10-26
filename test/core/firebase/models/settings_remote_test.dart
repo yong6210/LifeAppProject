@@ -18,6 +18,9 @@ Settings _settingsWithMixer() {
     ..workoutMinutes = 18
     ..sleepMinutes = 50
     ..lastMode = 'sleep'
+    ..routinePersonalizationEnabled = true
+    ..routinePersonalizationSyncEnabled = true
+    ..lifeBuddyTone = 'coach'
     ..schemaVersion = 3
     ..updatedAt = DateTime.utc(2025, 1, 1, 12);
   return settings;
@@ -45,6 +48,15 @@ void main() {
       expect(dto.sleepMixerPinkLevel, settings.sleepMixerPinkLevel);
       expect(dto.sleepMixerBrownLevel, settings.sleepMixerBrownLevel);
       expect(dto.sleepMixerPresetId, settings.sleepMixerPresetId);
+      expect(
+        dto.routinePersonalizationEnabled,
+        settings.routinePersonalizationEnabled,
+      );
+      expect(
+        dto.routinePersonalizationSyncEnabled,
+        settings.routinePersonalizationSyncEnabled,
+      );
+      expect(dto.lifeBuddyTone, settings.lifeBuddyTone);
     });
 
     test('fromMap falls back to existing values when fields missing', () {
@@ -52,7 +64,10 @@ void main() {
         ..sleepMixerPresetId = 'rain_light'
         ..sleepMixerWhiteLevel = 0.1
         ..sleepMixerPinkLevel = 0.2
-        ..sleepMixerBrownLevel = 0.3;
+        ..sleepMixerBrownLevel = 0.3
+        ..routinePersonalizationEnabled = false
+        ..routinePersonalizationSyncEnabled = false
+        ..lifeBuddyTone = 'friend';
 
       final dto = SettingsRemoteDto.fromMap({'theme': 'system'}, fallback);
 
@@ -62,6 +77,15 @@ void main() {
         dto.sleepSmartAlarmWindowMinutes,
         fallback.sleepSmartAlarmWindowMinutes,
       );
+      expect(
+        dto.routinePersonalizationEnabled,
+        fallback.routinePersonalizationEnabled,
+      );
+      expect(
+        dto.routinePersonalizationSyncEnabled,
+        fallback.routinePersonalizationSyncEnabled,
+      );
+      expect(dto.lifeBuddyTone, fallback.lifeBuddyTone);
     });
 
     test('applyTo writes sleep mixer fields to target settings', () {
@@ -74,6 +98,9 @@ void main() {
       expect(original.sleepMixerWhiteLevel, closeTo(0.6, 1e-9));
       expect(original.sleepSmartAlarmExactFallback, isFalse);
       expect(original.sleepSmartAlarmWindowMinutes, 30);
+      expect(original.routinePersonalizationEnabled, isTrue);
+      expect(original.routinePersonalizationSyncEnabled, isTrue);
+      expect(original.lifeBuddyTone, 'coach');
     });
   });
 }

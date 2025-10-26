@@ -87,8 +87,8 @@ jobs:
 - Mark `fail-fast: false` so one flavor failure doesn’t cancel others; surfaces configuration drift quickly.
 
 ## 6. Next Steps
-1. Decide on CI provider (GitHub Actions vs Bitrise vs Codemagic) and translate the job accordingly.
-2. Workflow draft now lives at `.github/workflows/flavor-ci.yml`; wire it into your chosen provider or adapt the steps if migrating elsewhere.
+1. Decide on CI provider (GitHub Actions vs Bitrise vs Codemagic) and translate the job accordingly. (DONE) GitHub Actions 선택.
+2. Workflow draft now lives at `.github/workflows/flavor-ci.yml`; wire it into your chosen provider or adapt the steps if migrating elsewhere. (DONE) 최신 버전 커밋됨.
 3. Configure required secrets (start with none; only add when running release jobs).
-4. Dry-run the pipeline on a feature branch; iterate on cache keys and artifact paths.
+4. Dry-run the pipeline on a feature branch; iterate on cache keys and artifact paths. _TODO – 캐시 hit 로그/아티팩트 사이즈 캡처 예정._
 5. Update `docs/implementation_checklist.md` item 19 once artifacts are available in CI.

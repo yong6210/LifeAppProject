@@ -46,3 +46,10 @@ _Next steps:_ expand translation coverage across remaining screens, introduce te
 - Confirmed UI builds rely on `Wrap`, `Column`, and `ListTile` which honour ambient `Directionality`. Benefit rows now use `ListBody` to maintain reading order in RTL.
 - Verified localization helper gracefully falls back to English for unsupported locales; plan is to temporarily register `Locale('ar')` in debug builds for QA sessions.
 - Next manual step: run an RTL device/emulator pass (Arabic/Hebrew) and capture notes in `docs/testing/runs/` once hardware access is available.
+
+## 8. Cultural Tone & Privacy Messaging (2025-10 Updates)
+- Add dual-tone strings for 라이프 버디 코멘트: `buddyToneFriend`, `buddyToneCoach` variants in EN/KR with guidance notes so translators keep warmth vs. coach-like brevity.
+- Prepare Plain English tooltips explaining on-device personalization vs. cloud sync (e.g., `personalizationOnDeviceInfo`, `personalizationCloudSyncInfo`) and Korean equivalents with 존댓말.
+- Localize consent surfaces individually: telemetry, 위치 추적, 수면 분석, 루틴 추천 동기화. Each toggle needs short+long copy and error messages.
+- Update onboarding copy decks (Notion) with US/KO persona references; ensure translators receive context screenshots to avoid culturally awkward phrasing.
+- Add checklist to QA runbook ensuring US/KR reviewers confirm privacy-related strings render correctly and match legal wording from `docs/privacy_policy_draft.md`.

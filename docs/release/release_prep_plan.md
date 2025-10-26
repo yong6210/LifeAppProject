@@ -50,8 +50,8 @@ flutter build ios --flavor prod --dart-define=FLAVOR=prod
 
 | Task | Owner | Prerequisites | Notes |
 |------|-------|---------------|-------|
-| Create release keystore (if not yet created) and store it securely (e.g., 1Password) | Android dev | Security policy approval | Example: `keytool -genkey -v -keystore life_app.jks -alias life_app -keyalg RSA -keysize 2048 -validity 10000`. |
-| Update `android/app/build.gradle.kts` with release signingConfigs referencing environment variables | Android dev | Keystore path/passwords | Consider using `gradle.properties` with encrypted values committed to secure storage. |
+| Create release keystore (if not yet created) and store it securely (e.g., 1Password) | Android dev | Security policy approval | Example: `keytool -genkey -v -keystore life_app.jks -alias life_app -keyalg RSA -keysize 2048 -validity 10000`. `tool/ops/create_android_keystore.sh` automates this and writes `android/key.properties` (keep out of Git). Set `ANDROID_KEYSTORE_PASSWORD` / `ANDROID_KEY_PASSWORD` / `ANDROID_KEY_ALIAS` to run non-interactively. |
+| Update `android/app/build.gradle.kts` with release signingConfigs referencing environment variables | Android dev | Keystore path/passwords | Completed: build script now reads `android/key.properties` or env vars (`ANDROID_KEYSTORE_PATH`, `ANDROID_KEYSTORE_PASSWORD`, etc.). |
 | Verify Play Console package names exist (dev/staging/prod tracks) | PM | Firebase IDs ready | Create internal testing tracks if they do not exist. |
 
 ### Validation Command
@@ -68,7 +68,7 @@ flutter build appbundle --flavor prod
 
 | Task | Owner | Notes |
 |------|-------|-------|
-| Update GitHub Actions (or chosen CI) to build dev/staging/prod flavors | DevOps | Add a strategy matrix for flavors and run `flutter test`, `flutter build apk/appbundle`, `flutter build ios --simulator`. |
+| Update GitHub Actions (or chosen CI) to build dev/staging/prod flavors | DevOps | DONE: `.github/workflows/flavor-ci.yml` now runs tests + Android/iOS builds per flavor with dependency caching. |
 | Configure CI secrets (keystore passwords, Apple API keys if required) | DevOps / Security | Use encrypted secrets storage. |
 | Add artifact uploads (AAB/IPA) to help QA download builds quickly | DevOps | Optional but recommended. |
 

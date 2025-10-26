@@ -59,7 +59,13 @@ class Settings {
 
   String lastMode = 'focus';
 
-  int schemaVersion = 1;
+  bool routinePersonalizationEnabled = true;
+
+  bool routinePersonalizationSyncEnabled = false;
+
+  String lifeBuddyTone = 'friend';
+
+  int schemaVersion = 2;
 
   DateTime createdAt = DateTime.now().toUtc();
 

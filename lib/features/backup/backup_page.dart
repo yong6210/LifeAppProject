@@ -183,6 +183,11 @@ const _backupProviders = <_BackupProviderOption>[
     descriptionKey: 'backup_provider_auto_description',
   ),
   _BackupProviderOption(
+    value: 'Life App Vault',
+    labelKey: 'backup_provider_vault',
+    descriptionKey: 'backup_provider_vault_description',
+  ),
+  _BackupProviderOption(
     value: 'Google Drive',
     labelKey: 'backup_provider_google_drive',
   ),
@@ -191,12 +196,9 @@ const _backupProviders = <_BackupProviderOption>[
     labelKey: 'backup_provider_icloud_drive',
   ),
   _BackupProviderOption(
-    value: 'Dropbox',
-    labelKey: 'backup_provider_dropbox',
-  ),
-  _BackupProviderOption(
-    value: 'OneDrive',
-    labelKey: 'backup_provider_onedrive',
+    value: 'Device-only',
+    labelKey: 'backup_provider_device',
+    descriptionKey: 'backup_provider_device_description',
   ),
   _BackupProviderOption(
     value: '기타',
@@ -206,12 +208,25 @@ const _backupProviders = <_BackupProviderOption>[
 ];
 
 String _displayProviderLabel(AppLocalizations l10n, String value) {
+  final normalized = _normalizeProviderValue(value);
   for (final option in _backupProviders) {
-    if (option.value == value) {
+    if (option.value == normalized) {
       return option.label(l10n);
     }
   }
   return value;
+}
+
+String _normalizeProviderValue(String value) {
+  switch (value) {
+    case 'Dropbox':
+    case 'OneDrive':
+      return '기타';
+    case 'Device-only export':
+      return 'Device-only';
+    default:
+      return value;
+  }
 }
 
 class _PreferredProviderSection extends ConsumerWidget {
@@ -238,51 +253,56 @@ class _PreferredProviderSection extends ConsumerWidget {
               style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 12),
-            ..._backupProviders.map(
-              (option) => RadioListTile<String>(
-                title: Text(option.label(l10n)),
-                subtitle: option.description(l10n) != null
-                    ? Text(option.description(l10n)!)
-                    : null,
-                value: option.value,
-                groupValue: settings.backupPreferredProvider,
-                onChanged: (value) async {
-                  if (value == null) return;
-                  try {
-                    await ref.read(
-                      updateBackupPreferredProviderProvider(value).future,
+            RadioGroup<String>(
+              groupValue:
+                  _normalizeProviderValue(settings.backupPreferredProvider),
+              onChanged: (value) async {
+                if (value == null) return;
+                try {
+                  await ref.read(
+                    updateBackupPreferredProviderProvider(value).future,
+                  );
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          l10n.tr(
+                            'backup_preferred_updated',
+                            {
+                              'provider': _displayProviderLabel(l10n, value),
+                            },
+                          ),
+                        ),
+                      ),
                     );
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            l10n.tr(
-                              'backup_preferred_updated',
-                              {
-                                'provider': _displayProviderLabel(l10n, value),
-                              },
-                            ),
-                          ),
-                        ),
-                      );
-                    }
-                  } catch (error) {
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            l10n.tr(
-                              'backup_preferred_update_error',
-                              {'error': error.toString()},
-                            ),
-                          ),
-                        ),
-                      );
-                    }
                   }
-                },
+                } catch (error) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          l10n.tr(
+                            'backup_preferred_update_error',
+                            {'error': error.toString()},
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                }
+              },
+              child: Column(
+                children: _backupProviders.map((option) {
+                  return RadioListTile<String>(
+                    title: Text(option.label(l10n)),
+                    subtitle: option.description(l10n) != null
+                        ? Text(option.description(l10n)!)
+                        : null,
+                    value: option.value,
+                  );
+                }).toList(),
               ),
             ),
           ],
@@ -333,7 +353,7 @@ class _BackupHistoryList extends StatelessWidget {
 
     return ListView.separated(
       itemCount: entries.length,
-      separatorBuilder: (_, __) => const Divider(height: 1),
+      separatorBuilder: (context, index) => const Divider(height: 1),
       itemBuilder: (context, index) {
         final entry = entries[index];
         return _BackupHistoryTile(entry: entry, l10n: l10n);

@@ -42,10 +42,12 @@ class BackupController extends AsyncNotifier<void> {
         mimeType: 'application/json',
         name: file.uri.pathSegments.last,
       );
-      await Share.shareXFiles(
-        [xFile],
-        subject: l10n.tr('backup_share_subject'),
-        text: l10n.tr('backup_share_text'),
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [xFile],
+          subject: l10n.tr('backup_share_subject'),
+          text: l10n.tr('backup_share_text'),
+        ),
       );
       state = const AsyncData(null);
       ref.invalidate(settingsFutureProvider);

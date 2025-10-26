@@ -37,16 +37,36 @@ const SessionSchema = CollectionSchema(
       name: r'localDate',
       type: IsarType.dateTime,
     ),
-    r'note': PropertySchema(id: 4, name: r'note', type: IsarType.string),
-    r'startedAt': PropertySchema(
+    r'navigatorRouteId': PropertySchema(
+      id: 4,
+      name: r'navigatorRouteId',
+      type: IsarType.string,
+    ),
+    r'navigatorTargetType': PropertySchema(
       id: 5,
+      name: r'navigatorTargetType',
+      type: IsarType.string,
+    ),
+    r'navigatorTargetValue': PropertySchema(
+      id: 6,
+      name: r'navigatorTargetValue',
+      type: IsarType.double,
+    ),
+    r'navigatorVoiceEnabled': PropertySchema(
+      id: 7,
+      name: r'navigatorVoiceEnabled',
+      type: IsarType.bool,
+    ),
+    r'note': PropertySchema(id: 8, name: r'note', type: IsarType.string),
+    r'startedAt': PropertySchema(
+      id: 9,
       name: r'startedAt',
       type: IsarType.dateTime,
     ),
-    r'tags': PropertySchema(id: 6, name: r'tags', type: IsarType.stringList),
-    r'type': PropertySchema(id: 7, name: r'type', type: IsarType.string),
+    r'tags': PropertySchema(id: 10, name: r'tags', type: IsarType.stringList),
+    r'type': PropertySchema(id: 11, name: r'type', type: IsarType.string),
     r'updatedAt': PropertySchema(
-      id: 8,
+      id: 12,
       name: r'updatedAt',
       type: IsarType.dateTime,
     ),
@@ -110,6 +130,19 @@ const SessionSchema = CollectionSchema(
         ),
       ],
     ),
+    r'navigatorRouteId': IndexSchema(
+      id: -6308522512525611428,
+      name: r'navigatorRouteId',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'navigatorRouteId',
+          type: IndexType.hash,
+          caseSensitive: true,
+        ),
+      ],
+    ),
   },
   links: {},
   embeddedSchemas: {},
@@ -127,6 +160,18 @@ int _sessionEstimateSize(
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.deviceId.length * 3;
+  {
+    final value = object.navigatorRouteId;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
+    final value = object.navigatorTargetType;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   {
     final value = object.note;
     if (value != null) {
@@ -154,11 +199,15 @@ void _sessionSerialize(
   writer.writeString(offsets[1], object.deviceId);
   writer.writeDateTime(offsets[2], object.endedAt);
   writer.writeDateTime(offsets[3], object.localDate);
-  writer.writeString(offsets[4], object.note);
-  writer.writeDateTime(offsets[5], object.startedAt);
-  writer.writeStringList(offsets[6], object.tags);
-  writer.writeString(offsets[7], object.type);
-  writer.writeDateTime(offsets[8], object.updatedAt);
+  writer.writeString(offsets[4], object.navigatorRouteId);
+  writer.writeString(offsets[5], object.navigatorTargetType);
+  writer.writeDouble(offsets[6], object.navigatorTargetValue);
+  writer.writeBool(offsets[7], object.navigatorVoiceEnabled);
+  writer.writeString(offsets[8], object.note);
+  writer.writeDateTime(offsets[9], object.startedAt);
+  writer.writeStringList(offsets[10], object.tags);
+  writer.writeString(offsets[11], object.type);
+  writer.writeDateTime(offsets[12], object.updatedAt);
 }
 
 Session _sessionDeserialize(
@@ -173,11 +222,15 @@ Session _sessionDeserialize(
   object.endedAt = reader.readDateTimeOrNull(offsets[2]);
   object.id = id;
   object.localDate = reader.readDateTime(offsets[3]);
-  object.note = reader.readStringOrNull(offsets[4]);
-  object.startedAt = reader.readDateTime(offsets[5]);
-  object.tags = reader.readStringList(offsets[6]) ?? [];
-  object.type = reader.readString(offsets[7]);
-  object.updatedAt = reader.readDateTime(offsets[8]);
+  object.navigatorRouteId = reader.readStringOrNull(offsets[4]);
+  object.navigatorTargetType = reader.readStringOrNull(offsets[5]);
+  object.navigatorTargetValue = reader.readDoubleOrNull(offsets[6]);
+  object.navigatorVoiceEnabled = reader.readBoolOrNull(offsets[7]);
+  object.note = reader.readStringOrNull(offsets[8]);
+  object.startedAt = reader.readDateTime(offsets[9]);
+  object.tags = reader.readStringList(offsets[10]) ?? [];
+  object.type = reader.readString(offsets[11]);
+  object.updatedAt = reader.readDateTime(offsets[12]);
   return object;
 }
 
@@ -199,12 +252,20 @@ P _sessionDeserializeProp<P>(
     case 4:
       return (reader.readStringOrNull(offset)) as P;
     case 5:
-      return (reader.readDateTime(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 6:
-      return (reader.readStringList(offset) ?? []) as P;
+      return (reader.readDoubleOrNull(offset)) as P;
     case 7:
-      return (reader.readString(offset)) as P;
+      return (reader.readBoolOrNull(offset)) as P;
     case 8:
+      return (reader.readStringOrNull(offset)) as P;
+    case 9:
+      return (reader.readDateTime(offset)) as P;
+    case 10:
+      return (reader.readStringList(offset) ?? []) as P;
+    case 11:
+      return (reader.readString(offset)) as P;
+    case 12:
       return (reader.readDateTime(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -631,6 +692,85 @@ extension SessionQueryWhere on QueryBuilder<Session, Session, QWhereClause> {
       }
     });
   }
+
+  QueryBuilder<Session, Session, QAfterWhereClause> navigatorRouteIdIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IndexWhereClause.equalTo(indexName: r'navigatorRouteId', value: [null]),
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterWhereClause>
+  navigatorRouteIdIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IndexWhereClause.between(
+          indexName: r'navigatorRouteId',
+          lower: [null],
+          includeLower: false,
+          upper: [],
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterWhereClause> navigatorRouteIdEqualTo(
+    String? navigatorRouteId,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IndexWhereClause.equalTo(
+          indexName: r'navigatorRouteId',
+          value: [navigatorRouteId],
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterWhereClause> navigatorRouteIdNotEqualTo(
+    String? navigatorRouteId,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'navigatorRouteId',
+                lower: [],
+                upper: [navigatorRouteId],
+                includeUpper: false,
+              ),
+            )
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'navigatorRouteId',
+                lower: [navigatorRouteId],
+                includeLower: false,
+                upper: [],
+              ),
+            );
+      } else {
+        return query
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'navigatorRouteId',
+                lower: [navigatorRouteId],
+                includeLower: false,
+                upper: [],
+              ),
+            )
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'navigatorRouteId',
+                lower: [],
+                upper: [navigatorRouteId],
+                includeUpper: false,
+              ),
+            );
+      }
+    });
+  }
 }
 
 extension SessionQueryFilter
@@ -1026,6 +1166,453 @@ extension SessionQueryFilter
           includeLower: includeLower,
           upper: upper,
           includeUpper: includeUpper,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterFilterCondition>
+  navigatorRouteIdIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        const FilterCondition.isNull(property: r'navigatorRouteId'),
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterFilterCondition>
+  navigatorRouteIdIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        const FilterCondition.isNotNull(property: r'navigatorRouteId'),
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterFilterCondition> navigatorRouteIdEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'navigatorRouteId',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterFilterCondition>
+  navigatorRouteIdGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'navigatorRouteId',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterFilterCondition>
+  navigatorRouteIdLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'navigatorRouteId',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterFilterCondition> navigatorRouteIdBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'navigatorRouteId',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterFilterCondition>
+  navigatorRouteIdStartsWith(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.startsWith(
+          property: r'navigatorRouteId',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterFilterCondition>
+  navigatorRouteIdEndsWith(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.endsWith(
+          property: r'navigatorRouteId',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterFilterCondition>
+  navigatorRouteIdContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.contains(
+          property: r'navigatorRouteId',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterFilterCondition> navigatorRouteIdMatches(
+    String pattern, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.matches(
+          property: r'navigatorRouteId',
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterFilterCondition>
+  navigatorRouteIdIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'navigatorRouteId', value: ''),
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterFilterCondition>
+  navigatorRouteIdIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(property: r'navigatorRouteId', value: ''),
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterFilterCondition>
+  navigatorTargetTypeIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        const FilterCondition.isNull(property: r'navigatorTargetType'),
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterFilterCondition>
+  navigatorTargetTypeIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        const FilterCondition.isNotNull(property: r'navigatorTargetType'),
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterFilterCondition>
+  navigatorTargetTypeEqualTo(String? value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'navigatorTargetType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterFilterCondition>
+  navigatorTargetTypeGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'navigatorTargetType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterFilterCondition>
+  navigatorTargetTypeLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'navigatorTargetType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterFilterCondition>
+  navigatorTargetTypeBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'navigatorTargetType',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterFilterCondition>
+  navigatorTargetTypeStartsWith(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.startsWith(
+          property: r'navigatorTargetType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterFilterCondition>
+  navigatorTargetTypeEndsWith(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.endsWith(
+          property: r'navigatorTargetType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterFilterCondition>
+  navigatorTargetTypeContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.contains(
+          property: r'navigatorTargetType',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterFilterCondition>
+  navigatorTargetTypeMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.matches(
+          property: r'navigatorTargetType',
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterFilterCondition>
+  navigatorTargetTypeIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'navigatorTargetType', value: ''),
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterFilterCondition>
+  navigatorTargetTypeIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          property: r'navigatorTargetType',
+          value: '',
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterFilterCondition>
+  navigatorTargetValueIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        const FilterCondition.isNull(property: r'navigatorTargetValue'),
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterFilterCondition>
+  navigatorTargetValueIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        const FilterCondition.isNotNull(property: r'navigatorTargetValue'),
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterFilterCondition>
+  navigatorTargetValueEqualTo(double? value, {double epsilon = Query.epsilon}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'navigatorTargetValue',
+          value: value,
+
+          epsilon: epsilon,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterFilterCondition>
+  navigatorTargetValueGreaterThan(
+    double? value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'navigatorTargetValue',
+          value: value,
+
+          epsilon: epsilon,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterFilterCondition>
+  navigatorTargetValueLessThan(
+    double? value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'navigatorTargetValue',
+          value: value,
+
+          epsilon: epsilon,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterFilterCondition>
+  navigatorTargetValueBetween(
+    double? lower,
+    double? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'navigatorTargetValue',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+
+          epsilon: epsilon,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterFilterCondition>
+  navigatorVoiceEnabledIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        const FilterCondition.isNull(property: r'navigatorVoiceEnabled'),
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterFilterCondition>
+  navigatorVoiceEnabledIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        const FilterCondition.isNotNull(property: r'navigatorVoiceEnabled'),
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterFilterCondition>
+  navigatorVoiceEnabledEqualTo(bool? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'navigatorVoiceEnabled',
+          value: value,
         ),
       );
     });
@@ -1715,6 +2302,56 @@ extension SessionQuerySortBy on QueryBuilder<Session, Session, QSortBy> {
     });
   }
 
+  QueryBuilder<Session, Session, QAfterSortBy> sortByNavigatorRouteId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'navigatorRouteId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterSortBy> sortByNavigatorRouteIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'navigatorRouteId', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterSortBy> sortByNavigatorTargetType() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'navigatorTargetType', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterSortBy> sortByNavigatorTargetTypeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'navigatorTargetType', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterSortBy> sortByNavigatorTargetValue() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'navigatorTargetValue', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterSortBy>
+  sortByNavigatorTargetValueDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'navigatorTargetValue', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterSortBy> sortByNavigatorVoiceEnabled() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'navigatorVoiceEnabled', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterSortBy>
+  sortByNavigatorVoiceEnabledDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'navigatorVoiceEnabled', Sort.desc);
+    });
+  }
+
   QueryBuilder<Session, Session, QAfterSortBy> sortByNote() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'note', Sort.asc);
@@ -1826,6 +2463,56 @@ extension SessionQuerySortThenBy
     });
   }
 
+  QueryBuilder<Session, Session, QAfterSortBy> thenByNavigatorRouteId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'navigatorRouteId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterSortBy> thenByNavigatorRouteIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'navigatorRouteId', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterSortBy> thenByNavigatorTargetType() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'navigatorTargetType', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterSortBy> thenByNavigatorTargetTypeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'navigatorTargetType', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterSortBy> thenByNavigatorTargetValue() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'navigatorTargetValue', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterSortBy>
+  thenByNavigatorTargetValueDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'navigatorTargetValue', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterSortBy> thenByNavigatorVoiceEnabled() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'navigatorVoiceEnabled', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Session, Session, QAfterSortBy>
+  thenByNavigatorVoiceEnabledDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'navigatorVoiceEnabled', Sort.desc);
+    });
+  }
+
   QueryBuilder<Session, Session, QAfterSortBy> thenByNote() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'note', Sort.asc);
@@ -1903,6 +2590,40 @@ extension SessionQueryWhereDistinct
     });
   }
 
+  QueryBuilder<Session, Session, QDistinct> distinctByNavigatorRouteId({
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(
+        r'navigatorRouteId',
+        caseSensitive: caseSensitive,
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QDistinct> distinctByNavigatorTargetType({
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(
+        r'navigatorTargetType',
+        caseSensitive: caseSensitive,
+      );
+    });
+  }
+
+  QueryBuilder<Session, Session, QDistinct> distinctByNavigatorTargetValue() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'navigatorTargetValue');
+    });
+  }
+
+  QueryBuilder<Session, Session, QDistinct> distinctByNavigatorVoiceEnabled() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'navigatorVoiceEnabled');
+    });
+  }
+
   QueryBuilder<Session, Session, QDistinct> distinctByNote({
     bool caseSensitive = true,
   }) {
@@ -1967,6 +2688,33 @@ extension SessionQueryProperty
   QueryBuilder<Session, DateTime, QQueryOperations> localDateProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'localDate');
+    });
+  }
+
+  QueryBuilder<Session, String?, QQueryOperations> navigatorRouteIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'navigatorRouteId');
+    });
+  }
+
+  QueryBuilder<Session, String?, QQueryOperations>
+  navigatorTargetTypeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'navigatorTargetType');
+    });
+  }
+
+  QueryBuilder<Session, double?, QQueryOperations>
+  navigatorTargetValueProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'navigatorTargetValue');
+    });
+  }
+
+  QueryBuilder<Session, bool?, QQueryOperations>
+  navigatorVoiceEnabledProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'navigatorVoiceEnabled');
     });
   }
 

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,6 +20,8 @@ import 'package:life_app/features/backup/backup_page.dart';
 import 'package:life_app/features/community/community_challenges_page.dart';
 import 'package:life_app/features/stats/stats_page.dart';
 import 'package:life_app/features/workout/workout_navigator_page.dart';
+import 'package:life_app/features/workout/models/workout_navigator_models.dart';
+import 'package:life_app/features/workout/data/workout_routes.dart';
 import 'package:life_app/features/subscription/paywall_page.dart';
 import 'package:life_app/features/wearable/wearable_insights_page.dart';
 import 'package:life_app/l10n/app_localizations.dart';
@@ -33,14 +36,7 @@ const _sleepPresetOrder = <String>[
   'fireplace_cozy',
 ];
 
-enum CoachAction {
-  backup,
-  startFocus,
-  startRest,
-  openWorkoutNavigator,
-  viewStats,
-  none,
-}
+enum CoachAction { backup, startFocus, openWorkoutNavigator, viewStats, none }
 
 class CoachNudge {
   CoachNudge({
@@ -60,6 +56,72 @@ class CoachNudge {
   bool get hasAction => action != CoachAction.none;
 }
 
+class _FocusPresetOption {
+  const _FocusPresetOption({required this.label, required this.minutes});
+
+  final String label;
+  final int minutes;
+}
+
+class _FocusPresetChips extends ConsumerWidget {
+  const _FocusPresetChips({required this.settings});
+
+  final Settings settings;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final controller = ref.read(timerControllerProvider.notifier);
+    final options = <_FocusPresetOption>[
+      for (final preset in settings.presets)
+        if (preset.mode == 'focus')
+          _FocusPresetOption(
+            label: preset.name,
+            minutes: preset.durationMinutes,
+          ),
+    ];
+    if (options.isEmpty) {
+      options.addAll(const [
+        _FocusPresetOption(label: '25분 포모도로', minutes: 25),
+        _FocusPresetOption(label: '45분 몰입', minutes: 45),
+        _FocusPresetOption(label: '90분 플로우', minutes: 90),
+      ]);
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '빠른 집중 루틴',
+          style: theme.textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 12,
+          runSpacing: 12,
+          children: options.map((option) {
+            return FilledButton.tonal(
+              onPressed: () async {
+                AnalyticsService.logEvent('focus_quick_preset_start', {
+                  'minutes': option.minutes,
+                  'label': option.label,
+                });
+                await controller.selectMode('focus');
+                final current = ref.read(timerControllerProvider);
+                if (!current.isRunning) {
+                  await controller.toggleStartStop();
+                }
+              },
+              child: Text(option.label),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+}
 String _sleepPresetLabel(AppLocalizations l10n, String id) {
   final key = 'timer_sleep_preset_$id';
   final value = l10n.tr(key);
@@ -111,21 +173,6 @@ String _formatTime(int seconds) {
   return '$minutesPart:$secondsPart';
 }
 
-String _modeLabel(String mode, AppLocalizations l10n) {
-  switch (mode) {
-    case 'focus':
-      return l10n.tr('timer_mode_focus');
-    case 'rest':
-      return l10n.tr('timer_mode_rest');
-    case 'workout':
-      return l10n.tr('timer_mode_workout');
-    case 'sleep':
-      return l10n.tr('timer_mode_sleep');
-    default:
-      return mode;
-  }
-}
-
 String _segmentTypeLabel(String type, AppLocalizations l10n) {
   switch (type) {
     case 'focus':
@@ -161,15 +208,15 @@ class _TimerPageState extends ConsumerState<TimerPage> {
   void initState() {
     super.initState();
     _announcer = ref.read(timerAnnouncerProvider);
-    _focusSubscription = ref.listenManual<TimerState>(
-      timerControllerProvider,
-      (previous, next) {
-        final previousMode = previous?.mode ?? '';
-        if (next.mode == 'focus' && previousMode != 'focus') {
-          _handleFocusModeEntered();
-        }
-      },
-    );
+    _focusSubscription = ref.listenManual<TimerState>(timerControllerProvider, (
+      previous,
+      next,
+    ) {
+      final previousMode = previous?.mode ?? '';
+      if (next.mode == 'focus' && previousMode != 'focus') {
+        _handleFocusModeEntered();
+      }
+    });
     Future.microtask(() {
       if (!mounted) return;
       final current = ref.read(timerControllerProvider);
@@ -283,6 +330,37 @@ class _TimerPageState extends ConsumerState<TimerPage> {
     final backupDays = lastBackup == null
         ? 7
         : now.difference(lastBackup).inDays;
+
+    final workoutGoal = settings.workoutMinutes.clamp(10, 120);
+    if (summary == null || summary.workout < workoutGoal) {
+      final remainingMinutes = summary == null
+          ? workoutGoal
+          : (workoutGoal - summary.workout).clamp(5, 120);
+      return CoachNudge(
+        title: l10n.tr('timer_coach_workout_title'),
+        message: l10n.tr('timer_coach_workout_message', {
+          'minutes': '$remainingMinutes',
+        }),
+        icon: Icons.directions_run,
+        action: CoachAction.openWorkoutNavigator,
+        actionLabel: l10n.tr('timer_coach_workout_action'),
+      );
+    }
+
+    final focusGoal = settings.focusMinutes.clamp(10, 240);
+    if (summary.focus < focusGoal) {
+      final remaining = (focusGoal - summary.focus).clamp(1, 240);
+      return CoachNudge(
+        title: l10n.tr('timer_coach_focus_title'),
+        message: l10n.tr('timer_coach_focus_message', {
+          'minutes': '$remaining',
+        }),
+        icon: Icons.timer,
+        action: CoachAction.startFocus,
+        actionLabel: l10n.tr('timer_coach_focus_action'),
+      );
+    }
+
     if (backupDays >= 7) {
       final daysLabel = backupDays.toString();
       return CoachNudge(
@@ -292,50 +370,6 @@ class _TimerPageState extends ConsumerState<TimerPage> {
         action: CoachAction.backup,
         actionLabel: l10n.tr('timer_coach_backup_action'),
       );
-    }
-
-    if (summary != null) {
-      final focusGoal = settings.focusMinutes.clamp(10, 240);
-      if (summary.focus < focusGoal) {
-        final remaining = (focusGoal - summary.focus).clamp(1, 240);
-        return CoachNudge(
-          title: l10n.tr('timer_coach_focus_title'),
-          message: l10n.tr('timer_coach_focus_message', {
-            'minutes': '$remaining',
-          }),
-          icon: Icons.timer,
-          action: CoachAction.startFocus,
-          actionLabel: l10n.tr('timer_coach_focus_action'),
-        );
-      }
-
-      final restGoal = settings.restMinutes.clamp(3, 30);
-      if (summary.rest < restGoal) {
-        final remaining = (restGoal - summary.rest).clamp(3, 45);
-        return CoachNudge(
-          title: l10n.tr('timer_coach_rest_title'),
-          message: l10n.tr('timer_coach_rest_message', {
-            'minutes': '$remaining',
-          }),
-          icon: Icons.self_improvement,
-          action: CoachAction.startRest,
-          actionLabel: l10n.tr('timer_coach_rest_action'),
-        );
-      }
-
-      final workoutGoal = settings.workoutMinutes.clamp(10, 120);
-      if (summary.workout < workoutGoal) {
-        final remaining = (workoutGoal - summary.workout).clamp(5, 90);
-        return CoachNudge(
-          title: l10n.tr('timer_coach_workout_title'),
-          message: l10n.tr('timer_coach_workout_message', {
-            'minutes': '$remaining',
-          }),
-          icon: Icons.directions_run,
-          action: CoachAction.openWorkoutNavigator,
-          actionLabel: l10n.tr('timer_coach_workout_action'),
-        );
-      }
     }
 
     return CoachNudge(
@@ -360,13 +394,6 @@ class _TimerPageState extends ConsumerState<TimerPage> {
         break;
       case CoachAction.startFocus:
         await controller.selectMode('focus');
-        final current = ref.read(timerControllerProvider);
-        if (!current.isRunning) {
-          await controller.toggleStartStop();
-        }
-        break;
-      case CoachAction.startRest:
-        await controller.selectMode('rest');
         final current = ref.read(timerControllerProvider);
         if (!current.isRunning) {
           await controller.toggleStartStop();
@@ -407,14 +434,14 @@ class _TimerPageState extends ConsumerState<TimerPage> {
       orElse: () => null,
     );
     final settingsAsync = ref.watch(settingsFutureProvider);
-    final coachNudge = settingsAsync.when<CoachNudge?>(
+    final settings = settingsAsync.asData?.value;
+    final coachNudge = settingsAsync.maybeWhen(
       data: (settings) => _buildCoachNudge(
         l10n: l10n,
         settings: settings,
         summary: todaySummary,
       ),
-      loading: () => null,
-      error: (_, __) => null,
+      orElse: () => null,
     );
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -434,6 +461,7 @@ class _TimerPageState extends ConsumerState<TimerPage> {
         : 1 -
               (state.segmentRemainingSeconds /
                   currentSegment.duration.inSeconds);
+    final featuredRoute = workoutNavigatorRoutes.first;
 
     final permissionTiles = permissionStatus.when<Widget?>(
       data: (status) {
@@ -516,6 +544,58 @@ class _TimerPageState extends ConsumerState<TimerPage> {
       ),
     );
 
+    Future<void> openWorkoutNavigatorQuick() async {
+      AnalyticsService.logEvent('workout_quick_card_tap');
+      AnalyticsService.logEvent('workout_navigator_open', {
+        'source': 'quick_card',
+      });
+      if (!context.mounted) return;
+      await Navigator.push<void>(
+        context,
+        WorkoutNavigatorPage.route(),
+      );
+    }
+
+    final List<Widget> modeHeader = [
+      _ModeMascot(mode: state.mode),
+      const SizedBox(height: 12),
+    ];
+    if (settings != null) {
+      switch (state.mode) {
+        case 'focus':
+          modeHeader
+            ..add(_FocusQuickCard(settings: settings))
+            ..add(const SizedBox(height: 12))
+            ..add(_FocusPresetChips(settings: settings))
+            ..add(const SizedBox(height: 16));
+          break;
+        case 'sleep':
+          modeHeader
+            ..add(_SleepQuickCard(settings: settings))
+            ..add(const SizedBox(height: 16));
+          break;
+        case 'workout':
+          modeHeader
+            ..add(
+              _WorkoutQuickCard(
+                route: featuredRoute,
+                onOpen: openWorkoutNavigatorQuick,
+              ),
+            )
+            ..add(const SizedBox(height: 16));
+          break;
+        default:
+          modeHeader
+            ..add(_FocusQuickCard(settings: settings))
+            ..add(const SizedBox(height: 12))
+            ..add(_FocusPresetChips(settings: settings))
+            ..add(const SizedBox(height: 16));
+          break;
+      }
+    } else {
+      modeHeader.add(const SizedBox(height: 4));
+    }
+
     return WithForegroundTask(
       child: Scaffold(
         appBar: AppBar(
@@ -567,12 +647,7 @@ class _TimerPageState extends ConsumerState<TimerPage> {
                 child: ListView(
                   padding: const EdgeInsets.all(16),
                   children: [
-                    _ModeSelector(
-                      currentMode: state.mode,
-                      onSelect: controller.selectMode,
-                    ),
-                    const SizedBox(height: 12),
-                    _PresetSelector(mode: state.mode, controller: controller),
+                    ...modeHeader,
                     if (permissionTiles != null) ...[
                       const SizedBox(height: 12),
                       permissionTiles,
@@ -610,6 +685,17 @@ class _TimerPageState extends ConsumerState<TimerPage> {
                       state: state,
                       l10n: l10n,
                     ),
+                    if (state.mode == 'workout' &&
+                        state.navigatorRoute != null) ...[
+                      const SizedBox(height: 16),
+                      _WorkoutNavigatorOverlay(state: state),
+                    ],
+                    if (state.navigatorLastSummary != null) ...[
+                      const SizedBox(height: 16),
+                      _NavigatorSummaryCard(
+                        summary: state.navigatorLastSummary!,
+                      ),
+                    ],
                     const SizedBox(height: 16),
                     _SoundControlsCard(
                       isSoundEnabled: state.isSoundEnabled,
@@ -763,72 +849,438 @@ class _CoachCard extends StatelessWidget {
   }
 }
 
-class _ModeSelector extends StatelessWidget {
-  const _ModeSelector({required this.currentMode, required this.onSelect});
+class _FocusQuickCard extends ConsumerWidget {
+  const _FocusQuickCard({required this.settings});
 
-  final String currentMode;
-  final ValueChanged<String> onSelect;
-
-  @override
-  Widget build(BuildContext context) {
-    final modes = const ['focus', 'rest', 'workout', 'sleep'];
-    final l10n = context.l10n;
-    return Wrap(
-      spacing: 8,
-      children: [
-        for (final mode in modes)
-          ChoiceChip(
-            selected: currentMode == mode,
-            label: Text(_modeLabel(mode, l10n)),
-            onSelected: (_) => onSelect(mode),
-          ),
-      ],
-    );
-  }
-}
-
-class _PresetSelector extends ConsumerWidget {
-  const _PresetSelector({required this.mode, required this.controller});
-
-  final String mode;
-  final TimerController controller;
+  final Settings settings;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final settingsAsync = ref.watch(settingsFutureProvider);
-    return settingsAsync.when(
-      loading: () => const SizedBox.shrink(),
-      error: (error, _) =>
-          Text(l10n.tr('generic_settings_error', {'error': '$error'})),
-      data: (settings) {
-        final current = _modeDuration(settings, mode);
-        final options = <int>{...?_presetOptions[mode]};
-        options.add(current);
-        final sorted = options.where((value) => value > 0).toList()..sort();
-        return DropdownButtonFormField<int>(
-          value: current,
-          decoration: InputDecoration(
-            labelText: l10n.tr('timer_preset_selector_label'),
-            border: const OutlineInputBorder(),
-          ),
-          onChanged: (value) async {
-            if (value == null || value <= 0) return;
-            await ref.read(
-              savePresetProvider({_modeSettingsKey(mode): value}).future,
-            );
-            await controller.setPreset(mode, value);
-          },
-          items: [
-            for (final option in sorted)
-              DropdownMenuItem<int>(
-                value: option,
-                child: Text(_formatDurationLabel(option, l10n)),
+    final theme = Theme.of(context);
+    final controller = ref.read(timerControllerProvider.notifier);
+    final state = ref.watch(timerControllerProvider);
+    final isActive = state.mode == 'focus';
+    final isRunning = isActive && state.isRunning;
+    final hasProgress = isActive && state.completedSeconds > 0;
+
+    final primaryLabel = isRunning
+        ? l10n.tr('timer_focus_card_view')
+        : hasProgress
+        ? l10n.tr('timer_focus_card_resume')
+        : l10n.tr('timer_focus_card_start');
+
+    Future<void> startOrResume() async {
+      await controller.selectMode('focus');
+      final current = ref.read(timerControllerProvider);
+      if (!current.isRunning) {
+        await controller.toggleStartStop();
+      }
+    }
+
+    Future<void> openFocus() async {
+      await controller.selectMode('focus');
+    }
+
+    final subtitle = l10n.tr('timer_focus_card_subtitle', {
+      'minutes': '${settings.focusMinutes}',
+    });
+    final breakHint = l10n.tr('timer_focus_card_break_hint', {
+      'minutes': '${settings.restMinutes}',
+    });
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.center_focus_strong_outlined,
+                  color: theme.colorScheme.primary,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  l10n.tr('timer_focus_card_title'),
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(subtitle, style: theme.textTheme.bodyMedium),
+            const SizedBox(height: 4),
+            Text(
+              breakHint,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant.withValues(
+                  alpha: 0.7,
+                ),
               ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: openFocus,
+                  child: Text(l10n.tr('timer_focus_card_open')),
+                ),
+                const SizedBox(width: 12),
+                FilledButton(
+                  onPressed: isRunning ? openFocus : startOrResume,
+                  child: Text(primaryLabel),
+                ),
+              ],
+            ),
           ],
-        );
-      },
+        ),
+      ),
     );
+  }
+}
+
+class _SleepQuickCard extends ConsumerWidget {
+  const _SleepQuickCard({required this.settings});
+
+  final Settings settings;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+    final controller = ref.read(timerControllerProvider.notifier);
+    final state = ref.watch(timerControllerProvider);
+    final isActive = state.mode == 'sleep';
+    final windowMinutes = settings.sleepSmartAlarmWindowMinutes;
+    final subtitle = l10n.tr('timer_sleep_card_subtitle', {
+      'minutes': '${settings.sleepMinutes}',
+    });
+    final windowLabel = windowMinutes > 0
+        ? l10n.tr('timer_sleep_card_window', {'minutes': '$windowMinutes'})
+        : l10n.tr('timer_sleep_card_window_off');
+
+    Future<void> openSleep() async {
+      await controller.selectMode('sleep');
+    }
+
+    Future<void> startSleep() async {
+      await controller.selectMode('sleep');
+      final current = ref.read(timerControllerProvider);
+      if (!current.isRunning) {
+        await controller.toggleStartStop();
+      }
+    }
+
+    final primaryLabel = isActive
+        ? l10n.tr('timer_sleep_card_view')
+        : l10n.tr('timer_sleep_card_cta');
+    final canStartSleep = !(isActive && state.isRunning);
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.bedtime_outlined,
+                  color: theme.colorScheme.secondary,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  l10n.tr('timer_sleep_card_title'),
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(subtitle, style: theme.textTheme.bodyMedium),
+            const SizedBox(height: 4),
+            Text(
+              windowLabel,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant.withValues(
+                  alpha: 0.7,
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: canStartSleep ? startSleep : null,
+                  child: Text(l10n.tr('timer_sleep_card_start')),
+                ),
+                const SizedBox(width: 12),
+                FilledButton(onPressed: openSleep, child: Text(primaryLabel)),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _WorkoutQuickCard extends StatelessWidget {
+  const _WorkoutQuickCard({required this.route, required this.onOpen});
+
+  final WorkoutNavigatorRoute route;
+  final VoidCallback onOpen;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = context.l10n;
+    final distanceLabel = l10n.tr('timer_workout_card_distance', {
+      'distance': route.distanceKm.toStringAsFixed(1),
+    });
+    final durationLabel = l10n.tr('timer_workout_card_duration', {
+      'minutes': route.estimatedMinutes.round().toString(),
+    });
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.fitness_center_outlined,
+                  color: theme.colorScheme.primary,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  l10n.tr('timer_workout_card_title'),
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              l10n.tr('timer_workout_card_subtitle'),
+              style: theme.textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              l10n.tr('timer_workout_card_featured'),
+              style: theme.textTheme.labelLarge?.copyWith(
+                color: theme.colorScheme.primary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              route.title,
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              route.description,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: theme.textTheme.bodySmall,
+            ),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 12,
+              runSpacing: 12,
+              children: [
+                _InfoBadge(
+                  icon: Icons.social_distance_outlined,
+                  label: distanceLabel,
+                ),
+                _InfoBadge(icon: Icons.schedule_outlined, label: durationLabel),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Align(
+              alignment: Alignment.centerRight,
+              child: FilledButton.icon(
+                onPressed: onOpen,
+                icon: const Icon(Icons.arrow_forward_rounded),
+                label: Text(l10n.tr('timer_workout_card_cta')),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ModeMascot extends StatefulWidget {
+  const _ModeMascot({required this.mode});
+
+  final String mode;
+
+  @override
+  State<_ModeMascot> createState() => _ModeMascotState();
+}
+
+class _ModeMascotState extends State<_ModeMascot>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 4),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final icon = _iconFor(widget.mode);
+    final baseColor = _colorFor(scheme, widget.mode);
+    final title = _titleFor(widget.mode);
+    final subtitle = _subtitleFor(widget.mode);
+    final gradient = LinearGradient(
+      colors: [
+        baseColor.withValues(alpha: 0.2),
+        baseColor.withValues(alpha: 0.08),
+      ],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    );
+
+    return SizedBox(
+      height: 160,
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, child) {
+          final angle = _controller.value * 2 * math.pi;
+          final dy = math.sin(angle) * 6;
+          final scale = 0.96 + (math.cos(angle) * 0.04);
+          return Transform.translate(
+            offset: Offset(0, dy),
+            child: Transform.scale(
+              scale: scale,
+              child: child,
+            ),
+          );
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: gradient,
+            borderRadius: BorderRadius.circular(28),
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  height: 72,
+                  width: 72,
+                  decoration: BoxDecoration(
+                    color: baseColor.withValues(alpha: 0.18),
+                    shape: BoxShape.circle,
+                  ),
+                  alignment: Alignment.center,
+                  child: Icon(icon, size: 36, color: baseColor),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  title,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  subtitle,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant.withValues(
+                      alpha: 0.8,
+                    ),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  IconData _iconFor(String mode) {
+    switch (mode) {
+      case 'focus':
+        return Icons.center_focus_strong_rounded;
+      case 'sleep':
+        return Icons.bedtime_rounded;
+      case 'workout':
+        return Icons.directions_run_rounded;
+      default:
+        return Icons.timer_rounded;
+    }
+  }
+
+  Color _colorFor(ColorScheme scheme, String mode) {
+    switch (mode) {
+      case 'focus':
+        return scheme.primary;
+      case 'sleep':
+        return scheme.secondary;
+      case 'workout':
+        return scheme.tertiary;
+      default:
+        return scheme.primary;
+    }
+  }
+
+  String _titleFor(String mode) {
+    switch (mode) {
+      case 'focus':
+        return '집중 세션 준비';
+      case 'sleep':
+        return '수면 루틴 준비';
+      case 'workout':
+        return '운동 세션 준비';
+      default:
+        return '타이머 준비';
+    }
+  }
+
+  String _subtitleFor(String mode) {
+    switch (mode) {
+      case 'focus':
+        return '원하는 루틴을 골라 바로 시작하세요.';
+      case 'sleep':
+        return '수면 시간과 기상 알림을 확인하세요.';
+      case 'workout':
+        return '코스와 목표를 확인하고 출발해요.';
+      default:
+        return '모드를 선택해 타이머를 시작하세요.';
+    }
   }
 }
 
@@ -857,8 +1309,6 @@ class _TimerStatusCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(segment.labelFor(l10n), style: theme.textTheme.titleMedium),
-            const SizedBox(height: 12),
             SizedBox(
               height: 180,
               width: 180,
@@ -948,6 +1398,387 @@ class _SoundControlsCard extends StatelessWidget {
   }
 }
 
+class _WorkoutNavigatorOverlay extends StatelessWidget {
+  const _WorkoutNavigatorOverlay({required this.state});
+
+  final TimerState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final route = state.navigatorRoute!;
+    final theme = Theme.of(context);
+    final now = DateTime.now();
+    final elapsed = state.sessionStartedAt != null
+        ? now.difference(state.sessionStartedAt!)
+        : Duration.zero;
+    final lastCueMessage = state.navigatorLastCueMessage;
+    final lastCueAt = state.navigatorLastCueAt;
+    final lastCueAgo = lastCueAt != null ? now.difference(lastCueAt) : null;
+    final total = route.totalDuration > Duration.zero
+        ? route.totalDuration
+        : Duration(minutes: route.estimatedMinutes.round().clamp(5, 240));
+    final progress = total.inSeconds == 0
+        ? 0.0
+        : (elapsed.inSeconds / total.inSeconds).clamp(0.0, 1.0);
+    final remaining = total - elapsed;
+    final nextCue = route.voiceCues
+        .where((cue) => cue.offset > elapsed)
+        .fold<WorkoutNavigatorCue?>(
+          null,
+          (previous, cue) =>
+              previous == null || cue.offset < previous.offset ? cue : previous,
+        );
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        route.title,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(route.description),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    _InfoBadge(
+                      icon: Icons.social_distance_outlined,
+                      label: '${route.distanceKm.toStringAsFixed(1)} km',
+                    ),
+                    const SizedBox(height: 8),
+                    _InfoBadge(
+                      icon: Icons.schedule_outlined,
+                      label: '${route.estimatedMinutes.round()} min',
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            if (route.mapAssetPath != null) ...[
+              const SizedBox(height: 12),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.asset(
+                  route.mapAssetPath!,
+                  fit: BoxFit.cover,
+                  height: 160,
+                  width: double.infinity,
+                  errorBuilder: (context, error, stack) => Container(
+                    height: 160,
+                    alignment: Alignment.center,
+                    color: theme.colorScheme.surfaceContainerHighest,
+                    child: Text(
+                      'Map preview coming soon',
+                      style: theme.textTheme.bodyMedium,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+            const SizedBox(height: 16),
+            LinearProgressIndicator(value: progress),
+            const SizedBox(height: 8),
+            Text(
+              remaining.isNegative
+                  ? 'Session complete'
+                  : 'Time remaining ${_formatRemaining(remaining)}',
+              style: theme.textTheme.bodySmall,
+            ),
+            if (state.navigatorTarget != null) ...[
+              const SizedBox(height: 12),
+              Text(
+                state.navigatorTarget!.type == WorkoutTargetType.distance
+                    ? 'Target • ${state.navigatorTarget!.value.toStringAsFixed(1)} km'
+                    : 'Target • ${state.navigatorTarget!.value.toStringAsFixed(0)} min',
+                style: theme.textTheme.bodyMedium,
+              ),
+            ],
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                const Icon(Icons.record_voice_over_outlined, size: 18),
+                const SizedBox(width: 6),
+                Text(
+                  state.navigatorVoiceEnabled
+                      ? 'Voice guidance • On'
+                      : 'Voice guidance • Off',
+                  style: theme.textTheme.bodySmall,
+                ),
+              ],
+            ),
+            if (lastCueMessage != null) ...[
+              const SizedBox(height: 8),
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.secondaryContainer.withValues(
+                    alpha: 0.6,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Last cue • ${_formatCueAgo(lastCueAgo)}',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(lastCueMessage),
+                  ],
+                ),
+              ),
+            ],
+            if (nextCue != null) ...[
+              const SizedBox(height: 12),
+              Text(
+                'Next cue in ${_formatRemaining(nextCue.offset - elapsed)}',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(nextCue.message),
+            ],
+            const SizedBox(height: 12),
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton.icon(
+                onPressed: () {
+                  showModalBottomSheet<void>(
+                    context: context,
+                    builder: (context) => SafeArea(
+                      child: Padding(
+                        padding: const EdgeInsets.all(24),
+                        child: SingleChildScrollView(
+                          child: Text(route.offlineSummary),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.offline_pin_outlined),
+                label: const Text('Offline instructions'),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _formatCueAgo(Duration? duration) {
+    if (duration == null || duration.isNegative || duration.inSeconds <= 1) {
+      return 'Just now';
+    }
+    if (duration.inMinutes == 0) {
+      return '${duration.inSeconds}s ago';
+    }
+    if (duration.inHours == 0) {
+      return '${duration.inMinutes}m ago';
+    }
+    final hours = duration.inHours;
+    final minutes = duration.inMinutes.remainder(60);
+    if (minutes == 0) {
+      return '${hours}h ago';
+    }
+    return '${hours}h ${minutes}m ago';
+  }
+
+  String _formatRemaining(Duration duration) {
+    if (duration.isNegative) {
+      return '0:00';
+    }
+    final minutes = duration.inMinutes;
+    final seconds = duration.inSeconds.remainder(60);
+    if (minutes >= 60) {
+      final hours = duration.inHours;
+      final remainingMinutes = minutes.remainder(60);
+      return '${hours}h ${remainingMinutes}m';
+    }
+    return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+  }
+}
+
+class _NavigatorSummaryCard extends StatelessWidget {
+  const _NavigatorSummaryCard({required this.summary});
+
+  final NavigatorCompletionSummary summary;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    WorkoutNavigatorRoute? matchedRoute;
+    for (final route in workoutNavigatorRoutes) {
+      if (route.id == summary.routeId) {
+        matchedRoute = route;
+        break;
+      }
+    }
+
+    final duration = Duration(seconds: summary.elapsedSeconds);
+    final durationLabel = _formatDuration(duration);
+    final voiceLabel = summary.voiceGuidanceEnabled ? 'On' : 'Off';
+    final checklistLabel = summary.checklistCheckedCount == 1
+        ? '1 item'
+        : '${summary.checklistCheckedCount} items';
+    String? targetLabel;
+    if (summary.targetType != null && summary.targetValue != null) {
+      targetLabel = summary.targetType == WorkoutTargetType.distance
+          ? '${summary.targetValue!.toStringAsFixed(1)} km distance'
+          : '${summary.targetValue!.toStringAsFixed(0)} min duration';
+    }
+    final completedTime = TimeOfDay.fromDateTime(summary.completedAt);
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Workout navigator summary',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Completed at ${completedTime.format(context)}',
+                      style: theme.textTheme.bodySmall,
+                    ),
+                  ],
+                ),
+                if (matchedRoute != null)
+                  _InfoBadge(
+                    icon: Icons.route_outlined,
+                    label: matchedRoute.title,
+                  ),
+              ],
+            ),
+            if (matchedRoute == null) ...[
+              const SizedBox(height: 8),
+              Text(summary.routeId, style: theme.textTheme.bodyMedium),
+            ],
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 12,
+              runSpacing: 12,
+              children: [
+                _InfoBadge(
+                  icon: Icons.schedule_outlined,
+                  label: 'Duration • $durationLabel',
+                ),
+                if (targetLabel != null)
+                  _InfoBadge(
+                    icon: Icons.flag_outlined,
+                    label: 'Target • $targetLabel',
+                  ),
+                _InfoBadge(
+                  icon: Icons.record_voice_over_outlined,
+                  label: 'Voice guidance • $voiceLabel',
+                ),
+                _InfoBadge(
+                  icon: Icons.checklist_rtl_outlined,
+                  label: 'Checklist • $checklistLabel',
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _formatDuration(Duration value) {
+    if (value.inHours > 0) {
+      final hours = value.inHours;
+      final minutes = value.inMinutes.remainder(60);
+      if (minutes == 0) return '${hours}h';
+      return '${hours}h ${minutes}m';
+    }
+    if (value.inMinutes > 0) {
+      final minutes = value.inMinutes;
+      final seconds = value.inSeconds.remainder(60);
+      if (seconds == 0) return '${minutes}m';
+      return '${minutes}m ${seconds}s';
+    }
+    return '${value.inSeconds}s';
+  }
+}
+
+class _InfoBadge extends StatelessWidget {
+  const _InfoBadge({required this.icon, required this.label});
+
+  final IconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final bg = scheme.surfaceContainerHighest.withValues(
+      alpha: theme.brightness == Brightness.dark ? 0.25 : 0.4,
+    );
+    final textStyle = theme.textTheme.labelLarge?.copyWith(
+      color: scheme.onSurfaceVariant,
+      fontWeight: FontWeight.w600,
+      letterSpacing: -0.1,
+    );
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: scheme.outlineVariant.withValues(alpha: 0.24),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 18, color: scheme.primary.withValues(alpha: 0.9)),
+          const SizedBox(width: 8),
+          Flexible(
+            child: Text(
+              label,
+              style: textStyle,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _SegmentTimelineCard extends StatelessWidget {
   const _SegmentTimelineCard({required this.state});
 
@@ -1014,7 +1845,7 @@ class _SegmentTimelineCard extends StatelessWidget {
                   ),
                 );
               },
-              separatorBuilder: (_, __) => const SizedBox(height: 8),
+              separatorBuilder: (_, index) => const SizedBox(height: 8),
               itemCount: state.segments.length,
             ),
           ],
@@ -1113,45 +1944,6 @@ class _TimerControlBar extends StatelessWidget {
   }
 }
 
-const Map<String, List<int>> _presetOptions = {
-  'focus': [15, 25, 40, 50],
-  'rest': [5, 10, 15],
-  'workout': [10, 20, 30],
-  'sleep': [15, 30, 45, 60],
-};
-
-String _modeSettingsKey(String mode) {
-  switch (mode) {
-    case 'rest':
-      return 'rest';
-    case 'workout':
-      return 'workout';
-    case 'sleep':
-      return 'sleep';
-    case 'focus':
-    default:
-      return 'focus';
-  }
-}
-
-int _modeDuration(Settings settings, String mode) {
-  switch (mode) {
-    case 'rest':
-      return settings.restMinutes;
-    case 'workout':
-      return settings.workoutMinutes;
-    case 'sleep':
-      return settings.sleepMinutes;
-    case 'focus':
-    default:
-      return settings.focusMinutes;
-  }
-}
-
-String _formatDurationLabel(int minutes, AppLocalizations l10n) {
-  return l10n.tr('session_duration_minutes', {'minutes': '$minutes'});
-}
-
 class _NoiseSlider extends StatelessWidget {
   const _NoiseSlider({
     required this.label,
@@ -1197,7 +1989,7 @@ class _NoiseSlider extends StatelessWidget {
 }
 
 class SleepPresetSummary extends StatelessWidget {
-  const SleepPresetSummary({required this.settings, this.catalog});
+  const SleepPresetSummary({super.key, required this.settings, this.catalog});
 
   final Settings settings;
   final SleepSoundCatalog? catalog;
@@ -1324,6 +2116,7 @@ class _SleepSmartAlarmCard extends ConsumerWidget {
                         }
                       }
                       if (catalog == null) return;
+                      if (!context.mounted) return;
                       final updated = await _showEditor(
                         context,
                         ref,
@@ -1331,6 +2124,7 @@ class _SleepSmartAlarmCard extends ConsumerWidget {
                         reducedMotion,
                         catalog,
                       );
+                      if (!context.mounted) return;
                       if (updated == true) {
                         await onUpdated();
                         if (context.mounted) {
@@ -1795,76 +2589,112 @@ class _QuickPresetEditor extends ConsumerWidget {
     return settingsAsync.when(
       loading: () => const SizedBox.shrink(),
       error: (e, _) => Text(l10n.tr('generic_settings_error', {'error': '$e'})),
-      data: (s) => Wrap(
-        spacing: 8,
-        crossAxisAlignment: WrapCrossAlignment.center,
-        children: [
-          _EditChip(
-            label: l10n.tr('timer_preset_label', {
-              'label': l10n.tr('timer_mode_focus'),
-              'minutes': '${s.focusMinutes}',
-            }),
-            onTap: () async {
-              final n = await _askMinutes(
-                context,
-                l10n.tr('timer_mode_focus'),
-                s.focusMinutes,
-              );
-              if (n == null || n <= 0) return;
-              await ref.read(savePresetProvider({'focus': n}).future);
-              await controller.setPreset('focus', n);
-            },
-          ),
-          _EditChip(
-            label: l10n.tr('timer_preset_label', {
-              'label': l10n.tr('timer_mode_rest'),
-              'minutes': '${s.restMinutes}',
-            }),
-            onTap: () async {
-              final n = await _askMinutes(
-                context,
-                l10n.tr('timer_mode_rest'),
-                s.restMinutes,
-              );
-              if (n == null || n <= 0) return;
-              await ref.read(savePresetProvider({'rest': n}).future);
-              await controller.setPreset('rest', n);
-            },
-          ),
-          _EditChip(
-            label: l10n.tr('timer_preset_label', {
-              'label': l10n.tr('timer_mode_workout'),
-              'minutes': '${s.workoutMinutes}',
-            }),
-            onTap: () async {
-              final n = await _askMinutes(
-                context,
-                l10n.tr('timer_mode_workout'),
-                s.workoutMinutes,
-              );
-              if (n == null || n <= 0) return;
-              await ref.read(savePresetProvider({'workout': n}).future);
-              await controller.setPreset('workout', n);
-            },
-          ),
-          _EditChip(
-            label: l10n.tr('timer_preset_label', {
-              'label': l10n.tr('timer_mode_sleep'),
-              'minutes': '${s.sleepMinutes}',
-            }),
-            onTap: () async {
-              final n = await _askMinutes(
-                context,
-                l10n.tr('timer_mode_sleep'),
-                s.sleepMinutes,
-              );
-              if (n == null || n <= 0) return;
-              await ref.read(savePresetProvider({'sleep': n}).future);
-              await controller.setPreset('sleep', n);
-            },
-          ),
-        ],
-      ),
+      data: (s) {
+        Widget buildSection({
+          required String title,
+          required List<Widget> chips,
+        }) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(height: 8),
+              Wrap(spacing: 8, runSpacing: 8, children: chips),
+            ],
+          );
+        }
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            buildSection(
+              title: l10n.tr('timer_preset_section_focus'),
+              chips: [
+                _EditChip(
+                  label: l10n.tr('timer_preset_label', {
+                    'label': l10n.tr('timer_mode_focus'),
+                    'minutes': '${s.focusMinutes}',
+                  }),
+                  onTap: () async {
+                    final n = await _askMinutes(
+                      context,
+                      l10n.tr('timer_mode_focus'),
+                      s.focusMinutes,
+                    );
+                    if (n == null || n <= 0) return;
+                    await ref.read(savePresetProvider({'focus': n}).future);
+                    await controller.setPreset('focus', n);
+                  },
+                ),
+                _EditChip(
+                  label: l10n.tr('timer_preset_break_label', {
+                    'minutes': '${s.restMinutes}',
+                  }),
+                  onTap: () async {
+                    final n = await _askMinutes(
+                      context,
+                      l10n.tr('timer_preset_break_title'),
+                      s.restMinutes,
+                    );
+                    if (n == null || n <= 0) return;
+                    await ref.read(savePresetProvider({'rest': n}).future);
+                    await controller.setPreset('rest', n);
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            buildSection(
+              title: l10n.tr('timer_preset_section_workout'),
+              chips: [
+                _EditChip(
+                  label: l10n.tr('timer_preset_label', {
+                    'label': l10n.tr('timer_mode_workout'),
+                    'minutes': '${s.workoutMinutes}',
+                  }),
+                  onTap: () async {
+                    final n = await _askMinutes(
+                      context,
+                      l10n.tr('timer_mode_workout'),
+                      s.workoutMinutes,
+                    );
+                    if (n == null || n <= 0) return;
+                    await ref.read(savePresetProvider({'workout': n}).future);
+                    await controller.setPreset('workout', n);
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            buildSection(
+              title: l10n.tr('timer_preset_section_sleep'),
+              chips: [
+                _EditChip(
+                  label: l10n.tr('timer_preset_label', {
+                    'label': l10n.tr('timer_mode_sleep'),
+                    'minutes': '${s.sleepMinutes}',
+                  }),
+                  onTap: () async {
+                    final n = await _askMinutes(
+                      context,
+                      l10n.tr('timer_mode_sleep'),
+                      s.sleepMinutes,
+                    );
+                    if (n == null || n <= 0) return;
+                    await ref.read(savePresetProvider({'sleep': n}).future);
+                    await controller.setPreset('sleep', n);
+                  },
+                ),
+              ],
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -24,7 +24,16 @@ import 'package:life_app/providers/sleep_analysis_providers.dart';
 import 'package:life_app/services/audio/timer_audio_service.dart';
 import 'package:life_app/providers/diagnostics_providers.dart';
 import 'package:life_app/services/diagnostics/timer_diagnostics_service.dart';
+import 'package:life_app/features/workout/models/workout_navigator_models.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+class _NavigatorCueTrigger {
+  _NavigatorCueTrigger({required this.offsetSeconds, required this.message});
+
+  final int offsetSeconds;
+  final String message;
+  bool triggered = false;
+}
 
 class TimerController extends Notifier<TimerState> {
   Timer? _ticker;
@@ -41,6 +50,11 @@ class TimerController extends Notifier<TimerState> {
   SleepSoundAnalyzer? _sleepSoundAnalyzer;
   bool _sleepCaptureActive = false;
   bool _sleepForegroundActive = false;
+  WorkoutNavigatorRoute? _navigatorRoute;
+  WorkoutNavigatorTarget? _navigatorTarget;
+  final List<_NavigatorCueTrigger> _navigatorCueTriggers = [];
+  bool _navigatorVoiceEnabled = true;
+  int _navigatorChecklistCheckedCount = 0;
 
   static const _prefsKey = 'timer_state_v2';
   static const _notificationIdBase = 4200;
@@ -86,12 +100,87 @@ class TimerController extends Notifier<TimerState> {
     return state;
   }
 
+  void _clearNavigatorContext() {
+    if (_navigatorRoute == null &&
+        _navigatorTarget == null &&
+        _navigatorCueTriggers.isEmpty) {
+      return;
+    }
+    _navigatorRoute = null;
+    _navigatorTarget = null;
+    _navigatorCueTriggers.clear();
+    _navigatorVoiceEnabled = true;
+    _navigatorChecklistCheckedCount = 0;
+    state = state.copyWith(
+      navigatorRoute: null,
+      navigatorTarget: null,
+      navigatorVoiceEnabled: true,
+      navigatorLastCueMessage: null,
+      navigatorLastCueAt: null,
+    );
+  }
+
   Future<void> selectMode(String mode) async {
     await _loadPlanAndRestore(mode: mode, forceReset: true);
   }
 
   Future<void> setPreset(String mode, int minutes) async {
     await selectMode(mode);
+  }
+
+  Future<void> startNavigatorWorkout({
+    required WorkoutNavigatorRoute route,
+    required WorkoutNavigatorTarget target,
+    required bool voiceGuidanceEnabled,
+    required int checklistCheckedCount,
+  }) async {
+    final soundEnabled = state.isSoundEnabled;
+    await _cancelScheduledNotifications();
+    await _stopTicker();
+    await _audioService.setEnabled(false);
+    await _background.cancelGuard();
+    await _cancelSleepSoundCapture();
+    await _foreground.stop();
+
+    _navigatorRoute = route;
+    _navigatorTarget = target;
+    _navigatorCueTriggers
+      ..clear()
+      ..addAll(
+        route.voiceCues
+            .map(
+              (cue) => _NavigatorCueTrigger(
+                offsetSeconds: cue.offset.inSeconds.clamp(0, 24 * 3600).toInt(),
+                message: cue.message,
+              ),
+            )
+            .toList()
+          ..sort((a, b) => a.offsetSeconds.compareTo(b.offsetSeconds)),
+      );
+    _navigatorVoiceEnabled = voiceGuidanceEnabled;
+    _navigatorChecklistCheckedCount = checklistCheckedCount;
+
+    final plan = _buildNavigatorPlan(route);
+    _currentPlan = plan;
+    state = TimerState.idle(
+      plan: plan,
+      soundEnabled: soundEnabled,
+      navigatorRoute: route,
+      navigatorTarget: target,
+      navigatorVoiceEnabled: voiceGuidanceEnabled,
+      navigatorLastSummary: null,
+    );
+
+    await AnalyticsService.logEvent('workout_navigator_start_session', {
+      'route_id': route.id,
+      'target_type': target.type.name,
+      'target_value': target.value,
+      'voice_guidance_enabled': voiceGuidanceEnabled,
+      'checklist_checked_count': checklistCheckedCount,
+    });
+
+    await _persistState();
+    await _start();
   }
 
   Future<void> refreshCurrentPlan() async {
@@ -121,6 +210,7 @@ class TimerController extends Notifier<TimerState> {
   }
 
   Future<void> reset() async {
+    _clearNavigatorContext();
     final plan =
         _currentPlan ?? TimerPlanFactory.createPlan(state.mode, Settings());
     state = TimerState.idle(plan: plan, soundEnabled: state.isSoundEnabled);
@@ -141,7 +231,10 @@ class TimerController extends Notifier<TimerState> {
       return;
     }
     await _completeCurrentSegment(record: false, autoAdvance: true);
-    await AnalyticsService.logEvent('segment_skip', {'mode': state.mode});
+    await AnalyticsService.logEvent('segment_skip', {
+      'mode': state.mode,
+      'navigator_route_id': _navigatorRoute?.id,
+    });
   }
 
   Future<void> previousSegment() async {
@@ -171,6 +264,7 @@ class TimerController extends Notifier<TimerState> {
     await AnalyticsService.logEvent('segment_rewind', {
       'mode': state.mode,
       'target_segment': state.currentSegment.id,
+      'navigator_route_id': _navigatorRoute?.id,
     });
   }
 
@@ -189,6 +283,7 @@ class TimerController extends Notifier<TimerState> {
     );
     final plan = TimerPlanFactory.createPlan(mode, settings);
     _currentPlan = plan;
+    _clearNavigatorContext();
 
     final restored = forceReset ? false : await _restoreState(plan);
     if (!restored) {
@@ -248,6 +343,8 @@ class TimerController extends Notifier<TimerState> {
               _remainingSecondsAfter(currentIndex + 1, plan: plan)
         : savedRemainingSeconds;
 
+    final navigatorVoiceEnabled = map['navigatorVoiceEnabled'] as bool? ?? true;
+
     state = TimerState(
       mode: plan.mode,
       segments: plan.segments,
@@ -261,7 +358,22 @@ class TimerController extends Notifier<TimerState> {
           ? segmentStartedAt
           : null,
       isSoundEnabled: soundEnabled,
+      navigatorRoute: null,
+      navigatorTarget: null,
+      navigatorVoiceEnabled: navigatorVoiceEnabled,
     );
+
+    final lastCueMessage = map['navigatorLastCueMessage'] as String?;
+    final lastCueAtRaw = map['navigatorLastCueAt'] as String?;
+    final lastCueAt = lastCueAtRaw != null
+        ? DateTime.tryParse(lastCueAtRaw)
+        : null;
+    if (lastCueMessage != null) {
+      state = state.copyWith(
+        navigatorLastCueMessage: lastCueMessage,
+        navigatorLastCueAt: lastCueAt,
+      );
+    }
 
     final l10n = await _localizations();
     if (state.isRunning) {
@@ -380,6 +492,11 @@ class TimerController extends Notifier<TimerState> {
       'plan_segments': state.segments.length,
       'sound_enabled': state.isSoundEnabled,
       'elapsed_sec': elapsed,
+      'navigator_route_id': _navigatorRoute?.id,
+      'navigator_target_type': _navigatorTarget?.type.name,
+      'navigator_target_value': _navigatorTarget?.value,
+      'navigator_voice_enabled': _navigatorVoiceEnabled,
+      'navigator_checklist_checked_count': _navigatorChecklistCheckedCount,
     });
   }
 
@@ -402,6 +519,9 @@ class TimerController extends Notifier<TimerState> {
       'segment_id': state.currentSegment.id,
       'remaining_sec': state.remainingSeconds,
       'elapsed_sec': elapsed,
+      'navigator_route_id': _navigatorRoute?.id,
+      'navigator_voice_enabled': _navigatorVoiceEnabled,
+      'navigator_checklist_checked_count': _navigatorChecklistCheckedCount,
     });
   }
 
@@ -434,6 +554,10 @@ class TimerController extends Notifier<TimerState> {
       segmentRemainingSeconds: segmentRemaining,
       remainingSeconds: remaining,
     );
+
+    if (_navigatorRoute != null) {
+      _processNavigatorCues(now);
+    }
 
     if (segmentRemaining <= 0) {
       await _completeCurrentSegment();
@@ -494,6 +618,8 @@ class TimerController extends Notifier<TimerState> {
       'segment_label': segmentLabel,
       'segment_type': segment.type,
       'duration_sec': segment.duration.inSeconds,
+      'navigator_route_id': _navigatorRoute?.id,
+      'navigator_voice_enabled': _navigatorVoiceEnabled,
     });
 
     if (state.isLastSegment) {
@@ -510,13 +636,40 @@ class TimerController extends Notifier<TimerState> {
         'mode': state.mode,
         'duration_sec': elapsed,
         'segments': state.segments.length,
+        'navigator_route_id': _navigatorRoute?.id,
+        'navigator_target_type': _navigatorTarget?.type.name,
+        'navigator_target_value': _navigatorTarget?.value,
+        'navigator_voice_enabled': _navigatorVoiceEnabled,
+        'navigator_checklist_checked_count': _navigatorChecklistCheckedCount,
       });
       await AnalyticsService.logEvent('routine_complete', {
         'mode': state.mode,
         'duration_sec': elapsed,
         'segments': state.segments.length,
+        'navigator_route_id': _navigatorRoute?.id,
+        'navigator_voice_enabled': _navigatorVoiceEnabled,
+        'navigator_checklist_checked_count': _navigatorChecklistCheckedCount,
       });
+      NavigatorCompletionSummary? summary;
+      if (_navigatorRoute != null) {
+        summary = NavigatorCompletionSummary(
+          routeId: _navigatorRoute!.id,
+          completedAt: now,
+          elapsedSeconds: elapsed,
+          targetType: _navigatorTarget?.type,
+          targetValue: _navigatorTarget?.value,
+          voiceGuidanceEnabled: _navigatorVoiceEnabled,
+          checklistCheckedCount: _navigatorChecklistCheckedCount,
+        );
+      }
       await reset();
+      if (summary != null) {
+        state = state.copyWith(
+          navigatorLastSummary: summary,
+          navigatorLastCueMessage: null,
+          navigatorLastCueAt: null,
+        );
+      }
       await _clearPersistedState();
       return;
     }
@@ -581,7 +734,7 @@ class TimerController extends Notifier<TimerState> {
     TimerSegment segment,
     AppLocalizations l10n,
   ) async {
-    if (state.mode != 'workout') {
+    if (state.mode != 'workout' || _navigatorRoute != null) {
       return;
     }
     final round = _workoutRoundFromSegment(segment);
@@ -723,6 +876,12 @@ class TimerController extends Notifier<TimerState> {
       ..deviceId = settings.deviceId
       ..tags = []
       ..note = segment.labelFor(localizations);
+    if (segment.type == 'workout' && state.navigatorRoute != null) {
+      session.navigatorRouteId = state.navigatorRoute!.id;
+      session.navigatorTargetType = state.navigatorTarget?.type.name;
+      session.navigatorTargetValue = state.navigatorTarget?.value;
+      session.navigatorVoiceEnabled = state.navigatorVoiceEnabled;
+    }
     await ref.read(addSessionProvider(session).future);
   }
 
@@ -826,6 +985,10 @@ class TimerController extends Notifier<TimerState> {
       'sessionStartedAt': state.sessionStartedAt?.toIso8601String(),
       'segmentStartedAt': state.segmentStartedAt?.toIso8601String(),
       'isSoundEnabled': state.isSoundEnabled,
+      'navigatorRouteId': state.navigatorRoute?.id,
+      'navigatorVoiceEnabled': state.navigatorVoiceEnabled,
+      'navigatorLastCueMessage': state.navigatorLastCueMessage,
+      'navigatorLastCueAt': state.navigatorLastCueAt?.toIso8601String(),
     };
     await prefs.setString(_prefsKey, jsonEncode(data));
   }
@@ -850,6 +1013,68 @@ class TimerController extends Notifier<TimerState> {
       count * 10 + 10,
     );
     await _notifications.cancelTimerNotifications();
+  }
+
+  TimerPlan _buildNavigatorPlan(WorkoutNavigatorRoute route) {
+    final navigatorSegments = <TimerSegment>[];
+    if (route.segments.isNotEmpty) {
+      for (var i = 0; i < route.segments.length; i++) {
+        final segment = route.segments[i];
+        final duration = segment.endOffset - segment.startOffset;
+        if (duration <= Duration.zero) continue;
+        navigatorSegments.add(
+          TimerSegment(
+            id: '${route.id}_segment_${i + 1}',
+            type: 'workout',
+            duration: duration,
+            label: segment.focus,
+            playSoundProfile: 'workout',
+          ),
+        );
+      }
+    }
+
+    if (navigatorSegments.isEmpty) {
+      final minutes = route.estimatedMinutes > 1
+          ? route.estimatedMinutes.round()
+          : 20;
+      navigatorSegments.add(
+        TimerSegment(
+          id: '${route.id}_main',
+          type: 'workout',
+          duration: Duration(minutes: minutes),
+          label: route.title,
+          playSoundProfile: 'workout',
+        ),
+      );
+    }
+
+    return TimerPlan(mode: 'workout', segments: navigatorSegments);
+  }
+
+  void _processNavigatorCues(DateTime now) {
+    if (_navigatorRoute == null) return;
+    if (!_navigatorVoiceEnabled) return;
+    final startedAt = state.sessionStartedAt;
+    if (startedAt == null) return;
+    final elapsed = now.difference(startedAt).inSeconds;
+    for (final cue in _navigatorCueTriggers) {
+      if (cue.triggered) continue;
+      if (elapsed >= cue.offsetSeconds) {
+        cue.triggered = true;
+        unawaited(_workoutCues.speakNavigatorCue(cue.message));
+        unawaited(
+          AnalyticsService.logEvent('workout_navigator_voice_cue', {
+            'route_id': _navigatorRoute?.id,
+            'offset_sec': cue.offsetSeconds,
+          }),
+        );
+        state = state.copyWith(
+          navigatorLastCueMessage: cue.message,
+          navigatorLastCueAt: DateTime.now(),
+        );
+      }
+    }
   }
 }
 

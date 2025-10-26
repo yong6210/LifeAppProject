@@ -8,11 +8,11 @@ class RevenueCatKeys {
 
   static const String androidKey = String.fromEnvironment(
     'REVENUECAT_ANDROID_KEY',
-    defaultValue: 'REPLACE_WITH_ANDROID_SDK_KEY',
+    defaultValue: 'test_TSvBcFkKMdEMgIEDoBnEQnOBKOT',
   );
 
   static const String iosKey = String.fromEnvironment(
     'REVENUECAT_IOS_KEY',
-    defaultValue: 'REPLACE_WITH_IOS_SDK_KEY',
+    defaultValue: 'test_TSvBcFkKMdEMgIEDoBnEQnOBKOT',
   );
 }

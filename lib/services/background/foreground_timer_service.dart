@@ -1,4 +1,3 @@
-import 'dart:isolate';
 import 'dart:io';
 
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
@@ -21,17 +20,17 @@ void timerForegroundStartCallback() {
 
 class _TimerTaskHandler extends TaskHandler {
   @override
-  Future<void> onStart(DateTime timestamp, SendPort? sendPort) async {
+  Future<void> onStart(DateTime timestamp, TaskStarter starter) async {
     await _refreshNotification();
   }
 
   @override
-  Future<void> onRepeatEvent(DateTime timestamp, SendPort? sendPort) async {
-    await _refreshNotification();
+  void onRepeatEvent(DateTime timestamp) {
+    _refreshNotification();
   }
 
   @override
-  Future<void> onDestroy(DateTime timestamp, SendPort? sendPort) async {
+  Future<void> onDestroy(DateTime timestamp, bool reconnect) async {
     await FlutterForegroundTask.clearAllData();
   }
 
@@ -125,15 +124,14 @@ class ForegroundTimerService {
         channelDescription: l10n.tr('foreground_channel_description'),
         channelImportance: NotificationChannelImportance.LOW,
         priority: NotificationPriority.LOW,
-        isSticky: true,
+        visibility: NotificationVisibility.VISIBILITY_PUBLIC,
       ),
       iosNotificationOptions: const IOSNotificationOptions(
         showNotification: true,
         playSound: false,
       ),
-      foregroundTaskOptions: const ForegroundTaskOptions(
-        interval: 60000,
-        isOnceEvent: false,
+      foregroundTaskOptions: ForegroundTaskOptions(
+        eventAction: ForegroundTaskEventAction.repeat(60000),
         autoRunOnBoot: false,
         allowWakeLock: true,
         allowWifiLock: false,

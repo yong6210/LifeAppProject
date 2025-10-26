@@ -9,7 +9,7 @@ void main() {
       SharedPreferences.setMockInitialValues({});
     });
 
-    TimerAccuracySample _sample({
+    TimerAccuracySample buildSample({
       required String id,
       required int skew,
     }) {
@@ -27,7 +27,7 @@ void main() {
 
       for (var i = 0; i < 60; i++) {
         await service.appendAccuracySample(
-          _sample(id: 'seg_$i', skew: i),
+          buildSample(id: 'seg_$i', skew: i),
         );
       }
 
@@ -42,7 +42,7 @@ void main() {
     test('exports CSV with header and rows', () async {
       final service = await TimerDiagnosticsService.create();
       await service.appendAccuracySample(
-        _sample(id: 'seg_a', skew: 10),
+        buildSample(id: 'seg_a', skew: 10),
       );
       final csv = await service.exportAccuracySamplesAsCsv();
       expect(
@@ -56,7 +56,7 @@ void main() {
     test('clear removes stored samples', () async {
       final service = await TimerDiagnosticsService.create();
       await service.appendAccuracySample(
-        _sample(id: 'seg_clear', skew: 5),
+        buildSample(id: 'seg_clear', skew: 5),
       );
       await service.clearAccuracySamples();
       final samples = await service.loadAccuracySamples();

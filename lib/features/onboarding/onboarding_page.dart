@@ -67,10 +67,10 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
               onPageChanged: (index) => setState(() => _currentIndex = index),
               itemBuilder: (context, index) {
                 final page = pages[index];
-                switch (page.runtimeType) {
-                  case _OnboardingInfoPage:
-                    return _InfoPageView(page: page as _OnboardingInfoPage);
-                  case _OnboardingPersonaPage:
+                switch (page) {
+                  case final _OnboardingInfoPage infoPage:
+                    return _InfoPageView(page: infoPage);
+                  case final _OnboardingPersonaPage _:
                     return _PersonaSelectionView(
                       controller: _controller,
                       variant: variant,
@@ -98,6 +98,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                 ),
                 FilledButton(
                   onPressed: () async {
+                    final navigator = Navigator.of(context);
                     final currentPage =
                         totalPages > 0 ? pages[displayIndex] : null;
                     if (currentPage != null) {
@@ -121,7 +122,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                             .difference(_startedAt)
                             .inSeconds,
                       });
-                      if (mounted) Navigator.pop(context, true);
+                      if (!mounted) return;
+                      navigator.pop(true);
                     }
                   },
                   child: Text(

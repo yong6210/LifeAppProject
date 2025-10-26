@@ -179,12 +179,13 @@ final weeklyHighlightProvider = FutureProvider<WeeklyHighlight?>((ref) async {
   DailySummaryLocal? best;
   for (final summary in deviceSummaries) {
     if (summary.focusMinutes <= 0) continue;
-    if (best == null || summary.focusMinutes > best!.focusMinutes) {
+    final currentBestMinutes = best?.focusMinutes ?? -1;
+    if (summary.focusMinutes > currentBestMinutes) {
       best = summary;
     }
   }
   if (best == null) {
     return null;
   }
-  return WeeklyHighlight(date: best!.date, focusMinutes: best!.focusMinutes);
+  return WeeklyHighlight(date: best.date, focusMinutes: best.focusMinutes);
 });

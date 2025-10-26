@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -8,9 +9,8 @@ import 'package:life_app/core/firebase/firebase_initializer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:life_app/design/app_theme.dart';
 import 'package:life_app/features/timer/timer_page.dart';
-import 'package:life_app/features/backup/backup_page.dart';
 import 'package:life_app/features/stats/stats_page.dart';
-import 'package:life_app/features/subscription/paywall_page.dart';
+import 'package:life_app/features/account/account_page.dart';
 import 'package:life_app/features/onboarding/onboarding_page.dart';
 import 'package:life_app/features/journal/journal_page.dart';
 import 'package:life_app/models/settings.dart';
@@ -25,7 +25,6 @@ import 'package:life_app/services/background/workmanager_scheduler.dart';
 import 'package:life_app/services/subscription/revenuecat_service.dart';
 import 'package:life_app/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
-import 'package:life_app/services/audio/sleep_sound_analyzer.dart';
 import 'package:life_app/providers/sleep_analysis_providers.dart';
 
 Future<void> main() async {
@@ -58,18 +57,24 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final Locale? locale = ref.watch(appLocaleControllerProvider);
-    return MaterialApp(
-      onGenerateTitle: (context) => context.l10n.tr('app_title'),
-      localizationsDelegates: [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: AppLocalizations.supportedLocales,
-      locale: locale,
-      theme: AppTheme.lightTheme(),
-      home: const MyHomePage(),
+    return DynamicColorBuilder(
+      builder: (lightDynamic, darkDynamic) {
+        return MaterialApp(
+          onGenerateTitle: (context) => context.l10n.tr('app_title'),
+          localizationsDelegates: [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: locale,
+          theme: AppTheme.lightTheme(dynamicColor: lightDynamic),
+          darkTheme: AppTheme.darkTheme(dynamicColor: darkDynamic),
+          themeMode: ThemeMode.system,
+          home: const MyHomePage(),
+        );
+      },
     );
   }
 }
@@ -166,18 +171,6 @@ class MyHomePage extends ConsumerStatefulWidget {
   ConsumerState<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _QuickStartPreset {
-  const _QuickStartPreset({
-    required this.label,
-    required this.mode,
-    this.minutes,
-  });
-
-  final String label;
-  final String mode;
-  final int? minutes;
-}
-
 String _formatMinutesLabel(int minutes) {
   if (minutes <= 0) {
     return '0분';
@@ -192,37 +185,20 @@ String _formatMinutesLabel(int minutes) {
   return '$mins분';
 }
 
-String _formatBackupLabel(DateTime? lastBackupAt) {
-  if (lastBackupAt == null) {
-    return '백업 기록 없음';
-  }
-  final now = DateTime.now();
-  final diff = now.difference(lastBackupAt);
-  if (diff.inDays >= 1) {
-    return '${diff.inDays}일 전';
-  }
-  if (diff.inHours >= 1) {
-    return '${diff.inHours}시간 전';
-  }
-  return '방금';
-}
-
 class _HomeSummaryCard extends StatelessWidget {
   const _HomeSummaryCard({
     required this.dateLabel,
     required this.focusMinutes,
     required this.focusGoalMinutes,
     required this.sleepMinutes,
-    required this.lastBackupAt,
-    required this.l10n,
+    required this.workoutMinutes,
   });
 
   final String dateLabel;
   final int focusMinutes;
   final int focusGoalMinutes;
   final int sleepMinutes;
-  final DateTime? lastBackupAt;
-  final AppLocalizations l10n;
+  final int workoutMinutes;
 
   @override
   Widget build(BuildContext context) {
@@ -253,12 +229,14 @@ class _HomeSummaryCard extends StatelessWidget {
                     value: _formatMinutesLabel(focusMinutes),
                     subtitle: '목표 대비 $focusPercent%',
                     color: const Color(0xFFFFA94D),
-                    icon: Icons.auto_graph_rounded,
+                    icon: Icons.center_focus_strong_rounded,
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute<void>(
-                          builder: (_) => const StatsPage(),
+                          builder: (_) => const TimerPage(
+                            initialMode: 'focus',
+                          ),
                         ),
                       );
                     },
@@ -269,9 +247,9 @@ class _HomeSummaryCard extends StatelessWidget {
                   child: _SummaryTile(
                     title: '수면',
                     value: _formatMinutesLabel(sleepMinutes),
-                    subtitle: '수면 모드 보기',
+                    subtitle: '수면 모드 열기',
                     color: const Color(0xFF4D9EFF),
-                    icon: Icons.nights_stay_rounded,
+                    icon: Icons.nightlight_rounded,
                     onTap: () {
                       Navigator.push(
                         context,
@@ -286,16 +264,18 @@ class _HomeSummaryCard extends StatelessWidget {
                 const SizedBox(width: 12),
                 Expanded(
                   child: _SummaryTile(
-                    title: '백업',
-                    value: _formatBackupLabel(lastBackupAt),
-                    subtitle: '지금 백업',
-                    color: const Color(0xFF4FE3C1),
-                    icon: Icons.cloud_upload_rounded,
+                    title: '운동',
+                    value: _formatMinutesLabel(workoutMinutes),
+                    subtitle: '운동 모드 열기',
+                    color: const Color(0xFF6BCB77),
+                    icon: Icons.fitness_center_rounded,
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute<void>(
-                          builder: (_) => const BackupPage(),
+                          builder: (_) => const TimerPage(
+                            initialMode: 'workout',
+                          ),
                         ),
                       );
                     },
@@ -368,9 +348,146 @@ class _SummaryTile extends StatelessWidget {
   }
 }
 
+class _HomeDashboardTab extends ConsumerWidget {
+  const _HomeDashboardTab();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authState = ref.watch(authControllerProvider);
+    final settingsAsync = ref.watch(settingsFutureProvider);
+    final settings = settingsAsync.asData?.value;
+    final todaySummary = ref
+        .watch(todaySummaryProvider)
+        .maybeWhen(data: (value) => value, orElse: () => const TodaySummary());
+    final syncState = ref.watch(syncControllerProvider);
+    final l10n = context.l10n;
+    final locale = Localizations.localeOf(context);
+    final dateLabel = DateFormat.yMMMMd(
+      locale.toLanguageTag(),
+    ).format(DateTime.now());
+    final focusGoalBaseMinutes = settings?.focusMinutes ?? 25;
+    final focusGoalMinutes =
+        ((focusGoalBaseMinutes * 4).clamp(0, 600)).toInt();
+
+    final banner = _buildSyncBanner(
+      context: context,
+      syncState: syncState,
+      authState: authState,
+      l10n: l10n,
+    );
+
+    Future<void> openTimer(
+      String mode, {
+      bool autoStart = false,
+    }) async {
+      await Navigator.push(
+        context,
+        MaterialPageRoute<void>(
+          builder: (_) => TimerPage(initialMode: mode, autoStart: autoStart),
+        ),
+      );
+    }
+
+    return SafeArea(
+      child: RefreshIndicator(
+        color: Theme.of(context).colorScheme.primary,
+        onRefresh: () async {
+          ref.invalidate(settingsFutureProvider);
+          ref.invalidate(todaySummaryProvider);
+          ref.invalidate(latestSleepSoundSummaryProvider);
+        },
+        child: ListView(
+          physics: const BouncingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics(),
+          ),
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 40),
+          children: [
+            _HomeSummaryCard(
+              dateLabel: dateLabel,
+              focusMinutes: todaySummary.focus,
+              focusGoalMinutes: focusGoalMinutes,
+              sleepMinutes: todaySummary.sleep,
+              workoutMinutes: todaySummary.workout,
+            ),
+            if (banner != null) ...[
+              const SizedBox(height: 20),
+              banner,
+            ],
+            const SizedBox(height: 24),
+            _QuickAccessCard(onOpenTimer: openTimer),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _QuickAccessCard extends StatelessWidget {
+  const _QuickAccessCard({required this.onOpenTimer});
+
+  final Future<void> Function(String mode, {bool autoStart}) onOpenTimer;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '빠른 실행',
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 12,
+              runSpacing: 12,
+              children: [
+                FilledButton.icon(
+                  onPressed: () => onOpenTimer('focus', autoStart: true),
+                  icon: const Icon(Icons.center_focus_strong_rounded),
+                  label: const Text('집중 바로 시작'),
+                ),
+                FilledButton.icon(
+                  onPressed: () => onOpenTimer('sleep'),
+                  icon: const Icon(Icons.nightlight_round),
+                  label: const Text('수면 준비'),
+                ),
+                FilledButton.icon(
+                  onPressed: () => onOpenTimer('workout'),
+                  icon: const Icon(Icons.fitness_center_rounded),
+                  label: const Text('운동 탐색'),
+                ),
+                OutlinedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (_) => const StatsPage(),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.insights_outlined),
+                  label: const Text('분석 살펴보기'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _MyHomePageState extends ConsumerState<MyHomePage> {
   bool _onboardingShown = false;
   ProviderSubscription<AsyncValue<Settings>>? _settingsSubscription;
+  int _currentIndex = 0;
 
   @override
   void initState() {
@@ -413,21 +530,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final authState = ref.watch(authControllerProvider);
-    final premiumStatus = ref.watch(premiumStatusProvider);
     ref.watch(revenueCatControllerProvider);
     final settingsAsync = ref.watch(settingsFutureProvider);
-    final settings = settingsAsync.asData?.value;
-    final todaySummary = ref
-        .watch(todaySummaryProvider)
-        .maybeWhen(data: (value) => value, orElse: () => const TodaySummary());
-    final sleepSummaryAsync = ref.watch(latestSleepSoundSummaryProvider);
-    final sleepSummary = sleepSummaryAsync.maybeWhen(
-      data: (value) => value,
-      orElse: () => null,
-    );
-    final syncState = ref.watch(syncControllerProvider);
-    final l10n = context.l10n;
     settingsAsync.whenData((settings) {
       if (!_onboardingShown && !settings.hasCompletedOnboarding) {
         _onboardingShown = true;
@@ -440,629 +544,54 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
         });
       }
     });
-    final isPremium = premiumStatus.isPremium;
-    final locale = Localizations.localeOf(context);
-    final dateLabel = DateFormat.yMMMMd(
-      locale.toLanguageTag(),
-    ).format(DateTime.now());
-
-    final focusMinutesToday = todaySummary.focus;
-    final sleepMinutes = todaySummary.sleep;
-    final focusGoalBaseMinutes = settings?.focusMinutes ?? 25;
-    final focusGoalMinutes =
-        ((focusGoalBaseMinutes * 4).clamp(0, 600)).toInt();
-    double focusProgress = 0;
-    if (focusGoalMinutes > 0) {
-      focusProgress = focusMinutesToday / focusGoalMinutes;
-    }
-    focusProgress = focusProgress.clamp(0.0, 1.0).toDouble();
-
-    final focusPresets = <_QuickStartPreset>[
-      for (final preset in settings?.presets ?? const <Preset>[])
-        if (preset.mode == 'focus')
-          _QuickStartPreset(
-            label: preset.name,
-            mode: preset.mode,
-            minutes: preset.durationMinutes,
-          ),
+    final tabs = const [
+      _HomeDashboardTab(),
+      StatsPage(),
+      JournalPage(),
+      AccountPage(),
     ];
-    if (focusPresets.isEmpty) {
-      focusPresets.addAll(const [
-        _QuickStartPreset(label: '25분 포모도로', mode: 'focus', minutes: 25),
-        _QuickStartPreset(label: '45분 몰입', mode: 'focus', minutes: 45),
-        _QuickStartPreset(label: '90분 플로우', mode: 'focus', minutes: 90),
-      ]);
-    }
-
-    final banner = _buildSyncBanner(
-      context: context,
-      syncState: syncState,
-      authState: authState,
-      l10n: l10n,
-    );
-
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      body: SafeArea(
-        child: RefreshIndicator(
-          color: Theme.of(context).colorScheme.primary,
-          onRefresh: () async {
-            ref.invalidate(settingsFutureProvider);
-            ref.invalidate(todaySummaryProvider);
-            ref.invalidate(latestSleepSoundSummaryProvider);
-          },
-          child: CustomScrollView(
-            physics: const BouncingScrollPhysics(
-              parent: AlwaysScrollableScrollPhysics(),
-            ),
-            slivers: [
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
-                  child: _HomeSummaryCard(
-                    dateLabel: dateLabel,
-                    focusMinutes: focusMinutesToday,
-                    focusGoalMinutes: focusGoalMinutes,
-                    sleepMinutes: sleepMinutes,
-                    lastBackupAt: settings?.lastBackupAt,
-                    l10n: l10n,
-                  ),
-                ),
-              ),
-              if (banner != null)
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
-                    child: banner,
-                  ),
-                ),
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
-                  child: _FocusSection(
-                    l10n: l10n,
-                    focusMinutes: focusMinutesToday,
-                    focusGoalMinutes: focusGoalMinutes,
-                    focusProgress: focusProgress,
-                    presets: focusPresets,
-                    onStartPreset: (preset) {
-                      AnalyticsService.logEvent('home_quick_start', {
-                        'mode': preset.mode,
-                        'minutes': preset.minutes,
-                      });
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (_) => TimerPage(
-                            initialMode: preset.mode,
-                            autoStart: true,
-                          ),
-                        ),
-                      );
-                    },
-                    onViewStats: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (_) => const StatsPage(),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
-                  child: _SleepSection(
-                    l10n: l10n,
-                    sleepMinutes: sleepMinutes,
-                    sleepSummary: sleepSummary,
-                    onStartSleepMode: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (_) =>
-                              TimerPage(initialMode: 'sleep', autoStart: true),
-                        ),
-                      );
-                    },
-                    onOpenBackup: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (_) => const BackupPage(),
-                        ),
-                      );
-                    },
-                    onSyncWearable: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: const Text('웨어러블 연동 기능이 준비 중입니다.')),
-                      );
-                    },
-                  ),
-                ),
-              ),
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
-                  child: _JournalSection(
-                    l10n: l10n,
-                    onOpenJournal: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (_) => const JournalPage(),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-              if (!isPremium)
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
-                    child: _PremiumUpsellHint(l10n: l10n),
-                  ),
-                ),
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 24, 20, 32),
-                  child: _CommunityBanner(
-                    l10n: l10n,
-                    onJoinChallenge: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: const Text('커뮤니티 기능이 곧 제공될 예정입니다.')),
-                      );
-                    },
-                    onInviteFriend: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: const Text('친구 초대 기능이 준비 중입니다.')),
-                      );
-                    },
-                  ),
-                ),
-              ),
-            ],
+      body: IndexedStack(
+        index: _currentIndex,
+        children: tabs,
+      ),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _currentIndex,
+        onDestinationSelected: (index) {
+          if (_currentIndex == index) return;
+          setState(() => _currentIndex = index);
+        },
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.home_outlined),
+            selectedIcon: Icon(Icons.home_rounded),
+            label: '메인',
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _FocusSection extends StatelessWidget {
-  const _FocusSection({
-    required this.l10n,
-    required this.focusMinutes,
-    required this.focusGoalMinutes,
-    required this.focusProgress,
-    required this.presets,
-    required this.onStartPreset,
-    required this.onViewStats,
-  });
-
-  final AppLocalizations l10n;
-  final int focusMinutes;
-  final int focusGoalMinutes;
-  final double focusProgress;
-  final List<_QuickStartPreset> presets;
-  final ValueChanged<_QuickStartPreset> onStartPreset;
-  final VoidCallback onViewStats;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final progressPercent = (focusProgress * 100).clamp(0, 100).toInt();
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Text(
-                  '집중 현황',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const Spacer(),
-                TextButton(
-                  onPressed: onViewStats,
-                  child: const Text('상세 보기'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Text(
-              '오늘 ${_formatMinutesLabel(focusMinutes)} 집중했습니다.',
-              style: theme.textTheme.bodyMedium,
-            ),
-            const SizedBox(height: 12),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: LinearProgressIndicator(
-                minHeight: 10,
-                value: focusProgress.clamp(0, 1),
-                backgroundColor:
-                    theme.colorScheme.primary.withValues(alpha: 0.12),
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  theme.colorScheme.primary,
-                ),
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              '목표의 $progressPercent% 달성',
-              style: theme.textTheme.bodySmall,
-            ),
-            const SizedBox(height: 16),
-            Wrap(
-              spacing: 12,
-              runSpacing: 12,
-              children: presets.map((preset) {
-                return FilledButton.tonal(
-                  onPressed: () => onStartPreset(preset),
-                  child: Text(preset.label),
-                );
-              }).toList(),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _SleepSection extends StatelessWidget {
-  const _SleepSection({
-    required this.l10n,
-    required this.sleepMinutes,
-    required this.sleepSummary,
-    required this.onStartSleepMode,
-    required this.onOpenBackup,
-    required this.onSyncWearable,
-  });
-
-  final AppLocalizations l10n;
-  final int sleepMinutes;
-  final SleepSoundSummary? sleepSummary;
-  final VoidCallback onStartSleepMode;
-  final VoidCallback onOpenBackup;
-  final VoidCallback onSyncWearable;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final restfulRatio = sleepSummary?.restfulSampleRatio;
-    final loudEvents = sleepSummary?.loudEventCount;
-    final noiseEvents = sleepSummary?.noiseEvents ?? const <SleepNoiseEvent>[];
-    final restfulLabel = restfulRatio != null
-        ? '${(restfulRatio * 100).clamp(0, 100).toStringAsFixed(1)}% 조용한 구간'
-        : '수면 사운드 분석 데이터를 수집해보세요.';
-    final loudLabel = loudEvents != null
-        ? '소음 이벤트 $loudEvents회 추정'
-        : '코골이/소음 이벤트를 분석하려면 수면 모드를 실행하세요.';
-
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '수면 요약',
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              '어제 ${_formatMinutesLabel(sleepMinutes)} 잠들었어요.',
-              style: theme.textTheme.bodyMedium,
-            ),
-            const SizedBox(height: 12),
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: const Color(0xFF4D9EFF).withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    restfulLabel,
-                    style: theme.textTheme.bodyMedium,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    loudLabel,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.textTheme.bodySmall?.color
-                          ?.withValues(alpha: 0.7),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-            Wrap(
-              spacing: 12,
-              runSpacing: 12,
-              children: [
-                FilledButton(
-                  onPressed: onStartSleepMode,
-                  child: const Text('수면 모드 시작'),
-                ),
-                FilledButton.tonal(
-                  onPressed: onOpenBackup,
-                  child: const Text('수면 기록 백업'),
-                ),
-                OutlinedButton(
-                  onPressed: onSyncWearable,
-                  child: const Text('웨어러블 연동'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            _SleepNoiseTimeline(events: noiseEvents),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _SleepNoiseTimeline extends StatelessWidget {
-  const _SleepNoiseTimeline({required this.events});
-
-  final List<SleepNoiseEvent> events;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    if (events.isEmpty) {
-      return Text(
-        '코골이/소음 이벤트가 감지되지 않았어요.',
-        style: theme.textTheme.bodySmall,
-      );
-    }
-
-    final limited = events.length > 3 ? events.take(3).toList() : events;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '소음 이벤트 타임라인',
-          style: theme.textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.w600,
+          NavigationDestination(
+            icon: Icon(Icons.auto_graph_outlined),
+            selectedIcon: Icon(Icons.auto_graph_rounded),
+            label: '분석',
           ),
-        ),
-        const SizedBox(height: 8),
-        ...limited.map((event) => _NoiseEventTile(event: event)),
-        if (events.length > limited.length)
-          Padding(
-            padding: const EdgeInsets.only(top: 4),
-            child: Text(
-              '그 외 ${events.length - limited.length}개의 이벤트',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
-              ),
-            ),
+          NavigationDestination(
+            icon: Icon(Icons.book_outlined),
+            selectedIcon: Icon(Icons.book_rounded),
+            label: '저널',
           ),
-      ],
-    );
-  }
-}
-
-class _NoiseEventTile extends StatelessWidget {
-  const _NoiseEventTile({required this.event});
-
-  final SleepNoiseEvent event;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final offsetLabel = _formatDuration(event.offset);
-    final durationLabel = _formatDuration(event.duration);
-    final peakPercent = (event.peakAmplitude * 100).clamp(0, 100).toStringAsFixed(0);
-
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 6),
-      child: Row(
-        children: [
-          Icon(Icons.volume_up_rounded, size: 16, color: theme.colorScheme.primary),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              '$offsetLabel 이후 · $durationLabel 지속 · 피크 $peakPercent%',
-              style: theme.textTheme.bodySmall,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  static String _formatDuration(Duration duration) {
-    if (duration.inHours >= 1) {
-      final hours = duration.inHours;
-      final minutes = duration.inMinutes.remainder(60).toString().padLeft(2, '0');
-      return '$hours시간 $minutes분';
-    }
-    if (duration.inMinutes >= 1) {
-      final minutes = duration.inMinutes;
-      final seconds = duration.inSeconds.remainder(60).toString().padLeft(2, '0');
-      return '$minutes분 $seconds초';
-    }
-    if (duration.inSeconds >= 1) {
-      return '${duration.inSeconds}초';
-    }
-    return '${duration.inMilliseconds}ms';
-  }
-}
-
-class _JournalSection extends StatelessWidget {
-  const _JournalSection({
-    required this.l10n,
-    required this.onOpenJournal,
-  });
-
-  final AppLocalizations l10n;
-  final VoidCallback onOpenJournal;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '저널 & 루틴 메모',
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              '감정과 메모를 남기면 집중·수면 리포트가 더 똑똑해집니다.',
-              style: theme.textTheme.bodyMedium,
-            ),
-            const SizedBox(height: 16),
-            FilledButton.icon(
-              onPressed: onOpenJournal,
-              icon: const Icon(Icons.edit_rounded),
-              label: const Text('저널 쓰기'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _PremiumUpsellHint extends StatelessWidget {
-  const _PremiumUpsellHint({required this.l10n});
-
-  final AppLocalizations l10n;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '프리미엄으로 확장하기',
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              '맞춤 사운드, 무제한 백업, 장기 통계를 이용해 보세요.',
-              style: theme.textTheme.bodyMedium,
-            ),
-            const SizedBox(height: 16),
-            FilledButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute<void>(
-                    builder: (_) => const PaywallPage(),
-                  ),
-                );
-              },
-              child: const Text('프리미엄 알아보기'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _CommunityBanner extends StatelessWidget {
-  const _CommunityBanner({
-    required this.l10n,
-    required this.onJoinChallenge,
-    required this.onInviteFriend,
-  });
-
-  final AppLocalizations l10n;
-  final VoidCallback onJoinChallenge;
-  final VoidCallback onInviteFriend;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFFB48CF8), Color(0xFF6F6CF3)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(24),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '오늘의 챌린지',
-            style: theme.textTheme.titleMedium?.copyWith(
-              color: Colors.white,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            '“오늘 1시간 집중을 완료하면 포인트 +1 🎯”',
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: Colors.white,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Wrap(
-            spacing: 12,
-            children: [
-              FilledButton(
-                style: FilledButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: const Color(0xFF6F6CF3),
-                ),
-                onPressed: onJoinChallenge,
-                child: const Text('챌린지 참여'),
-              ),
-              OutlinedButton(
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  side: const BorderSide(color: Colors.white54),
-                ),
-                onPressed: onInviteFriend,
-                child: const Text('친구 초대'),
-              ),
-            ],
+          NavigationDestination(
+            icon: Icon(Icons.person_outline),
+            selectedIcon: Icon(Icons.person),
+            label: '프로필',
           ),
         ],
       ),
     );
   }
 }
+
+
+
+
+
+
 
 // Legacy home widgets removed during dashboard refactor.

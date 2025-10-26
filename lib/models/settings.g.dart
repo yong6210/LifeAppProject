@@ -64,84 +64,99 @@ const SettingsSchema = CollectionSchema(
       name: r'lastMode',
       type: IsarType.string,
     ),
-    r'locale': PropertySchema(id: 9, name: r'locale', type: IsarType.string),
+    r'lifeBuddyTone': PropertySchema(
+      id: 9,
+      name: r'lifeBuddyTone',
+      type: IsarType.string,
+    ),
+    r'locale': PropertySchema(id: 10, name: r'locale', type: IsarType.string),
     r'notificationPrefs': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'notificationPrefs',
       type: IsarType.object,
 
       target: r'NotificationPrefs',
     ),
     r'presets': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'presets',
       type: IsarType.objectList,
 
       target: r'Preset',
     ),
     r'restMinutes': PropertySchema(
-      id: 12,
+      id: 13,
       name: r'restMinutes',
       type: IsarType.long,
     ),
+    r'routinePersonalizationEnabled': PropertySchema(
+      id: 14,
+      name: r'routinePersonalizationEnabled',
+      type: IsarType.bool,
+    ),
+    r'routinePersonalizationSyncEnabled': PropertySchema(
+      id: 15,
+      name: r'routinePersonalizationSyncEnabled',
+      type: IsarType.bool,
+    ),
     r'schemaVersion': PropertySchema(
-      id: 13,
+      id: 16,
       name: r'schemaVersion',
       type: IsarType.long,
     ),
     r'sleepMinutes': PropertySchema(
-      id: 14,
+      id: 17,
       name: r'sleepMinutes',
       type: IsarType.long,
     ),
     r'sleepMixerBrownLevel': PropertySchema(
-      id: 15,
+      id: 18,
       name: r'sleepMixerBrownLevel',
       type: IsarType.double,
     ),
     r'sleepMixerPinkLevel': PropertySchema(
-      id: 16,
+      id: 19,
       name: r'sleepMixerPinkLevel',
       type: IsarType.double,
     ),
     r'sleepMixerPresetId': PropertySchema(
-      id: 17,
+      id: 20,
       name: r'sleepMixerPresetId',
       type: IsarType.string,
     ),
     r'sleepMixerWhiteLevel': PropertySchema(
-      id: 18,
+      id: 21,
       name: r'sleepMixerWhiteLevel',
       type: IsarType.double,
     ),
     r'sleepSmartAlarmExactFallback': PropertySchema(
-      id: 19,
+      id: 22,
       name: r'sleepSmartAlarmExactFallback',
       type: IsarType.bool,
     ),
     r'sleepSmartAlarmIntervalMinutes': PropertySchema(
-      id: 20,
+      id: 23,
       name: r'sleepSmartAlarmIntervalMinutes',
       type: IsarType.long,
     ),
     r'sleepSmartAlarmWindowMinutes': PropertySchema(
-      id: 21,
+      id: 24,
       name: r'sleepSmartAlarmWindowMinutes',
       type: IsarType.long,
     ),
     r'soundIds': PropertySchema(
-      id: 22,
+      id: 25,
       name: r'soundIds',
       type: IsarType.stringList,
     ),
-    r'theme': PropertySchema(id: 23, name: r'theme', type: IsarType.string),
+    r'theme': PropertySchema(id: 26, name: r'theme', type: IsarType.string),
     r'updatedAt': PropertySchema(
-      id: 24,
+      id: 27,
       name: r'updatedAt',
       type: IsarType.dateTime,
     ),
     r'workoutMinutes': PropertySchema(
-      id: 25,
+      id: 28,
       name: r'workoutMinutes',
       type: IsarType.long,
     ),
@@ -187,6 +202,7 @@ int _settingsEstimateSize(
   bytesCount += 3 + object.backupPreferredProvider.length * 3;
   bytesCount += 3 + object.deviceId.length * 3;
   bytesCount += 3 + object.lastMode.length * 3;
+  bytesCount += 3 + object.lifeBuddyTone.length * 3;
   bytesCount += 3 + object.locale.length * 3;
   bytesCount +=
       3 +
@@ -235,33 +251,36 @@ void _settingsSerialize(
   writer.writeDateTime(offsets[6], object.lastBackupAt);
   writer.writeBool(offsets[7], object.lastKnownPremium);
   writer.writeString(offsets[8], object.lastMode);
-  writer.writeString(offsets[9], object.locale);
+  writer.writeString(offsets[9], object.lifeBuddyTone);
+  writer.writeString(offsets[10], object.locale);
   writer.writeObject<NotificationPrefs>(
-    offsets[10],
+    offsets[11],
     allOffsets,
     NotificationPrefsSchema.serialize,
     object.notificationPrefs,
   );
   writer.writeObjectList<Preset>(
-    offsets[11],
+    offsets[12],
     allOffsets,
     PresetSchema.serialize,
     object.presets,
   );
-  writer.writeLong(offsets[12], object.restMinutes);
-  writer.writeLong(offsets[13], object.schemaVersion);
-  writer.writeLong(offsets[14], object.sleepMinutes);
-  writer.writeDouble(offsets[15], object.sleepMixerBrownLevel);
-  writer.writeDouble(offsets[16], object.sleepMixerPinkLevel);
-  writer.writeString(offsets[17], object.sleepMixerPresetId);
-  writer.writeDouble(offsets[18], object.sleepMixerWhiteLevel);
-  writer.writeBool(offsets[19], object.sleepSmartAlarmExactFallback);
-  writer.writeLong(offsets[20], object.sleepSmartAlarmIntervalMinutes);
-  writer.writeLong(offsets[21], object.sleepSmartAlarmWindowMinutes);
-  writer.writeStringList(offsets[22], object.soundIds);
-  writer.writeString(offsets[23], object.theme);
-  writer.writeDateTime(offsets[24], object.updatedAt);
-  writer.writeLong(offsets[25], object.workoutMinutes);
+  writer.writeLong(offsets[13], object.restMinutes);
+  writer.writeBool(offsets[14], object.routinePersonalizationEnabled);
+  writer.writeBool(offsets[15], object.routinePersonalizationSyncEnabled);
+  writer.writeLong(offsets[16], object.schemaVersion);
+  writer.writeLong(offsets[17], object.sleepMinutes);
+  writer.writeDouble(offsets[18], object.sleepMixerBrownLevel);
+  writer.writeDouble(offsets[19], object.sleepMixerPinkLevel);
+  writer.writeString(offsets[20], object.sleepMixerPresetId);
+  writer.writeDouble(offsets[21], object.sleepMixerWhiteLevel);
+  writer.writeBool(offsets[22], object.sleepSmartAlarmExactFallback);
+  writer.writeLong(offsets[23], object.sleepSmartAlarmIntervalMinutes);
+  writer.writeLong(offsets[24], object.sleepSmartAlarmWindowMinutes);
+  writer.writeStringList(offsets[25], object.soundIds);
+  writer.writeString(offsets[26], object.theme);
+  writer.writeDateTime(offsets[27], object.updatedAt);
+  writer.writeLong(offsets[28], object.workoutMinutes);
 }
 
 Settings _settingsDeserialize(
@@ -288,36 +307,39 @@ Settings _settingsDeserialize(
   object.lastBackupAt = reader.readDateTimeOrNull(offsets[6]);
   object.lastKnownPremium = reader.readBool(offsets[7]);
   object.lastMode = reader.readString(offsets[8]);
-  object.locale = reader.readString(offsets[9]);
+  object.lifeBuddyTone = reader.readString(offsets[9]);
+  object.locale = reader.readString(offsets[10]);
   object.notificationPrefs =
       reader.readObjectOrNull<NotificationPrefs>(
-        offsets[10],
+        offsets[11],
         NotificationPrefsSchema.deserialize,
         allOffsets,
       ) ??
       NotificationPrefs();
   object.presets =
       reader.readObjectList<Preset>(
-        offsets[11],
+        offsets[12],
         PresetSchema.deserialize,
         allOffsets,
         Preset(),
       ) ??
       [];
-  object.restMinutes = reader.readLong(offsets[12]);
-  object.schemaVersion = reader.readLong(offsets[13]);
-  object.sleepMinutes = reader.readLong(offsets[14]);
-  object.sleepMixerBrownLevel = reader.readDouble(offsets[15]);
-  object.sleepMixerPinkLevel = reader.readDouble(offsets[16]);
-  object.sleepMixerPresetId = reader.readString(offsets[17]);
-  object.sleepMixerWhiteLevel = reader.readDouble(offsets[18]);
-  object.sleepSmartAlarmExactFallback = reader.readBool(offsets[19]);
-  object.sleepSmartAlarmIntervalMinutes = reader.readLong(offsets[20]);
-  object.sleepSmartAlarmWindowMinutes = reader.readLong(offsets[21]);
-  object.soundIds = reader.readStringList(offsets[22]) ?? [];
-  object.theme = reader.readString(offsets[23]);
-  object.updatedAt = reader.readDateTime(offsets[24]);
-  object.workoutMinutes = reader.readLong(offsets[25]);
+  object.restMinutes = reader.readLong(offsets[13]);
+  object.routinePersonalizationEnabled = reader.readBool(offsets[14]);
+  object.routinePersonalizationSyncEnabled = reader.readBool(offsets[15]);
+  object.schemaVersion = reader.readLong(offsets[16]);
+  object.sleepMinutes = reader.readLong(offsets[17]);
+  object.sleepMixerBrownLevel = reader.readDouble(offsets[18]);
+  object.sleepMixerPinkLevel = reader.readDouble(offsets[19]);
+  object.sleepMixerPresetId = reader.readString(offsets[20]);
+  object.sleepMixerWhiteLevel = reader.readDouble(offsets[21]);
+  object.sleepSmartAlarmExactFallback = reader.readBool(offsets[22]);
+  object.sleepSmartAlarmIntervalMinutes = reader.readLong(offsets[23]);
+  object.sleepSmartAlarmWindowMinutes = reader.readLong(offsets[24]);
+  object.soundIds = reader.readStringList(offsets[25]) ?? [];
+  object.theme = reader.readString(offsets[26]);
+  object.updatedAt = reader.readDateTime(offsets[27]);
+  object.workoutMinutes = reader.readLong(offsets[28]);
   return object;
 }
 
@@ -356,6 +378,8 @@ P _settingsDeserializeProp<P>(
     case 9:
       return (reader.readString(offset)) as P;
     case 10:
+      return (reader.readString(offset)) as P;
+    case 11:
       return (reader.readObjectOrNull<NotificationPrefs>(
                 offset,
                 NotificationPrefsSchema.deserialize,
@@ -363,7 +387,7 @@ P _settingsDeserializeProp<P>(
               ) ??
               NotificationPrefs())
           as P;
-    case 11:
+    case 12:
       return (reader.readObjectList<Preset>(
                 offset,
                 PresetSchema.deserialize,
@@ -372,33 +396,37 @@ P _settingsDeserializeProp<P>(
               ) ??
               [])
           as P;
-    case 12:
-      return (reader.readLong(offset)) as P;
     case 13:
       return (reader.readLong(offset)) as P;
     case 14:
-      return (reader.readLong(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 15:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 16:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 17:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 18:
       return (reader.readDouble(offset)) as P;
     case 19:
-      return (reader.readBool(offset)) as P;
+      return (reader.readDouble(offset)) as P;
     case 20:
-      return (reader.readLong(offset)) as P;
-    case 21:
-      return (reader.readLong(offset)) as P;
-    case 22:
-      return (reader.readStringList(offset) ?? []) as P;
-    case 23:
       return (reader.readString(offset)) as P;
+    case 21:
+      return (reader.readDouble(offset)) as P;
+    case 22:
+      return (reader.readBool(offset)) as P;
+    case 23:
+      return (reader.readLong(offset)) as P;
     case 24:
-      return (reader.readDateTime(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 25:
+      return (reader.readStringList(offset) ?? []) as P;
+    case 26:
+      return (reader.readString(offset)) as P;
+    case 27:
+      return (reader.readDateTime(offset)) as P;
+    case 28:
       return (reader.readLong(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1257,6 +1285,153 @@ extension SettingsQueryFilter
     });
   }
 
+  QueryBuilder<Settings, Settings, QAfterFilterCondition> lifeBuddyToneEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'lifeBuddyTone',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Settings, Settings, QAfterFilterCondition>
+  lifeBuddyToneGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(
+          include: include,
+          property: r'lifeBuddyTone',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Settings, Settings, QAfterFilterCondition> lifeBuddyToneLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.lessThan(
+          include: include,
+          property: r'lifeBuddyTone',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Settings, Settings, QAfterFilterCondition> lifeBuddyToneBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.between(
+          property: r'lifeBuddyTone',
+          lower: lower,
+          includeLower: includeLower,
+          upper: upper,
+          includeUpper: includeUpper,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Settings, Settings, QAfterFilterCondition>
+  lifeBuddyToneStartsWith(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.startsWith(
+          property: r'lifeBuddyTone',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Settings, Settings, QAfterFilterCondition> lifeBuddyToneEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.endsWith(
+          property: r'lifeBuddyTone',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Settings, Settings, QAfterFilterCondition> lifeBuddyToneContains(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.contains(
+          property: r'lifeBuddyTone',
+          value: value,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Settings, Settings, QAfterFilterCondition> lifeBuddyToneMatches(
+    String pattern, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.matches(
+          property: r'lifeBuddyTone',
+          wildcard: pattern,
+          caseSensitive: caseSensitive,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Settings, Settings, QAfterFilterCondition>
+  lifeBuddyToneIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(property: r'lifeBuddyTone', value: ''),
+      );
+    });
+  }
+
+  QueryBuilder<Settings, Settings, QAfterFilterCondition>
+  lifeBuddyToneIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.greaterThan(property: r'lifeBuddyTone', value: ''),
+      );
+    });
+  }
+
   QueryBuilder<Settings, Settings, QAfterFilterCondition> localeEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -1508,6 +1683,30 @@ extension SettingsQueryFilter
           includeLower: includeLower,
           upper: upper,
           includeUpper: includeUpper,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Settings, Settings, QAfterFilterCondition>
+  routinePersonalizationEnabledEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'routinePersonalizationEnabled',
+          value: value,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Settings, Settings, QAfterFilterCondition>
+  routinePersonalizationSyncEnabledEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(
+        FilterCondition.equalTo(
+          property: r'routinePersonalizationSyncEnabled',
+          value: value,
         ),
       );
     });
@@ -2705,6 +2904,18 @@ extension SettingsQuerySortBy on QueryBuilder<Settings, Settings, QSortBy> {
     });
   }
 
+  QueryBuilder<Settings, Settings, QAfterSortBy> sortByLifeBuddyTone() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lifeBuddyTone', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Settings, Settings, QAfterSortBy> sortByLifeBuddyToneDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lifeBuddyTone', Sort.desc);
+    });
+  }
+
   QueryBuilder<Settings, Settings, QAfterSortBy> sortByLocale() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'locale', Sort.asc);
@@ -2726,6 +2937,34 @@ extension SettingsQuerySortBy on QueryBuilder<Settings, Settings, QSortBy> {
   QueryBuilder<Settings, Settings, QAfterSortBy> sortByRestMinutesDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'restMinutes', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Settings, Settings, QAfterSortBy>
+  sortByRoutinePersonalizationEnabled() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'routinePersonalizationEnabled', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Settings, Settings, QAfterSortBy>
+  sortByRoutinePersonalizationEnabledDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'routinePersonalizationEnabled', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Settings, Settings, QAfterSortBy>
+  sortByRoutinePersonalizationSyncEnabled() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'routinePersonalizationSyncEnabled', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Settings, Settings, QAfterSortBy>
+  sortByRoutinePersonalizationSyncEnabledDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'routinePersonalizationSyncEnabled', Sort.desc);
     });
   }
 
@@ -2998,6 +3237,18 @@ extension SettingsQuerySortThenBy
     });
   }
 
+  QueryBuilder<Settings, Settings, QAfterSortBy> thenByLifeBuddyTone() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lifeBuddyTone', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Settings, Settings, QAfterSortBy> thenByLifeBuddyToneDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lifeBuddyTone', Sort.desc);
+    });
+  }
+
   QueryBuilder<Settings, Settings, QAfterSortBy> thenByLocale() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'locale', Sort.asc);
@@ -3019,6 +3270,34 @@ extension SettingsQuerySortThenBy
   QueryBuilder<Settings, Settings, QAfterSortBy> thenByRestMinutesDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'restMinutes', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Settings, Settings, QAfterSortBy>
+  thenByRoutinePersonalizationEnabled() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'routinePersonalizationEnabled', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Settings, Settings, QAfterSortBy>
+  thenByRoutinePersonalizationEnabledDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'routinePersonalizationEnabled', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Settings, Settings, QAfterSortBy>
+  thenByRoutinePersonalizationSyncEnabled() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'routinePersonalizationSyncEnabled', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Settings, Settings, QAfterSortBy>
+  thenByRoutinePersonalizationSyncEnabledDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'routinePersonalizationSyncEnabled', Sort.desc);
     });
   }
 
@@ -3236,6 +3515,17 @@ extension SettingsQueryWhereDistinct
     });
   }
 
+  QueryBuilder<Settings, Settings, QDistinct> distinctByLifeBuddyTone({
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(
+        r'lifeBuddyTone',
+        caseSensitive: caseSensitive,
+      );
+    });
+  }
+
   QueryBuilder<Settings, Settings, QDistinct> distinctByLocale({
     bool caseSensitive = true,
   }) {
@@ -3247,6 +3537,20 @@ extension SettingsQueryWhereDistinct
   QueryBuilder<Settings, Settings, QDistinct> distinctByRestMinutes() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'restMinutes');
+    });
+  }
+
+  QueryBuilder<Settings, Settings, QDistinct>
+  distinctByRoutinePersonalizationEnabled() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'routinePersonalizationEnabled');
+    });
+  }
+
+  QueryBuilder<Settings, Settings, QDistinct>
+  distinctByRoutinePersonalizationSyncEnabled() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'routinePersonalizationSyncEnabled');
     });
   }
 
@@ -3404,6 +3708,12 @@ extension SettingsQueryProperty
     });
   }
 
+  QueryBuilder<Settings, String, QQueryOperations> lifeBuddyToneProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'lifeBuddyTone');
+    });
+  }
+
   QueryBuilder<Settings, String, QQueryOperations> localeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'locale');
@@ -3426,6 +3736,20 @@ extension SettingsQueryProperty
   QueryBuilder<Settings, int, QQueryOperations> restMinutesProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'restMinutes');
+    });
+  }
+
+  QueryBuilder<Settings, bool, QQueryOperations>
+  routinePersonalizationEnabledProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'routinePersonalizationEnabled');
+    });
+  }
+
+  QueryBuilder<Settings, bool, QQueryOperations>
+  routinePersonalizationSyncEnabledProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'routinePersonalizationSyncEnabled');
     });
   }
 

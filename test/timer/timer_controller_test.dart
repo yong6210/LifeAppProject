@@ -220,17 +220,20 @@ Future<void> _waitForCondition(
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+  final defaultMessenger =
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
 
   setUp(() {
     SharedPreferences.setMockInitialValues({});
-    SystemChannels.platform.setMockMethodCallHandler(
+    defaultMessenger.setMockMethodCallHandler(
+      SystemChannels.platform,
       (MethodCall _) async => null,
     );
     FakeForegroundBridge.ensureCalls = 0;
   });
 
   tearDown(() {
-    SystemChannels.platform.setMockMethodCallHandler(null);
+    defaultMessenger.setMockMethodCallHandler(SystemChannels.platform, null);
   });
 
   group('TimerController', () {

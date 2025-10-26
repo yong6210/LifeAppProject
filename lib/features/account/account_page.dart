@@ -163,6 +163,18 @@ class AccountPage extends ConsumerWidget {
               onViewDetails: () => _showDataRetentionDisclosure(context),
             ),
             const SizedBox(height: 16),
+            settingsAsync.when(
+              loading: () => const _LoadingCard(),
+              error: (error, _) => _ErrorCard(
+                title: l10n.tr('account_personalization_title'),
+                message: l10n.tr('generic_settings_error', {'error': '$error'}),
+              ),
+              data: (settings) => _PersonalizationSettingsCard(
+                l10n: l10n,
+                settings: settings,
+              ),
+            ),
+            const SizedBox(height: 16),
             accessibilityAsync.when(
               loading: () => const _LoadingCard(),
               error: (error, _) => _ErrorCard(
@@ -278,16 +290,18 @@ class AccountPage extends ConsumerWidget {
                       'life_app_timer_accuracy_${DateTime.now().millisecondsSinceEpoch}.csv';
                   final file = File(p.join(dir.path, filename));
                   await file.writeAsString(csv, flush: true);
-                  await Share.shareXFiles(
-                    [
-                      XFile(
-                        file.path,
-                        mimeType: 'text/csv',
-                        name: 'timer_accuracy.csv',
-                      ),
-                    ],
-                    subject: l10n.tr('account_diagnostics_share_subject'),
-                    text: l10n.tr('account_diagnostics_share_body'),
+                  await SharePlus.instance.share(
+                    ShareParams(
+                      files: [
+                        XFile(
+                          file.path,
+                          mimeType: 'text/csv',
+                          name: 'timer_accuracy.csv',
+                        ),
+                      ],
+                      subject: l10n.tr('account_diagnostics_share_subject'),
+                      text: l10n.tr('account_diagnostics_share_body'),
+                    ),
                   );
                 },
               ),
@@ -1431,6 +1445,150 @@ class _OpenSourceLicensesCard extends StatelessWidget {
         subtitle: Text(l10n.tr('licenses_subtitle')),
         trailing: const Icon(Icons.keyboard_arrow_right),
         onTap: onOpen,
+      ),
+    );
+  }
+}
+
+class _PersonalizationSettingsCard extends ConsumerWidget {
+  const _PersonalizationSettingsCard({
+    required this.l10n,
+    required this.settings,
+  });
+
+  final AppLocalizations l10n;
+  final Settings settings;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final suggestionsEnabled = settings.routinePersonalizationEnabled;
+    final syncEnabled = settings.routinePersonalizationSyncEnabled;
+    final tone = settings.lifeBuddyTone;
+
+    Future<void> handleAction(Future<void> Function() run) async {
+      try {
+        await run();
+      } catch (error) {
+        if (!context.mounted) return;
+        final message = l10n.tr('generic_settings_error', {'error': '$error'});
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(message)),
+        );
+      }
+    }
+
+    String syncSubtitle() {
+      final base = l10n.tr('account_personalization_sync_subtitle');
+      if (suggestionsEnabled) {
+        return base;
+      }
+      final disabled = l10n.tr('account_personalization_sync_disabled');
+      return '$base\n$disabled';
+    }
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l10n.tr('account_personalization_title'),
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 8),
+            Text(l10n.tr('account_personalization_body')),
+            const SizedBox(height: 16),
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              value: suggestionsEnabled,
+              title: Text(
+                l10n.tr('account_personalization_enabled_title'),
+              ),
+              subtitle: Text(
+                l10n.tr('account_personalization_enabled_subtitle'),
+              ),
+              onChanged: (value) async {
+                await handleAction(() async {
+                  await ref
+                      .read(
+                        setRoutinePersonalizationEnabledProvider(value).future,
+                      );
+                  await AnalyticsService.logEvent(
+                    'personalization_toggle',
+                    {'enabled': value},
+                  );
+                });
+              },
+            ),
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              value: syncEnabled,
+              title: Text(
+                l10n.tr('account_personalization_sync_title'),
+              ),
+              subtitle: Text(syncSubtitle()),
+              onChanged: suggestionsEnabled
+                  ? (value) async {
+                    await handleAction(() async {
+                      await ref
+                          .read(
+                            setRoutinePersonalizationSyncProvider(value)
+                                .future,
+                          );
+                      await AnalyticsService.logEvent(
+                        'personalization_sync_toggle',
+                        {'enabled': value},
+                      );
+                    });
+                  }
+                  : null,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              l10n.tr('account_personalization_tone_title'),
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
+            RadioGroup<String>(
+              groupValue: tone,
+              onChanged: (value) async {
+                if (value == null) return;
+                await handleAction(() async {
+                  await ref
+                      .read(setLifeBuddyToneProvider(value).future);
+                  await AnalyticsService.logEvent(
+                    'personalization_tone_select',
+                    {'tone': value},
+                  );
+                });
+              },
+              child: Column(
+                children: [
+                  RadioListTile<String>(
+                    contentPadding: EdgeInsets.zero,
+                    value: 'friend',
+                    title: Text(
+                      l10n.tr('account_personalization_tone_friend'),
+                    ),
+                    subtitle: Text(
+                      l10n.tr('account_personalization_tone_friend_description'),
+                    ),
+                  ),
+                  RadioListTile<String>(
+                    contentPadding: EdgeInsets.zero,
+                    value: 'coach',
+                    title: Text(
+                      l10n.tr('account_personalization_tone_coach'),
+                    ),
+                    subtitle: Text(
+                      l10n.tr('account_personalization_tone_coach_description'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

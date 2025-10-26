@@ -162,8 +162,11 @@ class _PackageTile extends ConsumerWidget {
     final product = package.storeProduct;
     final benefits = _benefitsForVariant(variant, l10n);
     final theme = Theme.of(context);
-    final textScale = MediaQuery.textScaleFactorOf(context).clamp(1.0, 1.6);
-    final iconSize = math.min(20.0, 16 * textScale);
+    final textScaler = MediaQuery.textScalerOf(context).clamp(
+      minScaleFactor: 1.0,
+      maxScaleFactor: 1.6,
+    );
+    final iconSize = math.min(20.0, textScaler.scale(16));
     final packageSemanticLabel = l10n.tr('paywall_package_semantics_label', {
       'product': product.title,
       'price': product.priceString,

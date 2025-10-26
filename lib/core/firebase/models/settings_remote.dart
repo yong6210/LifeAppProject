@@ -21,6 +21,9 @@ class SettingsRemoteDto {
     required this.sleepMixerBrownLevel,
     required this.sleepMixerPresetId,
     required this.lastMode,
+    required this.routinePersonalizationEnabled,
+    required this.routinePersonalizationSyncEnabled,
+    required this.lifeBuddyTone,
     required this.schemaVersion,
     required this.updatedAt,
   });
@@ -61,6 +64,10 @@ class SettingsRemoteDto {
       sleepMixerBrownLevel: settings.sleepMixerBrownLevel,
       sleepMixerPresetId: settings.sleepMixerPresetId,
       lastMode: settings.lastMode,
+      routinePersonalizationEnabled: settings.routinePersonalizationEnabled,
+      routinePersonalizationSyncEnabled:
+          settings.routinePersonalizationSyncEnabled,
+      lifeBuddyTone: settings.lifeBuddyTone,
       schemaVersion: settings.schemaVersion,
       updatedAt: settings.updatedAt,
     );
@@ -114,6 +121,13 @@ class SettingsRemoteDto {
       sleepMixerPresetId:
           data['sleepMixerPresetId'] as String? ?? fallback.sleepMixerPresetId,
       lastMode: data['lastMode'] as String? ?? fallback.lastMode,
+      routinePersonalizationEnabled:
+          data['routinePersonalizationEnabled'] as bool? ??
+              fallback.routinePersonalizationEnabled,
+      routinePersonalizationSyncEnabled:
+          data['routinePersonalizationSyncEnabled'] as bool? ??
+              fallback.routinePersonalizationSyncEnabled,
+      lifeBuddyTone: data['lifeBuddyTone'] as String? ?? fallback.lifeBuddyTone,
       schemaVersion: (data['schemaVersion'] as num?)?.toInt() ?? 1,
       updatedAt:
           (data['updatedAt'] as firestore.Timestamp?)?.toDate() ??
@@ -139,6 +153,9 @@ class SettingsRemoteDto {
   final double sleepMixerBrownLevel;
   final String sleepMixerPresetId;
   final String lastMode;
+  final bool routinePersonalizationEnabled;
+  final bool routinePersonalizationSyncEnabled;
+  final String lifeBuddyTone;
   final int schemaVersion;
   final DateTime updatedAt;
 
@@ -162,6 +179,9 @@ class SettingsRemoteDto {
       'sleepMixerBrownLevel': sleepMixerBrownLevel,
       'sleepMixerPresetId': sleepMixerPresetId,
       'lastMode': lastMode,
+      'routinePersonalizationEnabled': routinePersonalizationEnabled,
+      'routinePersonalizationSyncEnabled': routinePersonalizationSyncEnabled,
+      'lifeBuddyTone': lifeBuddyTone,
       'schemaVersion': schemaVersion,
       'updatedAt': firestore.FieldValue.serverTimestamp(),
     };
@@ -201,6 +221,10 @@ class SettingsRemoteDto {
       ..sleepMixerBrownLevel = sleepMixerBrownLevel
       ..sleepMixerPresetId = sleepMixerPresetId
       ..lastMode = lastMode
+      ..routinePersonalizationEnabled = routinePersonalizationEnabled
+      ..routinePersonalizationSyncEnabled =
+          routinePersonalizationSyncEnabled
+      ..lifeBuddyTone = lifeBuddyTone
       ..schemaVersion = schemaVersion
       ..updatedAt = updatedAt;
     return settings;

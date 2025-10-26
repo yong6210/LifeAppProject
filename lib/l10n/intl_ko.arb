@@ -149,6 +149,18 @@
   "account_accessibility_title": "접근성",
   "account_accessibility_body": "애니메이션과 햅틱을 줄이고 싶은 경우 감속 모드를 사용하세요.",
   "account_accessibility_reduced_motion": "애니메이션/햅틱 최소화",
+  "account_personalization_title": "루틴 개인화",
+  "account_personalization_body": "라이프 버디가 루틴을 제안하는 방식과 기기 내 보관/기기 간 동기화를 선택하세요.",
+  "account_personalization_enabled_title": "개인화된 제안 사용",
+  "account_personalization_enabled_subtitle": "최근 타이머 기록을 활용해 루틴을 추천합니다. 기본적으로 데이터는 기기에만 저장됩니다.",
+  "account_personalization_sync_title": "개인화 데이터를 기기 간 동기화",
+  "account_personalization_sync_subtitle": "익명화된 점수를 업로드해 로그인한 모든 기기에서 동일한 제안을 받아보세요.",
+  "account_personalization_sync_disabled": "개인화된 제안을 켜면 동기화를 설정할 수 있습니다.",
+  "account_personalization_tone_title": "라이프 버디 톤",
+  "account_personalization_tone_friend": "친구형",
+  "account_personalization_tone_friend_description": "따뜻한 격려와 가벼운 체크인을 제공합니다.",
+  "account_personalization_tone_coach": "코치형",
+  "account_personalization_tone_coach_description": "목표와 진행 상황에 집중한 직설적인 안내입니다.",
   "account_diagnostics_title": "타이머 정확도 샘플",
   "account_diagnostics_body": "최근 측정값은 예약된 세그먼트 종료 시점과 실제 알림 실행 시점을 비교합니다. 양수는 알림이 늦게 울렸음을 의미합니다.",
   "account_diagnostics_no_samples": "기록된 샘플이 없습니다. 타이머를 실행하면 정확도 데이터가 수집됩니다.",
@@ -295,7 +307,7 @@
   "session_deleted": "삭제됨",
   "timer_title": "타이머",
   "timer_mode_focus": "집중",
-  "timer_mode_rest": "휴식",
+  "timer_mode_rest": "휴식 (자동)",
   "timer_mode_workout": "운동",
   "timer_mode_sleep": "숙면",
   "timer_permission_notification_title": "알림 권한이 필요합니다",
@@ -338,6 +350,66 @@
     }
   },
   "timer_coach_workout_action": "워크아웃 내비게이터 열기",
+  "timer_workout_card_title": "운동 내비게이터",
+  "timer_workout_card_subtitle": "출발 전에 코스와 음성 큐를 미리 살펴보세요.",
+  "timer_workout_card_featured": "추천 코스",
+  "timer_workout_card_distance": "{distance}km",
+  "@timer_workout_card_distance": {
+    "placeholders": {
+      "distance": {}
+    }
+  },
+  "timer_workout_card_duration": "{minutes}분",
+  "@timer_workout_card_duration": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "timer_workout_card_cta": "내비게이터 열기",
+  "timer_focus_card_title": "집중 타이머",
+  "timer_focus_card_subtitle": "{minutes}분 집중 블록",
+  "@timer_focus_card_subtitle": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "timer_focus_card_break_hint": "세트 사이 자동 휴식: {minutes}분",
+  "@timer_focus_card_break_hint": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "timer_focus_card_open": "집중 모드 열기",
+  "timer_focus_card_view": "진행 중 세션 보기",
+  "timer_focus_card_resume": "집중 재개",
+  "timer_focus_card_start": "집중 시작",
+  "timer_sleep_card_title": "수면 준비",
+  "timer_sleep_card_subtitle": "{minutes}분 취침 루틴",
+  "@timer_sleep_card_subtitle": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "timer_sleep_card_window": "스마트 알람 창 {minutes}분",
+  "@timer_sleep_card_window": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "timer_sleep_card_window_off": "스마트 알람 창 꺼짐",
+  "timer_sleep_card_start": "수면 타이머 시작",
+  "timer_sleep_card_cta": "수면 모드 열기",
+  "timer_sleep_card_view": "수면 컨트롤 보기",
+  "timer_preset_section_focus": "집중 & 휴식",
+  "timer_preset_section_workout": "운동 시간",
+  "timer_preset_section_sleep": "수면 시간",
+  "timer_preset_break_label": "휴식 {minutes}분",
+  "@timer_preset_break_label": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "timer_preset_break_title": "휴식 길이",
   "timer_workout_navigator_button": "워크아웃 내비게이터 열기",
   "timer_coach_default_title": "좋은 흐름을 이어가요",
   "timer_coach_default_message": "오늘도 잘 하고 있어요! 통계를 확인해 내일을 준비해보세요.",
@@ -900,13 +972,15 @@
   "backup_provider_auto_description": "공유 시트에서 최근 사용한 저장소를 우선 추천합니다.",
   "backup_provider_google_drive": "Google Drive",
   "backup_provider_icloud_drive": "iCloud Drive",
-  "backup_provider_dropbox": "Dropbox",
-  "backup_provider_onedrive": "OneDrive",
+  "backup_provider_vault": "Life App Vault (암호화)",
+  "backup_provider_vault_description": "Life App이 관리하는 암호화 개인 금고입니다. 언제든지 계정에서 삭제할 수 있습니다.",
+  "backup_provider_device": "기기 내보내기 전용",
+  "backup_provider_device_description": "클라우드 동기화 없이 이 기기에 저장하거나 다른 앱으로 직접 공유합니다.",
   "backup_provider_other": "기타",
   "backup_provider_other_description": "매번 저장소를 직접 선택하도록 안내합니다.",
   "backup_help_title": "백업 안내",
   "backup_help_encrypted": "• 백업 파일은 암호화되어 저장되며 확장자는 .lifeappbackup 입니다.",
-  "backup_help_choose_storage": "• 공유 시트에서 Google Drive, iCloud, Dropbox 등 원하는 저장소를 선택할 수 있습니다.",
+  "backup_help_choose_storage": "• 공유 시트에서 Google Drive, iCloud 등 원하는 저장소를 선택할 수 있습니다.",
   "backup_help_restore_notice": "• 복원 시 선택한 백업 파일로 현재 기기 데이터가 교체됩니다.",
   "backup_history_empty": "아직 백업/복원 기록이 없습니다.",
   "backup_history_action_backup": "백업",

@@ -4,6 +4,8 @@
 <dict>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
+		<string>com.pravera.flutter_foreground_task.refresh</string>
+		<string>com.pravera.flutter_foreground_task.notification</string>
 		<string>com.ymcompany.lifeapp.timer-refresh</string>
 	</array>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
