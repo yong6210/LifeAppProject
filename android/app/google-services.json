@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:403475731321:android:27b4f5805ce8f41c9255a8",
+        "mobilesdk_app_id": "1:403475731321:android:b4382a73eaa9d9d59255a8",
         "android_client_info": {
-          "package_name": "com.ymcompany.lifeapp"
+          "package_name": "com.ymcompany.lifeapp.dev"
         }
       },
       "oauth_client": [],

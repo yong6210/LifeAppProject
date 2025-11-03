@@ -1,4 +1,6 @@
 import java.io.FileInputStream
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Properties
 
 plugins {
@@ -21,15 +23,29 @@ android {
     // Flutter 플러그인이 노출하는 ndkVersion을 그대로 사용(필요 시)
     ndkVersion = flutter.ndkVersion
 
+    val env = System.getenv()
+    val versionCodeOverride =
+        (project.findProperty("LIFEAPP_VERSION_CODE") ?: env["LIFEAPP_VERSION_CODE"])
+            ?.toString()
+            ?.toIntOrNull()
+    val versionNameOverride =
+        (project.findProperty("LIFEAPP_VERSION_NAME") ?: env["LIFEAPP_VERSION_NAME"])
+            ?.toString()
+            ?.takeIf { it.isNotBlank() }
+    val dateCode = LocalDate.now()
+        .format(DateTimeFormatter.ofPattern("yyMMdd"))
+        .toInt()
+    val defaultVersionCode = 100_000 + dateCode
+    val defaultVersionName = "0.9.0"
+
     defaultConfig {
         applicationId = "com.ymcompany.lifeapp"
 
         // Android 8.0 (API 26) 이상 공식 지원 (health 플러그인 요구사항)
         minSdk = 26
         targetSdk = 36
-
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = versionCodeOverride ?: defaultVersionCode
+        versionName = versionNameOverride ?: defaultVersionName
 
         vectorDrawables.useSupportLibrary = true
     }

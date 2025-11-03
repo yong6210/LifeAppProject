@@ -305,6 +305,38 @@
   },
   "session_empty_hint": "세션이 없습니다. 오른쪽 위 + 로 추가해보세요.",
   "session_deleted": "삭제됨",
+  "home_dashboard_hero_title": "오늘도 꾸준하게, 잘하고 있어요",
+  "home_dashboard_hero_subtitle": "지금까지의 루틴을 한눈에 살펴볼까요?",
+  "home_dashboard_summary_focus": "집중 {minutes}",
+  "@home_dashboard_summary_focus": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "home_dashboard_summary_sleep": "수면 {minutes}",
+  "@home_dashboard_summary_sleep": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "home_dashboard_summary_workout": "운동 {minutes}",
+  "@home_dashboard_summary_workout": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "home_dashboard_card_focus_description": "집중 블록을 쌓고 휴식까지 균형 있게 챙기세요.",
+  "home_dashboard_card_workout_description": "다음 운동을 계획하거나 추천 코스를 미리 둘러보세요.",
+  "home_dashboard_card_sleep_description": "수면 사운드와 스마트 알람으로 편안한 밤을 준비하세요.",
+  "home_dashboard_action_start": "지금 시작",
+  "home_dashboard_action_customize": "루틴 조정",
+  "home_dashboard_action_explore": "탐색하기",
+  "home_dashboard_insight_stats_title": "인사이트",
+  "home_dashboard_insight_stats_description": "연속 기록과 지표 변화를 한 곳에서 확인하세요.",
+  "home_dashboard_insight_stats_action": "분석 열기",
+  "home_dashboard_insight_journal_title": "기록하기",
+  "home_dashboard_insight_journal_description": "오늘의 생각과 감정을 간단히 남겨보세요.",
+  "home_dashboard_insight_journal_action": "저널 작성",
   "timer_title": "타이머",
   "timer_mode_focus": "집중",
   "timer_mode_rest": "휴식 (자동)",
@@ -350,6 +382,23 @@
     }
   },
   "timer_coach_workout_action": "워크아웃 내비게이터 열기",
+  "timer_desktop_focus_hint": "집중 블록을 설정하고 휴식 시간도 함께 관리하세요.",
+  "timer_desktop_workout_hint": "추천 코스나 빠른 훈련 세션을 선택하세요.",
+  "timer_desktop_sleep_hint": "수면 사운드 재생 시간을 정하고 스마트 알람을 켜보세요.",
+  "timer_desktop_focus_duration": "{minutes}분 동안 집중하기",
+  "@timer_desktop_focus_duration": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "timer_desktop_minutes_label": "{minutes}분",
+  "@timer_desktop_minutes_label": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "timer_desktop_focus_tip": "팁: 세션 동안 방해 금지 모드를 켜두세요.",
+  "timer_desktop_open_navigator": "운동 내비게이터 열기",
   "timer_workout_card_title": "운동 내비게이터",
   "timer_workout_card_subtitle": "출발 전에 코스와 음성 큐를 미리 살펴보세요.",
   "timer_workout_card_featured": "추천 코스",
@@ -366,6 +415,105 @@
     }
   },
   "timer_workout_card_cta": "내비게이터 열기",
+  "timer_workout_light_section_title": "빠른 운동 루틴",
+  "timer_workout_light_section_subtitle": "지도 없이 타이머만으로 실행하는 러닝/자전거 프리셋.",
+  "timer_workout_light_minutes": "{minutes}분",
+  "@timer_workout_light_minutes": {
+    "description": "라이트 운동 프리셋의 총 길이(분).",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "timer_workout_light_run_light_title": "러닝 · 가볍게",
+  "timer_workout_light_run_light_desc": "3분 러닝 + 1분 걷기 × 4세트 · 총 {minutes}분",
+  "@timer_workout_light_run_light_desc": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "timer_workout_light_run_moderate_title": "러닝 · 중간 페이스",
+  "timer_workout_light_run_moderate_desc": "워밍업 후 4분 러닝/1분 리셋 × 4세트 + 쿨다운 · 총 {minutes}분",
+  "@timer_workout_light_run_moderate_desc": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "timer_workout_light_run_vigorous_title": "러닝 · 고강도",
+  "timer_workout_light_run_vigorous_desc": "워밍업 후 2분 스퍼트/1분 리셋 × 6세트 + 쿨다운 · 총 {minutes}분",
+  "@timer_workout_light_run_vigorous_desc": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "timer_workout_light_ride_light_title": "자전거 · 가볍게",
+  "timer_workout_light_ride_light_desc": "3분 워밍업, 5분 페달/2분 코스트 × 3세트, 5분 쿨다운 · 총 {minutes}분",
+  "@timer_workout_light_ride_light_desc": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "timer_workout_light_ride_moderate_title": "자전거 · 중간 템포",
+  "timer_workout_light_ride_moderate_desc": "4분 워밍업, 6분 템포/2분 코스트 × 3세트, 6분 쿨다운 · 총 {minutes}분",
+  "@timer_workout_light_ride_moderate_desc": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "timer_workout_light_ride_vigorous_title": "자전거 · 고강도",
+  "timer_workout_light_ride_vigorous_desc": "5분 워밍업, 3분 스프린트/1분 코스트 × 6세트, 3분 쿨다운 · 총 {minutes}분",
+  "@timer_workout_light_ride_vigorous_desc": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "timer_workout_light_segment_warmup": "워밍업",
+  "timer_workout_light_segment_run_interval": "{number}번째 러닝 인터벌",
+  "@timer_workout_light_segment_run_interval": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "timer_workout_light_segment_run_recovery": "{number}번째 리셋 걷기",
+  "@timer_workout_light_segment_run_recovery": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "timer_workout_light_segment_cooldown": "쿨다운",
+  "timer_workout_light_segment_ride_block": "{number}번째 라이딩 블록",
+  "@timer_workout_light_segment_ride_block": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "timer_workout_light_segment_ride_recovery": "{number}번째 이지 스핀",
+  "@timer_workout_light_segment_ride_recovery": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
   "timer_focus_card_title": "집중 타이머",
   "timer_focus_card_subtitle": "{minutes}분 집중 블록",
   "@timer_focus_card_subtitle": {
@@ -411,6 +559,65 @@
   },
   "timer_preset_break_title": "휴식 길이",
   "timer_workout_navigator_button": "워크아웃 내비게이터 열기",
+  "workoutNavigatorTitle": "운동 내비게이터",
+  "workoutNavigatorChooseActivity": "운동 유형을 선택하세요",
+  "workoutNavigatorRunLabel": "러닝",
+  "workoutNavigatorRunSubtitle": "도로와 트레일 모두에 적합한 코스입니다.",
+  "workoutNavigatorRideLabel": "라이드",
+  "workoutNavigatorRideSubtitle": "자전거 세션에 잘 어울리는 매끄러운 코스입니다.",
+  "workoutNavigatorConditionsTitle": "오늘의 컨디션",
+  "workoutNavigatorConditionsSubtitle": "나가기 전에 날씨와 일몰 시간을 확인하세요. 곧 날씨 팁이 제공될 예정입니다.",
+  "workoutNavigatorIntensity": "강도",
+  "workoutNavigatorGoal": "목표",
+  "workoutNavigatorTargetDistance": "거리",
+  "workoutNavigatorTargetDuration": "시간",
+  "workoutNavigatorSliderDistanceLabel": "거리 (km)",
+  "workoutNavigatorSliderDurationLabel": "시간 (분)",
+  "workoutNavigatorMapPlaceholder": "지도 미리보기 준비 중입니다.",
+  "workoutNavigatorTipsTitle": "팁",
+  "workoutNavigatorPlanTitle": "계획",
+  "workoutNavigatorVoicePreviewTitle": "음성 안내 미리보기",
+  "workoutNavigatorVoiceToggle": "음성 안내",
+  "workoutNavigatorVoiceToggleDescription": "세션 동안 음성 큐를 들을 수 있어요(기기 오디오 필요).",
+  "workoutNavigatorChecklistTitle": "출발 전에 확인",
+  "workoutNavigatorChecklistHydrate": "나가기 전에 수분 보충",
+  "workoutNavigatorChecklistWarmup": "워밍업 루틴 완료",
+  "workoutNavigatorChecklistGear": "장비 점검(신발/자전거/반사판)",
+  "workoutNavigatorChecklistVolume": "기기 오디오가 켜져 있는지 확인",
+  "workoutNavigatorOfflineButton": "오프라인 안내 보기",
+  "workoutNavigatorStartButton": "이 세션 시작하기",
+  "workoutNavigatorOfflineTitle": "오프라인 안내",
+  "workoutNavigatorIntensityLight": "가벼운 강도",
+  "workoutNavigatorIntensityModerate": "꾸준한 강도",
+  "workoutNavigatorIntensityVigorous": "강한 강도",
+  "workoutNavigatorIntensityLightDescription": "여유 있는 페이스로 호흡과 회복에 집중하세요.",
+  "workoutNavigatorIntensityModerateDescription": "꾸준히 지속 가능한 강도로, 숨이 가빠지지만 통제 가능한 수준입니다.",
+  "workoutNavigatorIntensityVigorousDescription": "강한 인터벌이 포함된 고강도 세션입니다.",
+  "workoutNavigatorUnitKm": "{value} km",
+  "@workoutNavigatorUnitKm": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "workoutNavigatorUnitMinutes": "{value}분",
+  "@workoutNavigatorUnitMinutes": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "workoutNavigatorDurationMinutes": "{minutes}분",
+  "@workoutNavigatorDurationMinutes": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "workoutNavigatorDurationMinutesSeconds": "{minutes}분 {seconds}초",
+  "@workoutNavigatorDurationMinutesSeconds": {
+    "placeholders": {
+      "minutes": {},
+      "seconds": {}
+    }
+  },
   "timer_coach_default_title": "좋은 흐름을 이어가요",
   "timer_coach_default_message": "오늘도 잘 하고 있어요! 통계를 확인해 내일을 준비해보세요.",
   "timer_coach_default_action": "통계 보기",

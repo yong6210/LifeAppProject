@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:life_app/services/audio/timer_audio_service.dart';
 import 'package:life_app/services/audio/workout_cue_service.dart';
@@ -170,6 +171,44 @@ class DefaultTimerForegroundBridge implements TimerForegroundBridge {
   }
 }
 
+class NoopTimerForegroundBridge implements TimerForegroundBridge {
+  const NoopTimerForegroundBridge();
+
+  @override
+  Future<void> ensureInitialized() async {}
+
+  @override
+  Future<void> start({
+    required String title,
+    required String text,
+    required String mode,
+    required String segmentLabel,
+    required DateTime segmentEndAt,
+    DateTime? smartWindowStart,
+    Duration? smartInterval,
+  }) async {}
+
+  @override
+  Future<void> stop() async {}
+
+  @override
+  Future<void> update({
+    required String title,
+    required String text,
+    required String mode,
+    required String segmentLabel,
+    required DateTime segmentEndAt,
+    DateTime? smartWindowStart,
+    Duration? smartInterval,
+  }) async {}
+
+  @override
+  Future<void> setSleepSoundActive({
+    required bool active,
+    DateTime? startedAt,
+  }) async {}
+}
+
 class DefaultTimerBackgroundBridge implements TimerBackgroundBridge {
   @override
   Future<void> cancelGuard() {
@@ -182,6 +221,16 @@ class DefaultTimerBackgroundBridge implements TimerBackgroundBridge {
   }
 }
 
+class NoopTimerBackgroundBridge implements TimerBackgroundBridge {
+  const NoopTimerBackgroundBridge();
+
+  @override
+  Future<void> cancelGuard() async {}
+
+  @override
+  Future<void> scheduleGuard() async {}
+}
+
 class TimerDependencies {
   TimerDependencies({
     TimerAudioEngine? audio,
@@ -191,8 +240,14 @@ class TimerDependencies {
     WorkoutCueService? workoutCues,
   }) : audio = audio ?? TimerAudioService(),
        notifications = notifications ?? DefaultTimerNotificationBridge(),
-       foreground = foreground ?? DefaultTimerForegroundBridge(),
-       background = background ?? DefaultTimerBackgroundBridge(),
+       foreground = foreground ??
+            (_isAndroid
+                ? DefaultTimerForegroundBridge()
+                : const NoopTimerForegroundBridge()),
+       background = background ??
+            (_isAndroid
+                ? DefaultTimerBackgroundBridge()
+                : const NoopTimerBackgroundBridge()),
        workoutCues = workoutCues ?? WorkoutCueService();
 
   final TimerAudioEngine audio;
@@ -201,6 +256,9 @@ class TimerDependencies {
   final TimerBackgroundBridge background;
   final WorkoutCueService workoutCues;
 }
+
+bool get _isAndroid =>
+    !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
 
 final timerDependenciesProvider = Provider<TimerDependencies>((ref) {
   return TimerDependencies();

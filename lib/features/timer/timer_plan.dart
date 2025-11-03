@@ -1,3 +1,4 @@
+import 'package:life_app/features/workout/workout_light_presets.dart';
 import 'package:life_app/l10n/app_localizations.dart';
 import 'package:life_app/models/settings.dart';
 
@@ -232,5 +233,318 @@ class TimerPlanFactory {
       ),
     ];
     return TimerPlan(mode: 'sleep', segments: segments);
+  }
+
+  static TimerPlan createWorkoutLightPlan(WorkoutLightPreset preset) {
+    return TimerPlan(
+      mode: 'workout',
+      segments: _segmentsForWorkoutPreset(preset),
+    );
+  }
+
+  static List<TimerSegment> _segmentsForWorkoutPreset(
+    WorkoutLightPreset preset,
+  ) {
+    switch (preset.id) {
+      case 'run_light':
+        return _runLightSegments();
+      case 'run_moderate':
+        return _runModerateSegments();
+      case 'run_vigorous':
+        return _runVigorousSegments();
+      case 'ride_light':
+        return _rideLightSegments();
+      case 'ride_moderate':
+        return _rideModerateSegments();
+      case 'ride_vigorous':
+        return _rideVigorousSegments();
+      default:
+        throw ArgumentError.value(
+          preset.id,
+          'preset',
+          'Unknown workout preset',
+        );
+    }
+  }
+
+  static List<TimerSegment> _runLightSegments() {
+    const rounds = 4;
+    final segments = <TimerSegment>[];
+    for (var round = 1; round <= rounds; round++) {
+      segments.add(
+        TimerSegment(
+          id: 'run_light_active_$round',
+          type: 'workout',
+          duration: const Duration(minutes: 3),
+          localizationKey: 'timer_workout_light_segment_run_interval',
+          localizationArgs: {'number': '$round'},
+          playSoundProfile: 'workout',
+        ),
+      );
+      if (round < rounds) {
+        segments.add(
+          TimerSegment(
+            id: 'run_light_recover_$round',
+            type: 'rest',
+            duration: const Duration(minutes: 1),
+            localizationKey: 'timer_workout_light_segment_run_recovery',
+            localizationArgs: {'number': '$round'},
+            recordSession: false,
+            playSoundProfile: 'rest',
+          ),
+        );
+      }
+    }
+    return segments;
+  }
+
+  static List<TimerSegment> _runModerateSegments() {
+    const rounds = 4;
+    final segments = <TimerSegment>[
+      TimerSegment(
+        id: 'run_moderate_warmup',
+        type: 'workout',
+        duration: const Duration(minutes: 3),
+        localizationKey: 'timer_workout_light_segment_warmup',
+        recordSession: false,
+        playSoundProfile: 'workout',
+      ),
+    ];
+    for (var round = 1; round <= rounds; round++) {
+      segments.add(
+        TimerSegment(
+          id: 'run_moderate_active_$round',
+          type: 'workout',
+          duration: const Duration(minutes: 4),
+          localizationKey: 'timer_workout_light_segment_run_interval',
+          localizationArgs: {'number': '$round'},
+          playSoundProfile: 'workout',
+        ),
+      );
+      if (round < rounds) {
+        segments.add(
+          TimerSegment(
+            id: 'run_moderate_recover_$round',
+            type: 'rest',
+            duration: const Duration(minutes: 1),
+            localizationKey: 'timer_workout_light_segment_run_recovery',
+            localizationArgs: {'number': '$round'},
+            recordSession: false,
+            playSoundProfile: 'rest',
+          ),
+        );
+      }
+    }
+    segments.add(
+      TimerSegment(
+        id: 'run_moderate_cooldown',
+        type: 'rest',
+        duration: const Duration(minutes: 2),
+        localizationKey: 'timer_workout_light_segment_cooldown',
+        recordSession: false,
+        playSoundProfile: 'calm',
+      ),
+    );
+    return segments;
+  }
+
+  static List<TimerSegment> _runVigorousSegments() {
+    const rounds = 6;
+    final segments = <TimerSegment>[
+      TimerSegment(
+        id: 'run_vigorous_warmup',
+        type: 'workout',
+        duration: const Duration(minutes: 2),
+        localizationKey: 'timer_workout_light_segment_warmup',
+        recordSession: false,
+        playSoundProfile: 'workout',
+      ),
+    ];
+    for (var round = 1; round <= rounds; round++) {
+      segments.add(
+        TimerSegment(
+          id: 'run_vigorous_active_$round',
+          type: 'workout',
+          duration: const Duration(minutes: 2),
+          localizationKey: 'timer_workout_light_segment_run_interval',
+          localizationArgs: {'number': '$round'},
+          playSoundProfile: 'workout',
+        ),
+      );
+      if (round < rounds) {
+        segments.add(
+          TimerSegment(
+            id: 'run_vigorous_recover_$round',
+            type: 'rest',
+            duration: const Duration(minutes: 1),
+            localizationKey: 'timer_workout_light_segment_run_recovery',
+            localizationArgs: {'number': '$round'},
+            recordSession: false,
+            playSoundProfile: 'rest',
+          ),
+        );
+      }
+    }
+    segments.add(
+      TimerSegment(
+        id: 'run_vigorous_cooldown',
+        type: 'rest',
+        duration: const Duration(minutes: 3),
+        localizationKey: 'timer_workout_light_segment_cooldown',
+        recordSession: false,
+        playSoundProfile: 'calm',
+      ),
+    );
+    return segments;
+  }
+
+  static List<TimerSegment> _rideLightSegments() {
+    const rounds = 3;
+    final segments = <TimerSegment>[
+      TimerSegment(
+        id: 'ride_light_warmup',
+        type: 'workout',
+        duration: const Duration(minutes: 3),
+        localizationKey: 'timer_workout_light_segment_warmup',
+        recordSession: false,
+        playSoundProfile: 'workout',
+      ),
+    ];
+    for (var round = 1; round <= rounds; round++) {
+      segments.add(
+        TimerSegment(
+          id: 'ride_light_block_$round',
+          type: 'workout',
+          duration: const Duration(minutes: 5),
+          localizationKey: 'timer_workout_light_segment_ride_block',
+          localizationArgs: {'number': '$round'},
+          playSoundProfile: 'workout',
+        ),
+      );
+      if (round < rounds) {
+        segments.add(
+          TimerSegment(
+            id: 'ride_light_recover_$round',
+            type: 'rest',
+            duration: const Duration(minutes: 2),
+            localizationKey: 'timer_workout_light_segment_ride_recovery',
+            localizationArgs: {'number': '$round'},
+            recordSession: false,
+            playSoundProfile: 'rest',
+          ),
+        );
+      }
+    }
+    segments.add(
+      TimerSegment(
+        id: 'ride_light_cooldown',
+        type: 'rest',
+        duration: const Duration(minutes: 5),
+        localizationKey: 'timer_workout_light_segment_cooldown',
+        recordSession: false,
+        playSoundProfile: 'calm',
+      ),
+    );
+    return segments;
+  }
+
+  static List<TimerSegment> _rideModerateSegments() {
+    const rounds = 3;
+    final segments = <TimerSegment>[
+      TimerSegment(
+        id: 'ride_moderate_warmup',
+        type: 'workout',
+        duration: const Duration(minutes: 4),
+        localizationKey: 'timer_workout_light_segment_warmup',
+        recordSession: false,
+        playSoundProfile: 'workout',
+      ),
+    ];
+    for (var round = 1; round <= rounds; round++) {
+      segments.add(
+        TimerSegment(
+          id: 'ride_moderate_block_$round',
+          type: 'workout',
+          duration: const Duration(minutes: 6),
+          localizationKey: 'timer_workout_light_segment_ride_block',
+          localizationArgs: {'number': '$round'},
+          playSoundProfile: 'workout',
+        ),
+      );
+      if (round < rounds) {
+        segments.add(
+          TimerSegment(
+            id: 'ride_moderate_recover_$round',
+            type: 'rest',
+            duration: const Duration(minutes: 2),
+            localizationKey: 'timer_workout_light_segment_ride_recovery',
+            localizationArgs: {'number': '$round'},
+            recordSession: false,
+            playSoundProfile: 'rest',
+          ),
+        );
+      }
+    }
+    segments.add(
+      TimerSegment(
+        id: 'ride_moderate_cooldown',
+        type: 'rest',
+        duration: const Duration(minutes: 6),
+        localizationKey: 'timer_workout_light_segment_cooldown',
+        recordSession: false,
+        playSoundProfile: 'calm',
+      ),
+    );
+    return segments;
+  }
+
+  static List<TimerSegment> _rideVigorousSegments() {
+    const rounds = 6;
+    final segments = <TimerSegment>[
+      TimerSegment(
+        id: 'ride_vigorous_warmup',
+        type: 'workout',
+        duration: const Duration(minutes: 5),
+        localizationKey: 'timer_workout_light_segment_warmup',
+        recordSession: false,
+        playSoundProfile: 'workout',
+      ),
+    ];
+    for (var round = 1; round <= rounds; round++) {
+      segments.add(
+        TimerSegment(
+          id: 'ride_vigorous_block_$round',
+          type: 'workout',
+          duration: const Duration(minutes: 3),
+          localizationKey: 'timer_workout_light_segment_ride_block',
+          localizationArgs: {'number': '$round'},
+          playSoundProfile: 'workout',
+        ),
+      );
+      if (round < rounds) {
+        segments.add(
+          TimerSegment(
+            id: 'ride_vigorous_recover_$round',
+            type: 'rest',
+            duration: const Duration(minutes: 1),
+            localizationKey: 'timer_workout_light_segment_ride_recovery',
+            localizationArgs: {'number': '$round'},
+            recordSession: false,
+            playSoundProfile: 'rest',
+          ),
+        );
+      }
+    }
+    segments.add(
+      TimerSegment(
+        id: 'ride_vigorous_cooldown',
+        type: 'rest',
+        duration: const Duration(minutes: 3),
+        localizationKey: 'timer_workout_light_segment_cooldown',
+        recordSession: false,
+        playSoundProfile: 'calm',
+      ),
+    );
+    return segments;
   }
 }

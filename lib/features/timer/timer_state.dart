@@ -19,6 +19,7 @@ class TimerState {
     this.navigatorLastCueMessage,
     this.navigatorLastCueAt,
     this.navigatorLastSummary,
+    this.workoutPresetId,
   });
 
   final String mode;
@@ -37,6 +38,7 @@ class TimerState {
   final String? navigatorLastCueMessage;
   final DateTime? navigatorLastCueAt;
   final NavigatorCompletionSummary? navigatorLastSummary;
+  final String? workoutPresetId;
 
   TimerSegment get currentSegment => segments[currentSegmentIndex];
 
@@ -53,6 +55,7 @@ class TimerState {
     WorkoutNavigatorTarget? navigatorTarget,
     bool navigatorVoiceEnabled = true,
     NavigatorCompletionSummary? navigatorLastSummary,
+    String? workoutPresetId,
   }) {
     return TimerState(
       mode: plan.mode,
@@ -71,6 +74,7 @@ class TimerState {
       navigatorLastCueMessage: null,
       navigatorLastCueAt: null,
       navigatorLastSummary: navigatorLastSummary,
+      workoutPresetId: workoutPresetId,
     );
   }
 
@@ -91,6 +95,7 @@ class TimerState {
     Object? navigatorLastCueMessage = _sentinel,
     Object? navigatorLastCueAt = _sentinel,
     Object? navigatorLastSummary = _sentinel,
+    Object? workoutPresetId = _sentinel,
   }) {
     final effectiveSegments = segments ?? this.segments;
     final effectiveIndex = currentSegmentIndex ?? this.currentSegmentIndex;
@@ -123,6 +128,9 @@ class TimerState {
       navigatorLastSummary: navigatorLastSummary == _sentinel
           ? this.navigatorLastSummary
           : navigatorLastSummary as NavigatorCompletionSummary?,
+      workoutPresetId: workoutPresetId == _sentinel
+          ? this.workoutPresetId
+          : workoutPresetId as String?,
     );
   }
 }

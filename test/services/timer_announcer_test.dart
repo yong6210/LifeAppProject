@@ -54,6 +54,7 @@ void main() {
       sessionStartedAt: DateTime.now(),
       segmentStartedAt: DateTime.now(),
       isSoundEnabled: true,
+      workoutPresetId: null,
     );
   }
 

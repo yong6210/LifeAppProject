@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -155,10 +157,7 @@ class FakeForegroundBridge implements TimerForegroundBridge {
     required bool active,
     DateTime? startedAt,
   }) async {
-    sleepSoundCalls.add({
-      'active': active,
-      'startedAt': startedAt,
-    });
+    sleepSoundCalls.add({'active': active, 'startedAt': startedAt});
   }
 
   @override
@@ -476,6 +475,53 @@ void main() {
 
       container.dispose();
     });
+
+    test(
+      'startWorkoutLightPreset selects preset and persists selection',
+      () async {
+        SharedPreferences.setMockInitialValues(const <String, Object>{});
+        final audio = FakeTimerAudio();
+        final notifications = FakeNotificationBridge();
+        final foreground = FakeForegroundBridge();
+        final background = FakeBackgroundBridge();
+        final sessions = <Session>[];
+        final container = createContainer(
+          audio: audio,
+          notifications: notifications,
+          foreground: foreground,
+          background: background,
+          recordedSessions: sessions,
+        );
+
+        final controller = container.read(timerControllerProvider.notifier);
+        await _waitForCondition(() => audio.configureCalls > 0);
+
+        await controller.startWorkoutLightPreset('run_light');
+        await _pumpEventQueue();
+
+        final state = controller.state;
+        expect(state.mode, 'workout');
+        expect(state.workoutPresetId, 'run_light');
+        expect(state.segments.length, 7);
+        expect(
+          state.segments.first.localizationKey,
+          'timer_workout_light_segment_run_interval',
+        );
+
+        final prefs = await SharedPreferences.getInstance();
+        expect(prefs.getString('workout_light_preset_id'), 'run_light');
+        final persisted = prefs.getString('timer_state_v2');
+        expect(persisted, isNotNull);
+        final map = jsonDecode(persisted!) as Map<String, dynamic>;
+        expect(map['workoutPresetId'], 'run_light');
+
+        await controller.selectMode('workout');
+        await _pumpEventQueue();
+        expect(controller.state.workoutPresetId, 'run_light');
+
+        container.dispose();
+      },
+    );
 
     test('persists state to shared preferences for restoration', () async {
       final audio = FakeTimerAudio();

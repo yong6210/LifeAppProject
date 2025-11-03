@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:math' as math;
 
@@ -22,6 +23,7 @@ import 'package:life_app/features/stats/stats_page.dart';
 import 'package:life_app/features/workout/workout_navigator_page.dart';
 import 'package:life_app/features/workout/models/workout_navigator_models.dart';
 import 'package:life_app/features/workout/data/workout_routes.dart';
+import 'package:life_app/features/workout/workout_light_presets.dart';
 import 'package:life_app/features/subscription/paywall_page.dart';
 import 'package:life_app/features/wearable/wearable_insights_page.dart';
 import 'package:life_app/l10n/app_localizations.dart';
@@ -35,6 +37,9 @@ const _sleepPresetOrder = <String>[
   'ocean_waves',
   'fireplace_cozy',
 ];
+
+/// Mac/desktop 전용 레이아웃은 설계/QA가 끝난 뒤 켭니다.
+const bool _enableDesktopLayout = false;
 
 enum CoachAction { backup, startFocus, openWorkoutNavigator, viewStats, none }
 
@@ -122,6 +127,136 @@ class _FocusPresetChips extends ConsumerWidget {
     );
   }
 }
+
+class _WorkoutLightPresetChips extends ConsumerWidget {
+  const _WorkoutLightPresetChips();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final l10n = context.l10n;
+    final controller = ref.read(timerControllerProvider.notifier);
+    final state = ref.watch(timerControllerProvider);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          l10n.tr('timer_workout_light_section_title'),
+          style: theme.textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          l10n.tr('timer_workout_light_section_subtitle'),
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: colorScheme.onSurfaceVariant.withValues(alpha: 0.85),
+          ),
+        ),
+        const SizedBox(height: 12),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final maxWidth = constraints.maxWidth;
+            final double cardWidth = maxWidth > 560
+                ? math.min(320.0, maxWidth / 2 - 12)
+                : maxWidth;
+            return Wrap(
+              spacing: 16,
+              runSpacing: 16,
+              children: workoutLightPresets.map((preset) {
+                final selected = state.workoutPresetId == preset.id;
+                final cardColor = selected
+                    ? colorScheme.primaryContainer
+                    : theme.cardColor;
+                final onCardColor = selected
+                    ? colorScheme.onPrimaryContainer
+                    : colorScheme.onSurface;
+                final subtitleColor = selected
+                ? colorScheme.onPrimaryContainer.withValues(alpha: 0.85)
+                    : colorScheme.onSurfaceVariant;
+                final accentColor = selected
+                    ? colorScheme.onPrimaryContainer
+                    : colorScheme.primary;
+
+                return ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: cardWidth,
+                    minWidth: math.min(cardWidth, 220.0),
+                  ),
+                  child: Card(
+                    color: cardColor,
+                    elevation: selected ? 2 : 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(16),
+                      onTap: () async {
+                        AnalyticsService.logEvent(
+                          'workout_light_preset_start',
+                          {'preset_id': preset.id},
+                        );
+                        await controller.startWorkoutLightPreset(preset.id);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              l10n.tr(preset.labelKey),
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: onCardColor,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              l10n.tr(preset.descriptionKey, {
+                                'minutes': '${preset.totalMinutes}',
+                              }),
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: subtitleColor,
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.timer_outlined,
+                                  size: 16,
+                                  color: accentColor,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  l10n.tr('timer_workout_light_minutes', {
+                                    'minutes': '${preset.totalMinutes}',
+                                  }),
+                                  style: theme.textTheme.labelSmall?.copyWith(
+                                    color: accentColor,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            );
+          },
+        ),
+      ],
+    );
+  }
+}
+
 String _sleepPresetLabel(AppLocalizations l10n, String id) {
   final key = 'timer_sleep_preset_$id';
   final value = l10n.tr(key);
@@ -424,6 +559,10 @@ class _TimerPageState extends ConsumerState<TimerPage> {
     final l10n = context.l10n;
     final state = ref.watch(timerControllerProvider);
     final controller = ref.read(timerControllerProvider.notifier);
+
+    if (_enableDesktopLayout && !(Platform.isAndroid || Platform.isIOS)) {
+      return const _TimerDesktopLayout();
+    }
     final currentSegment = state.currentSegment;
     final permissionStatus = ref.watch(timerPermissionStatusProvider);
     final isPremium = ref.watch(isPremiumProvider);
@@ -550,10 +689,7 @@ class _TimerPageState extends ConsumerState<TimerPage> {
         'source': 'quick_card',
       });
       if (!context.mounted) return;
-      await Navigator.push<void>(
-        context,
-        WorkoutNavigatorPage.route(),
-      );
+      await Navigator.push<void>(context, WorkoutNavigatorPage.route());
     }
 
     final List<Widget> modeHeader = [
@@ -582,6 +718,8 @@ class _TimerPageState extends ConsumerState<TimerPage> {
                 onOpen: openWorkoutNavigatorQuick,
               ),
             )
+            ..add(const SizedBox(height: 16))
+            ..add(const _WorkoutLightPresetChips())
             ..add(const SizedBox(height: 16));
           break;
         default:
@@ -1179,10 +1317,7 @@ class _ModeMascotState extends State<_ModeMascot>
           final scale = 0.96 + (math.cos(angle) * 0.04);
           return Transform.translate(
             offset: Offset(0, dy),
-            child: Transform.scale(
-              scale: scale,
-              child: child,
-            ),
+            child: Transform.scale(scale: scale, child: child),
           );
         },
         child: Container(
@@ -2708,5 +2843,644 @@ class _EditChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ActionChip(label: Text(label), onPressed: onTap);
+  }
+}
+
+class _TimerDesktopLayout extends ConsumerStatefulWidget {
+  const _TimerDesktopLayout();
+
+  @override
+  ConsumerState<_TimerDesktopLayout> createState() => _TimerDesktopLayoutState();
+}
+
+class _TimerDesktopLayoutState extends ConsumerState<_TimerDesktopLayout> {
+  static const List<int> _focusOptions = [15, 25, 45, 60, 90];
+  static const List<int> _sleepOptions = [45, 60, 75, 90, 120];
+
+  int? _focusMinutes;
+  int? _sleepMinutes;
+  String? _workoutPresetId;
+  bool? _sleepSmartWindowEnabled;
+  ProviderSubscription<AsyncValue<Settings>>? _settingsSubscription;
+  ProviderSubscription<TimerState>? _timerSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    _settingsSubscription =
+        ref.listenManual<AsyncValue<Settings>>(
+      settingsFutureProvider,
+      (previous, next) {
+        next.whenData((settings) {
+          if (!mounted) return;
+          setState(() {
+            _focusMinutes ??= settings.focusMinutes;
+            _sleepMinutes ??= settings.sleepMinutes;
+            _sleepSmartWindowEnabled ??=
+                settings.sleepSmartAlarmWindowMinutes > 0;
+          });
+        });
+      },
+      fireImmediately: true,
+    );
+
+    _timerSubscription = ref.listenManual<TimerState>(
+      timerControllerProvider,
+      (previous, next) {
+        if (!mounted) return;
+        if (_workoutPresetId == null && next.workoutPresetId != null) {
+          setState(() {
+            _workoutPresetId = next.workoutPresetId;
+          });
+        }
+      },
+      fireImmediately: true,
+    );
+  }
+
+  @override
+  void dispose() {
+    _settingsSubscription?.close();
+    _timerSubscription?.close();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+    final state = ref.watch(timerControllerProvider);
+    final controller = ref.read(timerControllerProvider.notifier);
+    final settingsAsync = ref.watch(settingsFutureProvider);
+    final settings = settingsAsync.asData?.value;
+
+    final focusMinutes = _focusMinutes ?? settings?.focusMinutes ?? 25;
+    final sleepMinutes = _sleepMinutes ?? settings?.sleepMinutes ?? 60;
+    final defaultPresetId = _workoutPresetId ??
+        state.workoutPresetId ??
+        (workoutLightPresets.isNotEmpty ? workoutLightPresets.first.id : null);
+    final sleepSmartEnabled =
+        _sleepSmartWindowEnabled ?? (settings?.sleepSmartAlarmWindowMinutes ?? 0) > 0;
+
+    final totalProgress = state.totalSeconds == 0
+        ? 0.0
+        : 1 - (state.remainingSeconds / state.totalSeconds);
+    final segmentProgress = state.currentSegment.duration.inSeconds == 0
+        ? 0.0
+        : 1 -
+            (state.segmentRemainingSeconds /
+                state.currentSegment.duration.inSeconds);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(l10n.tr('timer_title')),
+        actions: [
+          IconButton(
+            tooltip: l10n.tr('timer_workout_navigator_button'),
+            icon: const Icon(Icons.route_outlined),
+            onPressed: () async {
+              AnalyticsService.logEvent('workout_navigator_open', {
+                'source': 'desktop_app_bar',
+              });
+              if (!context.mounted) return;
+              await Navigator.push<void>(context, WorkoutNavigatorPage.route());
+            },
+          ),
+          IconButton(
+            tooltip: l10n.tr('timer_button_start'),
+            icon: const Icon(Icons.analytics_outlined),
+            onPressed: () async {
+              if (!context.mounted) return;
+              await Navigator.push<void>(
+                context,
+                MaterialPageRoute<void>(builder: (_) => const StatsPage()),
+              );
+            },
+          ),
+        ],
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _DesktopStatusCard(
+                state: state,
+                totalProgress: totalProgress,
+                segmentProgress: segmentProgress,
+                onToggle: () => _handleToggle(context, controller),
+                onReset: controller.reset,
+                onNext: controller.skipSegment,
+                onPrevious: controller.previousSegment,
+                onSoundToggle: controller.toggleSound,
+              ),
+              const SizedBox(height: 24),
+              Expanded(
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final isNarrow = constraints.maxWidth < 960;
+                    final cards = <Widget>[
+                      _ModeCard(
+                        icon: Icons.timer_outlined,
+                        title: l10n.tr('timer_mode_focus'),
+                        description: l10n.tr('timer_desktop_focus_hint'),
+                        child: _buildFocusControls(
+                          context,
+                          theme,
+                          focusMinutes,
+                          onMinutesChanged: (value) {
+                            setState(() => _focusMinutes = value);
+                            unawaited(
+                              ref
+                                  .read(savePresetProvider({'focus': value}).future),
+                            );
+                          },
+                          onStart: () => _startFocus(context, focusMinutes),
+                        ),
+                      ),
+                      _ModeCard(
+                        icon: Icons.directions_run,
+                        title: l10n.tr('timer_mode_workout'),
+                        description: l10n.tr('timer_desktop_workout_hint'),
+                        child: _buildWorkoutControls(
+                          context,
+                          theme,
+                          defaultPresetId,
+                          onPresetChanged: (id) {
+                            setState(() => _workoutPresetId = id);
+                          },
+                          onStart: () =>
+                              _startWorkout(context, controller, defaultPresetId),
+                        ),
+                      ),
+                      _ModeCard(
+                        icon: Icons.bedtime_outlined,
+                        title: l10n.tr('timer_mode_sleep'),
+                        description: l10n.tr('timer_desktop_sleep_hint'),
+                        child: _buildSleepControls(
+                          context,
+                          theme,
+                          sleepMinutes,
+                          smartWindowEnabled: sleepSmartEnabled,
+                          onMinutesChanged: (value) {
+                            setState(() => _sleepMinutes = value);
+                            unawaited(
+                              ref
+                                  .read(savePresetProvider({'sleep': value}).future),
+                            );
+                          },
+                          onSmartWindowChanged: (value) async {
+                            await _toggleSmartWindow(value, settings);
+                          },
+                          onStart: () => _startSleep(context, sleepMinutes),
+                        ),
+                      ),
+                    ];
+
+                    if (isNarrow) {
+                      return Column(
+                        children: [
+                          ...cards.map(
+                            (card) => Padding(
+                              padding: const EdgeInsets.only(bottom: 16),
+                              child: SizedBox(width: double.infinity, child: card),
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+
+                    return Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: cards
+                          .map(
+                            (card) => Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 16),
+                                child: card,
+                              ),
+                            ),
+                          )
+                          .toList()
+                        ..last = Expanded(child: cards.last),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _toggleSmartWindow(bool enabled, Settings? settings) async {
+    final current = settings;
+    if (current == null) {
+      setState(() => _sleepSmartWindowEnabled = enabled);
+      return;
+    }
+    setState(() => _sleepSmartWindowEnabled = enabled);
+    final windowMinutes = enabled ? current.sleepSmartAlarmWindowMinutes.clamp(15, 120) : 0;
+    await ref
+        .read(
+          updateSleepSmartAlarmProvider(
+            SleepSmartAlarmInput(
+              windowMinutes: windowMinutes,
+              intervalMinutes: current.sleepSmartAlarmIntervalMinutes,
+              fallbackExact: current.sleepSmartAlarmExactFallback,
+              whiteLevel: current.sleepMixerWhiteLevel,
+              pinkLevel: current.sleepMixerPinkLevel,
+              brownLevel: current.sleepMixerBrownLevel,
+              presetId: current.sleepMixerPresetId.isEmpty
+                  ? SleepSoundCatalog.defaultPresetId
+                  : current.sleepMixerPresetId,
+            ),
+          ).future,
+        );
+  }
+
+  Widget _buildFocusControls(
+    BuildContext context,
+    ThemeData theme,
+    int focusMinutes, {
+    required ValueChanged<int> onMinutesChanged,
+    required VoidCallback onStart,
+  }) {
+    final l10n = context.l10n;
+    final options = {..._focusOptions, focusMinutes}..removeWhere((value) => value <= 0);
+    final sortedOptions = options.toList()..sort();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          l10n.tr('timer_desktop_focus_duration', {
+            'minutes': '$focusMinutes',
+          }),
+          style: theme.textTheme.bodyMedium,
+        ),
+        const SizedBox(height: 12),
+        DropdownButton<int>(
+          value: focusMinutes,
+          onChanged: (value) {
+            if (value == null) return;
+            onMinutesChanged(value);
+          },
+          items: sortedOptions
+              .map(
+                (minutes) => DropdownMenuItem<int>(
+                  value: minutes,
+                  child: Text(l10n.tr('timer_desktop_minutes_label', {
+                    'minutes': '$minutes',
+                  })),
+                ),
+              )
+              .toList(),
+        ),
+        const SizedBox(height: 16),
+        ElevatedButton.icon(
+          icon: const Icon(Icons.play_arrow_rounded),
+          label: Text(l10n.tr('timer_button_start')),
+          onPressed: onStart,
+        ),
+        const SizedBox(height: 8),
+        Text(
+          l10n.tr('timer_desktop_focus_tip'),
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildWorkoutControls(
+    BuildContext context,
+    ThemeData theme,
+    String? selectedId, {
+    required ValueChanged<String> onPresetChanged,
+    required VoidCallback onStart,
+  }) {
+    final l10n = context.l10n;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        DropdownButton<String>(
+          value: selectedId,
+          isExpanded: true,
+          onChanged: (value) {
+            if (value == null) return;
+            onPresetChanged(value);
+          },
+          items: workoutLightPresets
+              .map(
+                (preset) => DropdownMenuItem<String>(
+                  value: preset.id,
+                  child: Text(l10n.tr(preset.labelKey)),
+                ),
+              )
+              .toList(),
+        ),
+        const SizedBox(height: 16),
+        ElevatedButton.icon(
+          icon: const Icon(Icons.play_arrow_rounded),
+          label: Text(l10n.tr('timer_button_start')),
+          onPressed: selectedId == null ? null : onStart,
+        ),
+        const SizedBox(height: 8),
+        TextButton(
+          onPressed: () async {
+            AnalyticsService.logEvent('workout_navigator_open', {
+              'source': 'desktop_card',
+            });
+            if (!context.mounted) return;
+            await Navigator.push<void>(context, WorkoutNavigatorPage.route());
+          },
+          child: Text(l10n.tr('timer_desktop_open_navigator')),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSleepControls(
+    BuildContext context,
+    ThemeData theme,
+    int sleepMinutes, {
+    required bool smartWindowEnabled,
+    required ValueChanged<int> onMinutesChanged,
+    required ValueChanged<bool> onSmartWindowChanged,
+    required VoidCallback onStart,
+  }) {
+    final l10n = context.l10n;
+    final options = {..._sleepOptions, sleepMinutes}..removeWhere((value) => value <= 0);
+    final sortedOptions = options.toList()..sort();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        DropdownButton<int>(
+          value: sleepMinutes,
+          onChanged: (value) {
+            if (value == null) return;
+            onMinutesChanged(value);
+          },
+          items: sortedOptions
+              .map(
+                (minutes) => DropdownMenuItem<int>(
+                  value: minutes,
+                  child: Text(l10n.tr('timer_desktop_minutes_label', {
+                    'minutes': '$minutes',
+                  })),
+                ),
+              )
+              .toList(),
+        ),
+        const SizedBox(height: 12),
+        SwitchListTile(
+          contentPadding: EdgeInsets.zero,
+          value: smartWindowEnabled,
+          onChanged: (value) => onSmartWindowChanged(value),
+          title: Text(l10n.tr('timer_sleep_smart_alarm_title')), // reuse existing key or create new? ensure exists.
+          subtitle: Text(
+            smartWindowEnabled
+                ? l10n.tr('timer_sleep_smart_alarm_on')
+                : l10n.tr('timer_sleep_smart_alarm_off'),
+            style: theme.textTheme.bodySmall,
+          ),
+        ),
+        const SizedBox(height: 12),
+        ElevatedButton.icon(
+          icon: const Icon(Icons.play_arrow_rounded),
+          label: Text(l10n.tr('timer_button_start')),
+          onPressed: onStart,
+        ),
+      ],
+    );
+  }
+
+  Future<void> _startFocus(BuildContext context, int minutes) async {
+    final granted = await _ensurePermissions(context);
+    if (!granted) return;
+    await ref.read(savePresetProvider({'focus': minutes}).future);
+    await ref.read(timerControllerProvider.notifier).selectMode('focus');
+    final current = ref.read(timerControllerProvider);
+    if (!current.isRunning) {
+      await ref.read(timerControllerProvider.notifier).toggleStartStop();
+    }
+  }
+
+  Future<void> _startWorkout(
+    BuildContext context,
+    TimerController controller,
+    String? presetId,
+  ) async {
+    if (presetId == null) return;
+    final granted = await _ensurePermissions(context);
+    if (!granted) return;
+    await controller.startWorkoutLightPreset(presetId);
+    final current = ref.read(timerControllerProvider);
+    if (!current.isRunning) {
+      await controller.toggleStartStop();
+    }
+  }
+
+  Future<void> _startSleep(BuildContext context, int minutes) async {
+    final granted = await _ensurePermissions(context);
+    if (!granted) return;
+    await ref.read(savePresetProvider({'sleep': minutes}).future);
+    await ref.read(timerControllerProvider.notifier).selectMode('sleep');
+    final current = ref.read(timerControllerProvider);
+    if (!current.isRunning) {
+      await ref.read(timerControllerProvider.notifier).toggleStartStop();
+    }
+  }
+
+  Future<bool> _ensurePermissions(BuildContext context) async {
+    final granted = await TimerPermissionService.ensureTimerPermissions(context);
+    ref.invalidate(timerPermissionStatusProvider);
+    return granted;
+  }
+
+  Future<void> _handleToggle(
+    BuildContext context,
+    TimerController controller,
+  ) async {
+    final granted = await _ensurePermissions(context);
+    if (!granted) return;
+    await controller.toggleStartStop();
+  }
+}
+
+class _ModeCard extends StatelessWidget {
+  const _ModeCard({
+    required this.icon,
+    required this.title,
+    required this.description,
+    required this.child,
+  });
+
+  final IconData icon;
+  final String title;
+  final String description;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Card(
+      elevation: 1,
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 28, color: theme.colorScheme.primary),
+            const SizedBox(height: 12),
+            Text(
+              title,
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              description,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 16),
+            child,
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _DesktopStatusCard extends StatelessWidget {
+  const _DesktopStatusCard({
+    required this.state,
+    required this.totalProgress,
+    required this.segmentProgress,
+    required this.onToggle,
+    required this.onReset,
+    required this.onNext,
+    required this.onPrevious,
+    required this.onSoundToggle,
+  });
+
+  final TimerState state;
+  final double totalProgress;
+  final double segmentProgress;
+  final Future<void> Function() onToggle;
+  final Future<void> Function() onReset;
+  final Future<void> Function() onNext;
+  final Future<void> Function() onPrevious;
+  final Future<void> Function()? onSoundToggle;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+    final modeLabel = _modeLabel(l10n, state.mode);
+    final segmentLabel = state.currentSegment.labelFor(l10n);
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              modeLabel,
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              segmentLabel,
+              style: theme.textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 12),
+            LinearProgressIndicator(value: totalProgress.clamp(0, 1)),
+            const SizedBox(height: 8),
+            LinearProgressIndicator(
+              value: segmentProgress.clamp(0, 1),
+              color: theme.colorScheme.secondary,
+              backgroundColor:
+                  theme.colorScheme.secondary.withValues(alpha: 0.2),
+            ),
+            const SizedBox(height: 16),
+            Wrap(
+              spacing: 12,
+              runSpacing: 12,
+              children: [
+                ElevatedButton.icon(
+                  icon: Icon(
+                    state.isRunning ? Icons.pause_rounded : Icons.play_arrow,
+                  ),
+                  label: Text(
+                    state.isRunning
+                        ? l10n.tr('timer_button_pause')
+                        : l10n.tr('timer_button_start'),
+                  ),
+                  onPressed: onToggle,
+                ),
+                OutlinedButton.icon(
+                  icon: const Icon(Icons.skip_previous_rounded),
+                  label: Text(l10n.tr('timer_button_previous')),
+                  onPressed: onPrevious,
+                ),
+                OutlinedButton.icon(
+                  icon: const Icon(Icons.skip_next_rounded),
+                  label: Text(l10n.tr('timer_button_next')),
+                  onPressed: onNext,
+                ),
+                TextButton.icon(
+                  icon: const Icon(Icons.refresh_rounded),
+                  label: Text(l10n.tr('timer_button_reset')),
+                  onPressed: onReset,
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              value: state.isSoundEnabled,
+              onChanged: (_) => onSoundToggle?.call(),
+              title: Text(l10n.tr('timer_sound_switch_title')),
+              subtitle: Text(
+                state.isSoundEnabled
+                    ? l10n.tr('timer_sound_switch_enabled', {
+                        'profile': state.currentSegment.playSoundProfile ??
+                            l10n.tr('timer_sound_profile_default'),
+                      })
+                    : l10n.tr('timer_sound_switch_disabled'),
+                style: theme.textTheme.bodySmall,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  static String _modeLabel(AppLocalizations l10n, String mode) {
+    switch (mode) {
+      case 'focus':
+        return l10n.tr('timer_mode_focus');
+      case 'workout':
+        return l10n.tr('timer_mode_workout');
+      case 'sleep':
+        return l10n.tr('timer_mode_sleep');
+      case 'rest':
+        return l10n.tr('timer_mode_rest');
+      default:
+        return l10n.tr('timer_title');
+    }
   }
 }

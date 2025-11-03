@@ -345,6 +345,38 @@
   },
   "session_empty_hint": "No sessions yet. Tap + in the top right to add one.",
   "session_deleted": "Deleted",
+  "home_dashboard_hero_title": "Nice work staying consistent today",
+  "home_dashboard_hero_subtitle": "Here’s a quick snapshot of your routines.",
+  "home_dashboard_summary_focus": "Focus {minutes}",
+  "@home_dashboard_summary_focus": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "home_dashboard_summary_sleep": "Sleep {minutes}",
+  "@home_dashboard_summary_sleep": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "home_dashboard_summary_workout": "Workout {minutes}",
+  "@home_dashboard_summary_workout": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "home_dashboard_card_focus_description": "Stack focused blocks with mindful breaks.",
+  "home_dashboard_card_workout_description": "Plan your next session or preview guided routes.",
+  "home_dashboard_card_sleep_description": "Wind down with sleep sounds and smart alarms.",
+  "home_dashboard_action_start": "Start now",
+  "home_dashboard_action_customize": "Adjust routine",
+  "home_dashboard_action_explore": "Explore",
+  "home_dashboard_insight_stats_title": "Insights",
+  "home_dashboard_insight_stats_description": "Track streaks and compare trends across time.",
+  "home_dashboard_insight_stats_action": "Open stats",
+  "home_dashboard_insight_journal_title": "Reflect",
+  "home_dashboard_insight_journal_description": "Capture today’s thoughts before they fade.",
+  "home_dashboard_insight_journal_action": "Write journal",
   "timer_title": "Timer",
   "timer_mode_focus": "Focus",
   "timer_mode_rest": "Break (auto)",
@@ -390,6 +422,23 @@
     }
   },
   "timer_coach_workout_action": "Open Workout Navigator",
+  "timer_desktop_focus_hint": "Set a deep work block and include recovery time.",
+  "timer_desktop_workout_hint": "Pick a curated route or start a quick training session.",
+  "timer_desktop_sleep_hint": "Choose how long to play sleep sounds and enable smart wake.",
+  "timer_desktop_focus_duration": "Focus for {minutes} minutes",
+  "@timer_desktop_focus_duration": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "timer_desktop_minutes_label": "{minutes} min",
+  "@timer_desktop_minutes_label": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "timer_desktop_focus_tip": "Tip: Turn on Do Not Disturb while this session runs.",
+  "timer_desktop_open_navigator": "Open workout navigator",
   "timer_workout_card_title": "Workout navigator",
   "timer_workout_card_subtitle": "Plan your run or ride with cues and maps before heading out.",
   "timer_workout_card_featured": "Featured route",
@@ -406,6 +455,105 @@
     }
   },
   "timer_workout_card_cta": "Open navigator",
+  "timer_workout_light_section_title": "Quick workout routines",
+  "timer_workout_light_section_subtitle": "Timer-based running and cycling presets—no maps required.",
+  "timer_workout_light_minutes": "{minutes} min",
+  "@timer_workout_light_minutes": {
+    "description": "Displays total minutes for a light workout preset.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "timer_workout_light_run_light_title": "Easy run intervals",
+  "timer_workout_light_run_light_desc": "4 × (3 min run / 1 min walk) · {minutes} min",
+  "@timer_workout_light_run_light_desc": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "timer_workout_light_run_moderate_title": "Steady run builder",
+  "timer_workout_light_run_moderate_desc": "Warm-up + 4 × (4 min run / 1 min reset) + cooldown · {minutes} min",
+  "@timer_workout_light_run_moderate_desc": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "timer_workout_light_run_vigorous_title": "Power run surges",
+  "timer_workout_light_run_vigorous_desc": "Warm-up + 6 × (2 min surge / 1 min reset) + cooldown · {minutes} min",
+  "@timer_workout_light_run_vigorous_desc": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "timer_workout_light_ride_light_title": "Easy ride spin",
+  "timer_workout_light_ride_light_desc": "3 min warm-up, 3 × (5 min ride / 2 min coast), 5 min cooldown · {minutes} min",
+  "@timer_workout_light_ride_light_desc": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "timer_workout_light_ride_moderate_title": "Tempo ride blocks",
+  "timer_workout_light_ride_moderate_desc": "4 min warm-up, 3 × (6 min tempo / 2 min coast), 6 min cooldown · {minutes} min",
+  "@timer_workout_light_ride_moderate_desc": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "timer_workout_light_ride_vigorous_title": "Sprint ride intervals",
+  "timer_workout_light_ride_vigorous_desc": "5 min warm-up, 6 × (3 min surge / 1 min coast), 3 min cooldown · {minutes} min",
+  "@timer_workout_light_ride_vigorous_desc": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "timer_workout_light_segment_warmup": "Warm-up",
+  "timer_workout_light_segment_run_interval": "Run interval {number}",
+  "@timer_workout_light_segment_run_interval": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "timer_workout_light_segment_run_recovery": "Walk reset {number}",
+  "@timer_workout_light_segment_run_recovery": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "timer_workout_light_segment_cooldown": "Cooldown",
+  "timer_workout_light_segment_ride_block": "Ride block {number}",
+  "@timer_workout_light_segment_ride_block": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "timer_workout_light_segment_ride_recovery": "Easy spin {number}",
+  "@timer_workout_light_segment_ride_recovery": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
   "timer_focus_card_title": "Focus timer",
   "timer_focus_card_subtitle": "{minutes}-minute focus block",
   "@timer_focus_card_subtitle": {
@@ -451,6 +599,65 @@
   },
   "timer_preset_break_title": "Break length",
   "timer_workout_navigator_button": "Open Workout Navigator",
+  "workoutNavigatorTitle": "Workout Navigator",
+  "workoutNavigatorChooseActivity": "Choose your activity",
+  "workoutNavigatorRunLabel": "Run",
+  "workoutNavigatorRunSubtitle": "Ideal for road and trail workouts",
+  "workoutNavigatorRideLabel": "Ride",
+  "workoutNavigatorRideSubtitle": "Smooth routes for your bike sessions",
+  "workoutNavigatorConditionsTitle": "Today's conditions",
+  "workoutNavigatorConditionsSubtitle": "Check the weather and daylight before you head out. Weather tips will appear here soon.",
+  "workoutNavigatorIntensity": "Intensity",
+  "workoutNavigatorGoal": "Goal",
+  "workoutNavigatorTargetDistance": "Distance",
+  "workoutNavigatorTargetDuration": "Duration",
+  "workoutNavigatorSliderDistanceLabel": "Distance (km)",
+  "workoutNavigatorSliderDurationLabel": "Duration (min)",
+  "workoutNavigatorMapPlaceholder": "Map preview coming soon",
+  "workoutNavigatorTipsTitle": "Tips",
+  "workoutNavigatorPlanTitle": "Plan",
+  "workoutNavigatorVoicePreviewTitle": "Voice cues preview",
+  "workoutNavigatorVoiceToggle": "Voice guidance",
+  "workoutNavigatorVoiceToggleDescription": "Hear cues during your session (requires device audio).",
+  "workoutNavigatorChecklistTitle": "Before you head out",
+  "workoutNavigatorChecklistHydrate": "Hydrate before leaving",
+  "workoutNavigatorChecklistWarmup": "Complete warm-up routine",
+  "workoutNavigatorChecklistGear": "Gear check (shoes/bike/reflectors)",
+  "workoutNavigatorChecklistVolume": "Ensure device audio is on for cues",
+  "workoutNavigatorOfflineButton": "View offline instructions",
+  "workoutNavigatorStartButton": "Start this session",
+  "workoutNavigatorOfflineTitle": "Offline instructions",
+  "workoutNavigatorIntensityLight": "Light effort",
+  "workoutNavigatorIntensityModerate": "Steady effort",
+  "workoutNavigatorIntensityVigorous": "Power effort",
+  "workoutNavigatorIntensityLightDescription": "Easy pace, focus on relaxed breathing and recovery.",
+  "workoutNavigatorIntensityModerateDescription": "Sustainable effort; breathing harder but still in control.",
+  "workoutNavigatorIntensityVigorousDescription": "High intensity with surges. Expect strong effort intervals.",
+  "workoutNavigatorUnitKm": "{value} km",
+  "@workoutNavigatorUnitKm": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "workoutNavigatorUnitMinutes": "{value} min",
+  "@workoutNavigatorUnitMinutes": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "workoutNavigatorDurationMinutes": "{minutes} min",
+  "@workoutNavigatorDurationMinutes": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "workoutNavigatorDurationMinutesSeconds": "{minutes}:{seconds}",
+  "@workoutNavigatorDurationMinutesSeconds": {
+    "placeholders": {
+      "minutes": {},
+      "seconds": {}
+    }
+  },
   "timer_coach_default_title": "Keep the streak alive",
   "timer_coach_default_message": "Great work today! Review your stats to plan tomorrow.",
   "timer_coach_default_action": "View stats",

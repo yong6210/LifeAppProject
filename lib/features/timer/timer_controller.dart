@@ -25,6 +25,7 @@ import 'package:life_app/services/audio/timer_audio_service.dart';
 import 'package:life_app/providers/diagnostics_providers.dart';
 import 'package:life_app/services/diagnostics/timer_diagnostics_service.dart';
 import 'package:life_app/features/workout/models/workout_navigator_models.dart';
+import 'package:life_app/features/workout/workout_light_presets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class _NavigatorCueTrigger {
@@ -47,6 +48,7 @@ class TimerController extends Notifier<TimerState> {
   late TimerDependencies _deps;
   bool _allowHaptics = true;
   SharedPreferences? _prefs;
+  String? _workoutPresetId;
   SleepSoundAnalyzer? _sleepSoundAnalyzer;
   bool _sleepCaptureActive = false;
   bool _sleepForegroundActive = false;
@@ -57,6 +59,7 @@ class TimerController extends Notifier<TimerState> {
   int _navigatorChecklistCheckedCount = 0;
 
   static const _prefsKey = 'timer_state_v2';
+  static const _prefsWorkoutPresetKey = 'workout_light_preset_id';
   static const _notificationIdBase = 4200;
 
   Future<AppLocalizations> _localizations() => loadAppLocalizations();
@@ -74,13 +77,16 @@ class TimerController extends Notifier<TimerState> {
       _allowHaptics = !next;
     });
     final defaultPlan = TimerPlanFactory.createPlan('focus', Settings());
-    state = TimerState.idle(plan: defaultPlan);
+    state = TimerState.idle(plan: defaultPlan, workoutPresetId: null);
 
     unawaited(_foreground.ensureInitialized());
     Future.microtask(() async {
       await _foreground.ensureInitialized();
       try {
-        _prefs = await SharedPreferences.getInstance();
+        final prefs = await SharedPreferences.getInstance();
+        _prefs = prefs;
+        _workoutPresetId =
+            prefs.getString(_prefsWorkoutPresetKey) ?? _workoutPresetId;
       } catch (_) {
         _prefs = null;
       }
@@ -128,6 +134,31 @@ class TimerController extends Notifier<TimerState> {
     await selectMode(mode);
   }
 
+  Future<void> startWorkoutLightPreset(String presetId) async {
+    final preset = _findWorkoutPreset(presetId);
+    if (preset == null) {
+      await selectMode('workout');
+      return;
+    }
+
+    final soundEnabled = state.isSoundEnabled;
+    final plan = TimerPlanFactory.createWorkoutLightPlan(preset);
+    _currentPlan = plan;
+    _clearNavigatorContext();
+    await _setWorkoutPreset(preset.id);
+    unawaited(ref.read(saveLastModeProvider('workout').future));
+
+    state = TimerState.idle(
+      plan: plan,
+      soundEnabled: soundEnabled,
+      workoutPresetId: preset.id,
+    );
+    await _audioService.setEnabled(false);
+    await _foreground.stop();
+    await _background.cancelGuard();
+    await _persistState();
+  }
+
   Future<void> startNavigatorWorkout({
     required WorkoutNavigatorRoute route,
     required WorkoutNavigatorTarget target,
@@ -169,6 +200,7 @@ class TimerController extends Notifier<TimerState> {
       navigatorTarget: target,
       navigatorVoiceEnabled: voiceGuidanceEnabled,
       navigatorLastSummary: null,
+      workoutPresetId: null,
     );
 
     await AnalyticsService.logEvent('workout_navigator_start_session', {
@@ -211,9 +243,14 @@ class TimerController extends Notifier<TimerState> {
 
   Future<void> reset() async {
     _clearNavigatorContext();
+    final previousPresetId = state.workoutPresetId;
     final plan =
         _currentPlan ?? TimerPlanFactory.createPlan(state.mode, Settings());
-    state = TimerState.idle(plan: plan, soundEnabled: state.isSoundEnabled);
+    state = TimerState.idle(
+      plan: plan,
+      soundEnabled: state.isSoundEnabled,
+      workoutPresetId: previousPresetId,
+    );
     await _stopTicker();
     await _audioService.setEnabled(false);
     await _cancelScheduledNotifications();
@@ -281,28 +318,75 @@ class TimerController extends Notifier<TimerState> {
           ? SleepSoundCatalog.defaultPresetId
           : settings.sleepMixerPresetId,
     );
-    final plan = TimerPlanFactory.createPlan(mode, settings);
+    final persistedState = forceReset ? null : await _readPersistedStateMap();
+    final resolution = _resolvePlan(
+      mode: mode,
+      settings: settings,
+      persistedState: persistedState,
+    );
+    final plan = resolution.plan;
+    final presetId = resolution.presetId;
     _currentPlan = plan;
     _clearNavigatorContext();
 
-    final restored = forceReset ? false : await _restoreState(plan);
+    final restored = forceReset
+        ? false
+        : await _restoreState(plan, persistedState);
     if (!restored) {
-      state = TimerState.idle(plan: plan, soundEnabled: state.isSoundEnabled);
+      state = TimerState.idle(
+        plan: plan,
+        soundEnabled: state.isSoundEnabled,
+        workoutPresetId: presetId,
+      );
       await _foreground.stop();
       await _background.cancelGuard();
       await _persistState();
     }
   }
 
-  Future<bool> _restoreState(TimerPlan plan) async {
+  Future<Map<String, dynamic>?> _readPersistedStateMap() async {
     final prefs = _prefs;
-    if (prefs == null) return false;
+    if (prefs == null) return null;
     final raw = prefs.getString(_prefsKey);
-    if (raw == null) return false;
-    final Map<String, dynamic> map;
+    if (raw == null || raw.isEmpty) return null;
     try {
-      map = jsonDecode(raw) as Map<String, dynamic>;
+      return jsonDecode(raw) as Map<String, dynamic>;
     } catch (_) {
+      return null;
+    }
+  }
+
+  ({TimerPlan plan, String? presetId}) _resolvePlan({
+    required String mode,
+    required Settings settings,
+    Map<String, dynamic>? persistedState,
+  }) {
+    if (mode == 'workout') {
+      final hasPersistedKey =
+          persistedState?.containsKey('workoutPresetId') ?? false;
+      final storedPreset = persistedState?['workoutPresetId'];
+      final candidateId = hasPersistedKey
+          ? storedPreset as String?
+          : _workoutPresetId;
+      final preset = _findWorkoutPreset(candidateId);
+      if (preset != null) {
+        _workoutPresetId = preset.id;
+        return (
+          plan: TimerPlanFactory.createWorkoutLightPlan(preset),
+          presetId: preset.id,
+        );
+      }
+    }
+    return (plan: TimerPlanFactory.createPlan(mode, settings), presetId: null);
+  }
+
+  Future<bool> _restoreState(
+    TimerPlan plan,
+    Map<String, dynamic>? persistedState,
+  ) async {
+    var map = persistedState;
+    map ??= await _readPersistedStateMap();
+    if (map == null) {
       return false;
     }
 
@@ -313,6 +397,15 @@ class TimerController extends Notifier<TimerState> {
         .cast<Map<String, dynamic>>();
     if (!_segmentsMatch(plan.segments, segmentsData)) {
       return false;
+    }
+
+    final storedPresetId = map['workoutPresetId'];
+    final workoutPresetId =
+        storedPresetId is String && storedPresetId.isNotEmpty
+        ? storedPresetId
+        : null;
+    if (workoutPresetId != null) {
+      _workoutPresetId = workoutPresetId;
     }
 
     final currentIndex = (map['currentIndex'] as num?)?.toInt() ?? 0;
@@ -361,6 +454,7 @@ class TimerController extends Notifier<TimerState> {
       navigatorRoute: null,
       navigatorTarget: null,
       navigatorVoiceEnabled: navigatorVoiceEnabled,
+      workoutPresetId: workoutPresetId,
     );
 
     final lastCueMessage = map['navigatorLastCueMessage'] as String?;
@@ -963,6 +1057,34 @@ class TimerController extends Notifier<TimerState> {
     }
   }
 
+  Future<void> _setWorkoutPreset(String? presetId) async {
+    _workoutPresetId = presetId;
+    SharedPreferences? prefs = _prefs;
+    if (prefs == null) {
+      try {
+        prefs = await SharedPreferences.getInstance();
+        _prefs = prefs;
+      } catch (_) {
+        return;
+      }
+    }
+    if (presetId == null || presetId.isEmpty) {
+      await prefs.remove(_prefsWorkoutPresetKey);
+    } else {
+      await prefs.setString(_prefsWorkoutPresetKey, presetId);
+    }
+  }
+
+  WorkoutLightPreset? _findWorkoutPreset(String? id) {
+    if (id == null || id.isEmpty) return null;
+    for (final preset in workoutLightPresets) {
+      if (preset.id == id) {
+        return preset;
+      }
+    }
+    return null;
+  }
+
   Future<void> _persistState() async {
     final prefs = _prefs;
     if (prefs == null) return;
@@ -989,6 +1111,7 @@ class TimerController extends Notifier<TimerState> {
       'navigatorVoiceEnabled': state.navigatorVoiceEnabled,
       'navigatorLastCueMessage': state.navigatorLastCueMessage,
       'navigatorLastCueAt': state.navigatorLastCueAt?.toIso8601String(),
+      'workoutPresetId': state.workoutPresetId,
     };
     await prefs.setString(_prefsKey, jsonEncode(data));
   }

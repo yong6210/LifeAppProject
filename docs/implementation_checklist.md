@@ -177,16 +177,16 @@
 
 ### Stage 0 — Prelaunch / MVP 준비 (안드로이드 단독)
 - [ ] Google Play 내부 테스트 트랙 준비: keystore/버전 코드/스토어 메타데이터 세팅. (See `docs/stage0_play_console_prep.md`, `docs/qa/android_internal_test_checklist.md`.)
-- [ ] 저널 30일 보존 정책, 텍스트 월간 리캡, 무료 플랜 범위 확정. (See `docs/features/journal_calendar.md`.)
-- [ ] Workout 타이머 기반 라이트 루틴(지도 없이) + 기본 사운드 4종 제공. (See `docs/features/premium_expansion_plan.md`.)
-- [ ] 라이프 버디 기본 애니메이션/커멘트 룰 구현, 무료 30일 TTL 적용. (See `docs/features/journal_calendar_implementation_plan.md`.)
+- [x] 저널 30일 보존 정책, 텍스트 월간 리캡, 무료 플랜 범위 확정. (See `docs/features/journal_calendar.md`.)
+- [x] Workout 타이머 기반 라이트 루틴(지도 없이) + 기본 사운드 4종 제공. (See `docs/features/premium_expansion_plan.md`.)
+- [x] 라이프 버디 기본 애니메이션/커멘트 룰 구현, 무료 30일 TTL 적용. (See `docs/features/journal_calendar_implementation_plan.md`, `docs/features/life_buddy_roadmap.md`.)
 - [ ] Stage 0 QA 시나리오(타이머 주요 모드 – 집중/운동/수면, 백업/복원, 페이월 가드) 완료 기록. (See `docs/qa_plan.md`.)
 - **매출 목표:** 출시 전이므로 0원 기준. 안정적 기능 완성 + 피드백 루프 확보가 핵심.
 
 ### Stage 1 — Early Growth (MAU 2,000 / 유료 50명 / 월 순매출 ≥ 20만 원)
-- [ ] Workout Navigator MVP: GPS 거리 측정, 고정 코스 + 강도 선택, 지도 API는 정적/캐시 사용. (See `docs/features/premium_expansion_plan.md`.)
-- [ ] 무료 텍스트 월간 리캡 개선 + 프리미엄 그래프형 월간 리캡 도입. (See `docs/features/journal_calendar.md`.)
-- [ ] 라이프 버디 코멘트 시스템(무료 30일 / 프리미엄 1년 학습)과 저널 캘린더 UI 완성. (See `docs/features/journal_calendar_implementation_plan.md`.)
+- [ ] Workout Navigator MVP: GPS 거리 측정, 고정 코스 + 강도 선택, 지도 API는 정적/캐시 사용. (See `docs/features/premium_expansion_plan.md`, `docs/stage1_execution_plan.md`.)
+- [ ] 무료 텍스트 월간 리캡 개선 + 프리미엄 그래프형 월간 리캡 도입. (See `docs/features/journal_calendar.md`, `docs/stage1_execution_plan.md`.)
+- [x] 라이프 버디 코멘트 시스템(무료 30일 / 프리미엄 1년 학습)과 저널 캘린더 UI 완성. *(2025-10-12: 캘린더/상세 카드 Stage 0 버전 완료, 프리미엄 365일 로컬 보존 적용. 타임라인/바텀 시트/그래프는 Stage 1에서 확장)* (See `docs/features/journal_calendar_implementation_plan.md`, `docs/stage1_execution_plan.md`.)
 - [ ] 프리미엄 체험 A/B(7일 vs 14일) 및 첫 달 할인 실험 세팅. (See `docs/features/premium_expansion_plan.md`.)
 - [ ] 콘텐츠 파이프라인 정착: 집중/수면/운동 루틴 +4, 사운드 +6 제작. (See `docs/features/content_roadmap.md`.)
 - **전환 조건:** MAU 2k / 순매출 20만 원 달성 시 Apple Developer 가입 및 iOS 준비 착수.

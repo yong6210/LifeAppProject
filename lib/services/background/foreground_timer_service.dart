@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 
 import 'package:life_app/l10n/app_localizations.dart';
@@ -114,6 +113,10 @@ class ForegroundTimerService {
   static bool _initialized = false;
 
   static Future<void> ensureInitialized() async {
+    if (!_isAndroid) {
+      _initialized = true;
+      return;
+    }
     if (_initialized) return;
     final l10n = await loadAppLocalizations();
 
@@ -149,6 +152,9 @@ class ForegroundTimerService {
     DateTime? smartWindowStart,
     Duration? smartInterval,
   }) async {
+    if (!_isAndroid) {
+      return;
+    }
     await ensureInitialized();
     await _persistMetadata(
       mode: mode,
@@ -180,6 +186,9 @@ class ForegroundTimerService {
     DateTime? smartWindowStart,
     Duration? smartInterval,
   }) async {
+    if (!_isAndroid) {
+      return;
+    }
     await _persistMetadata(
       mode: mode,
       segmentLabel: segmentLabel,
@@ -196,6 +205,9 @@ class ForegroundTimerService {
   }
 
   static Future<void> stop() async {
+    if (!_isAndroid) {
+      return;
+    }
     await FlutterForegroundTask.clearAllData();
     if (await FlutterForegroundTask.isRunningService) {
       await FlutterForegroundTask.stopService();
@@ -206,7 +218,7 @@ class ForegroundTimerService {
     required bool active,
     DateTime? startedAt,
   }) async {
-    if (!Platform.isAndroid) {
+    if (!_isAndroid) {
       return;
     }
     await ensureInitialized();
@@ -238,6 +250,9 @@ class ForegroundTimerService {
     DateTime? smartWindowStart,
     Duration? smartInterval,
   }) async {
+    if (!_isAndroid) {
+      return;
+    }
     await FlutterForegroundTask.saveData(
       key: _keyMode,
       value: mode.toUpperCase(),
@@ -281,6 +296,9 @@ String _formatCompact(AppLocalizations l10n, int seconds) {
   }
   return l10n.tr('duration_seconds_only', {'seconds': '$secs'});
 }
+
+bool get _isAndroid =>
+    !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
 
 String _modeLabel(AppLocalizations l10n, String mode) {
   switch (mode) {
