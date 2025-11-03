@@ -581,16 +581,16 @@ class _JournalCalendar extends StatelessWidget {
                     final cellKey = DateFormat('yyyy-MM-dd').format(normalized);
 
                     final backgroundColor = isSelected
-                        ? theme.colorScheme.primary.withOpacity(0.15)
+                        ? theme.colorScheme.primary.withValues(alpha: 0.15)
                         : Colors.transparent;
                     final borderColor = isSelected
                         ? theme.colorScheme.primary
                         : Colors.transparent;
                     final baseTextColor = isCurrentMonth
                         ? theme.colorScheme.onSurface
-                        : theme.colorScheme.onSurface.withOpacity(0.4);
+                        : theme.colorScheme.onSurface.withValues(alpha: 0.4);
                     final textColor = isFuture
-                        ? baseTextColor.withOpacity(0.35)
+                        ? baseTextColor.withValues(alpha: 0.35)
                         : baseTextColor;
 
                     Color? dotColor;
@@ -709,7 +709,7 @@ class _MoodDot extends StatelessWidget {
       height: 24,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: color.withOpacity(opacity),
+        color: color.withValues(alpha: opacity),
       ),
       alignment: Alignment.center,
       child: emoji != null
@@ -790,7 +790,7 @@ class _EntryDetailCard extends StatelessWidget {
                 Chip(
                   label: Text(journalEntry.mood),
                   avatar: Text(moodEmoji),
-                  backgroundColor: moodColor.withOpacity(0.12),
+                  backgroundColor: moodColor.withValues(alpha: 0.12),
                   labelStyle: theme.textTheme.bodyMedium?.copyWith(
                     color: moodColor.darken(),
                   ),
@@ -854,7 +854,7 @@ class _JournalEntryDetailSheet extends StatelessWidget {
       child: Container(
         key: const Key('journal-entry-detail-sheet'),
         decoration: BoxDecoration(
-          color: theme.colorScheme.background,
+          color: theme.colorScheme.surface,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
         ),
         child: Column(
@@ -864,7 +864,8 @@ class _JournalEntryDetailSheet extends StatelessWidget {
               width: 44,
               height: 4,
               decoration: BoxDecoration(
-                color: theme.colorScheme.onSurfaceVariant.withOpacity(0.3),
+                color: theme.colorScheme.onSurfaceVariant
+                    .withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -892,7 +893,7 @@ class _JournalEntryDetailSheet extends StatelessWidget {
                                 label: Text(entry.mood),
                                 avatar: Text(_emojiForMood(entry.mood)),
                                 backgroundColor: theme.colorScheme.primary
-                                    .withOpacity(0.12),
+                                    .withValues(alpha: 0.12),
                                 labelStyle:
                                     theme.textTheme.bodyMedium?.copyWith(
                                   color: theme.colorScheme.primary,
@@ -936,8 +937,8 @@ class _JournalEntryDetailSheet extends StatelessWidget {
                     if (comment != null) ...[
                       const SizedBox(height: 24),
                       Card(
-                        color:
-                            theme.colorScheme.secondaryContainer.withOpacity(0.6),
+                        color: theme.colorScheme.secondaryContainer
+                            .withValues(alpha: 0.6),
                         child: Padding(
                           padding: const EdgeInsets.all(16),
                           child: Column(
@@ -990,7 +991,7 @@ class _JournalEntryDetailSheet extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     Card(
-                      color: theme.colorScheme.surfaceVariant,
+                      color: theme.colorScheme.surfaceContainerHighest,
                       child: Padding(
                         padding: const EdgeInsets.all(16),
                         child: Column(
@@ -1050,7 +1051,7 @@ class _JournalStatChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceVariant,
+        color: theme.colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
@@ -1113,7 +1114,7 @@ class _TimelineEntry extends StatelessWidget {
                 height: 18,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: moodColor.withOpacity(0.35),
+                  color: moodColor.withValues(alpha: 0.35),
                   border: Border.all(color: moodColor, width: 2),
                 ),
                 alignment: Alignment.center,
@@ -1169,7 +1170,8 @@ class _TimelineEntry extends StatelessWidget {
                           Chip(
                             label: Text(entry.mood),
                             avatar: Text(_emojiForMood(entry.mood)),
-                            backgroundColor: moodColor.withOpacity(0.12),
+                            backgroundColor:
+                                moodColor.withValues(alpha: 0.12),
                             labelStyle: theme.textTheme.bodyMedium?.copyWith(
                               color: moodColor.darken(),
                             ),
@@ -1177,8 +1179,9 @@ class _TimelineEntry extends StatelessWidget {
                           if (entry.energyLevel != null)
                             Chip(
                               label: Text('에너지 ${entry.energyLevel}'),
-                              backgroundColor: theme.colorScheme.surfaceVariant
-                                  .withOpacity(0.5),
+                              backgroundColor: theme.colorScheme
+                                  .surfaceContainerHighest
+                                  .withValues(alpha: 0.5),
                             ),
                         ],
                       ),
@@ -1292,7 +1295,10 @@ class _MonthlyRecapCard extends StatelessWidget {
 
         return Card(
           elevation: 0,
-          color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.4),
+          color: Theme.of(context)
+              .colorScheme
+              .surfaceContainerHighest
+              .withValues(alpha: 0.4),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
