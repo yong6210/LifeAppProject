@@ -82,7 +82,7 @@ android {
     }
 
     // (선택) 릴리즈 빌드 서명 미설정 시 debug 키로 임시 서명
-    val releaseSigning = signingConfigs.create("release").apply {
+    val releaseSigning by signingConfigs.creating {
         val keystorePropsFile = rootProject.file("android/key.properties")
         if (keystorePropsFile.exists()) {
             val props = Properties().apply {
