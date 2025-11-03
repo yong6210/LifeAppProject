@@ -53,15 +53,15 @@ android {
     flavorDimensions += "environment"
 
     productFlavors {
-        create("dev") {
+        register("dev") {
             dimension = "environment"
             applicationId = "com.ymcompany.lifeapp.dev"
         }
-        create("staging") {
+        register("staging") {
             dimension = "environment"
             applicationId = "com.ymcompany.lifeapp.staging"
         }
-        create("prod") {
+        register("prod") {
             dimension = "environment"
             applicationId = "com.ymcompany.lifeapp"
         }
