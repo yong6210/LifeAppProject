@@ -43,6 +43,11 @@ project(":isar_flutter_libs") {
     plugins.withId("com.android.library") {
         extensions.configure<LibraryExtension> {
             namespace = "dev.isar.isar_flutter_libs"
+            compileSdk = 36
+        }
+        // Legacy plugin uses API 30; skip the new verify task that fails due to missing attrs.
+        tasks.matching { it.name == "verifyReleaseResources" }.configureEach {
+            enabled = false
         }
     }
 }
