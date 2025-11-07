@@ -281,11 +281,11 @@ Widget? _buildSyncBanner({
   final colorScheme = Theme.of(context).colorScheme;
   if (syncState.hasError) {
     return _GlassPanel(
-      accent: Colors.redAccent,
+      accent: colorScheme.error,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
       child: Row(
         children: [
-          const Icon(Icons.warning_amber_rounded, color: Colors.redAccent),
+          Icon(Icons.warning_amber_rounded, color: colorScheme.error),
           const SizedBox(width: 16),
           Expanded(
             child: Text(
@@ -293,7 +293,7 @@ Widget? _buildSyncBanner({
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium
-                  ?.copyWith(color: Colors.redAccent),
+                  ?.copyWith(color: colorScheme.error),
             ),
           ),
         ],
@@ -311,7 +311,9 @@ Widget? _buildSyncBanner({
           Expanded(
             child: Text(
               l10n.tr('home_sync_signed_out'),
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
             ),
           ),
         ],
@@ -329,7 +331,9 @@ Widget? _buildSyncBanner({
           Expanded(
             child: Text(
               l10n.tr('home_sync_in_progress'),
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
             ),
           ),
         ],
@@ -355,6 +359,7 @@ class _DashboardAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textStyle = Theme.of(context).textTheme;
+    final theme = Theme.of(context);
     return Row(
       children: [
         Container(
@@ -394,7 +399,7 @@ class _DashboardAppBar extends StatelessWidget {
               Text(
                 appName,
                 style: textStyle.titleMedium?.copyWith(
-                  color: Colors.white,
+                  color: theme.colorScheme.onSurface,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -402,7 +407,7 @@ class _DashboardAppBar extends StatelessWidget {
               Text(
                 dateLabel,
                 style: textStyle.bodySmall?.copyWith(
-                  color: Colors.white.withValues(alpha: 0.6),
+                  color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
             ],
@@ -430,17 +435,18 @@ class _IconCircleButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Material(
-      color: Colors.white.withValues(alpha: 0.08),
+      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(16),
-        splashColor: Colors.white.withValues(alpha: 0.2),
+        splashColor: theme.colorScheme.primary.withValues(alpha: 0.2),
         child: SizedBox(
           width: 40,
           height: 40,
-          child: Icon(icon, color: Colors.white.withValues(alpha: 0.85)),
+          child: Icon(icon, color: theme.colorScheme.onSurface),
         ),
       ),
     );
@@ -456,13 +462,14 @@ class _GreetingSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           '$greeting ✨',
           style: textTheme.headlineMedium?.copyWith(
-            color: Colors.white,
+            color: theme.colorScheme.onSurface,
             fontWeight: FontWeight.w700,
           ),
         ),
@@ -470,7 +477,7 @@ class _GreetingSection extends StatelessWidget {
         Text(
           subtitle,
           style: textTheme.bodyMedium?.copyWith(
-            color: Colors.white.withValues(alpha: 0.65),
+            color: theme.colorScheme.onSurfaceVariant,
           ),
         ),
       ],
@@ -485,10 +492,11 @@ class _SectionLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Text(
       text,
-      style: Theme.of(context).textTheme.labelLarge?.copyWith(
-        color: Colors.white.withValues(alpha: 0.7),
+      style: theme.textTheme.labelLarge?.copyWith(
+        color: theme.colorScheme.onSurfaceVariant,
         letterSpacing: 1.2,
         fontWeight: FontWeight.w600,
       ),
@@ -594,7 +602,7 @@ class _QuickActionButtonState extends State<_QuickActionButton> {
                 Text(
                   widget.config.label,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontWeight: FontWeight.w600,
                       ),
                 ),
@@ -712,7 +720,7 @@ class _RoutineCard extends StatelessWidget {
             Text(
               data.title,
               style: theme.textTheme.titleLarge?.copyWith(
-                color: Colors.white,
+                color: theme.colorScheme.onSurface,
                 fontWeight: FontWeight.w700,
               ),
             ),
@@ -720,7 +728,7 @@ class _RoutineCard extends StatelessWidget {
             Text(
               data.description,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: Colors.white.withValues(alpha: 0.75),
+                color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
             const Spacer(),
@@ -792,12 +800,12 @@ class _RoutineStatChip extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 16, color: Colors.white.withValues(alpha: 0.8)),
+          Icon(icon, size: 16, color: Theme.of(context).colorScheme.onSurface),
           const SizedBox(width: 6),
           Text(
             label,
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.onSurface,
                   fontWeight: FontWeight.w500,
                 ),
           ),
@@ -837,7 +845,7 @@ class _DailyProgressCard extends StatelessWidget {
               Text(
                 l10n.tr('home_dashboard_progress_title'),
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontWeight: FontWeight.w600,
                     ),
               ),
@@ -845,7 +853,7 @@ class _DailyProgressCard extends StatelessWidget {
               Text(
                 l10n.tr('duration_minutes_only', {'minutes': '$total'}),
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontWeight: FontWeight.w600,
                     ),
               ),
@@ -908,7 +916,7 @@ class _MetricProgressRow extends StatelessWidget {
             Text(
               label,
               style: theme.textTheme.bodyMedium?.copyWith(
-                    color: Colors.white,
+                    color: theme.colorScheme.onSurface,
                     fontWeight: FontWeight.w600,
                   ),
             ),
@@ -917,7 +925,7 @@ class _MetricProgressRow extends StatelessWidget {
               '${_formatMinutesLabel(minutes, locale: locale)} / '
               '${_formatMinutesLabel(target, locale: locale)}',
               style: theme.textTheme.labelMedium?.copyWith(
-                    color: Colors.white.withValues(alpha: 0.7),
+                    color: theme.colorScheme.onSurfaceVariant,
                   ),
             ),
           ],
@@ -928,7 +936,7 @@ class _MetricProgressRow extends StatelessWidget {
           child: LinearProgressIndicator(
             value: progress,
             minHeight: 6,
-            backgroundColor: Colors.white.withValues(alpha: 0.15),
+            backgroundColor: theme.colorScheme.surfaceContainerHighest,
             valueColor: AlwaysStoppedAnimation<Color>(color),
           ),
         ),
@@ -1015,13 +1023,13 @@ class _IntegrationCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(14),
                   color: Colors.white.withValues(alpha: 0.1),
                 ),
-                child: Icon(icon, color: Colors.white.withValues(alpha: 0.8)),
+                child: Icon(icon, color: Theme.of(context).colorScheme.onSurface),
               ),
               const SizedBox(height: 12),
               Text(
                 title,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontWeight: FontWeight.w600,
                     ),
               ),
@@ -1029,7 +1037,7 @@ class _IntegrationCard extends StatelessWidget {
               Text(
                 subtitle,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.white.withValues(alpha: 0.6),
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
               ),
             ],
@@ -1105,7 +1113,7 @@ class _PremiumUpsellCard extends StatelessWidget {
               Text(
                 title,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontWeight: FontWeight.w700,
                     ),
               ),
@@ -1113,7 +1121,7 @@ class _PremiumUpsellCard extends StatelessWidget {
               Text(
                 subtitle,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.white.withValues(alpha: 0.7),
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
               ),
               const SizedBox(height: 20),
@@ -1158,9 +1166,10 @@ class _GlassPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final radius = borderRadius ?? BorderRadius.circular(28);
     final borderColor = accent?.withValues(alpha: 0.35) ??
-        Colors.white.withValues(alpha: 0.22);
+        theme.colorScheme.outlineVariant.withValues(alpha: 0.5);
     return ClipRRect(
       borderRadius: radius,
       child: BackdropFilter(
@@ -1169,10 +1178,10 @@ class _GlassPanel extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: radius,
             gradient: gradient ??
-                const LinearGradient(
+                LinearGradient(
                   colors: [
-                    Color.fromRGBO(15, 23, 42, 0.75),
-                    Color.fromRGBO(15, 23, 42, 0.6),
+                    theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.85),
+                    theme.colorScheme.surfaceContainer.withValues(alpha: 0.75),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,

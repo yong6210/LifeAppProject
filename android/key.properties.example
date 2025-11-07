@@ -1,0 +1,5 @@
+# Copy to android/key.properties (do not commit the real file)
+storeFile=../keystore/life_app_release.keystore
+storePassword=CHANGE_ME
+keyAlias=life_app_release
+keyPassword=CHANGE_ME

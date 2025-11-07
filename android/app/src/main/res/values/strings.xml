@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_focus_default_title">Ready to focus</string>
+    <string name="widget_focus_paused_title">Paused · %1$s</string>
+    <string name="widget_focus_running_title">%1$s in progress</string>
+    <string name="widget_focus_ready_title">Start your next session</string>
+    <string name="widget_focus_subtitle_idle">Open the app to begin a timer</string>
+    <string name="widget_focus_subtitle_paused">Tap to resume</string>
+    <string name="widget_focus_subtitle_up_next">Up next: %1$s</string>
+    <string name="widget_focus_subtitle_running">Stay focused</string>
+</resources>
