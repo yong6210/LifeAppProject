@@ -96,3 +96,8 @@ macos/Runner/GeneratedPluginRegistrant.*
 ########################################
 app.*.symbols
 app.*.map.json
+
+########################################
+# Documentation
+########################################
+docs/
