@@ -1,4 +1,6 @@
-# Miscellaneous
+########################################
+# General tools & OS clutter
+########################################
 *.class
 *.log
 *.pyc
@@ -11,35 +13,86 @@
 .svn/
 .swiftpm/
 migrate_working_dir/
+.config/
+.cocoapods/
+.npm/
+Library/
 
-# IntelliJ related
+########################################
+# IDE / Editor metadata
+########################################
 *.iml
 *.ipr
 *.iws
 .idea/
+.vscode/
 
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
-
-# Flutter/Dart/Pub related
+########################################
+# Flutter / Dart
+########################################
 **/doc/api/
 **/ios/Flutter/.last_build_id
 .dart_tool/
+.dartServer/
+.flutter-plugins
 .flutter-plugins-dependencies
+.fvm/
+.packages
 .pub-cache/
 .pub/
+lib/generated_plugin_registrant.dart
+web/wasm_interop.js
+
+########################################
+# Build artifacts
+########################################
 /build/
+**/build/
 /coverage/
+**/coverage/
 
-# Symbolication related
-app.*.symbols
+########################################
+# Node / JS
+########################################
+**/node_modules/
 
-# Obfuscation related
-app.*.map.json
-
-# Android Studio will place build artifacts here
+########################################
+# Android / Gradle
+########################################
+/.gradle/
+**/.gradle/
+**/local.properties
+**/key.properties
+*.jks
+*.keystore
 /android/app/debug
 /android/app/profile
 /android/app/release
+android/keystore/
+
+########################################
+# Apple platforms (iOS / macOS)
+########################################
+**/DerivedData/
+**/.symlinks/
+**/Pods/
+ios/Flutter/App.framework
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Flutter/Generated.xcconfig
+ios/Flutter/ephemeral/
+ios/Runner/GeneratedPluginRegistrant.*
+macos/Flutter/ephemeral/
+macos/Flutter/GeneratedPluginRegistrant.*
+macos/Pods/
+macos/Runner/GeneratedPluginRegistrant.*
+*.xcuserstate
+*.xcscmblueprint
+**/*.xcworkspace/xcuserdata/
+**/*.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings
+
+########################################
+# Symbolication / obfuscation
+########################################
+app.*.symbols
+app.*.map.json
