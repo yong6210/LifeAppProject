@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import 'package:life_app/design/app_theme.dart';
 import 'package:life_app/features/journal/journal_entry.dart';
 import 'package:life_app/providers/journal_providers.dart';
 import 'package:life_app/services/journal/life_buddy_comment_service.dart';
+import 'package:life_app/widgets/modern_animations.dart';
 
 /// Stage 0 journal page with 30-day retention and monthly recap.
 class JournalPage extends ConsumerStatefulWidget {

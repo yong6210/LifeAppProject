@@ -1,6 +1,7 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:life_app/design/app_theme.dart';
 import 'package:life_app/features/life_buddy/life_buddy_models.dart';
 import 'package:life_app/features/life_buddy/life_buddy_service.dart';
 import 'package:life_app/features/life_buddy/life_buddy_state_controller.dart';
@@ -12,6 +13,7 @@ import 'package:life_app/services/analytics/life_buddy_analytics.dart';
 import 'package:life_app/services/engagement/engagement_store.dart';
 import 'package:life_app/services/life_buddy/life_buddy_quest_store.dart';
 import 'package:life_app/services/subscription/revenuecat_service.dart';
+import 'package:life_app/widgets/modern_animations.dart';
 
 class LifeBuddyPage extends ConsumerWidget {
   const LifeBuddyPage({super.key});
@@ -108,32 +110,37 @@ class _MoodHeader extends StatelessWidget {
     final theme = Theme.of(context);
     final details = describeMood(state.mood, theme);
     final color = details.color;
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
+    return ScaleInAnimation(
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: theme.colorScheme.surface,
+          border: Border.all(
+            color: theme.colorScheme.outline.withValues(alpha: 0.08),
+            width: 1,
+          ),
+        ),
+        padding: const EdgeInsets.all(24),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             _AnimatedMoodAvatar(color: color, emoji: details.emoji),
-            const SizedBox(width: 16),
+            const SizedBox(width: 20),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     details.title,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 6),
                   Text(
                     details.description,
                     style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.textTheme.bodyMedium?.color?.withValues(
-                        alpha: 0.75,
-                      ),
+                      height: 1.5,
                     ),
                   ),
                 ],
@@ -154,27 +161,28 @@ class _AnimatedMoodAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final baseColor = color.withValues(alpha: 0.85);
-    final highlight = color.withValues(alpha: 0.6);
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      width: 72,
-      height: 72,
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeOutBack,
+      width: 80,
+      height: 80,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        gradient: LinearGradient(colors: [baseColor, highlight]),
+        color: color.withValues(alpha: 0.15),
       ),
       alignment: Alignment.center,
       child: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 250),
+        duration: const Duration(milliseconds: 300),
         transitionBuilder: (child, animation) => ScaleTransition(
-          scale: CurvedAnimation(parent: animation, curve: Curves.easeOutBack),
+          scale: Tween<double>(begin: 0.5, end: 1.0).animate(
+            CurvedAnimation(parent: animation, curve: Curves.elasticOut),
+          ),
           child: child,
         ),
         child: Text(
           emoji,
           key: ValueKey(emoji),
-          style: const TextStyle(fontSize: 36),
+          style: const TextStyle(fontSize: 44),
         ),
       ),
     );
@@ -197,43 +205,76 @@ class _ProgressCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final xpRemaining = (xpNeeded - experience).clamp(0, xpNeeded).toInt();
     final xpLabel = xpNeeded <= 0
-        ? '최고 레벨에 도달했어요!'
-        : '다음 레벨까지 ${(xpNeeded - experience).clamp(0, xpNeeded).toStringAsFixed(0)} XP 남았어요.';
+        ? '🎉 최고 레벨에 도달했어요!'
+        : '다음 레벨까지 $xpRemaining XP';
 
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
+    return SlideInAnimation(
+      delay: const Duration(milliseconds: 100),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: theme.colorScheme.surface,
+          border: Border.all(
+            color: theme.colorScheme.outline.withValues(alpha: 0.08),
+            width: 1,
+          ),
+        ),
+        padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                Text(
-                  '레벨 $level',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: AppTheme.accentOrange.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.auto_awesome,
+                        size: 18,
+                        color: AppTheme.accentOrange,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        '레벨 $level',
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: AppTheme.accentOrange,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 const Spacer(),
                 Text(
                   '${experience.toStringAsFixed(0)} / ${xpNeeded.toStringAsFixed(0)} XP',
-                  style: theme.textTheme.bodySmall,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
             ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: LinearProgressIndicator(minHeight: 12, value: progress),
+              borderRadius: BorderRadius.circular(12),
+              child: LinearProgressIndicator(
+                minHeight: 14,
+                value: progress,
+                backgroundColor: AppTheme.accentOrange.withValues(alpha: 0.1),
+                valueColor: AlwaysStoppedAnimation<Color>(AppTheme.accentOrange),
+              ),
             ),
             const SizedBox(height: 12),
             Text(
               xpLabel,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
-              ),
+              style: theme.textTheme.bodyMedium,
             ),
           ],
         ),

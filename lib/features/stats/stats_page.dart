@@ -3,9 +3,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:life_app/design/app_theme.dart';
 import 'package:life_app/l10n/app_localizations.dart';
 import 'package:life_app/providers/stats_providers.dart';
 import 'package:life_app/utils/date_range.dart';
+import 'package:life_app/widgets/modern_animations.dart';
 
 class StatsPage extends ConsumerWidget {
   const StatsPage({super.key});
@@ -119,24 +121,35 @@ class _TotalsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final theme = Theme.of(context);
     final metrics = [
-      _Metric(l10n.tr('session_type_focus'), totals.focusMinutes),
-      _Metric(l10n.tr('session_type_rest'), totals.restMinutes),
-      _Metric(l10n.tr('session_type_workout'), totals.workoutMinutes),
-      _Metric(l10n.tr('session_type_sleep'), totals.sleepMinutes),
+      _Metric(l10n.tr('session_type_focus'), totals.focusMinutes, AppTheme.accentBlue),
+      _Metric(l10n.tr('session_type_rest'), totals.restMinutes, AppTheme.accentOrange),
+      _Metric(l10n.tr('session_type_workout'), totals.workoutMinutes, AppTheme.accentGreen),
+      _Metric(l10n.tr('session_type_sleep'), totals.sleepMinutes, AppTheme.accentPurple),
     ];
 
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
+    return FadeInAnimation(
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: theme.colorScheme.surface,
+          border: Border.all(
+            color: theme.colorScheme.outline.withValues(alpha: 0.08),
+            width: 1,
+          ),
+        ),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               l10n.tr('stats_totals_title'),
-              style: Theme.of(context).textTheme.titleMedium,
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
             Wrap(
               spacing: 12,
               runSpacing: 12,
@@ -145,11 +158,32 @@ class _TotalsCard extends StatelessWidget {
                   .toList(growable: false),
             ),
             const SizedBox(height: 16),
-            Text(
-              l10n.tr('stats_totals_overall', {
-                'duration': _formatMinutes(totals.totalMinutes, l10n),
-              }),
-              style: Theme.of(context).textTheme.bodyMedium,
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.timeline,
+                    color: theme.colorScheme.primary,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      l10n.tr('stats_totals_overall', {
+                        'duration': _formatMinutes(totals.totalMinutes, l10n),
+                      }),
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -166,6 +200,7 @@ class _WeeklyHighlightCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final theme = Theme.of(context);
     final localeTag = Localizations.localeOf(context).toLanguageTag();
     final formatter = DateFormat.yMMMd(localeTag);
     final dateLabel = formatter.format(highlight.date.toLocal());
@@ -173,18 +208,50 @@ class _WeeklyHighlightCard extends StatelessWidget {
       'date': dateLabel,
       'minutes': '${highlight.focusMinutes}',
     });
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return ScaleInAnimation(
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: AppTheme.accentOrange.withValues(alpha: 0.1),
+          border: Border.all(
+            color: AppTheme.accentOrange.withValues(alpha: 0.2),
+            width: 1,
+          ),
+        ),
+        padding: const EdgeInsets.all(20),
+        child: Row(
           children: [
-            Text(
-              l10n.tr('stats_highlight_title'),
-              style: Theme.of(context).textTheme.titleMedium,
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: AppTheme.accentOrange.withValues(alpha: 0.2),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.emoji_events,
+                color: AppTheme.accentOrange,
+                size: 28,
+              ),
             ),
-            const SizedBox(height: 8),
-            Text(body, style: Theme.of(context).textTheme.bodyMedium),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.tr('stats_highlight_title'),
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    body,
+                    style: theme.textTheme.bodyMedium,
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -419,9 +486,10 @@ class _TrendDataTable extends StatelessWidget {
 }
 
 class _Metric {
-  const _Metric(this.label, this.minutes);
+  const _Metric(this.label, this.minutes, [this.color]);
   final String label;
   final int minutes;
+  final Color? color;
 }
 
 class _MetricChip extends StatelessWidget {
@@ -432,18 +500,37 @@ class _MetricChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return Chip(
-      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+    final theme = Theme.of(context);
+    final color = metric.color ?? theme.colorScheme.primary;
+
+    return Container(
       padding: dense
-          ? const EdgeInsets.symmetric(horizontal: 8)
-          : const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-      label: Text(
-        '${metric.label} ${_formatMinutes(metric.minutes, l10n)}',
-        style: dense
-            ? Theme.of(
-                context,
-              ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500)
-            : null,
+          ? const EdgeInsets.symmetric(horizontal: 10, vertical: 6)
+          : const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 8,
+            height: 8,
+            decoration: BoxDecoration(
+              color: color,
+              shape: BoxShape.circle,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            '${metric.label} ${_formatMinutes(metric.minutes, l10n)}',
+            style: (dense ? theme.textTheme.bodySmall : theme.textTheme.bodyMedium)?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: theme.colorScheme.onSurface,
+            ),
+          ),
+        ],
       ),
     );
   }
