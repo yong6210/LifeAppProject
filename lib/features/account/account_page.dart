@@ -504,18 +504,30 @@ class _AccountStatusCard extends StatelessWidget {
     final isSignedIn = user != null;
     final isAnonymous = user?.isAnonymous ?? true;
     final displayUid = user?.uid ?? '-';
+    final theme = Theme.of(context);
     return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      color: theme.colorScheme.surfaceContainerHighest,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               l10n.tr('account_status_title'),
-              style: Theme.of(context).textTheme.titleMedium,
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: theme.colorScheme.onSurface,
+              ),
             ),
             const SizedBox(height: 12),
-            Text(l10n.tr('account_uid_label', {'uid': displayUid})),
+            Text(
+              l10n.tr('account_uid_label', {'uid': displayUid}),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
             const SizedBox(height: 4),
             Text(
               isSignedIn
@@ -523,35 +535,43 @@ class _AccountStatusCard extends StatelessWidget {
                         ? l10n.tr('account_status_anonymous')
                         : l10n.tr('account_status_logged_in'))
                   : l10n.tr('account_status_logged_out'),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
             ),
             const SizedBox(height: 16),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (!isSignedIn)
-                  FilledButton.icon(
-                    onPressed: isLoading ? null : onSignIn,
-                    icon: const Icon(Icons.login),
-                    label: Text(
-                      isLoading
-                          ? l10n.tr('account_processing')
-                          : l10n.tr('account_login_button'),
-                    ),
-                  )
-                else
-                  FilledButton.icon(
-                    onPressed: isLoading ? null : onSignOut,
-                    icon: const Icon(Icons.logout),
-                    label: Text(
-                      isLoading
-                          ? l10n.tr('account_processing')
-                          : l10n.tr('account_logout_button'),
-                    ),
-                  ),
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 220),
+                  child: (!isSignedIn)
+                      ? FilledButton.icon(
+                          onPressed: isLoading ? null : onSignIn,
+                          icon: const Icon(Icons.login),
+                          label: Text(
+                            isLoading
+                                ? l10n.tr('account_processing')
+                                : l10n.tr('account_login_button'),
+                          ),
+                        )
+                      : FilledButton.icon(
+                          onPressed: isLoading ? null : onSignOut,
+                          icon: const Icon(Icons.logout),
+                          label: Text(
+                            isLoading
+                                ? l10n.tr('account_processing')
+                                : l10n.tr('account_logout_button'),
+                          ),
+                        ),
+                ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     l10n.tr('account_upgrade_hint'),
-                    style: Theme.of(context).textTheme.bodySmall,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
                   ),
                 ),
               ],
@@ -577,15 +597,22 @@ class _SubscriptionStatusCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isPremium = status.isPremium;
+    final theme = Theme.of(context);
     return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      color: theme.colorScheme.surfaceContainerHighest,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               l10n.tr('subscription_title'),
-              style: Theme.of(context).textTheme.titleMedium,
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: theme.colorScheme.onSurface,
+              ),
             ),
             const SizedBox(height: 8),
             Row(
@@ -595,14 +622,18 @@ class _SubscriptionStatusCard extends StatelessWidget {
                       ? Icons.workspace_premium
                       : Icons.workspace_premium_outlined,
                   color: isPremium
-                      ? Theme.of(context).colorScheme.primary
-                      : null,
+                      ? theme.colorScheme.primary
+                      : theme.colorScheme.onSurfaceVariant,
                 ),
                 const SizedBox(width: 8),
                 Text(
                   isPremium
                       ? l10n.tr('subscription_premium')
                       : l10n.tr('subscription_free'),
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    color: theme.colorScheme.onSurface,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ],
             ),
@@ -617,7 +648,12 @@ class _SubscriptionStatusCard extends StatelessWidget {
                       child: CircularProgressIndicator(strokeWidth: 2),
                     ),
                     const SizedBox(width: 8),
-                    Text(l10n.tr('subscription_checking')),
+                    Text(
+                      l10n.tr('subscription_checking'),
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -627,12 +663,18 @@ class _SubscriptionStatusCard extends StatelessWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(Icons.wifi_off, size: 18),
+                    Icon(
+                      Icons.wifi_off,
+                      size: 18,
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         l10n.tr('subscription_offline_notice'),
-                        style: Theme.of(context).textTheme.bodySmall,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
                       ),
                     ),
                   ],
@@ -644,20 +686,26 @@ class _SubscriptionStatusCard extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.tertiaryContainer,
+                    color: theme.colorScheme.tertiaryContainer,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Icon(Icons.access_time, size: 18),
+                      Icon(
+                        Icons.access_time,
+                        size: 18,
+                        color: theme.colorScheme.onTertiaryContainer,
+                      ),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           l10n.tr('subscription_grace_notice', {
                             'date': _formatDate(status.gracePeriodEndsAt!),
                           }),
-                          style: Theme.of(context).textTheme.bodySmall,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onTertiaryContainer,
+                          ),
                         ),
                       ),
                     ],
@@ -670,9 +718,7 @@ class _SubscriptionStatusCard extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.errorContainer.withValues(alpha: 0.2),
+                    color: theme.colorScheme.errorContainer,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
@@ -681,7 +727,7 @@ class _SubscriptionStatusCard extends StatelessWidget {
                       Icon(
                         Icons.warning_amber_rounded,
                         size: 18,
-                        color: Theme.of(context).colorScheme.error,
+                        color: theme.colorScheme.onErrorContainer,
                       ),
                       const SizedBox(width: 8),
                       Expanded(
@@ -689,7 +735,9 @@ class _SubscriptionStatusCard extends StatelessWidget {
                           l10n.tr('subscription_expired_notice', {
                             'date': _formatDate(status.expirationDate!),
                           }),
-                          style: Theme.of(context).textTheme.bodySmall,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onErrorContainer,
+                          ),
                         ),
                       ),
                     ],
@@ -735,14 +783,20 @@ class _BackupHistoryCard extends StatelessWidget {
     final theme = Theme.of(context);
     final summary = _buildSummary(l10n, history);
     return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      color: theme.colorScheme.surfaceContainerHighest,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               l10n.tr('backup_history_title'),
-              style: theme.textTheme.titleMedium,
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: theme.colorScheme.onSurface,
+              ),
             ),
             const SizedBox(height: 8),
             summary,
@@ -755,6 +809,9 @@ class _BackupHistoryCard extends StatelessWidget {
               l10n.tr('backup_preferred_label', {
                 'provider': settings.backupPreferredProvider,
               }),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
             ),
             const SizedBox(height: 12),
             if (!isPremium) ...[
@@ -771,12 +828,15 @@ class _BackupHistoryCard extends StatelessWidget {
                       l10n.tr('backup_premium_header'),
                       style: theme.textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.bold,
+                        color: theme.colorScheme.onSecondaryContainer,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       l10n.tr('backup_premium_message'),
-                      style: theme.textTheme.bodySmall,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSecondaryContainer,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     Align(
@@ -798,13 +858,20 @@ class _BackupHistoryCard extends StatelessWidget {
                 const SizedBox(height: 12),
                 Text(
                   l10n.tr('backup_history_recent_only'),
-                  style: theme.textTheme.bodySmall,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 _BackupEntryTile(entry: history.first),
               ],
             ] else if (history.isEmpty)
-              Text(l10n.tr('backup_history_empty'))
+              Text(
+                l10n.tr('backup_history_empty'),
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              )
             else ...[
               ...history
                   .take(10)
@@ -839,8 +906,11 @@ class _TimerDiagnosticsCard extends StatelessWidget {
     final visibleSamples = samples.take(8).toList();
 
     return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      color: theme.colorScheme.surfaceContainerHighest,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -849,7 +919,10 @@ class _TimerDiagnosticsCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     l10n.tr('account_diagnostics_title'),
-                    style: theme.textTheme.titleMedium,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: theme.colorScheme.onSurface,
+                    ),
                   ),
                 ),
                 IconButton(
@@ -875,7 +948,9 @@ class _TimerDiagnosticsCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               l10n.tr('account_diagnostics_body'),
-              style: theme.textTheme.bodySmall,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
             ),
             const SizedBox(height: 12),
             if (samples.isNotEmpty)
@@ -884,7 +959,9 @@ class _TimerDiagnosticsCard extends StatelessWidget {
             if (samples.isEmpty)
               Text(
                 l10n.tr('account_diagnostics_no_samples'),
-                style: theme.textTheme.bodyMedium,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
               )
             else
               ListBody(
@@ -906,12 +983,14 @@ class _TimerDiagnosticsCard extends StatelessWidget {
                                 ),
                                 'segment': sample.segmentLabel,
                               }),
-                              style: theme.textTheme.bodyMedium,
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: theme.colorScheme.onSurface,
+                              ),
                             ),
                             Text(
                               _formatSkew(sample.skewMs, l10n),
                               style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.colorScheme.secondary,
+                                color: theme.colorScheme.primary,
                               ),
                             ),
                           ],
@@ -926,7 +1005,9 @@ class _TimerDiagnosticsCard extends StatelessWidget {
                 l10n.tr('account_diagnostics_more_available', {
                   'count': (samples.length - visibleSamples.length).toString(),
                 }),
-                style: theme.textTheme.bodySmall,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
               ),
             ],
           ],
@@ -992,20 +1073,27 @@ class _DiagnosticsSummary extends StatelessWidget {
             l10n.tr('account_diagnostics_summary_heading', {
               'count': '${stats.count}',
             }),
-            style: theme.textTheme.labelLarge,
+            style: theme.textTheme.labelLarge?.copyWith(
+              color: theme.colorScheme.onSurface,
+              fontWeight: FontWeight.w600,
+            ),
           ),
           const SizedBox(height: 8),
           Text(
             l10n.tr('account_diagnostics_summary_avg', {
               'value': _formatSignedValue(stats.averageSkewMs, l10n),
             }),
-            style: theme.textTheme.bodyMedium,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurface,
+            ),
           ),
           Text(
             l10n.tr('account_diagnostics_summary_max', {
               'value': _formatUnsignedValue(stats.maxDeviationMs, l10n),
             }),
-            style: theme.textTheme.bodyMedium,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurface,
+            ),
           ),
           Text(
             l10n.tr('account_diagnostics_summary_within_target', {
@@ -1013,7 +1101,9 @@ class _DiagnosticsSummary extends StatelessWidget {
                 stats.withinTargetPercent % 1 == 0 ? 0 : 1,
               ),
             }),
-            style: theme.textTheme.bodyMedium,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurface,
+            ),
           ),
         ],
       ),
@@ -1107,29 +1197,54 @@ class _BackupEntryTile extends StatelessWidget {
       contentPadding: EdgeInsets.zero,
       leading: Icon(
         isSuccess ? Icons.check_circle : Icons.error_outline,
-        color: isSuccess ? Colors.green : Colors.redAccent,
+        color: isSuccess
+            ? theme.colorScheme.primary
+            : theme.colorScheme.error,
       ),
       isThreeLine: true,
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(actionLabel, style: theme.textTheme.bodyMedium),
+          Text(
+            actionLabel,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurface,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
           const SizedBox(height: 2),
-          Text(timestamp, style: theme.textTheme.bodySmall, softWrap: true),
+          Text(
+            timestamp,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+            softWrap: true,
+          ),
         ],
       ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(l10n.tr('backup_entry_storage', {'provider': entry.provider})),
+          Text(
+            l10n.tr('backup_entry_storage', {'provider': entry.provider}),
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
           if (entry.bytes > 0)
             Text(
               l10n.tr('backup_entry_size', {'size': _formatBytes(entry.bytes)}),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
             ),
           if (!isSuccess && entry.errorMessage != null)
             Text(
               l10n.tr('backup_entry_error', {'message': entry.errorMessage!}),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.error,
+              ),
             ),
         ],
       ),
@@ -1139,7 +1254,14 @@ class _BackupEntryTile extends StatelessWidget {
 
 Widget _buildSummary(AppLocalizations l10n, List<BackupLogEntry> history) {
   if (history.isEmpty) {
-    return Text(l10n.tr('backup_summary_never'));
+    return Builder(
+      builder: (context) => Text(
+        l10n.tr('backup_summary_never'),
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
+        ),
+      ),
+    );
   }
   final lastSuccess = history.firstWhere(
     (entry) => entry.action == 'backup' && entry.status == 'success',
@@ -1150,26 +1272,43 @@ Widget _buildSummary(AppLocalizations l10n, List<BackupLogEntry> history) {
   final streakLabel = streak <= 1
       ? l10n.tr('backup_summary_streak_single')
       : l10n.tr('backup_summary_streak', {'count': '$streak'});
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        l10n.tr('backup_summary_last_backup', {'date': formattedDate}),
-        style: const TextStyle(fontWeight: FontWeight.w600),
-      ),
-      const SizedBox(height: 4),
-      Text(streakLabel),
-      if (streak >= 3) ...[
-        const SizedBox(height: 8),
-        Semantics(
-          label: l10n.tr('backup_summary_badge_semantics'),
-          child: Chip(
-            label: Text(l10n.tr('backup_summary_badge', {'count': '$streak'})),
-            avatar: const Icon(Icons.emoji_events, size: 18),
+  return Builder(
+    builder: (context) {
+      final theme = Theme.of(context);
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l10n.tr('backup_summary_last_backup', {'date': formattedDate}),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: theme.colorScheme.onSurface,
+            ),
           ),
-        ),
-      ],
-    ],
+          const SizedBox(height: 4),
+          Text(
+            streakLabel,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+          if (streak >= 3) ...[
+            const SizedBox(height: 8),
+            Semantics(
+              label: l10n.tr('backup_summary_badge_semantics'),
+              child: Chip(
+                label: Text(l10n.tr('backup_summary_badge', {'count': '$streak'})),
+                avatar: Icon(
+                  Icons.emoji_events,
+                  size: 18,
+                  color: theme.colorScheme.primary,
+                ),
+              ),
+            ),
+          ],
+        ],
+      );
+    },
   );
 }
 
@@ -1181,13 +1320,12 @@ class _BackupReminderBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Theme.of(
-          context,
-        ).colorScheme.primaryContainer.withValues(alpha: 0.4),
+        color: theme.colorScheme.primaryContainer,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -1195,14 +1333,17 @@ class _BackupReminderBanner extends StatelessWidget {
         children: [
           Text(
             l10n.tr('backup_banner_title'),
-            style: Theme.of(
-              context,
-            ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: theme.colorScheme.onPrimaryContainer,
+            ),
           ),
           const SizedBox(height: 4),
           Text(
             l10n.tr('backup_banner_body'),
-            style: Theme.of(context).textTheme.bodySmall,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onPrimaryContainer,
+            ),
           ),
           const SizedBox(height: 8),
           FilledButton.tonal(
@@ -1247,28 +1388,45 @@ class _AccountDeletionSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      color: theme.colorScheme.surfaceContainerHighest,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               l10n.tr('account_delete_card_title'),
-              style: theme.textTheme.titleMedium,
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: theme.colorScheme.onSurface,
+              ),
             ),
             const SizedBox(height: 8),
-            Text(l10n.tr('account_delete_card_body')),
+            Text(
+              l10n.tr('account_delete_card_body'),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
             if (requiresReauth) ...[
               const SizedBox(height: 12),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.info_outline, size: 18),
+                  Icon(
+                    Icons.info_outline,
+                    size: 18,
+                    color: theme.colorScheme.primary,
+                  ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       l10n.tr('account_delete_requires_reauth'),
-                      style: theme.textTheme.bodySmall,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
                     ),
                   ),
                 ],
@@ -1340,7 +1498,9 @@ class _LanguagePreferenceCard extends StatelessWidget {
         : 'system';
 
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      elevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      color: theme.colorScheme.surfaceContainerHighest,
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -1348,12 +1508,17 @@ class _LanguagePreferenceCard extends StatelessWidget {
           children: [
             Text(
               l10n.tr('account_language_title'),
-              style: theme.textTheme.titleMedium,
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: theme.colorScheme.onSurface,
+              ),
             ),
             const SizedBox(height: 8),
             Text(
               l10n.tr('account_language_description'),
-              style: theme.textTheme.bodyMedium,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
             ),
             const SizedBox(height: 16),
             SegmentedButton<String>(
@@ -1398,12 +1563,34 @@ class _DataDisclosureCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      color: theme.colorScheme.surfaceContainerHighest,
       child: ListTile(
-        leading: const Icon(Icons.privacy_tip_outlined),
-        title: Text(l10n.tr('data_disclosure_title')),
-        subtitle: Text(l10n.tr('data_disclosure_subtitle')),
-        trailing: const Icon(Icons.keyboard_arrow_right),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        leading: Icon(
+          Icons.privacy_tip_outlined,
+          color: theme.colorScheme.primary,
+        ),
+        title: Text(
+          l10n.tr('data_disclosure_title'),
+          style: theme.textTheme.bodyLarge?.copyWith(
+            color: theme.colorScheme.onSurface,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        subtitle: Text(
+          l10n.tr('data_disclosure_subtitle'),
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
+        trailing: Icon(
+          Icons.keyboard_arrow_right,
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
         onTap: onViewDetails,
       ),
     );
@@ -1418,12 +1605,34 @@ class _PrivacyPolicyCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      color: theme.colorScheme.surfaceContainerHighest,
       child: ListTile(
-        leading: const Icon(Icons.description_outlined),
-        title: Text(l10n.tr('privacy_policy_title')),
-        subtitle: Text(l10n.tr('privacy_policy_subtitle')),
-        trailing: const Icon(Icons.keyboard_arrow_right),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        leading: Icon(
+          Icons.description_outlined,
+          color: theme.colorScheme.primary,
+        ),
+        title: Text(
+          l10n.tr('privacy_policy_title'),
+          style: theme.textTheme.bodyLarge?.copyWith(
+            color: theme.colorScheme.onSurface,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        subtitle: Text(
+          l10n.tr('privacy_policy_subtitle'),
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
+        trailing: Icon(
+          Icons.keyboard_arrow_right,
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
         onTap: onOpen,
       ),
     );
@@ -1438,12 +1647,34 @@ class _OpenSourceLicensesCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      color: theme.colorScheme.surfaceContainerHighest,
       child: ListTile(
-        leading: const Icon(Icons.code_outlined),
-        title: Text(l10n.tr('licenses_title')),
-        subtitle: Text(l10n.tr('licenses_subtitle')),
-        trailing: const Icon(Icons.keyboard_arrow_right),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        leading: Icon(
+          Icons.code_outlined,
+          color: theme.colorScheme.primary,
+        ),
+        title: Text(
+          l10n.tr('licenses_title'),
+          style: theme.textTheme.bodyLarge?.copyWith(
+            color: theme.colorScheme.onSurface,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        subtitle: Text(
+          l10n.tr('licenses_subtitle'),
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
+        trailing: Icon(
+          Icons.keyboard_arrow_right,
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
         onTap: onOpen,
       ),
     );
@@ -1486,18 +1717,30 @@ class _PersonalizationSettingsCard extends ConsumerWidget {
       return '$base\n$disabled';
     }
 
+    final theme = Theme.of(context);
     return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      color: theme.colorScheme.surfaceContainerHighest,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               l10n.tr('account_personalization_title'),
-              style: Theme.of(context).textTheme.titleMedium,
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: theme.colorScheme.onSurface,
+              ),
             ),
             const SizedBox(height: 8),
-            Text(l10n.tr('account_personalization_body')),
+            Text(
+              l10n.tr('account_personalization_body'),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
             const SizedBox(height: 16),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
@@ -1547,7 +1790,10 @@ class _PersonalizationSettingsCard extends ConsumerWidget {
             const SizedBox(height: 16),
             Text(
               l10n.tr('account_personalization_tone_title'),
-              style: Theme.of(context).textTheme.titleSmall,
+              style: theme.textTheme.titleSmall?.copyWith(
+                color: theme.colorScheme.onSurface,
+                fontWeight: FontWeight.w600,
+              ),
             ),
             RadioGroup<String>(
               groupValue: tone,
@@ -1607,20 +1853,29 @@ class _AccessibilitySettingsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      color: theme.colorScheme.surfaceContainerHighest,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               l10n.tr('account_accessibility_title'),
-              style: Theme.of(context).textTheme.titleMedium,
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: theme.colorScheme.onSurface,
+              ),
             ),
             const SizedBox(height: 8),
             Text(
               l10n.tr('account_accessibility_body'),
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
             ),
             const SizedBox(height: 12),
             SwitchListTile(
@@ -1642,9 +1897,22 @@ class _LoadingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      color: theme.colorScheme.surfaceContainerHighest,
       child: ListTile(
-        title: title != null ? Text(title!) : null,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        title: title != null
+            ? Text(
+                title!,
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  color: theme.colorScheme.onSurface,
+                  fontWeight: FontWeight.w500,
+                ),
+              )
+            : null,
         subtitle: const Padding(
           padding: EdgeInsets.only(top: 8),
           child: LinearProgressIndicator(minHeight: 4),
@@ -1662,11 +1930,30 @@ class _ErrorCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      color: theme.colorScheme.surfaceContainerHighest,
       child: ListTile(
-        leading: const Icon(Icons.error_outline, color: Colors.redAccent),
-        title: Text(title),
-        subtitle: Text(message),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        leading: Icon(
+          Icons.error_outline,
+          color: theme.colorScheme.error,
+        ),
+        title: Text(
+          title,
+          style: theme.textTheme.bodyLarge?.copyWith(
+            color: theme.colorScheme.onSurface,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        subtitle: Text(
+          message,
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: theme.colorScheme.error,
+          ),
+        ),
       ),
     );
   }

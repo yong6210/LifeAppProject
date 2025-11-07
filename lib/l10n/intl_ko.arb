@@ -337,6 +337,39 @@
   "home_dashboard_insight_journal_title": "기록하기",
   "home_dashboard_insight_journal_description": "오늘의 생각과 감정을 간단히 남겨보세요.",
   "home_dashboard_insight_journal_action": "저널 작성",
+  "home_dashboard_greeting_morning": "좋은 아침이에요",
+  "home_dashboard_greeting_afternoon": "좋은 오후예요",
+  "home_dashboard_greeting_evening": "좋은 저녁이에요",
+  "home_dashboard_greeting_subtitle": "오늘도 더 나은 습관을 쌓아봐요",
+  "home_dashboard_quick_start_title": "빠른 시작",
+  "home_dashboard_routines_title": "나의 루틴",
+  "home_dashboard_progress_title": "오늘의 진행",
+  "home_dashboard_integrations_title": "연동",
+  "home_dashboard_integrations_wearables_title": "웨어러블",
+  "home_dashboard_integrations_wearables_subtitle": "디바이스 연결",
+  "home_dashboard_integrations_backup_title": "백업",
+  "home_dashboard_integrations_backup_subtitle": "자동 동기화 사용 중",
+  "home_dashboard_premium_title": "프리미엄 이용하기",
+  "home_dashboard_premium_subtitle": "고급 인사이트와 추가 기능",
+  "home_dashboard_premium_cta": "7일 무료 체험 시작",
+  "home_dashboard_routine_stat_today": "오늘 {value}",
+  "@home_dashboard_routine_stat_today": {
+    "description": "루틴별로 오늘 기록한 시간 라벨",
+    "placeholders": {
+      "value": {
+        "example": "1시간 20분"
+      }
+    }
+  },
+  "home_dashboard_routine_stat_streak": "{days}일 연속",
+  "@home_dashboard_routine_stat_streak": {
+    "description": "사용자의 현재 루틴 연속 일수 라벨",
+    "placeholders": {
+      "days": {
+        "example": "5"
+      }
+    }
+  },
   "timer_title": "타이머",
   "timer_mode_focus": "집중",
   "timer_mode_rest": "휴식 (자동)",

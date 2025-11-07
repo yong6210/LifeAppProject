@@ -377,6 +377,39 @@
   "home_dashboard_insight_journal_title": "Reflect",
   "home_dashboard_insight_journal_description": "Capture today’s thoughts before they fade.",
   "home_dashboard_insight_journal_action": "Write journal",
+  "home_dashboard_greeting_morning": "Good morning",
+  "home_dashboard_greeting_afternoon": "Good afternoon",
+  "home_dashboard_greeting_evening": "Good evening",
+  "home_dashboard_greeting_subtitle": "Let's build better habits today",
+  "home_dashboard_quick_start_title": "Quick start",
+  "home_dashboard_routines_title": "Your routines",
+  "home_dashboard_progress_title": "Today's progress",
+  "home_dashboard_integrations_title": "Integrations",
+  "home_dashboard_integrations_wearables_title": "Wearables",
+  "home_dashboard_integrations_wearables_subtitle": "Connect devices",
+  "home_dashboard_integrations_backup_title": "Backup",
+  "home_dashboard_integrations_backup_subtitle": "Auto-sync enabled",
+  "home_dashboard_premium_title": "Go premium",
+  "home_dashboard_premium_subtitle": "Advanced insights & more",
+  "home_dashboard_premium_cta": "Start free trial • 7 days",
+  "home_dashboard_routine_stat_today": "Today {value}",
+  "@home_dashboard_routine_stat_today": {
+    "description": "Label describing how much time was logged today for a routine.",
+    "placeholders": {
+      "value": {
+        "example": "1h 20m"
+      }
+    }
+  },
+  "home_dashboard_routine_stat_streak": "{days}-day streak",
+  "@home_dashboard_routine_stat_streak": {
+    "description": "Label describing the user's current routine streak in days.",
+    "placeholders": {
+      "days": {
+        "example": "5"
+      }
+    }
+  },
   "timer_title": "Timer",
   "timer_mode_focus": "Focus",
   "timer_mode_rest": "Break (auto)",
