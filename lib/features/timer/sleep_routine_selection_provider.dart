@@ -8,10 +8,7 @@ import 'package:life_app/providers/stats_providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SleepRoutineSelection {
-  const SleepRoutineSelection({
-    required this.goal,
-    required this.intent,
-  });
+  const SleepRoutineSelection({required this.goal, required this.intent});
 
   final SleepGoal goal;
   final SleepIntent intent;
@@ -49,8 +46,7 @@ class SleepRoutineSelectionNotifier
             )
           : SleepIntent.wakeTime(
               DateTime.parse(
-                map['wakeTime'] as String? ??
-                    DateTime.now().toIso8601String(),
+                map['wakeTime'] as String? ?? DateTime.now().toIso8601String(),
               ),
             );
       return SleepRoutineSelection(goal: goal, intent: intent);
@@ -81,39 +77,37 @@ class SleepRoutineSelectionNotifier
   }
 }
 
-final sleepRoutineSelectionProvider = AsyncNotifierProvider<
-    SleepRoutineSelectionNotifier,
-    SleepRoutineSelection?>(
-  SleepRoutineSelectionNotifier.new,
-);
+final sleepRoutineSelectionProvider =
+    AsyncNotifierProvider<
+      SleepRoutineSelectionNotifier,
+      SleepRoutineSelection?
+    >(SleepRoutineSelectionNotifier.new);
 
-final sleepRoutinePlanProvider = FutureProvider<SleepRoutinePlan?>(
-  (ref) async {
-    final selectionAsync = ref.watch(sleepRoutineSelectionProvider);
-    final selection = selectionValueOrNull(selectionAsync);
-    if (selection == null) {
-      return null;
-    }
-    final settings = await ref.watch(settingsFutureProvider.future);
-    final usageTotalsAsync = ref.watch(dailyTotalsProvider);
-    final usage = usageTotalsAsync.maybeWhen(
-      data: (totals) => DailyUsageContext(
-        focusMinutes: totals.focusMinutes,
-        restMinutes: totals.restMinutes,
-        workoutMinutes: totals.workoutMinutes,
-        sleepMinutes: totals.sleepMinutes,
-      ),
-      orElse: () => null,
-    );
-    final planner = SleepRoutinePlanner();
-    return planner.build(
-      goal: selection.goal,
-      intent: selection.intent,
-      settings: settings,
-      usage: usage,
-    );
-  },
-);
+final sleepRoutinePlanProvider = FutureProvider<SleepRoutinePlan?>((ref) async {
+  final selectionAsync = ref.watch(sleepRoutineSelectionProvider);
+  final selection = selectionValueOrNull(selectionAsync);
+  if (selection == null) {
+    return null;
+  }
+  final settings = await ref.watch(settingsFutureProvider.future);
+  final usageTotalsAsync = ref.watch(dailyTotalsProvider);
+  final usage = usageTotalsAsync.maybeWhen(
+    data: (totals) => DailyUsageContext(
+      focusMinutes: totals.focusMinutes,
+      restMinutes: totals.restMinutes,
+      workoutMinutes: totals.workoutMinutes,
+      sleepMinutes: totals.sleepMinutes,
+    ),
+    orElse: () => null,
+  );
+  final planner = SleepRoutinePlanner();
+  return planner.build(
+    goal: selection.goal,
+    intent: selection.intent,
+    settings: settings,
+    usage: usage,
+  );
+});
 
 SleepRoutineSelection? selectionValueOrNull(
   AsyncValue<SleepRoutineSelection?> asyncValue,
@@ -121,10 +115,7 @@ SleepRoutineSelection? selectionValueOrNull(
   return asyncValue.asData?.value;
 }
 
-bool sleepSelectionsEqual(
-  SleepRoutineSelection? a,
-  SleepRoutineSelection? b,
-) {
+bool sleepSelectionsEqual(SleepRoutineSelection? a, SleepRoutineSelection? b) {
   if (identical(a, b)) return true;
   if (a == null || b == null) return false;
   if (a.goal != b.goal) return false;

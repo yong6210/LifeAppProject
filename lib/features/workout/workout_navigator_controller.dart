@@ -295,21 +295,18 @@ class WorkoutNavigatorController extends Notifier<WorkoutNavigatorState> {
     }
     _lastRecommendationDigest = digest;
     unawaited(
-      AnalyticsService.logEvent(
-        'workout_navigator_recommendation_view',
-        {
-          'route_id': recommendation.route.id,
-          'discipline': target.discipline.name,
-          'intensity': target.intensity.name,
-          'target_type': target.type.name,
-          'target_value': target.value,
-          'voice_guidance_enabled': voiceGuidanceEnabled,
-          'has_map_preview': recommendation.route.mapAssetPath != null,
-          'has_voice_cues': recommendation.route.voiceCues.isNotEmpty,
-          'is_dynamic_route': recommendation.route.id.startsWith('dynamic_'),
-          'tips_count': recommendation.tips.length,
-        },
-      ),
+      AnalyticsService.logEvent('workout_navigator_recommendation_view', {
+        'route_id': recommendation.route.id,
+        'discipline': target.discipline.name,
+        'intensity': target.intensity.name,
+        'target_type': target.type.name,
+        'target_value': target.value,
+        'voice_guidance_enabled': voiceGuidanceEnabled,
+        'has_map_preview': recommendation.route.mapAssetPath != null,
+        'has_voice_cues': recommendation.route.voiceCues.isNotEmpty,
+        'is_dynamic_route': recommendation.route.id.startsWith('dynamic_'),
+        'tips_count': recommendation.tips.length,
+      }),
     );
   }
 

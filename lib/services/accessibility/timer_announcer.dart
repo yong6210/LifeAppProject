@@ -56,9 +56,7 @@ class TimerAnnouncer {
             'minutes': '$minutes',
             'seconds': seconds.toString().padLeft(2, '0'),
           })
-        : l10n.tr('timer_announcer_seconds_only', {
-            'seconds': '$seconds',
-          });
+        : l10n.tr('timer_announcer_seconds_only', {'seconds': '$seconds'});
 
     final message = l10n.tr('timer_announcer_segment', {
       'segment': segmentLabel,

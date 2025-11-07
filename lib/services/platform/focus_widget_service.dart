@@ -18,13 +18,13 @@ class FocusWidgetSnapshot {
   final String? upNextSegment;
 
   Map<String, dynamic> toMap() => {
-        'mode': mode,
-        'segmentTitle': segmentTitle,
-        'remainingSeconds': remainingSeconds,
-        'totalSeconds': totalSeconds,
-        'isPaused': isPaused,
-        if (upNextSegment != null) 'upNext': upNextSegment,
-      };
+    'mode': mode,
+    'segmentTitle': segmentTitle,
+    'remainingSeconds': remainingSeconds,
+    'totalSeconds': totalSeconds,
+    'isPaused': isPaused,
+    if (upNextSegment != null) 'upNext': upNextSegment,
+  };
 }
 
 class FocusWidgetService {

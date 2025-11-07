@@ -45,10 +45,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // On non-mobile test platforms, gate with the unsupported message.
-    expect(
-      find.textContaining('Purchases are only supported'),
-      findsOneWidget,
-    );
+    expect(find.textContaining('Purchases are only supported'), findsOneWidget);
   });
 }
 

@@ -114,10 +114,7 @@ class _DashboardBody extends StatelessWidget {
     final l10n = context.l10n;
     final theme = Theme.of(context);
     if (analytics.points.isEmpty) {
-      return _EmptyState(
-        range: range,
-        onRangeChanged: onRangeChanged,
-      );
+      return _EmptyState(range: range, onRangeChanged: onRangeChanged);
     }
 
     final dateFormat = DateFormat.yMMMd(l10n.locale.toLanguageTag());
@@ -203,11 +200,14 @@ class _SummaryGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final averageMood = analytics.averageMoodScore != null
-        ? NumberFormat.percentPattern(l10n.locale.toLanguageTag())
-            .format(analytics.averageMoodScore)
+        ? NumberFormat.percentPattern(
+            l10n.locale.toLanguageTag(),
+          ).format(analytics.averageMoodScore)
         : '—';
-    final sleepDebtHours =
-        (analytics.totalSleepDebtMinutes / 60).clamp(0, double.infinity);
+    final sleepDebtHours = (analytics.totalSleepDebtMinutes / 60).clamp(
+      0,
+      double.infinity,
+    );
 
     final cards = [
       _SummaryCard(
@@ -228,10 +228,9 @@ class _SummaryGrid extends StatelessWidget {
       ),
       _SummaryCard(
         label: l10n.tr('analytics_dashboard_sleep_debt'),
-        value: l10n.tr(
-          'analytics_dashboard_sleep_debt_hours',
-          {'hours': sleepDebtHours.toStringAsFixed(1)},
-        ),
+        value: l10n.tr('analytics_dashboard_sleep_debt_hours', {
+          'hours': sleepDebtHours.toStringAsFixed(1),
+        }),
       ),
     ];
 
@@ -369,10 +368,7 @@ class _CorrelationCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 6),
-            Text(
-              descriptor,
-              style: theme.textTheme.bodyMedium,
-            ),
+            Text(descriptor, style: theme.textTheme.bodyMedium),
           ],
         ),
       ),
@@ -561,19 +557,18 @@ class _MultiMetricChartPainter extends CustomPainter {
     }
     final focusMax = points.fold<int>(
       0,
-      (maxValue, point) => point.focusMinutes > maxValue
-          ? point.focusMinutes
-          : maxValue,
+      (maxValue, point) =>
+          point.focusMinutes > maxValue ? point.focusMinutes : maxValue,
     );
     final sleepMax = points.fold<int>(
       0,
-      (maxValue, point) => point.sleepMinutes > maxValue
-          ? point.sleepMinutes
-          : maxValue,
+      (maxValue, point) =>
+          point.sleepMinutes > maxValue ? point.sleepMinutes : maxValue,
     );
     final moodMax = points.fold<double>(
       0,
-      (maxValue, point) => point.moodScore != null && point.moodScore! > maxValue
+      (maxValue, point) =>
+          point.moodScore != null && point.moodScore! > maxValue
           ? point.moodScore!
           : maxValue,
     );
@@ -582,9 +577,7 @@ class _MultiMetricChartPainter extends CustomPainter {
     final sleepScale = sleepMax == 0 ? 1 : sleepMax.toDouble();
     final moodScale = moodMax == 0 ? 1 : moodMax;
 
-    final dxStep = points.length == 1
-        ? 0.0
-        : size.width / (points.length - 1);
+    final dxStep = points.length == 1 ? 0.0 : size.width / (points.length - 1);
 
     final focusPath = Path();
     final sleepPath = Path();
@@ -740,7 +733,9 @@ class _DataTable extends StatelessWidget {
             label: Text(l10n.tr('analytics_dashboard_table_header_mood')),
           ),
           DataColumn(
-            label: Text(l10n.tr('analytics_dashboard_table_header_journal_sleep')),
+            label: Text(
+              l10n.tr('analytics_dashboard_table_header_journal_sleep'),
+            ),
           ),
         ],
         rows: points
@@ -813,10 +808,7 @@ class _ErrorView extends StatelessWidget {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
-        child: Text(
-          message,
-          textAlign: TextAlign.center,
-        ),
+        child: Text(message, textAlign: TextAlign.center),
       ),
     );
   }

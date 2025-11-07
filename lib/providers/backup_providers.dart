@@ -73,9 +73,7 @@ class BackupController extends AsyncNotifier<void> {
       }
       final path = result.files.single.path;
       if (path == null) {
-        throw FormatException(
-          l10n.tr('backup_picker_path_error'),
-        );
+        throw FormatException(l10n.tr('backup_picker_path_error'));
       }
       final file = File(path);
       await _backupService.restoreFromFile(file);
@@ -89,12 +87,15 @@ class BackupController extends AsyncNotifier<void> {
     }
   }
 }
-final backupReminderServiceProvider =
-    FutureProvider<BackupReminderService>((ref) async {
+
+final backupReminderServiceProvider = FutureProvider<BackupReminderService>((
+  ref,
+) async {
   return BackupReminderService.create();
 });
 
-final backupBannerServiceProvider =
-    FutureProvider<BackupBannerService>((ref) async {
+final backupBannerServiceProvider = FutureProvider<BackupBannerService>((
+  ref,
+) async {
   return BackupBannerService.create();
 });

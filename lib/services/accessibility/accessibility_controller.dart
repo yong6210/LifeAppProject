@@ -26,7 +26,9 @@ class AccessibilityController extends AsyncNotifier<AccessibilityState> {
 
   Future<void> setReducedMotion(bool value) async {
     await _prefs?.setBool(_prefsKeyReducedMotion, value);
-    state = AsyncData(state.value?.copyWith(reducedMotion: value) ??
-        AccessibilityState(reducedMotion: value));
+    state = AsyncData(
+      state.value?.copyWith(reducedMotion: value) ??
+          AccessibilityState(reducedMotion: value),
+    );
   }
 }

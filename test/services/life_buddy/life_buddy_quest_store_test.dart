@@ -21,16 +21,10 @@ void main() {
       ),
       isTrue,
     );
-    expect(
-      await store.hasClaimedToday(now, questId: 'weekend_relax'),
-      isFalse,
-    );
+    expect(await store.hasClaimedToday(now, questId: 'weekend_relax'), isFalse);
 
     await store.markClaimed(now, questId: 'weekend_relax');
-    expect(
-      await store.hasClaimedToday(now, questId: 'weekend_relax'),
-      isTrue,
-    );
+    expect(await store.hasClaimedToday(now, questId: 'weekend_relax'), isTrue);
 
     final tomorrow = now.add(const Duration(days: 1));
     expect(
@@ -59,10 +53,7 @@ void main() {
 
     await store.markClaimed(legacyDate, questId: 'alternate_quest');
     final prefs = await SharedPreferences.getInstance();
-    expect(
-      prefs.getString('life_buddy_last_quest_claim_iso'),
-      isNull,
-    );
+    expect(prefs.getString('life_buddy_last_quest_claim_iso'), isNull);
   });
 
   test('clear clears specific quest or all quests', () async {

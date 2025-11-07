@@ -99,7 +99,8 @@ const List<PremiumRoutine> _routines = [
     descriptionKey: 'premium_rest_guided_unwind_desc',
     durationMinutes: 25,
     audioAsset: 'https://cdn.lifeapp.com/premium/rest_guided_unwind_full.mp3',
-    previewAsset: 'https://cdn.lifeapp.com/premium/rest_guided_unwind_preview.mp3',
+    previewAsset:
+        'https://cdn.lifeapp.com/premium/rest_guided_unwind_preview.mp3',
   ),
   PremiumRoutine(
     id: 'sleep_lunar_waves',
@@ -108,7 +109,8 @@ const List<PremiumRoutine> _routines = [
     descriptionKey: 'premium_sleep_lunar_waves_desc',
     durationMinutes: 40,
     audioAsset: 'https://cdn.lifeapp.com/premium/sleep_lunar_waves_full.mp3',
-    previewAsset: 'https://cdn.lifeapp.com/premium/sleep_lunar_waves_preview.mp3',
+    previewAsset:
+        'https://cdn.lifeapp.com/premium/sleep_lunar_waves_preview.mp3',
     recommendedSlot: PremiumRoutineSlot(
       labelKey: 'premium_reco_night',
       icon: Icons.nightlight_round,
@@ -121,7 +123,8 @@ const List<PremiumRoutine> _routines = [
     descriptionKey: 'premium_sleep_breath_release_desc',
     durationMinutes: 30,
     audioAsset: 'https://cdn.lifeapp.com/premium/sleep_breath_release_full.mp3',
-    previewAsset: 'https://cdn.lifeapp.com/premium/sleep_breath_release_preview.mp3',
+    previewAsset:
+        'https://cdn.lifeapp.com/premium/sleep_breath_release_preview.mp3',
     sample: true,
   ),
 ];

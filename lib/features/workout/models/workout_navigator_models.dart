@@ -5,10 +5,7 @@ enum WorkoutIntensity { light, moderate, vigorous }
 enum WorkoutTargetType { distance, duration }
 
 class WorkoutNavigatorCue {
-  const WorkoutNavigatorCue({
-    required this.offset,
-    required this.message,
-  });
+  const WorkoutNavigatorCue({required this.offset, required this.message});
 
   final Duration offset;
   final String message;

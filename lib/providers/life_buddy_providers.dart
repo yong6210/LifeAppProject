@@ -51,10 +51,10 @@ class LifeBuddyInventory {
   });
 
   factory LifeBuddyInventory.initial() => const LifeBuddyInventory(
-        ownedDecorIds: {'bed_basic'},
-        coins: 0,
-        isPremiumUser: false,
-      );
+    ownedDecorIds: {'bed_basic'},
+    coins: 0,
+    isPremiumUser: false,
+  );
 
   factory LifeBuddyInventory.fromMap(Map<String, dynamic>? data) {
     final ownedRaw = data?['owned'];
@@ -154,6 +154,4 @@ final lifeBuddyInventoryProvider =
       LifeBuddyInventoryController.new,
     );
 
-final lifeBuddyUnlockingDecorProvider = StateProvider<String?>(
-  (ref) => null,
-);
+final lifeBuddyUnlockingDecorProvider = StateProvider<String?>((ref) => null);

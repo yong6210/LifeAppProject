@@ -174,7 +174,7 @@ class _WorkoutLightPresetChips extends ConsumerWidget {
                     ? colorScheme.onPrimaryContainer
                     : colorScheme.onSurface;
                 final subtitleColor = selected
-                ? colorScheme.onPrimaryContainer.withValues(alpha: 0.85)
+                    ? colorScheme.onPrimaryContainer.withValues(alpha: 0.85)
                     : colorScheme.onSurfaceVariant;
                 final accentColor = selected
                     ? colorScheme.onPrimaryContainer
@@ -2850,7 +2850,8 @@ class _TimerDesktopLayout extends ConsumerStatefulWidget {
   const _TimerDesktopLayout();
 
   @override
-  ConsumerState<_TimerDesktopLayout> createState() => _TimerDesktopLayoutState();
+  ConsumerState<_TimerDesktopLayout> createState() =>
+      _TimerDesktopLayoutState();
 }
 
 class _TimerDesktopLayoutState extends ConsumerState<_TimerDesktopLayout> {
@@ -2867,8 +2868,7 @@ class _TimerDesktopLayoutState extends ConsumerState<_TimerDesktopLayout> {
   @override
   void initState() {
     super.initState();
-    _settingsSubscription =
-        ref.listenManual<AsyncValue<Settings>>(
+    _settingsSubscription = ref.listenManual<AsyncValue<Settings>>(
       settingsFutureProvider,
       (previous, next) {
         next.whenData((settings) {
@@ -2884,18 +2884,17 @@ class _TimerDesktopLayoutState extends ConsumerState<_TimerDesktopLayout> {
       fireImmediately: true,
     );
 
-    _timerSubscription = ref.listenManual<TimerState>(
-      timerControllerProvider,
-      (previous, next) {
-        if (!mounted) return;
-        if (_workoutPresetId == null && next.workoutPresetId != null) {
-          setState(() {
-            _workoutPresetId = next.workoutPresetId;
-          });
-        }
-      },
-      fireImmediately: true,
-    );
+    _timerSubscription = ref.listenManual<TimerState>(timerControllerProvider, (
+      previous,
+      next,
+    ) {
+      if (!mounted) return;
+      if (_workoutPresetId == null && next.workoutPresetId != null) {
+        setState(() {
+          _workoutPresetId = next.workoutPresetId;
+        });
+      }
+    }, fireImmediately: true);
   }
 
   @override
@@ -2916,11 +2915,13 @@ class _TimerDesktopLayoutState extends ConsumerState<_TimerDesktopLayout> {
 
     final focusMinutes = _focusMinutes ?? settings?.focusMinutes ?? 25;
     final sleepMinutes = _sleepMinutes ?? settings?.sleepMinutes ?? 60;
-    final defaultPresetId = _workoutPresetId ??
+    final defaultPresetId =
+        _workoutPresetId ??
         state.workoutPresetId ??
         (workoutLightPresets.isNotEmpty ? workoutLightPresets.first.id : null);
     final sleepSmartEnabled =
-        _sleepSmartWindowEnabled ?? (settings?.sleepSmartAlarmWindowMinutes ?? 0) > 0;
+        _sleepSmartWindowEnabled ??
+        (settings?.sleepSmartAlarmWindowMinutes ?? 0) > 0;
 
     final totalProgress = state.totalSeconds == 0
         ? 0.0
@@ -2928,8 +2929,8 @@ class _TimerDesktopLayoutState extends ConsumerState<_TimerDesktopLayout> {
     final segmentProgress = state.currentSegment.duration.inSeconds == 0
         ? 0.0
         : 1 -
-            (state.segmentRemainingSeconds /
-                state.currentSegment.duration.inSeconds);
+              (state.segmentRemainingSeconds /
+                  state.currentSegment.duration.inSeconds);
 
     return Scaffold(
       appBar: AppBar(
@@ -2992,8 +2993,9 @@ class _TimerDesktopLayoutState extends ConsumerState<_TimerDesktopLayout> {
                           onMinutesChanged: (value) {
                             setState(() => _focusMinutes = value);
                             unawaited(
-                              ref
-                                  .read(savePresetProvider({'focus': value}).future),
+                              ref.read(
+                                savePresetProvider({'focus': value}).future,
+                              ),
                             );
                           },
                           onStart: () => _startFocus(context, focusMinutes),
@@ -3010,8 +3012,11 @@ class _TimerDesktopLayoutState extends ConsumerState<_TimerDesktopLayout> {
                           onPresetChanged: (id) {
                             setState(() => _workoutPresetId = id);
                           },
-                          onStart: () =>
-                              _startWorkout(context, controller, defaultPresetId),
+                          onStart: () => _startWorkout(
+                            context,
+                            controller,
+                            defaultPresetId,
+                          ),
                         ),
                       ),
                       _ModeCard(
@@ -3026,8 +3031,9 @@ class _TimerDesktopLayoutState extends ConsumerState<_TimerDesktopLayout> {
                           onMinutesChanged: (value) {
                             setState(() => _sleepMinutes = value);
                             unawaited(
-                              ref
-                                  .read(savePresetProvider({'sleep': value}).future),
+                              ref.read(
+                                savePresetProvider({'sleep': value}).future,
+                              ),
                             );
                           },
                           onSmartWindowChanged: (value) async {
@@ -3044,7 +3050,10 @@ class _TimerDesktopLayoutState extends ConsumerState<_TimerDesktopLayout> {
                           ...cards.map(
                             (card) => Padding(
                               padding: const EdgeInsets.only(bottom: 16),
-                              child: SizedBox(width: double.infinity, child: card),
+                              child: SizedBox(
+                                width: double.infinity,
+                                child: card,
+                              ),
                             ),
                           ),
                         ],
@@ -3053,17 +3062,18 @@ class _TimerDesktopLayoutState extends ConsumerState<_TimerDesktopLayout> {
 
                     return Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: cards
-                          .map(
-                            (card) => Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.only(right: 16),
-                                child: card,
-                              ),
-                            ),
-                          )
-                          .toList()
-                        ..last = Expanded(child: cards.last),
+                      children:
+                          cards
+                              .map(
+                                (card) => Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(right: 16),
+                                    child: card,
+                                  ),
+                                ),
+                              )
+                              .toList()
+                            ..last = Expanded(child: cards.last),
                     );
                   },
                 ),
@@ -3082,23 +3092,24 @@ class _TimerDesktopLayoutState extends ConsumerState<_TimerDesktopLayout> {
       return;
     }
     setState(() => _sleepSmartWindowEnabled = enabled);
-    final windowMinutes = enabled ? current.sleepSmartAlarmWindowMinutes.clamp(15, 120) : 0;
-    await ref
-        .read(
-          updateSleepSmartAlarmProvider(
-            SleepSmartAlarmInput(
-              windowMinutes: windowMinutes,
-              intervalMinutes: current.sleepSmartAlarmIntervalMinutes,
-              fallbackExact: current.sleepSmartAlarmExactFallback,
-              whiteLevel: current.sleepMixerWhiteLevel,
-              pinkLevel: current.sleepMixerPinkLevel,
-              brownLevel: current.sleepMixerBrownLevel,
-              presetId: current.sleepMixerPresetId.isEmpty
-                  ? SleepSoundCatalog.defaultPresetId
-                  : current.sleepMixerPresetId,
-            ),
-          ).future,
-        );
+    final windowMinutes = enabled
+        ? current.sleepSmartAlarmWindowMinutes.clamp(15, 120)
+        : 0;
+    await ref.read(
+      updateSleepSmartAlarmProvider(
+        SleepSmartAlarmInput(
+          windowMinutes: windowMinutes,
+          intervalMinutes: current.sleepSmartAlarmIntervalMinutes,
+          fallbackExact: current.sleepSmartAlarmExactFallback,
+          whiteLevel: current.sleepMixerWhiteLevel,
+          pinkLevel: current.sleepMixerPinkLevel,
+          brownLevel: current.sleepMixerBrownLevel,
+          presetId: current.sleepMixerPresetId.isEmpty
+              ? SleepSoundCatalog.defaultPresetId
+              : current.sleepMixerPresetId,
+        ),
+      ).future,
+    );
   }
 
   Widget _buildFocusControls(
@@ -3109,15 +3120,14 @@ class _TimerDesktopLayoutState extends ConsumerState<_TimerDesktopLayout> {
     required VoidCallback onStart,
   }) {
     final l10n = context.l10n;
-    final options = {..._focusOptions, focusMinutes}..removeWhere((value) => value <= 0);
+    final options = {..._focusOptions, focusMinutes}
+      ..removeWhere((value) => value <= 0);
     final sortedOptions = options.toList()..sort();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          l10n.tr('timer_desktop_focus_duration', {
-            'minutes': '$focusMinutes',
-          }),
+          l10n.tr('timer_desktop_focus_duration', {'minutes': '$focusMinutes'}),
           style: theme.textTheme.bodyMedium,
         ),
         const SizedBox(height: 12),
@@ -3131,9 +3141,11 @@ class _TimerDesktopLayoutState extends ConsumerState<_TimerDesktopLayout> {
               .map(
                 (minutes) => DropdownMenuItem<int>(
                   value: minutes,
-                  child: Text(l10n.tr('timer_desktop_minutes_label', {
-                    'minutes': '$minutes',
-                  })),
+                  child: Text(
+                    l10n.tr('timer_desktop_minutes_label', {
+                      'minutes': '$minutes',
+                    }),
+                  ),
                 ),
               )
               .toList(),
@@ -3213,7 +3225,8 @@ class _TimerDesktopLayoutState extends ConsumerState<_TimerDesktopLayout> {
     required VoidCallback onStart,
   }) {
     final l10n = context.l10n;
-    final options = {..._sleepOptions, sleepMinutes}..removeWhere((value) => value <= 0);
+    final options = {..._sleepOptions, sleepMinutes}
+      ..removeWhere((value) => value <= 0);
     final sortedOptions = options.toList()..sort();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -3228,9 +3241,11 @@ class _TimerDesktopLayoutState extends ConsumerState<_TimerDesktopLayout> {
               .map(
                 (minutes) => DropdownMenuItem<int>(
                   value: minutes,
-                  child: Text(l10n.tr('timer_desktop_minutes_label', {
-                    'minutes': '$minutes',
-                  })),
+                  child: Text(
+                    l10n.tr('timer_desktop_minutes_label', {
+                      'minutes': '$minutes',
+                    }),
+                  ),
                 ),
               )
               .toList(),
@@ -3240,7 +3255,9 @@ class _TimerDesktopLayoutState extends ConsumerState<_TimerDesktopLayout> {
           contentPadding: EdgeInsets.zero,
           value: smartWindowEnabled,
           onChanged: (value) => onSmartWindowChanged(value),
-          title: Text(l10n.tr('timer_sleep_smart_alarm_title')), // reuse existing key or create new? ensure exists.
+          title: Text(
+            l10n.tr('timer_sleep_smart_alarm_title'),
+          ), // reuse existing key or create new? ensure exists.
           subtitle: Text(
             smartWindowEnabled
                 ? l10n.tr('timer_sleep_smart_alarm_on')
@@ -3296,7 +3313,9 @@ class _TimerDesktopLayoutState extends ConsumerState<_TimerDesktopLayout> {
   }
 
   Future<bool> _ensurePermissions(BuildContext context) async {
-    final granted = await TimerPermissionService.ensureTimerPermissions(context);
+    final granted = await TimerPermissionService.ensureTimerPermissions(
+      context,
+    );
     ref.invalidate(timerPermissionStatusProvider);
     return granted;
   }
@@ -3401,18 +3420,16 @@ class _DesktopStatusCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            Text(
-              segmentLabel,
-              style: theme.textTheme.bodyMedium,
-            ),
+            Text(segmentLabel, style: theme.textTheme.bodyMedium),
             const SizedBox(height: 12),
             LinearProgressIndicator(value: totalProgress.clamp(0, 1)),
             const SizedBox(height: 8),
             LinearProgressIndicator(
               value: segmentProgress.clamp(0, 1),
               color: theme.colorScheme.secondary,
-              backgroundColor:
-                  theme.colorScheme.secondary.withValues(alpha: 0.2),
+              backgroundColor: theme.colorScheme.secondary.withValues(
+                alpha: 0.2,
+              ),
             ),
             const SizedBox(height: 16),
             Wrap(
@@ -3456,7 +3473,8 @@ class _DesktopStatusCard extends StatelessWidget {
               subtitle: Text(
                 state.isSoundEnabled
                     ? l10n.tr('timer_sound_switch_enabled', {
-                        'profile': state.currentSegment.playSoundProfile ??
+                        'profile':
+                            state.currentSegment.playSoundProfile ??
                             l10n.tr('timer_sound_profile_default'),
                       })
                     : l10n.tr('timer_sound_switch_disabled'),

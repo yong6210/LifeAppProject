@@ -200,7 +200,9 @@ class TodaySummaryCard extends ConsumerWidget {
             const SizedBox(height: 8),
             Text('${l10n.tr('session_type_focus')}  ${formatMinutes(t.focus)}'),
             Text('${l10n.tr('session_type_rest')}  ${formatMinutes(t.rest)}'),
-            Text('${l10n.tr('session_type_workout')}  ${formatMinutes(t.workout)}'),
+            Text(
+              '${l10n.tr('session_type_workout')}  ${formatMinutes(t.workout)}',
+            ),
             Text('${l10n.tr('session_type_sleep')}  ${formatMinutes(t.sleep)}'),
             const Divider(height: 16),
             Text(

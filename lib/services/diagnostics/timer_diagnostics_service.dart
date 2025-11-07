@@ -18,19 +18,20 @@ class TimerAccuracySample {
   final int skewMs;
 
   Map<String, dynamic> toJson() => {
-        'recordedAt': recordedAt.toIso8601String(),
-        'mode': mode,
-        'segmentId': segmentId,
-        'segmentLabel': segmentLabel,
-        'skewMs': skewMs,
-      };
+    'recordedAt': recordedAt.toIso8601String(),
+    'mode': mode,
+    'segmentId': segmentId,
+    'segmentLabel': segmentLabel,
+    'skewMs': skewMs,
+  };
 
   static TimerAccuracySample? fromJson(Map<String, dynamic>? json) {
     if (json == null) return null;
     final recordedAtString = json['recordedAt'] as String?;
     if (recordedAtString == null) return null;
     return TimerAccuracySample(
-      recordedAt: DateTime.tryParse(recordedAtString)?.toUtc() ??
+      recordedAt:
+          DateTime.tryParse(recordedAtString)?.toUtc() ??
           DateTime.now().toUtc(),
       mode: json['mode'] as String? ?? 'unknown',
       segmentId: json['segmentId'] as String? ?? 'unknown',
@@ -55,9 +56,10 @@ class TimerDiagnosticsService {
 
   Future<void> appendAccuracySample(TimerAccuracySample sample) async {
     final entries = await loadAccuracySamples();
-    final updated = <TimerAccuracySample>[sample, ...entries]
-        .take(_maxSamples)
-        .toList();
+    final updated = <TimerAccuracySample>[
+      sample,
+      ...entries,
+    ].take(_maxSamples).toList();
     final encoded = updated
         .map((entry) => jsonEncode(entry.toJson()))
         .toList(growable: false);
@@ -85,7 +87,9 @@ class TimerDiagnosticsService {
 
   Future<String> exportAccuracySamplesAsCsv() async {
     final samples = await loadAccuracySamples();
-    final buffer = StringBuffer('recorded_at_utc,mode,segment_id,segment_label,skew_ms\n');
+    final buffer = StringBuffer(
+      'recorded_at_utc,mode,segment_id,segment_label,skew_ms\n',
+    );
     for (final sample in samples) {
       buffer.writeln(
         '${sample.recordedAt.toIso8601String()},'

@@ -60,9 +60,8 @@ class _TimerTaskHandler extends TaskHandler {
 
     final modeRaw =
         await FlutterForegroundTask.getData<String>(key: _keyMode) ?? 'TIMER';
-    final segmentLabel = await FlutterForegroundTask.getData<String>(
-          key: _keySegment,
-        ) ??
+    final segmentLabel =
+        await FlutterForegroundTask.getData<String>(key: _keySegment) ??
         l10n.tr('foreground_notification_default_segment');
 
     final formatted = _formatCompact(l10n, remainingSeconds);
@@ -70,15 +69,12 @@ class _TimerTaskHandler extends TaskHandler {
 
     var notificationText = l10n.tr(
       'foreground_notification_segment_remaining',
-      {
-        'segment': segmentLabel,
-        'time': formatted,
-      },
+      {'segment': segmentLabel, 'time': formatted},
     );
 
     final sleepSoundActive =
         await FlutterForegroundTask.getData<bool>(key: _keySleepSoundActive) ??
-            false;
+        false;
     if (sleepSoundActive) {
       final startedAtMillis = await FlutterForegroundTask.getData<int>(
         key: _keySleepSoundStartedAt,
@@ -86,24 +82,21 @@ class _TimerTaskHandler extends TaskHandler {
       final startedAt = startedAtMillis != null && startedAtMillis > 0
           ? DateTime.fromMillisecondsSinceEpoch(startedAtMillis)
           : null;
-      final elapsedSeconds =
-          startedAt != null ? now.difference(startedAt).inSeconds : 0;
+      final elapsedSeconds = startedAt != null
+          ? now.difference(startedAt).inSeconds
+          : 0;
       final overlay = elapsedSeconds > 0
-          ? l10n.tr(
-              'foreground_sleep_sound_notification',
-              {
-                'elapsed': _formatCompact(l10n, elapsedSeconds),
-              },
-            )
+          ? l10n.tr('foreground_sleep_sound_notification', {
+              'elapsed': _formatCompact(l10n, elapsedSeconds),
+            })
           : l10n.tr('foreground_sleep_sound_notification_idle');
       notificationText = '$notificationText • $overlay';
     }
 
     await FlutterForegroundTask.updateService(
-      notificationTitle: l10n.tr(
-        'foreground_notification_mode_progress',
-        {'mode': modeLabel},
-      ),
+      notificationTitle: l10n.tr('foreground_notification_mode_progress', {
+        'mode': modeLabel,
+      }),
       notificationText: notificationText,
     );
   }

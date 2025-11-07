@@ -183,10 +183,7 @@ class _JournalPageState extends ConsumerState<JournalPage> {
     });
   }
 
-  void _handleTimelineTap(
-    JournalEntry entry,
-    List<JournalEntry> allEntries,
-  ) {
+  void _handleTimelineTap(JournalEntry entry, List<JournalEntry> allEntries) {
     _handleDateSelected(entry.date);
     final engine = const LifeBuddyCommentEngine();
     final comment = engine.generate(allEntries);
@@ -866,8 +863,9 @@ class _JournalEntryDetailSheet extends StatelessWidget {
               width: 44,
               height: 4,
               decoration: BoxDecoration(
-                color: theme.colorScheme.onSurfaceVariant
-                    .withValues(alpha: 0.3),
+                color: theme.colorScheme.onSurfaceVariant.withValues(
+                  alpha: 0.3,
+                ),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -896,10 +894,10 @@ class _JournalEntryDetailSheet extends StatelessWidget {
                                 avatar: Text(_emojiForMood(entry.mood)),
                                 backgroundColor: theme.colorScheme.primary
                                     .withValues(alpha: 0.12),
-                                labelStyle:
-                                    theme.textTheme.bodyMedium?.copyWith(
-                                  color: theme.colorScheme.primary,
-                                ),
+                                labelStyle: theme.textTheme.bodyMedium
+                                    ?.copyWith(
+                                      color: theme.colorScheme.primary,
+                                    ),
                               ),
                             ],
                           ),
@@ -931,16 +929,14 @@ class _JournalEntryDetailSheet extends StatelessWidget {
                     ),
                     if (notes != null && notes.isNotEmpty) ...[
                       const SizedBox(height: 20),
-                      Text(
-                        notes,
-                        style: theme.textTheme.bodyLarge,
-                      ),
+                      Text(notes, style: theme.textTheme.bodyLarge),
                     ],
                     if (comment != null) ...[
                       const SizedBox(height: 24),
                       Card(
-                        color: theme.colorScheme.secondaryContainer
-                            .withValues(alpha: 0.6),
+                        color: theme.colorScheme.secondaryContainer.withValues(
+                          alpha: 0.6,
+                        ),
                         child: Padding(
                           padding: const EdgeInsets.all(16),
                           child: Column(
@@ -1061,10 +1057,7 @@ class _JournalStatChip extends StatelessWidget {
         children: [
           Icon(icon, size: 18),
           const SizedBox(width: 8),
-          Text(
-            '$label · $value',
-            style: theme.textTheme.bodyMedium,
-          ),
+          Text('$label · $value', style: theme.textTheme.bodyMedium),
         ],
       ),
     );
@@ -1172,8 +1165,7 @@ class _TimelineEntry extends StatelessWidget {
                           Chip(
                             label: Text(entry.mood),
                             avatar: Text(_emojiForMood(entry.mood)),
-                            backgroundColor:
-                                moodColor.withValues(alpha: 0.12),
+                            backgroundColor: moodColor.withValues(alpha: 0.12),
                             labelStyle: theme.textTheme.bodyMedium?.copyWith(
                               color: moodColor.darken(),
                             ),
@@ -1181,7 +1173,8 @@ class _TimelineEntry extends StatelessWidget {
                           if (entry.energyLevel != null)
                             Chip(
                               label: Text('에너지 ${entry.energyLevel}'),
-                              backgroundColor: theme.colorScheme
+                              backgroundColor: theme
+                                  .colorScheme
                                   .surfaceContainerHighest
                                   .withValues(alpha: 0.5),
                             ),
@@ -1297,10 +1290,9 @@ class _MonthlyRecapCard extends StatelessWidget {
 
         return Card(
           elevation: 0,
-          color: Theme.of(context)
-              .colorScheme
-              .surfaceContainerHighest
-              .withValues(alpha: 0.4),
+          color: Theme.of(
+            context,
+          ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),

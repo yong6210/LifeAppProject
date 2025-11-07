@@ -17,9 +17,7 @@ class BackupPage extends ConsumerWidget {
     ref.listen<AsyncValue<void>>(backupControllerProvider, (previous, next) {
       next.whenOrNull(
         error: (error, _) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
                 l10n.tr('backup_error_message', {'error': error.toString()}),
@@ -29,9 +27,7 @@ class BackupPage extends ConsumerWidget {
         },
         data: (_) {
           if (previous?.isLoading == true) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(
+            ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(l10n.tr('backup_success_toast'))),
             );
           }
@@ -59,14 +55,11 @@ class BackupPage extends ConsumerWidget {
         data: (settings) {
           final lastBackupText = settings.lastBackupAt == null
               ? l10n.tr('backup_last_backup_never')
-              : l10n.tr(
-                  'backup_last_backup',
-                  {
-                    'timestamp': DateFormat.yMd(
-                      Localizations.localeOf(context).toLanguageTag(),
-                    ).add_Hm().format(settings.lastBackupAt!.toLocal()),
-                  },
-                );
+              : l10n.tr('backup_last_backup', {
+                  'timestamp': DateFormat.yMd(
+                    Localizations.localeOf(context).toLanguageTag(),
+                  ).add_Hm().format(settings.lastBackupAt!.toLocal()),
+                });
           return Stack(
             children: [
               Padding(
@@ -254,8 +247,9 @@ class _PreferredProviderSection extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
             RadioGroup<String>(
-              groupValue:
-                  _normalizeProviderValue(settings.backupPreferredProvider),
+              groupValue: _normalizeProviderValue(
+                settings.backupPreferredProvider,
+              ),
               onChanged: (value) async {
                 if (value == null) return;
                 try {
@@ -266,27 +260,21 @@ class _PreferredProviderSection extends ConsumerWidget {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
-                          l10n.tr(
-                            'backup_preferred_updated',
-                            {
-                              'provider': _displayProviderLabel(l10n, value),
-                            },
-                          ),
+                          l10n.tr('backup_preferred_updated', {
+                            'provider': _displayProviderLabel(l10n, value),
+                          }),
                         ),
                       ),
                     );
                   }
                 } catch (error) {
                   if (context.mounted) {
-                    ScaffoldMessenger.of(
-                      context,
-                    ).showSnackBar(
+                    ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
-                          l10n.tr(
-                            'backup_preferred_update_error',
-                            {'error': error.toString()},
-                          ),
+                          l10n.tr('backup_preferred_update_error', {
+                            'error': error.toString(),
+                          }),
                         ),
                       ),
                     );
@@ -329,7 +317,7 @@ class _BackupHelpCard extends StatelessWidget {
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
-            Text(l10n.tr('backup_help_encrypted')), 
+            Text(l10n.tr('backup_help_encrypted')),
             Text(l10n.tr('backup_help_choose_storage')),
             Text(l10n.tr('backup_help_restore_notice')),
           ],
@@ -394,9 +382,7 @@ class _BackupHistoryTile extends StatelessWidget {
         'provider': _displayProviderLabel(l10n, entry.provider),
       }),
       if (!success && entry.errorMessage != null)
-        l10n.tr('backup_history_entry_error', {
-          'error': entry.errorMessage!,
-        }),
+        l10n.tr('backup_history_entry_error', {'error': entry.errorMessage!}),
     ].whereType<String>().join('\n');
 
     return ListTile(

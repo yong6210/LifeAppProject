@@ -5,8 +5,9 @@ import 'package:life_app/services/audio/sleep_sound_store.dart';
 
 /// Provides the most recently persisted [SleepSoundSummary]. If no analysis has
 /// been recorded yet, `null` is returned so the UI can show an empty state.
-final latestSleepSoundSummaryProvider =
-    FutureProvider<SleepSoundSummary?>((ref) async {
+final latestSleepSoundSummaryProvider = FutureProvider<SleepSoundSummary?>((
+  ref,
+) async {
   final store = ref.watch(sleepSoundSummaryStoreProvider);
   return store.loadLatest();
 });
@@ -16,6 +17,6 @@ final latestSleepSoundSummaryProvider =
 /// [SleepSoundAnalyzer.stop] completes.
 final saveSleepSoundSummaryProvider =
     FutureProvider.family<void, SleepSoundSummary>((ref, summary) async {
-  final store = ref.watch(sleepSoundSummaryStoreProvider);
-  await store.saveLatest(summary);
-});
+      final store = ref.watch(sleepSoundSummaryStoreProvider);
+      await store.saveLatest(summary);
+    });

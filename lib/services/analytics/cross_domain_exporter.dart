@@ -23,8 +23,9 @@ class CrossDomainAnalyticsExporter {
     final fileTimestamp = DateFormat('yyyyMMdd_HHmmss').format(now);
     final rangeLabel = _rangeLabel(range, l10n);
     final averageMood = analytics.averageMoodScore != null
-        ? NumberFormat.percentPattern(l10n.locale.toLanguageTag())
-            .format(analytics.averageMoodScore)
+        ? NumberFormat.percentPattern(
+            l10n.locale.toLanguageTag(),
+          ).format(analytics.averageMoodScore)
         : '—';
 
     final correlationRows = [
@@ -54,8 +55,9 @@ class CrossDomainAnalyticsExporter {
             point.sleepMinutes.toString(),
             point.moodScore == null
                 ? '—'
-                : NumberFormat.percentPattern(l10n.locale.toLanguageTag())
-                    .format(point.moodScore),
+                : NumberFormat.percentPattern(
+                    l10n.locale.toLanguageTag(),
+                  ).format(point.moodScore),
             point.journalSleepHours == null
                 ? '—'
                 : point.journalSleepHours!.toStringAsFixed(1),
@@ -70,16 +72,12 @@ class CrossDomainAnalyticsExporter {
         build: (context) => [
           pw.Text(
             l10n.tr('analytics_dashboard_title'),
-            style: pw.TextStyle(
-              fontSize: 22,
-              fontWeight: pw.FontWeight.bold,
-            ),
+            style: pw.TextStyle(fontSize: 22, fontWeight: pw.FontWeight.bold),
           ),
           pw.SizedBox(height: 6),
           pw.Text(
             l10n.tr('analytics_dashboard_pdf_generated_on', {
-              'date':
-                  '${dateFormat.format(now)} ${timeFormat.format(now)}',
+              'date': '${dateFormat.format(now)} ${timeFormat.format(now)}',
             }),
             style: const pw.TextStyle(fontSize: 12),
           ),
@@ -101,14 +99,11 @@ class CrossDomainAnalyticsExporter {
                 '${analytics.averageFocusMinutes.toStringAsFixed(0)} min',
                 '${analytics.averageSleepMinutes.toStringAsFixed(0)} min',
                 averageMood,
-                l10n.tr(
-                  'analytics_dashboard_sleep_debt_hours',
-                  {
-                    'hours': (analytics.totalSleepDebtMinutes / 60)
-                        .clamp(0, double.infinity)
-                        .toStringAsFixed(1),
-                  },
-                ),
+                l10n.tr('analytics_dashboard_sleep_debt_hours', {
+                  'hours': (analytics.totalSleepDebtMinutes / 60)
+                      .clamp(0, double.infinity)
+                      .toStringAsFixed(1),
+                }),
               ],
             ],
             cellAlignment: pw.Alignment.centerLeft,
@@ -116,10 +111,7 @@ class CrossDomainAnalyticsExporter {
           pw.SizedBox(height: 20),
           pw.Text(
             l10n.tr('analytics_dashboard_pdf_correlations_heading'),
-            style: pw.TextStyle(
-              fontSize: 16,
-              fontWeight: pw.FontWeight.bold,
-            ),
+            style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold),
           ),
           pw.TableHelper.fromTextArray(
             headers: [
@@ -139,8 +131,14 @@ class CrossDomainAnalyticsExporter {
             ],
             data: [
               [
-                _formatHighlight(analytics.highlights.bestFocusDate, dateFormat),
-                _formatHighlight(analytics.highlights.bestSleepDate, dateFormat),
+                _formatHighlight(
+                  analytics.highlights.bestFocusDate,
+                  dateFormat,
+                ),
+                _formatHighlight(
+                  analytics.highlights.bestSleepDate,
+                  dateFormat,
+                ),
                 _formatHighlight(analytics.highlights.lowMoodDate, dateFormat),
               ],
             ],
@@ -148,10 +146,7 @@ class CrossDomainAnalyticsExporter {
           pw.SizedBox(height: 20),
           pw.Text(
             l10n.tr('analytics_dashboard_table_header_date'),
-            style: pw.TextStyle(
-              fontSize: 16,
-              fontWeight: pw.FontWeight.bold,
-            ),
+            style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold),
           ),
           pw.SizedBox(height: 8),
           pw.TableHelper.fromTextArray(

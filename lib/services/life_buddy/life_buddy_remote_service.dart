@@ -36,7 +36,9 @@ class LifeBuddyRemoteService {
 
   Future<UnlockDecorResult> unlockDecor(String decorId) async {
     final callable = _instance.httpsCallable('unlockDecorItem');
-    final response = await callable.call<Map<String, dynamic>>({'decorId': decorId});
+    final response = await callable.call<Map<String, dynamic>>({
+      'decorId': decorId,
+    });
     final data = Map<String, dynamic>.from(response.data);
     return UnlockDecorResult(
       ok: data['ok'] == true,
@@ -52,7 +54,8 @@ class LifeBuddyRemoteService {
       return false;
     }
     final projectId = _instance.app.options.projectId;
-    return projectId.contains('life-app-dev') || projectId.contains('life-app-ed218');
+    return projectId.contains('life-app-dev') ||
+        projectId.contains('life-app-ed218');
   }
 
   Future<ClaimQuestResult> _claimDailyQuestFallback(String questId) async {
@@ -65,7 +68,9 @@ class LifeBuddyRemoteService {
     }
 
     final firestore = FirebaseFirestore.instance;
-    final inventoryRef = firestore.doc('users/${user.uid}/decor_inventory/state');
+    final inventoryRef = firestore.doc(
+      'users/${user.uid}/decor_inventory/state',
+    );
 
     try {
       await firestore.runTransaction((transaction) async {
@@ -91,15 +96,11 @@ class LifeBuddyRemoteService {
         final updatedCoins = currentCoins + _defaultQuestRewardCoins;
         final updatedClaimed = [...claimed, questId];
 
-        transaction.set(
-          inventoryRef,
-          {
-            'softCurrency': updatedCoins,
-            'claimedQuests': updatedClaimed,
-            'updatedAt': FieldValue.serverTimestamp(),
-          },
-          SetOptions(merge: true),
-        );
+        transaction.set(inventoryRef, {
+          'softCurrency': updatedCoins,
+          'claimedQuests': updatedClaimed,
+          'updatedAt': FieldValue.serverTimestamp(),
+        }, SetOptions(merge: true));
       });
 
       return ClaimQuestResult(

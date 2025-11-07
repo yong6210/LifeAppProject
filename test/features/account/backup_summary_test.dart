@@ -19,7 +19,9 @@ void main() {
   group('calculateBackupStreak', () {
     test('returns zero when no recent backup', () {
       final history = [
-        _entry(timestamp: DateTime.now().toUtc().subtract(const Duration(days: 10))),
+        _entry(
+          timestamp: DateTime.now().toUtc().subtract(const Duration(days: 10)),
+        ),
       ];
       expect(calculateBackupStreak(history), 0);
     });
@@ -48,8 +50,14 @@ void main() {
       final now = DateTime.now().toUtc();
       final history = [
         _entry(timestamp: now.subtract(const Duration(days: 3))),
-        _entry(timestamp: now.subtract(const Duration(days: 5)), status: 'failure'),
-        _entry(timestamp: now.subtract(const Duration(days: 9)), action: 'restore'),
+        _entry(
+          timestamp: now.subtract(const Duration(days: 5)),
+          status: 'failure',
+        ),
+        _entry(
+          timestamp: now.subtract(const Duration(days: 9)),
+          action: 'restore',
+        ),
         _entry(timestamp: now.subtract(const Duration(days: 11))),
       ];
       expect(calculateBackupStreak(history), 1);
@@ -64,13 +72,17 @@ void main() {
 
     test('returns false when backup recent', () {
       final settings = Settings()
-        ..lastBackupAt = DateTime.now().toUtc().subtract(const Duration(days: 2));
+        ..lastBackupAt = DateTime.now().toUtc().subtract(
+          const Duration(days: 2),
+        );
       expect(shouldEncourageBackup(settings), isFalse);
     });
 
     test('returns true when backup stale', () {
       final settings = Settings()
-        ..lastBackupAt = DateTime.now().toUtc().subtract(const Duration(days: 10));
+        ..lastBackupAt = DateTime.now().toUtc().subtract(
+          const Duration(days: 10),
+        );
       expect(shouldEncourageBackup(settings), isTrue);
     });
   });

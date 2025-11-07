@@ -9,10 +9,7 @@ void main() {
       SharedPreferences.setMockInitialValues({});
     });
 
-    TimerAccuracySample buildSample({
-      required String id,
-      required int skew,
-    }) {
+    TimerAccuracySample buildSample({required String id, required int skew}) {
       return TimerAccuracySample(
         recordedAt: DateTime.utc(2025, 1, 1, 0, 0).add(Duration(minutes: skew)),
         mode: 'focus',
@@ -26,9 +23,7 @@ void main() {
       final service = await TimerDiagnosticsService.create();
 
       for (var i = 0; i < 60; i++) {
-        await service.appendAccuracySample(
-          buildSample(id: 'seg_$i', skew: i),
-        );
+        await service.appendAccuracySample(buildSample(id: 'seg_$i', skew: i));
       }
 
       final samples = await service.loadAccuracySamples();
@@ -41,9 +36,7 @@ void main() {
 
     test('exports CSV with header and rows', () async {
       final service = await TimerDiagnosticsService.create();
-      await service.appendAccuracySample(
-        buildSample(id: 'seg_a', skew: 10),
-      );
+      await service.appendAccuracySample(buildSample(id: 'seg_a', skew: 10));
       final csv = await service.exportAccuracySamplesAsCsv();
       expect(
         csv,
@@ -55,9 +48,7 @@ void main() {
 
     test('clear removes stored samples', () async {
       final service = await TimerDiagnosticsService.create();
-      await service.appendAccuracySample(
-        buildSample(id: 'seg_clear', skew: 5),
-      );
+      await service.appendAccuracySample(buildSample(id: 'seg_clear', skew: 5));
       await service.clearAccuracySamples();
       final samples = await service.loadAccuracySamples();
       expect(samples, isEmpty);

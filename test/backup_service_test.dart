@@ -58,8 +58,7 @@ void main() {
   setUp(() {
     tempDir = Directory.systemTemp.createTempSync('backup_service_test');
     originalPathProvider = PathProviderPlatform.instance;
-    PathProviderPlatform.instance =
-        _FakePathProviderPlatform(tempDir.path);
+    PathProviderPlatform.instance = _FakePathProviderPlatform(tempDir.path);
 
     databaseBytes = Uint8List.fromList('initial-db'.codeUnits);
     dataSource = _FakeSettingsDataSource(Settings()..schemaVersion = 1);
@@ -90,7 +89,10 @@ void main() {
     final backupFile = await service.createEncryptedBackup();
     expect(backupFile.existsSync(), isTrue);
     expect(p.extension(backupFile.path), '.${service.backupFileExtension}');
-    expect(dataSource.ensure().then((s) => s.lastBackupAt), completion(isNotNull));
+    expect(
+      dataSource.ensure().then((s) => s.lastBackupAt),
+      completion(isNotNull),
+    );
 
     // mutate local state after backup
     dataSource.update((settings) {
@@ -102,7 +104,10 @@ void main() {
     await service.restoreFromFile(backupFile);
 
     final restoredSettings = await dataSource.ensure();
-    expect(restoredSettings.theme, 'light'); // restore flow does not overwrite theme
+    expect(
+      restoredSettings.theme,
+      'light',
+    ); // restore flow does not overwrite theme
     expect(restoredSettings.lastBackupAt, isNotNull);
     expect(String.fromCharCodes(databaseBytes), 'initial-db');
 

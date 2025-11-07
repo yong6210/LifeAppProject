@@ -74,9 +74,7 @@ class MethodChannelShortcutAutomationService
   Stream<ShortcutInvocation> watchInvocations() {
     _cachedStream ??= _eventChannel.receiveBroadcastStream().map((raw) {
       if (raw is Map) {
-        return ShortcutInvocation.fromJson(
-          Map<String, dynamic>.from(raw),
-        );
+        return ShortcutInvocation.fromJson(Map<String, dynamic>.from(raw));
       }
       return ShortcutInvocation(action: raw?.toString() ?? '');
     });

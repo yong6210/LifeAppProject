@@ -57,7 +57,9 @@ void main() {
     expect(refreshed.asData?.value, isEmpty);
   });
 
-  testWidgets('Journal page shows calendar and toggles detail card state', (tester) async {
+  testWidgets('Journal page shows calendar and toggles detail card state', (
+    tester,
+  ) async {
     final now = DateTime.now();
     final yesterday = DateUtils.dateOnly(now.subtract(const Duration(days: 1)));
     final emptyDate = DateUtils.dateOnly(now.subtract(const Duration(days: 5)));
@@ -123,73 +125,72 @@ void main() {
     );
   });
 
-  testWidgets('Timeline entry opens detail sheet with buddy comment and suggestions', (tester) async {
-    final now = DateTime.now();
-    final today = DateUtils.dateOnly(now);
-    final dayBefore = DateUtils.dateOnly(now.subtract(const Duration(days: 2)));
+  testWidgets(
+    'Timeline entry opens detail sheet with buddy comment and suggestions',
+    (tester) async {
+      final now = DateTime.now();
+      final today = DateUtils.dateOnly(now);
+      final dayBefore = DateUtils.dateOnly(
+        now.subtract(const Duration(days: 2)),
+      );
 
-    await JournalStore.saveEntry(
-      JournalEntry(
-        id: 'previous',
-        date: dayBefore,
-        mood: '좋아요',
-        sleepHours: 7.0,
-        notes: '회복한 하루',
-      ),
-    );
-    await JournalStore.saveEntry(
-      JournalEntry(
-        id: 'focus-day',
-        date: today,
-        mood: '무기력해요',
-        sleepHours: 5.0,
-        energyLevel: 'Low',
-        notes: '야근 때문에 너무 피곤했어',
-      ),
-    );
+      await JournalStore.saveEntry(
+        JournalEntry(
+          id: 'previous',
+          date: dayBefore,
+          mood: '좋아요',
+          sleepHours: 7.0,
+          notes: '회복한 하루',
+        ),
+      );
+      await JournalStore.saveEntry(
+        JournalEntry(
+          id: 'focus-day',
+          date: today,
+          mood: '무기력해요',
+          sleepHours: 5.0,
+          energyLevel: 'Low',
+          notes: '야근 때문에 너무 피곤했어',
+        ),
+      );
 
-    await tester.pumpWidget(
-      const ProviderScope(child: MaterialApp(home: JournalPage())),
-    );
-    await tester.pumpAndSettle();
+      await tester.pumpWidget(
+        const ProviderScope(child: MaterialApp(home: JournalPage())),
+      );
+      await tester.pumpAndSettle();
 
-    final listFinder = find.byType(ListView);
-    await tester.drag(listFinder, const Offset(0, -800));
-    await tester.pumpAndSettle();
-    await tester.drag(listFinder, const Offset(0, -800));
-    await tester.pumpAndSettle();
+      final listFinder = find.byType(ListView);
+      await tester.drag(listFinder, const Offset(0, -800));
+      await tester.pumpAndSettle();
+      await tester.drag(listFinder, const Offset(0, -800));
+      await tester.pumpAndSettle();
 
-    final deleteButtons = find.byTooltip('기록 삭제');
-    expect(deleteButtons, findsWidgets);
-    final timelineCard = find.ancestor(
-      of: deleteButtons.first,
-      matching: find.byType(Card),
-    );
-    await tester.tap(timelineCard);
-    await tester.pumpAndSettle();
+      final deleteButtons = find.byTooltip('기록 삭제');
+      expect(deleteButtons, findsWidgets);
+      final timelineCard = find.ancestor(
+        of: deleteButtons.first,
+        matching: find.byType(Card),
+      );
+      await tester.tap(timelineCard);
+      await tester.pumpAndSettle();
 
-    final sheetFinder = find.byKey(const Key('journal-entry-detail-sheet'));
-    expect(sheetFinder, findsOneWidget);
-    expect(
-      find.descendant(
-        of: sheetFinder,
-        matching: find.textContaining('야근했구나…'),
-      ),
-      findsOneWidget,
-    );
-    expect(
-      find.descendant(
-        of: sheetFinder,
-        matching: find.text('모닝 스트레칭 10분'),
-      ),
-      findsOneWidget,
-    );
-    expect(
-      find.descendant(
-        of: sheetFinder,
-        matching: find.text('이 날짜로 새 기록 작성'),
-      ),
-      findsOneWidget,
-    );
-  });
+      final sheetFinder = find.byKey(const Key('journal-entry-detail-sheet'));
+      expect(sheetFinder, findsOneWidget);
+      expect(
+        find.descendant(
+          of: sheetFinder,
+          matching: find.textContaining('야근했구나…'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(of: sheetFinder, matching: find.text('모닝 스트레칭 10분')),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(of: sheetFinder, matching: find.text('이 날짜로 새 기록 작성')),
+        findsOneWidget,
+      );
+    },
+  );
 }

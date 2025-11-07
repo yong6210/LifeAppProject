@@ -187,18 +187,18 @@ class _SleepRoutineBuilderSheetState
           const SizedBox(height: 24),
           SizedBox(
             width: double.infinity,
-              child: FilledButton(
-                onPressed: () async {
-                  final navigator = Navigator.of(context);
-                  final intent = _currentIntent();
-                  await ref
-                      .read(sleepRoutineSelectionProvider.notifier)
-                      .setSelection(_goal, intent);
-                  if (!mounted) return;
-                  navigator.pop();
-                },
-                child: Text(l10n.tr('sleep_builder_save_button')),
-              ),
+            child: FilledButton(
+              onPressed: () async {
+                final navigator = Navigator.of(context);
+                final intent = _currentIntent();
+                await ref
+                    .read(sleepRoutineSelectionProvider.notifier)
+                    .setSelection(_goal, intent);
+                if (!mounted) return;
+                navigator.pop();
+              },
+              child: Text(l10n.tr('sleep_builder_save_button')),
+            ),
           ),
           const SizedBox(height: 12),
         ],
@@ -251,7 +251,10 @@ class _DurationSlider extends StatelessWidget {
       children: [
         Text(
           l10n.tr('sleep_builder_duration_value', {
-            'duration': _localizedDuration(context, Duration(minutes: currentMinutes)),
+            'duration': _localizedDuration(
+              context,
+              Duration(minutes: currentMinutes),
+            ),
           }),
           style: Theme.of(context).textTheme.bodyMedium,
         ),
@@ -272,10 +275,7 @@ class _DurationSlider extends StatelessWidget {
 }
 
 class _WakeTimePicker extends StatelessWidget {
-  const _WakeTimePicker({
-    required this.initial,
-    required this.onChanged,
-  });
+  const _WakeTimePicker({required this.initial, required this.onChanged});
 
   final DateTime initial;
   final ValueChanged<DateTime> onChanged;
@@ -296,7 +296,13 @@ class _WakeTimePicker extends StatelessWidget {
         );
         if (picked == null) return;
         final now = DateTime.now();
-        var next = DateTime(now.year, now.month, now.day, picked.hour, picked.minute);
+        var next = DateTime(
+          now.year,
+          now.month,
+          now.day,
+          picked.hour,
+          picked.minute,
+        );
         while (!next.isAfter(now)) {
           next = next.add(const Duration(days: 1));
         }
@@ -315,8 +321,12 @@ class _PlanSummary extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final locale = MaterialLocalizations.of(context);
-    final bed = locale.formatTimeOfDay(TimeOfDay.fromDateTime(plan.recommendedBedTime));
-    final wake = locale.formatTimeOfDay(TimeOfDay.fromDateTime(plan.recommendedWakeTime));
+    final bed = locale.formatTimeOfDay(
+      TimeOfDay.fromDateTime(plan.recommendedBedTime),
+    );
+    final wake = locale.formatTimeOfDay(
+      TimeOfDay.fromDateTime(plan.recommendedWakeTime),
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -356,9 +366,7 @@ String _localizedDuration(BuildContext context, Duration duration) {
     });
   }
   if (hours > 0) {
-    return l10n.tr('sleep_builder_duration_hours_only', {
-      'hours': '$hours',
-    });
+    return l10n.tr('sleep_builder_duration_hours_only', {'hours': '$hours'});
   }
   return l10n.tr('sleep_builder_duration_minutes_only', {
     'minutes': '$minutes',

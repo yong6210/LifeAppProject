@@ -65,5 +65,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'life-app-dev.firebasestorage.app',
     iosBundleId: 'com.ymcompany.lifeapp.dev',
   );
-
 }

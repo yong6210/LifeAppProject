@@ -25,8 +25,10 @@ class BackupReminderService {
 
     final lastShownMillis = _prefs.getInt(_prefsKeyLastShown);
     if (lastShownMillis != null) {
-      final lastShownAt =
-          DateTime.fromMillisecondsSinceEpoch(lastShownMillis, isUtc: true);
+      final lastShownAt = DateTime.fromMillisecondsSinceEpoch(
+        lastShownMillis,
+        isUtc: true,
+      );
       if (now.difference(lastShownAt) < _cooldown) {
         return false;
       }

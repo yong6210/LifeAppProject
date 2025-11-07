@@ -205,7 +205,6 @@ class TimerPermissionService {
       if (open == true) {
         await openAppSettings();
       }
-
     } else {
       _showSnack(messenger, l10n.tr('timer_permission_microphone_denied'));
     }

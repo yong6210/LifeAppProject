@@ -139,9 +139,7 @@ class _MoodHeader extends StatelessWidget {
                   const SizedBox(height: 6),
                   Text(
                     details.description,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      height: 1.5,
-                    ),
+                    style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
                   ),
                 ],
               ),
@@ -228,7 +226,10 @@ class _ProgressCard extends StatelessWidget {
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: AppTheme.accentOrange.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(12),
@@ -268,14 +269,13 @@ class _ProgressCard extends StatelessWidget {
                 minHeight: 14,
                 value: progress,
                 backgroundColor: AppTheme.accentOrange.withValues(alpha: 0.1),
-                valueColor: AlwaysStoppedAnimation<Color>(AppTheme.accentOrange),
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  AppTheme.accentOrange,
+                ),
               ),
             ),
             const SizedBox(height: 12),
-            Text(
-              xpLabel,
-              style: theme.textTheme.bodyMedium,
-            ),
+            Text(xpLabel, style: theme.textTheme.bodyMedium),
           ],
         ),
       ),

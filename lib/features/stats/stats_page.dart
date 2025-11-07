@@ -123,10 +123,26 @@ class _TotalsCard extends StatelessWidget {
     final l10n = context.l10n;
     final theme = Theme.of(context);
     final metrics = [
-      _Metric(l10n.tr('session_type_focus'), totals.focusMinutes, AppTheme.accentBlue),
-      _Metric(l10n.tr('session_type_rest'), totals.restMinutes, AppTheme.accentOrange),
-      _Metric(l10n.tr('session_type_workout'), totals.workoutMinutes, AppTheme.accentGreen),
-      _Metric(l10n.tr('session_type_sleep'), totals.sleepMinutes, AppTheme.accentPurple),
+      _Metric(
+        l10n.tr('session_type_focus'),
+        totals.focusMinutes,
+        AppTheme.accentBlue,
+      ),
+      _Metric(
+        l10n.tr('session_type_rest'),
+        totals.restMinutes,
+        AppTheme.accentOrange,
+      ),
+      _Metric(
+        l10n.tr('session_type_workout'),
+        totals.workoutMinutes,
+        AppTheme.accentGreen,
+      ),
+      _Metric(
+        l10n.tr('session_type_sleep'),
+        totals.sleepMinutes,
+        AppTheme.accentPurple,
+      ),
     ];
 
     return FadeInAnimation(
@@ -161,7 +177,9 @@ class _TotalsCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
+                color: theme.colorScheme.primaryContainer.withValues(
+                  alpha: 0.3,
+                ),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Row(
@@ -245,10 +263,7 @@ class _WeeklyHighlightCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 6),
-                  Text(
-                    body,
-                    style: theme.textTheme.bodyMedium,
-                  ),
+                  Text(body, style: theme.textTheme.bodyMedium),
                 ],
               ),
             ),
@@ -517,18 +532,17 @@ class _MetricChip extends StatelessWidget {
           Container(
             width: 8,
             height: 8,
-            decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.circle,
-            ),
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
           ),
           const SizedBox(width: 8),
           Text(
             '${metric.label} ${_formatMinutes(metric.minutes, l10n)}',
-            style: (dense ? theme.textTheme.bodySmall : theme.textTheme.bodyMedium)?.copyWith(
-              fontWeight: FontWeight.w600,
-              color: theme.colorScheme.onSurface,
-            ),
+            style:
+                (dense ? theme.textTheme.bodySmall : theme.textTheme.bodyMedium)
+                    ?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: theme.colorScheme.onSurface,
+                    ),
           ),
         ],
       ),

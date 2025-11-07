@@ -85,9 +85,7 @@ class _TimerInitDialogState extends ConsumerState<TimerInitDialog> {
               }
             } catch (error) {
               if (context.mounted) {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(
+                ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
                       l10n.tr('timer_init_save_error', {

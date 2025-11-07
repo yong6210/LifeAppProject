@@ -27,16 +27,10 @@ class ModernSectionHeader extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: theme.textTheme.titleLarge,
-                ),
+                Text(title, style: theme.textTheme.titleLarge),
                 if (subtitle != null) ...[
                   const SizedBox(height: 4),
-                  Text(
-                    subtitle!,
-                    style: theme.textTheme.bodyMedium,
-                  ),
+                  Text(subtitle!, style: theme.textTheme.bodyMedium),
                 ],
               ],
             ),
@@ -63,11 +57,7 @@ class ModernDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Divider(
-      height: height,
-      indent: indent,
-      endIndent: endIndent,
-    );
+    return Divider(height: height, indent: indent, endIndent: endIndent);
   }
 }
 
@@ -123,10 +113,7 @@ class ModernEmptyState extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ],
-            if (action != null) ...[
-              const SizedBox(height: 24),
-              action!,
-            ],
+            if (action != null) ...[const SizedBox(height: 24), action!],
           ],
         ),
       ),
@@ -136,11 +123,7 @@ class ModernEmptyState extends StatelessWidget {
 
 /// Loading shimmer effect
 class ModernShimmer extends StatefulWidget {
-  const ModernShimmer({
-    super.key,
-    required this.child,
-    this.enabled = true,
-  });
+  const ModernShimmer({super.key, required this.child, this.enabled = true});
 
   final Widget child;
   final bool enabled;
@@ -235,12 +218,7 @@ class ModernSkeleton extends StatelessWidget {
 
 /// Badge component
 class ModernBadge extends StatelessWidget {
-  const ModernBadge({
-    super.key,
-    required this.label,
-    this.color,
-    this.icon,
-  });
+  const ModernBadge({super.key, required this.label, this.color, this.icon});
 
   final String label;
   final Color? color;
@@ -261,11 +239,7 @@ class ModernBadge extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (icon != null) ...[
-            Icon(
-              icon,
-              size: 14,
-              color: badgeColor,
-            ),
+            Icon(icon, size: 14, color: badgeColor),
             const SizedBox(width: 4),
           ],
           Text(

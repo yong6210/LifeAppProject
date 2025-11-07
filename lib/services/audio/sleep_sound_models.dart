@@ -60,9 +60,11 @@ class SleepSoundSummary {
       maxAmplitude: castDouble(json['maxAmplitude']),
       loudEventCount: castInt(json['loudEventCount']),
       sampleCount: castInt(json['sampleCount']),
-      restfulSampleRatio: (castDouble(json['restfulSampleRatio']).clamp(0.0, 1.0) as num)
-          .toDouble(),
-      noiseEvents: (json['noiseEvents'] as List<dynamic>?)
+      restfulSampleRatio:
+          (castDouble(json['restfulSampleRatio']).clamp(0.0, 1.0) as num)
+              .toDouble(),
+      noiseEvents:
+          (json['noiseEvents'] as List<dynamic>?)
               ?.map(
                 (event) => SleepNoiseEvent.fromJson(
                   Map<String, dynamic>.from(event as Map),
@@ -74,15 +76,15 @@ class SleepSoundSummary {
   }
 
   Map<String, dynamic> toJson() => {
-        'recordingPath': recordingPath,
-        'durationMs': duration.inMilliseconds,
-        'averageAmplitude': averageAmplitude,
-        'maxAmplitude': maxAmplitude,
-        'loudEventCount': loudEventCount,
-        'sampleCount': sampleCount,
-        'restfulSampleRatio': restfulSampleRatio,
-        'noiseEvents': noiseEvents.map((event) => event.toJson()).toList(),
-      };
+    'recordingPath': recordingPath,
+    'durationMs': duration.inMilliseconds,
+    'averageAmplitude': averageAmplitude,
+    'maxAmplitude': maxAmplitude,
+    'loudEventCount': loudEventCount,
+    'sampleCount': sampleCount,
+    'restfulSampleRatio': restfulSampleRatio,
+    'noiseEvents': noiseEvents.map((event) => event.toJson()).toList(),
+  };
 
   /// Approximate restful minutes (based on quiet samples).
   double get restfulMinutes => duration.inSeconds * restfulSampleRatio / 60.0;
@@ -125,9 +127,9 @@ class SleepNoiseEvent {
   }
 
   Map<String, dynamic> toJson() => {
-        'offsetMs': offset.inMilliseconds,
-        'durationMs': duration.inMilliseconds,
-        'peakAmplitude': peakAmplitude,
-        'sampleCount': sampleCount,
-      };
+    'offsetMs': offset.inMilliseconds,
+    'durationMs': duration.inMilliseconds,
+    'peakAmplitude': peakAmplitude,
+    'sampleCount': sampleCount,
+  };
 }

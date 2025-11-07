@@ -137,7 +137,9 @@ class RevenueCatController extends AsyncNotifier<RevenueCatState?> {
 
   Future<PurchaseResult> purchasePackage(Package package) async {
     if (!isRevenueCatSupportedPlatform()) {
-      throw UnsupportedError('RevenueCat purchase unsupported on this platform');
+      throw UnsupportedError(
+        'RevenueCat purchase unsupported on this platform',
+      );
     }
     final result = await Purchases.purchasePackage(package);
     await refreshCustomerInfo();
@@ -237,11 +239,12 @@ final premiumStatusProvider = Provider<PremiumStatus>((ref) {
     final entitlement = rcState.activeEntitlement;
     expirationDate = entitlement != null
         ? _parseIso8601(entitlement.expirationDate) ??
-            _latestExpiration(rcState.customerInfo.entitlements.all.values)
+              _latestExpiration(rcState.customerInfo.entitlements.all.values)
         : _latestExpiration(rcState.customerInfo.entitlements.all.values);
   }
 
-  const bool isInGracePeriod = false; // Purchases SDK does not expose grace data on this channel.
+  const bool isInGracePeriod =
+      false; // Purchases SDK does not expose grace data on this channel.
 
   final usesCachedValue = premiumFromRc == null;
   final effectivePremium = (premiumFromRc ?? cachedPremium) || isInGracePeriod;

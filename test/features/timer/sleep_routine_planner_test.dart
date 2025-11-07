@@ -21,8 +21,10 @@ void main() {
 
       expect(plan.goal, SleepGoal.rest);
       expect(plan.segments.length, 5);
-      final total =
-          plan.segments.fold<Duration>(Duration.zero, (prev, s) => prev + s.duration);
+      final total = plan.segments.fold<Duration>(
+        Duration.zero,
+        (prev, s) => prev + s.duration,
+      );
       expect(total.inMinutes, plan.totalDuration.inMinutes);
       final main = plan.mainSleepSegment.duration;
       expect(main.inMinutes, greaterThanOrEqualTo(12));
@@ -40,7 +42,10 @@ void main() {
       );
 
       expect(plan.recommendedWakeTime.isAfter(now), isTrue);
-      expect(plan.recommendedBedTime.isBefore(plan.recommendedWakeTime), isTrue);
+      expect(
+        plan.recommendedBedTime.isBefore(plan.recommendedWakeTime),
+        isTrue,
+      );
       expect(plan.totalDuration.inHours, greaterThanOrEqualTo(4));
       expect(plan.mainSleepSegment.duration.inHours, greaterThanOrEqualTo(4));
       expect(
@@ -85,14 +90,20 @@ void main() {
       );
 
       final baseWindDown = basePlan.segments
-          .firstWhere((segment) => segment.kind == SleepRoutineSegmentKind.windDown)
+          .firstWhere(
+            (segment) => segment.kind == SleepRoutineSegmentKind.windDown,
+          )
           .duration;
       final tunedWindDown = tunedPlan.segments
-          .firstWhere((segment) => segment.kind == SleepRoutineSegmentKind.windDown)
+          .firstWhere(
+            (segment) => segment.kind == SleepRoutineSegmentKind.windDown,
+          )
           .duration;
       expect(tunedWindDown, greaterThan(baseWindDown));
-      expect(tunedPlan.totalDuration.inMinutes,
-          greaterThanOrEqualTo(basePlan.totalDuration.inMinutes));
+      expect(
+        tunedPlan.totalDuration.inMinutes,
+        greaterThanOrEqualTo(basePlan.totalDuration.inMinutes),
+      );
       expect(tunedPlan.audioBlend.layers.containsKey('ocean_waves'), isTrue);
     });
   });

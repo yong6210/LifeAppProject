@@ -39,9 +39,10 @@ class _ModernButtonState extends State<ModernButton>
       duration: const Duration(milliseconds: 100),
       vsync: this,
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.96).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.96,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -148,7 +149,10 @@ class _ModernButtonState extends State<ModernButton>
           onPressed: widget.isLoading ? null : widget.onPressed,
           style: FilledButton.styleFrom(
             padding: padding,
-            minimumSize: Size(widget.fullWidth ? double.infinity : 0, minHeight),
+            minimumSize: Size(
+              widget.fullWidth ? double.infinity : 0,
+              minHeight,
+            ),
           ),
           child: content,
         );
@@ -158,7 +162,10 @@ class _ModernButtonState extends State<ModernButton>
           onPressed: widget.isLoading ? null : widget.onPressed,
           style: OutlinedButton.styleFrom(
             padding: padding,
-            minimumSize: Size(widget.fullWidth ? double.infinity : 0, minHeight),
+            minimumSize: Size(
+              widget.fullWidth ? double.infinity : 0,
+              minHeight,
+            ),
           ),
           child: content,
         );
@@ -168,7 +175,10 @@ class _ModernButtonState extends State<ModernButton>
           onPressed: widget.isLoading ? null : widget.onPressed,
           style: TextButton.styleFrom(
             padding: padding,
-            minimumSize: Size(widget.fullWidth ? double.infinity : 0, minHeight),
+            minimumSize: Size(
+              widget.fullWidth ? double.infinity : 0,
+              minHeight,
+            ),
           ),
           child: content,
         );
@@ -178,7 +188,10 @@ class _ModernButtonState extends State<ModernButton>
           onPressed: widget.isLoading ? null : widget.onPressed,
           style: ElevatedButton.styleFrom(
             padding: padding,
-            minimumSize: Size(widget.fullWidth ? double.infinity : 0, minHeight),
+            minimumSize: Size(
+              widget.fullWidth ? double.infinity : 0,
+              minHeight,
+            ),
           ),
           child: content,
         );
@@ -186,18 +199,9 @@ class _ModernButtonState extends State<ModernButton>
   }
 }
 
-enum ModernButtonVariant {
-  filled,
-  outlined,
-  text,
-  elevated,
-}
+enum ModernButtonVariant { filled, outlined, text, elevated }
 
-enum ModernButtonSize {
-  small,
-  medium,
-  large,
-}
+enum ModernButtonSize { small, medium, large }
 
 /// Icon button with refined design
 class ModernIconButton extends StatefulWidget {
@@ -234,9 +238,10 @@ class _ModernIconButtonState extends State<ModernIconButton>
       duration: const Duration(milliseconds: 100),
       vsync: this,
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.92).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.92,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -272,7 +277,8 @@ class _ModernIconButtonState extends State<ModernIconButton>
           width: widget.size,
           height: widget.size,
           decoration: BoxDecoration(
-            color: widget.backgroundColor ??
+            color:
+                widget.backgroundColor ??
                 theme.colorScheme.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(widget.size / 3.5),
           ),
@@ -286,10 +292,7 @@ class _ModernIconButtonState extends State<ModernIconButton>
     );
 
     if (widget.tooltip != null) {
-      button = Tooltip(
-        message: widget.tooltip!,
-        child: button,
-      );
+      button = Tooltip(message: widget.tooltip!, child: button);
     }
 
     return button;

@@ -24,12 +24,12 @@ enum SleepIntentType {
 /// Represents the user's high-level intent.
 class SleepIntent extends Equatable {
   const SleepIntent.duration(this.duration)
-      : type = SleepIntentType.duration,
-        wakeTime = null;
+    : type = SleepIntentType.duration,
+      wakeTime = null;
 
   const SleepIntent.wakeTime(this.wakeTime)
-      : type = SleepIntentType.wakeTime,
-        duration = null;
+    : type = SleepIntentType.wakeTime,
+      duration = null;
 
   final SleepIntentType type;
   final Duration? duration;
@@ -43,13 +43,7 @@ class SleepIntent extends Equatable {
 }
 
 /// Semantic grouping for sleep routine segments.
-enum SleepRoutineSegmentKind {
-  windDown,
-  relax,
-  mainSleep,
-  preWake,
-  wakeAlarm,
-}
+enum SleepRoutineSegmentKind { windDown, relax, mainSleep, preWake, wakeAlarm }
 
 /// Single segment in an AI generated sleep routine.
 class SleepRoutineSegmentPlan extends Equatable {
@@ -75,15 +69,15 @@ class SleepRoutineSegmentPlan extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        kind,
-        duration,
-        localizationKey,
-        localizationArgs,
-        soundProfile,
-        autoStartNext,
-        enableSmartAlarm,
-      ];
+    id,
+    kind,
+    duration,
+    localizationKey,
+    localizationArgs,
+    soundProfile,
+    autoStartNext,
+    enableSmartAlarm,
+  ];
 }
 
 /// Declarative audio blend values for the routine.
@@ -122,19 +116,20 @@ class SleepRoutinePlan extends Equatable {
   final SleepAudioBlend audioBlend;
   final Duration totalDuration;
 
-  SleepRoutineSegmentPlan get mainSleepSegment =>
-      segments.firstWhere((segment) => segment.kind == SleepRoutineSegmentKind.mainSleep);
+  SleepRoutineSegmentPlan get mainSleepSegment => segments.firstWhere(
+    (segment) => segment.kind == SleepRoutineSegmentKind.mainSleep,
+  );
 
   @override
   List<Object?> get props => [
-        goal,
-        intent,
-        recommendedBedTime,
-        recommendedWakeTime,
-        segments,
-        audioBlend,
-        totalDuration,
-      ];
+    goal,
+    intent,
+    recommendedBedTime,
+    recommendedWakeTime,
+    segments,
+    audioBlend,
+    totalDuration,
+  ];
 }
 
 class DailyUsageContext {

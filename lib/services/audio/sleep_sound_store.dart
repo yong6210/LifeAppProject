@@ -11,8 +11,8 @@ import 'package:life_app/services/audio/sleep_sound_analyzer.dart';
 /// can surface the latest analysis result even after the app restarts.
 class SleepSoundSummaryStore {
   SleepSoundSummaryStore({Future<Directory> Function()? documentsDirBuilder})
-      : _documentsDirBuilder =
-            documentsDirBuilder ?? getApplicationDocumentsDirectory;
+    : _documentsDirBuilder =
+          documentsDirBuilder ?? getApplicationDocumentsDirectory;
 
   final Future<Directory> Function() _documentsDirBuilder;
 
@@ -56,5 +56,6 @@ class SleepSoundSummaryStore {
   }
 }
 
-final sleepSoundSummaryStoreProvider =
-    Provider<SleepSoundSummaryStore>((ref) => SleepSoundSummaryStore());
+final sleepSoundSummaryStoreProvider = Provider<SleepSoundSummaryStore>(
+  (ref) => SleepSoundSummaryStore(),
+);

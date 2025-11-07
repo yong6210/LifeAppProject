@@ -74,28 +74,31 @@ final setRoutinePersonalizationEnabledProvider =
       ref.invalidate(settingsFutureProvider);
     });
 
-final setRoutinePersonalizationSyncProvider =
-    FutureProvider.family<void, bool>((ref, enabled) async {
-      final repo = await ref.watch(settingsRepoProvider.future);
-      await repo.update((s) {
-        if (!s.routinePersonalizationEnabled && enabled) {
-          return;
-        }
-        s.routinePersonalizationSyncEnabled =
-            enabled && s.routinePersonalizationEnabled;
-      });
-      ref.invalidate(settingsFutureProvider);
-    });
-
-final setLifeBuddyToneProvider =
-    FutureProvider.family<void, String>((ref, tone) async {
-      if (tone != 'friend' && tone != 'coach') {
-        throw ArgumentError.value(tone, 'tone', 'Unsupported tone option');
+final setRoutinePersonalizationSyncProvider = FutureProvider.family<void, bool>(
+  (ref, enabled) async {
+    final repo = await ref.watch(settingsRepoProvider.future);
+    await repo.update((s) {
+      if (!s.routinePersonalizationEnabled && enabled) {
+        return;
       }
-      final repo = await ref.watch(settingsRepoProvider.future);
-      await repo.update((s) => s.lifeBuddyTone = tone);
-      ref.invalidate(settingsFutureProvider);
+      s.routinePersonalizationSyncEnabled =
+          enabled && s.routinePersonalizationEnabled;
     });
+    ref.invalidate(settingsFutureProvider);
+  },
+);
+
+final setLifeBuddyToneProvider = FutureProvider.family<void, String>((
+  ref,
+  tone,
+) async {
+  if (tone != 'friend' && tone != 'coach') {
+    throw ArgumentError.value(tone, 'tone', 'Unsupported tone option');
+  }
+  final repo = await ref.watch(settingsRepoProvider.future);
+  await repo.update((s) => s.lifeBuddyTone = tone);
+  ref.invalidate(settingsFutureProvider);
+});
 
 final completeOnboardingProvider = FutureProvider<void>((ref) async {
   final repo = await ref.watch(settingsRepoProvider.future);

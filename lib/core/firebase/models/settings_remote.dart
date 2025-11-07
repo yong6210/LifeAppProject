@@ -123,10 +123,10 @@ class SettingsRemoteDto {
       lastMode: data['lastMode'] as String? ?? fallback.lastMode,
       routinePersonalizationEnabled:
           data['routinePersonalizationEnabled'] as bool? ??
-              fallback.routinePersonalizationEnabled,
+          fallback.routinePersonalizationEnabled,
       routinePersonalizationSyncEnabled:
           data['routinePersonalizationSyncEnabled'] as bool? ??
-              fallback.routinePersonalizationSyncEnabled,
+          fallback.routinePersonalizationSyncEnabled,
       lifeBuddyTone: data['lifeBuddyTone'] as String? ?? fallback.lifeBuddyTone,
       schemaVersion: (data['schemaVersion'] as num?)?.toInt() ?? 1,
       updatedAt:
@@ -222,8 +222,7 @@ class SettingsRemoteDto {
       ..sleepMixerPresetId = sleepMixerPresetId
       ..lastMode = lastMode
       ..routinePersonalizationEnabled = routinePersonalizationEnabled
-      ..routinePersonalizationSyncEnabled =
-          routinePersonalizationSyncEnabled
+      ..routinePersonalizationSyncEnabled = routinePersonalizationSyncEnabled
       ..lifeBuddyTone = lifeBuddyTone
       ..schemaVersion = schemaVersion
       ..updatedAt = updatedAt;

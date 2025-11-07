@@ -171,10 +171,8 @@ class AccountPage extends ConsumerWidget {
                 title: l10n.tr('account_personalization_title'),
                 message: l10n.tr('generic_settings_error', {'error': '$error'}),
               ),
-              data: (settings) => _PersonalizationSettingsCard(
-                l10n: l10n,
-                settings: settings,
-              ),
+              data: (settings) =>
+                  _PersonalizationSettingsCard(l10n: l10n, settings: settings),
             ),
             const SizedBox(height: 16),
             accessibilityAsync.when(
@@ -1199,9 +1197,7 @@ class _BackupEntryTile extends StatelessWidget {
       contentPadding: EdgeInsets.zero,
       leading: Icon(
         isSuccess ? Icons.check_circle : Icons.error_outline,
-        color: isSuccess
-            ? theme.colorScheme.primary
-            : theme.colorScheme.error,
+        color: isSuccess ? theme.colorScheme.primary : theme.colorScheme.error,
       ),
       isThreeLine: true,
       title: Column(
@@ -1299,7 +1295,9 @@ Widget _buildSummary(AppLocalizations l10n, List<BackupLogEntry> history) {
             Semantics(
               label: l10n.tr('backup_summary_badge_semantics'),
               child: Chip(
-                label: Text(l10n.tr('backup_summary_badge', {'count': '$streak'})),
+                label: Text(
+                  l10n.tr('backup_summary_badge', {'count': '$streak'}),
+                ),
                 avatar: Icon(
                   Icons.emoji_events,
                   size: 18,
@@ -1656,10 +1654,7 @@ class _OpenSourceLicensesCard extends StatelessWidget {
       color: theme.colorScheme.surfaceContainerHighest,
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-        leading: Icon(
-          Icons.code_outlined,
-          color: theme.colorScheme.primary,
-        ),
+        leading: Icon(Icons.code_outlined, color: theme.colorScheme.primary),
         title: Text(
           l10n.tr('licenses_title'),
           style: theme.textTheme.bodyLarge?.copyWith(
@@ -1704,9 +1699,9 @@ class _PersonalizationSettingsCard extends ConsumerWidget {
       } catch (error) {
         if (!context.mounted) return;
         final message = l10n.tr('generic_settings_error', {'error': '$error'});
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(message)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(message)));
       }
     }
 
@@ -1747,46 +1742,38 @@ class _PersonalizationSettingsCard extends ConsumerWidget {
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
               value: suggestionsEnabled,
-              title: Text(
-                l10n.tr('account_personalization_enabled_title'),
-              ),
+              title: Text(l10n.tr('account_personalization_enabled_title')),
               subtitle: Text(
                 l10n.tr('account_personalization_enabled_subtitle'),
               ),
               onChanged: (value) async {
                 await handleAction(() async {
-                  await ref
-                      .read(
-                        setRoutinePersonalizationEnabledProvider(value).future,
-                      );
-                  await AnalyticsService.logEvent(
-                    'personalization_toggle',
-                    {'enabled': value},
+                  await ref.read(
+                    setRoutinePersonalizationEnabledProvider(value).future,
                   );
+                  await AnalyticsService.logEvent('personalization_toggle', {
+                    'enabled': value,
+                  });
                 });
               },
             ),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
               value: syncEnabled,
-              title: Text(
-                l10n.tr('account_personalization_sync_title'),
-              ),
+              title: Text(l10n.tr('account_personalization_sync_title')),
               subtitle: Text(syncSubtitle()),
               onChanged: suggestionsEnabled
                   ? (value) async {
-                    await handleAction(() async {
-                      await ref
-                          .read(
-                            setRoutinePersonalizationSyncProvider(value)
-                                .future,
-                          );
-                      await AnalyticsService.logEvent(
-                        'personalization_sync_toggle',
-                        {'enabled': value},
-                      );
-                    });
-                  }
+                      await handleAction(() async {
+                        await ref.read(
+                          setRoutinePersonalizationSyncProvider(value).future,
+                        );
+                        await AnalyticsService.logEvent(
+                          'personalization_sync_toggle',
+                          {'enabled': value},
+                        );
+                      });
+                    }
                   : null,
             ),
             const SizedBox(height: 16),
@@ -1802,8 +1789,7 @@ class _PersonalizationSettingsCard extends ConsumerWidget {
               onChanged: (value) async {
                 if (value == null) return;
                 await handleAction(() async {
-                  await ref
-                      .read(setLifeBuddyToneProvider(value).future);
+                  await ref.read(setLifeBuddyToneProvider(value).future);
                   await AnalyticsService.logEvent(
                     'personalization_tone_select',
                     {'tone': value},
@@ -1815,19 +1801,17 @@ class _PersonalizationSettingsCard extends ConsumerWidget {
                   RadioListTile<String>(
                     contentPadding: EdgeInsets.zero,
                     value: 'friend',
-                    title: Text(
-                      l10n.tr('account_personalization_tone_friend'),
-                    ),
+                    title: Text(l10n.tr('account_personalization_tone_friend')),
                     subtitle: Text(
-                      l10n.tr('account_personalization_tone_friend_description'),
+                      l10n.tr(
+                        'account_personalization_tone_friend_description',
+                      ),
                     ),
                   ),
                   RadioListTile<String>(
                     contentPadding: EdgeInsets.zero,
                     value: 'coach',
-                    title: Text(
-                      l10n.tr('account_personalization_tone_coach'),
-                    ),
+                    title: Text(l10n.tr('account_personalization_tone_coach')),
                     subtitle: Text(
                       l10n.tr('account_personalization_tone_coach_description'),
                     ),
@@ -1939,10 +1923,7 @@ class _ErrorCard extends StatelessWidget {
       color: theme.colorScheme.surfaceContainerHighest,
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-        leading: Icon(
-          Icons.error_outline,
-          color: theme.colorScheme.error,
-        ),
+        leading: Icon(Icons.error_outline, color: theme.colorScheme.error),
         title: Text(
           title,
           style: theme.textTheme.bodyLarge?.copyWith(

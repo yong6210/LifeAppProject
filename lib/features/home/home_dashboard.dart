@@ -33,24 +33,25 @@ class HomeDashboardTab extends ConsumerWidget {
     final now = DateTime.now();
     final greeting = l10n.tr(_greetingKeyForHour(now.hour));
     final greetingSubtitle = l10n.tr('home_dashboard_greeting_subtitle');
-    final dateLabel = DateFormat('EEE, MMM d', locale.toLanguageTag())
-        .format(now);
+    final dateLabel = DateFormat(
+      'EEE, MMM d',
+      locale.toLanguageTag(),
+    ).format(now);
 
     final authState = ref.watch(authControllerProvider);
     final settingsAsync = ref.watch(settingsFutureProvider);
     final settings = settingsAsync.asData?.value;
-    final todaySummary = ref.watch(todaySummaryProvider).maybeWhen(
-          data: (value) => value,
-          orElse: () => const TodaySummary(),
-        );
+    final todaySummary = ref
+        .watch(todaySummaryProvider)
+        .maybeWhen(data: (value) => value, orElse: () => const TodaySummary());
     final syncState = ref.watch(syncControllerProvider);
-    final streakDays = ref.watch(streakCountProvider).maybeWhen(
-          data: (value) => value,
-          orElse: () => 0,
-        );
+    final streakDays = ref
+        .watch(streakCountProvider)
+        .maybeWhen(data: (value) => value, orElse: () => 0);
 
-    final focusGoalMinutes =
-        ((settings?.focusMinutes ?? 25) * 4).clamp(0, 600).toInt();
+    final focusGoalMinutes = ((settings?.focusMinutes ?? 25) * 4)
+        .clamp(0, 600)
+        .toInt();
 
     final banner = _buildSyncBanner(
       context: context,
@@ -71,43 +72,32 @@ class HomeDashboardTab extends ConsumerWidget {
     void openStats() {
       Navigator.push(
         context,
-        MaterialPageRoute<void>(
-          builder: (_) => const StatsPage(),
-        ),
+        MaterialPageRoute<void>(builder: (_) => const StatsPage()),
       );
     }
 
     void openWorkout() {
-      Navigator.push<void>(
-        context,
-        WorkoutNavigatorPage.route(),
-      );
+      Navigator.push<void>(context, WorkoutNavigatorPage.route());
     }
 
     void openAccount() {
       Navigator.push(
         context,
-        MaterialPageRoute<void>(
-          builder: (_) => const AccountPage(),
-        ),
+        MaterialPageRoute<void>(builder: (_) => const AccountPage()),
       );
     }
 
     void openBackup() {
       Navigator.push(
         context,
-        MaterialPageRoute<void>(
-          builder: (_) => const BackupPage(),
-        ),
+        MaterialPageRoute<void>(builder: (_) => const BackupPage()),
       );
     }
 
     void openPremium() {
       Navigator.push(
         context,
-        MaterialPageRoute<void>(
-          builder: (_) => const PaywallPage(),
-        ),
+        MaterialPageRoute<void>(builder: (_) => const PaywallPage()),
       );
     }
 
@@ -199,12 +189,11 @@ class HomeDashboardTab extends ConsumerWidget {
                     greeting: greeting,
                     subtitle: greetingSubtitle,
                   ),
-                  if (banner != null) ...[
-                    const SizedBox(height: 24),
-                    banner,
-                  ],
+                  if (banner != null) ...[const SizedBox(height: 24), banner],
                   const SizedBox(height: 36),
-                  _SectionLabel(text: l10n.tr('home_dashboard_quick_start_title')),
+                  _SectionLabel(
+                    text: l10n.tr('home_dashboard_quick_start_title'),
+                  ),
                   const SizedBox(height: 20),
                   _QuickActionsRow(actions: quickActions),
                   const SizedBox(height: 36),
@@ -228,17 +217,23 @@ class HomeDashboardTab extends ConsumerWidget {
                     focusTarget: focusGoalMinutes,
                   ),
                   const SizedBox(height: 36),
-                  _SectionLabel(text: l10n.tr('home_dashboard_integrations_title')),
+                  _SectionLabel(
+                    text: l10n.tr('home_dashboard_integrations_title'),
+                  ),
                   const SizedBox(height: 20),
                   _IntegrationsRow(
-                    wearablesTitle:
-                        l10n.tr('home_dashboard_integrations_wearables_title'),
-                    wearablesSubtitle:
-                        l10n.tr('home_dashboard_integrations_wearables_subtitle'),
-                    backupTitle:
-                        l10n.tr('home_dashboard_integrations_backup_title'),
-                    backupSubtitle:
-                        l10n.tr('home_dashboard_integrations_backup_subtitle'),
+                    wearablesTitle: l10n.tr(
+                      'home_dashboard_integrations_wearables_title',
+                    ),
+                    wearablesSubtitle: l10n.tr(
+                      'home_dashboard_integrations_wearables_subtitle',
+                    ),
+                    backupTitle: l10n.tr(
+                      'home_dashboard_integrations_backup_title',
+                    ),
+                    backupSubtitle: l10n.tr(
+                      'home_dashboard_integrations_backup_subtitle',
+                    ),
                     onOpenWearables: openAccount,
                     onOpenBackup: openBackup,
                   ),
@@ -279,10 +274,7 @@ Widget? _buildSyncBanner({
       decoration: BoxDecoration(
         color: backgroundColor.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: textColor.withValues(alpha: 0.2),
-          width: 1,
-        ),
+        border: Border.all(color: textColor.withValues(alpha: 0.2), width: 1),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       child: Row(
@@ -379,22 +371,13 @@ class _DashboardAppBar extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 2),
-              Text(
-                dateLabel,
-                style: textStyle.bodySmall,
-              ),
+              Text(dateLabel, style: textStyle.bodySmall),
             ],
           ),
         ),
-        _IconCircleButton(
-          icon: Icons.bar_chart_rounded,
-          onTap: onOpenStats,
-        ),
+        _IconCircleButton(icon: Icons.bar_chart_rounded, onTap: onOpenStats),
         const SizedBox(width: 8),
-        _IconCircleButton(
-          icon: Icons.settings_outlined,
-          onTap: onOpenSettings,
-        ),
+        _IconCircleButton(icon: Icons.settings_outlined, onTap: onOpenSettings),
       ],
     );
   }
@@ -453,10 +436,7 @@ class _GreetingSection extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          Text(
-            subtitle,
-            style: textTheme.bodyLarge,
-          ),
+          Text(subtitle, style: textTheme.bodyLarge),
         ],
       ),
     );
@@ -473,9 +453,7 @@ class _SectionLabel extends StatelessWidget {
     final theme = Theme.of(context);
     return Text(
       text,
-      style: theme.textTheme.titleLarge?.copyWith(
-        fontWeight: FontWeight.w700,
-      ),
+      style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
     );
   }
 }
@@ -574,8 +552,8 @@ class _QuickActionButtonState extends State<_QuickActionButton> {
                   Text(
                     widget.config.label,
                     style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
+                      fontWeight: FontWeight.w600,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 ],
@@ -704,9 +682,7 @@ class _RoutineCard extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 data.description,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  height: 1.6,
-                ),
+                style: theme.textTheme.bodyMedium?.copyWith(height: 1.6),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -778,9 +754,9 @@ class _RoutineStatChip extends StatelessWidget {
           Text(
             label,
             style: theme.textTheme.labelMedium?.copyWith(
-                  color: theme.colorScheme.onSurface,
-                  fontWeight: FontWeight.w600,
-                ),
+              color: theme.colorScheme.onSurface,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ],
       ),
@@ -827,13 +803,16 @@ class _DailyProgressCard extends StatelessWidget {
               Text(
                 l10n.tr('home_dashboard_progress_title'),
                 style: theme.textTheme.titleLarge?.copyWith(
-                      color: theme.colorScheme.onSurface,
-                      fontWeight: FontWeight.w700,
-                    ),
+                  color: theme.colorScheme.onSurface,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
               const Spacer(),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: theme.colorScheme.primaryContainer,
                   borderRadius: BorderRadius.circular(20),
@@ -841,9 +820,9 @@ class _DailyProgressCard extends StatelessWidget {
                 child: Text(
                   l10n.tr('duration_minutes_only', {'minutes': '$total'}),
                   style: theme.textTheme.titleSmall?.copyWith(
-                        color: theme.colorScheme.onPrimaryContainer,
-                        fontWeight: FontWeight.w700,
-                      ),
+                    color: theme.colorScheme.onPrimaryContainer,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ],
@@ -905,18 +884,18 @@ class _MetricProgressRow extends StatelessWidget {
             Text(
               label,
               style: theme.textTheme.titleSmall?.copyWith(
-                    color: theme.colorScheme.onSurface,
-                    fontWeight: FontWeight.w700,
-                  ),
+                color: theme.colorScheme.onSurface,
+                fontWeight: FontWeight.w700,
+              ),
             ),
             const Spacer(),
             Text(
               '${_formatMinutesLabel(minutes, locale: locale)} / '
               '${_formatMinutesLabel(target, locale: locale)}',
               style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                    fontWeight: FontWeight.w600,
-                  ),
+                color: theme.colorScheme.onSurfaceVariant,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ],
         ),
@@ -1019,27 +998,23 @@ class _IntegrationCard extends StatelessWidget {
                   height: 48,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    color: theme.colorScheme.primaryContainer.withValues(alpha: 0.5),
+                    color: theme.colorScheme.primaryContainer.withValues(
+                      alpha: 0.5,
+                    ),
                   ),
-                  child: Icon(
-                    icon,
-                    color: theme.colorScheme.primary,
-                    size: 24,
-                  ),
+                  child: Icon(icon, color: theme.colorScheme.primary, size: 24),
                 ),
                 const SizedBox(height: 16),
                 Text(
                   title,
                   style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 const SizedBox(height: 6),
                 Text(
                   subtitle,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                        height: 1.5,
-                      ),
+                  style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
                 ),
               ],
             ),
@@ -1096,15 +1071,13 @@ class _PremiumUpsellCard extends StatelessWidget {
           Text(
             title,
             style: theme.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+              fontWeight: FontWeight.w700,
+            ),
           ),
           const SizedBox(height: 8),
           Text(
             subtitle,
-            style: theme.textTheme.bodyMedium?.copyWith(
-                  height: 1.6,
-                ),
+            style: theme.textTheme.bodyMedium?.copyWith(height: 1.6),
           ),
           const SizedBox(height: 20),
           FilledButton(
@@ -1119,9 +1092,7 @@ class _PremiumUpsellCard extends StatelessWidget {
             ),
             child: Text(
               ctaLabel,
-              style: const TextStyle(
-                fontWeight: FontWeight.w600,
-              ),
+              style: const TextStyle(fontWeight: FontWeight.w600),
             ),
           ),
         ],
@@ -1178,10 +1149,7 @@ String _greetingKeyForHour(int hour) {
   return 'home_dashboard_greeting_evening';
 }
 
-String _formatMinutesLabel(
-  int minutes, {
-  Locale? locale,
-}) {
+String _formatMinutesLabel(int minutes, {Locale? locale}) {
   final languageCode = locale?.languageCode ?? 'ko';
   if (minutes <= 0) {
     return languageCode == 'ko' ? '0분' : '0 min';

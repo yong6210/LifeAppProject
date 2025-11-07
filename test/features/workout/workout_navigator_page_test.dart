@@ -31,9 +31,7 @@ void main() {
   });
 
   testWidgets('tapping discipline cards updates selection', (tester) async {
-    await tester.pumpWidget(
-      ProviderScope(child: _buildApp()),
-    );
+    await tester.pumpWidget(ProviderScope(child: _buildApp()));
 
     await tester.pumpAndSettle();
     final pageFinder = find.byType(WorkoutNavigatorPage, skipOffstage: false);
@@ -60,10 +58,7 @@ void main() {
     addTearDown(container.dispose);
 
     await tester.pumpWidget(
-      UncontrolledProviderScope(
-        container: container,
-        child: _buildApp(),
-      ),
+      UncontrolledProviderScope(container: container, child: _buildApp()),
     );
 
     await tester.pumpAndSettle();

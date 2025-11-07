@@ -20,16 +20,15 @@ class BackupBannerService {
     if (!shouldEncourageBackup(settings)) return false;
     final dismissedMillis = _prefs.getInt(_prefsKeyDismissedUntil);
     if (dismissedMillis == null) return true;
-    final dismissedUntil =
-        DateTime.fromMillisecondsSinceEpoch(dismissedMillis, isUtc: true);
+    final dismissedUntil = DateTime.fromMillisecondsSinceEpoch(
+      dismissedMillis,
+      isUtc: true,
+    );
     return DateTime.now().toUtc().isAfter(dismissedUntil);
   }
 
   Future<void> snooze() async {
     final until = DateTime.now().toUtc().add(_snoozeDuration);
-    await _prefs.setInt(
-      _prefsKeyDismissedUntil,
-      until.millisecondsSinceEpoch,
-    );
+    await _prefs.setInt(_prefsKeyDismissedUntil, until.millisecondsSinceEpoch);
   }
 }

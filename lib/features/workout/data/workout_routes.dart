@@ -193,7 +193,8 @@ final List<WorkoutNavigatorRoute> workoutNavigatorRoutes = [
         startOffset: Duration(minutes: 5),
         endOffset: Duration(minutes: 35),
         focus: 'Intervals',
-        cue: 'Alternate 2 minutes strong / 2 minutes steady. Use traffic lights as recovery.',
+        cue:
+            'Alternate 2 minutes strong / 2 minutes steady. Use traffic lights as recovery.',
       ),
       WorkoutNavigatorSegment(
         startOffset: Duration(minutes: 35),

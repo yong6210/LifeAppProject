@@ -42,10 +42,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
     final variant = config?.onboardingVariant ?? 'default';
     if (_lastLoggedVariant != variant) {
       _lastLoggedVariant = variant;
-      AnalyticsService.setUserProperty(
-        'onboarding_variant',
-        variant,
-      );
+      AnalyticsService.setUserProperty('onboarding_variant', variant);
     }
     final pages = _resolvePages(config);
     final totalPages = pages.length;
@@ -88,19 +85,17 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  l10n.tr(
-                    'onboarding_progress',
-                    {
-                      'current': '${displayIndex + 1}',
-                      'total': '$totalPages',
-                    },
-                  ),
+                  l10n.tr('onboarding_progress', {
+                    'current': '${displayIndex + 1}',
+                    'total': '$totalPages',
+                  }),
                 ),
                 FilledButton(
                   onPressed: () async {
                     final navigator = Navigator.of(context);
-                    final currentPage =
-                        totalPages > 0 ? pages[displayIndex] : null;
+                    final currentPage = totalPages > 0
+                        ? pages[displayIndex]
+                        : null;
                     if (currentPage != null) {
                       await _logStepComplete(
                         currentPage,
@@ -138,7 +133,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         ],
       ),
     );
-}
+  }
 
   Future<void> _logStepComplete(
     Object page,
@@ -296,15 +291,12 @@ class _PersonaSelectionView extends ConsumerWidget {
                     if (context.mounted) Navigator.pop(context, true);
                   } catch (error) {
                     if (context.mounted) {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(
+                      ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                            l10n.tr(
-                              'onboarding_preset_error',
-                              {'error': '$error'},
-                            ),
+                            l10n.tr('onboarding_preset_error', {
+                              'error': '$error',
+                            }),
                           ),
                         ),
                       );

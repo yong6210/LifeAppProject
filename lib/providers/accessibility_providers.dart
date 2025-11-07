@@ -3,8 +3,8 @@ import 'package:life_app/services/accessibility/accessibility_controller.dart';
 
 final accessibilityControllerProvider =
     AsyncNotifierProvider<AccessibilityController, AccessibilityState>(
-  AccessibilityController.new,
-);
+      AccessibilityController.new,
+    );
 
 final reducedMotionProvider = Provider<bool>((ref) {
   final asyncState = ref.watch(accessibilityControllerProvider);

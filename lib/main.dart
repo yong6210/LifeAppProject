@@ -22,27 +22,30 @@ import 'package:life_app/services/subscription/revenuecat_service.dart';
 import 'package:life_app/l10n/app_localizations.dart';
 
 Future<void> main() async {
-  await runZonedGuarded(() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    try {
-      await FirebaseInitializer.ensureInitialized();
-    } catch (_) {
-      // Continue boot; Firebase operations will throw descriptive errors later.
-    }
-    await AnalyticsService.init();
-    await NotificationService.init();
-    await TimerWorkmanagerGuard.initialize();
-    runApp(const ProviderScope(child: MyApp()));
-  }, (error, stack) {
-    unawaited(
-      AnalyticsService.recordError(
-        error,
-        stack,
-        fatal: true,
-        reason: 'uncaught_zone',
-      ),
-    );
-  });
+  await runZonedGuarded(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
+      try {
+        await FirebaseInitializer.ensureInitialized();
+      } catch (_) {
+        // Continue boot; Firebase operations will throw descriptive errors later.
+      }
+      await AnalyticsService.init();
+      await NotificationService.init();
+      await TimerWorkmanagerGuard.initialize();
+      runApp(const ProviderScope(child: MyApp()));
+    },
+    (error, stack) {
+      unawaited(
+        AnalyticsService.recordError(
+          error,
+          stack,
+          fatal: true,
+          reason: 'uncaught_zone',
+        ),
+      );
+    },
+  );
 }
 
 class MyApp extends ConsumerWidget {
@@ -147,10 +150,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
       AccountPage(),
     ];
     return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: tabs,
-      ),
+      body: IndexedStack(index: _currentIndex, children: tabs),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _currentIndex,
         onDestinationSelected: (index) {
@@ -183,11 +183,5 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
     );
   }
 }
-
-
-
-
-
-
 
 // Legacy home widgets removed during dashboard refactor.

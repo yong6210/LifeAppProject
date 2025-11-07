@@ -43,8 +43,7 @@ class _FakeQuestStore extends LifeBuddyQuestStore {
   Future<bool> hasClaimedToday(
     DateTime now, {
     String questId = LifeBuddyQuestStore.defaultQuestId,
-  }) async =>
-      claimed;
+  }) async => claimed;
 
   @override
   Future<void> markClaimed(
@@ -147,10 +146,7 @@ void main() {
     final questButton = find.text('일일 퀘스트 보상 받기').first;
     await tester.ensureVisible(questButton);
     final buttonWidget = tester.widget<FilledButton>(
-      find.ancestor(
-        of: questButton,
-        matching: find.byType(FilledButton),
-      ),
+      find.ancestor(of: questButton, matching: find.byType(FilledButton)),
     );
     buttonWidget.onPressed?.call();
     await tester.pump();
@@ -162,7 +158,9 @@ void main() {
     expect(questStore.markedQuestId, LifeBuddyQuestStore.defaultQuestId);
   });
 
-  testWidgets('Quest claim button disables when already claimed', (tester) async {
+  testWidgets('Quest claim button disables when already claimed', (
+    tester,
+  ) async {
     final questStore = _FakeQuestStore()..claimed = true;
     await tester.pumpWidget(
       ProviderScope(
@@ -173,14 +171,14 @@ void main() {
           lifeBuddyBuffsProvider.overrideWithValue(sampleBuffs),
           lifeBuddyServiceProvider.overrideWithValue(LifeBuddyService()),
           premiumStatusProvider.overrideWithValue(premiumStatus),
-          lifeBuddyRemoteServiceProvider.overrideWithValue(_FakeRemoteService()),
+          lifeBuddyRemoteServiceProvider.overrideWithValue(
+            _FakeRemoteService(),
+          ),
           lifeBuddyQuestClaimingProvider.overrideWithValue(
             ValueNotifier(false),
           ),
           lifeBuddyQuestStoreProvider.overrideWithValue(questStore),
-          lifeBuddyQuestStatusProvider.overrideWith(
-            (ref) async => false,
-          ),
+          lifeBuddyQuestStatusProvider.overrideWith((ref) async => false),
           lifeBuddyInventoryProvider.overrideWith(
             () => _FakeInventoryController(sampleInventory),
           ),

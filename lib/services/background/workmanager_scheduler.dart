@@ -81,8 +81,7 @@ void _callbackDispatcher() {
       if (idx >= 0 && idx < segmentsRaw.length) {
         final entry = segmentsRaw[idx];
         if (entry is Map) {
-          segmentLabel =
-              (entry['label'] ?? segmentLabel).toString();
+          segmentLabel = (entry['label'] ?? segmentLabel).toString();
         }
       }
     }

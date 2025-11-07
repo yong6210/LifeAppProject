@@ -33,7 +33,12 @@ class SleepRoutinePlanner {
     final tunedTemplate = usage == null
         ? baseTemplate
         : _applyUsageToTemplate(baseTemplate, usage, goal);
-    final segments = _buildSegments(goal, resolvedDuration, settings, tunedTemplate);
+    final segments = _buildSegments(
+      goal,
+      resolvedDuration,
+      settings,
+      tunedTemplate,
+    );
     final blend = _audioBlendFor(goal, usage);
 
     return SleepRoutinePlan(
@@ -223,7 +228,8 @@ class SleepRoutinePlanner {
     var relaxSeconds = template.relax.inSeconds;
     var preWakeSeconds = template.preWake.inSeconds;
     final wakeSeconds = template.wake.inSeconds;
-    var mainSeconds = totalSeconds -
+    var mainSeconds =
+        totalSeconds -
         (windDownSeconds + relaxSeconds + preWakeSeconds + wakeSeconds);
 
     final minMainSeconds = template.minMain.inSeconds;
@@ -265,7 +271,8 @@ class SleepRoutinePlanner {
     relaxSeconds = max(relaxSeconds, minRelax);
     preWakeSeconds = max(preWakeSeconds, minPreWake);
 
-    var used = windDownSeconds +
+    var used =
+        windDownSeconds +
         relaxSeconds +
         preWakeSeconds +
         wakeSeconds +
@@ -273,7 +280,8 @@ class SleepRoutinePlanner {
     if (used > totalSeconds) {
       final overflow = used - totalSeconds;
       mainSeconds = max(minMainSeconds, mainSeconds - overflow);
-      used = windDownSeconds +
+      used =
+          windDownSeconds +
           relaxSeconds +
           preWakeSeconds +
           wakeSeconds +
@@ -295,10 +303,7 @@ class SleepRoutinePlanner {
     );
   }
 
-  SleepAudioBlend _audioBlendFor(
-    SleepGoal goal,
-    DailyUsageContext? usage,
-  ) {
+  SleepAudioBlend _audioBlendFor(SleepGoal goal, DailyUsageContext? usage) {
     final base = _baseAudioBlend(goal);
     if (usage == null) {
       return base;
@@ -313,7 +318,8 @@ class SleepRoutinePlanner {
     final physical = usage.physicalRecoveryNeedScore(goal);
     if (physical > 0.05) {
       layers['brown_noise'] = (layers['brown_noise'] ?? 0.2) + 0.2 * physical;
-      layers['forest_birds'] = (layers['forest_birds'] ?? 0.1) * (1 - 0.1 * physical);
+      layers['forest_birds'] =
+          (layers['forest_birds'] ?? 0.1) * (1 - 0.1 * physical);
     }
     final normalized = _normalizeLayers(layers);
     return SleepAudioBlend(
@@ -359,7 +365,10 @@ class SleepRoutinePlanner {
         positiveEntries[entry.key] = entry.value;
       }
     }
-    final total = positiveEntries.values.fold<double>(0, (prev, value) => prev + value);
+    final total = positiveEntries.values.fold<double>(
+      0,
+      (prev, value) => prev + value,
+    );
     if (total <= 0) {
       return layers;
     }
@@ -419,11 +428,7 @@ class _SegmentTemplate {
 }
 
 class _MutableSegment {
-  _MutableSegment(
-    this.current,
-    this.set,
-    this.minimum,
-  );
+  _MutableSegment(this.current, this.set, this.minimum);
 
   final int Function() current;
   final void Function(int) set;

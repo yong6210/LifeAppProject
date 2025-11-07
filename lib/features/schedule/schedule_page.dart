@@ -63,7 +63,8 @@ class _SchedulePageState extends ConsumerState<SchedulePage> {
                   : ListView.separated(
                       padding: const EdgeInsets.fromLTRB(20, 20, 20, 80),
                       itemCount: grouped.length,
-                      separatorBuilder: (context, index) => const SizedBox(height: 24),
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(height: 24),
                       itemBuilder: (context, index) {
                         final group = grouped[index];
                         return _ScheduleDaySection(
@@ -222,7 +223,9 @@ class _SchedulePageState extends ConsumerState<SchedulePage> {
                         for (final type in ScheduleRoutineType.values)
                           DropdownMenuEntry(
                             value: type,
-                            label: l10n.tr('schedule_routine_type_${type.name}'),
+                            label: l10n.tr(
+                              'schedule_routine_type_${type.name}',
+                            ),
                           ),
                       ],
                       onSelected: (value) {
@@ -237,11 +240,11 @@ class _SchedulePageState extends ConsumerState<SchedulePage> {
                         initialSelection: routines.isEmpty
                             ? null
                             : routines
-                                .firstWhere(
-                                  (routine) => routine.id == routineId,
-                                  orElse: () => routines.first,
-                                )
-                                .id,
+                                  .firstWhere(
+                                    (routine) => routine.id == routineId,
+                                    orElse: () => routines.first,
+                                  )
+                                  .id,
                         label: Text(l10n.tr('schedule_field_select_custom')),
                         dropdownMenuEntries: [
                           for (final routine in routines)

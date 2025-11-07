@@ -22,24 +22,28 @@ class FocusLiveActivitySnapshot {
   final String? upNextSegment;
 
   Map<String, dynamic> toMap() => {
-        'sessionId': sessionId,
-        'mode': mode,
-        'segmentTitle': segmentTitle,
-        'remainingSeconds': remainingSeconds,
-        'totalSeconds': totalSeconds,
-        'isPaused': isPaused,
-        if (upNextSegment != null) 'upNext': upNextSegment,
-      };
+    'sessionId': sessionId,
+    'mode': mode,
+    'segmentTitle': segmentTitle,
+    'remainingSeconds': remainingSeconds,
+    'totalSeconds': totalSeconds,
+    'isPaused': isPaused,
+    if (upNextSegment != null) 'upNext': upNextSegment,
+  };
 }
 
 class FocusLiveActivityService {
   const FocusLiveActivityService();
 
-  static const MethodChannel _channel = MethodChannel('life_app/focus_live_activity');
+  static const MethodChannel _channel = MethodChannel(
+    'life_app/focus_live_activity',
+  );
 
   Future<bool> supportsLiveActivities() async {
     try {
-      final response = await _channel.invokeMethod<bool>('supportsLiveActivities');
+      final response = await _channel.invokeMethod<bool>(
+        'supportsLiveActivities',
+      );
       return response ?? false;
     } on PlatformException {
       return false;
@@ -48,7 +52,10 @@ class FocusLiveActivityService {
 
   Future<bool> start(FocusLiveActivitySnapshot snapshot) async {
     try {
-      final response = await _channel.invokeMethod<bool>('start', snapshot.toMap());
+      final response = await _channel.invokeMethod<bool>(
+        'start',
+        snapshot.toMap(),
+      );
       return response ?? false;
     } on PlatformException {
       return false;

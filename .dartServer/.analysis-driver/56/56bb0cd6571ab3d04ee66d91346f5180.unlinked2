@@ -1,621 +1,0 @@
-€“pattern	variablesguardnone	logicalOrsharedCaseAbsentsharedCaseHasLabeldifferentFinalityOrType	_severitymaxWith
-maxWithAllsinglePatternsharedCaseScopekeyvaluenodenameequals	notEqualsotherkindparameterType
-returnTypehead
-expressionheads	hasLabelsbody_dotShorthandserrorsflowisDotShorthandContextEmpty
-operationstypeAnalyzerOptionsanalyzeAssignedVariablePattern$analyzeAssignedVariablePatternSchemaanalyzeCastPatternanalyzeCastPatternSchemaanalyzeConstantPatternanalyzeConstantPatternSchemaanalyzeDeclaredVariablePattern$analyzeDeclaredVariablePatternSchemaanalyzeDotShorthandanalyzeExpressionanalyzeIfCaseElementanalyzeIfCaseStatementanalyzeIfElementanalyzeIfStatementanalyzeIntLiteralanalyzeListPatternanalyzeListPatternSchemaanalyzeLogicalAndPatternanalyzeLogicalAndPatternSchemaanalyzeLogicalOrPatternanalyzeLogicalOrPatternSchemaanalyzeMapPatternanalyzeMapPatternSchemaanalyzeNullCheckOrAssertPattern%analyzeNullCheckOrAssertPatternSchemaanalyzeObjectPatternanalyzeObjectPatternSchemaanalyzePatternAssignmentanalyzePatternForIn!analyzePatternVariableDeclarationanalyzeRecordPatternanalyzeRecordPatternSchemaanalyzeRelationalPatternanalyzeRelationalPatternSchemaanalyzeSwitchExpressionanalyzeSwitchStatement'analyzeUninitializedVariableDeclarationanalyzeWildcardPatternanalyzeWildcardPatternSchemadispatchCollectionElementdispatchExpressiondispatchPatterndispatchPatternSchemadispatchStatement&downwardInferObjectPatternRequiredTypefinishExpressionCasefinishJoinedPatternVariablegetDotShorthandContextgetMapPatternEntrygetRestPatternElementPatterngetSwitchExpressionMemberInfogetSwitchStatementMemberInfo#handle_ifCaseStatement_afterPatternhandle_ifElement_conditionEndhandle_ifElement_elseEndhandle_ifElement_thenEndhandle_ifStatement_conditionEndhandle_ifStatement_elseEndhandle_ifStatement_thenEnd handle_logicalOrPattern_afterLhshandleCase_afterCaseHeadshandleCaseHeadhandleDefaulthandleListPatternRestElementhandleMapPatternEntryhandleMapPatternRestElementhandleMergedStatementCasehandleNoCollectionElementhandleNoGuardhandleNoStatementhandleSwitchBeforeAlternativehandleSwitchScrutineeisDotShorthandisLegacySwitchExhaustiveisRestPatternElementisVariablePatternpopDotShorthandContextpushDotShorthandContextresolveObjectPatternPropertyGet resolveRelationalPatternOperatorsetVariableTypevariableTypeFromInitializerType_analyzeIfCommon_analyzeIfElementCommon_checkGuardType_finishJoinedPatternVariables_matchRecordTypeShape#_reportDuplicateRecordPatternFields _structurallyEqualAfterNormTypescaseExpressionTypeMismatch"duplicateAssignmentPatternVariableduplicateRecordPatternFieldduplicateRestPatternemptyMapPattern!inconsistentJoinedPatternVariable matchedTypeIsStrictlyNonNullablematchedTypeIsSubtypeOfRequirednonBooleanCondition#patternForInExpressionIsNotIterable'patternTypeMismatchInIrrefutableContext$refutablePatternInIrrefutableContext)relationalPatternOperandTypeNotAssignable6relationalPatternOperatorReturnTypeNotAssignableToBoolrestPatternInMapswitchCaseCompletesNormallyunnecessaryWildcardPatternassertInErrorRecoverypatternsEnabledinferenceUpdate3Enabled%respectImplicitlyTypedVarInitializersfieldPromotionEnabledinferenceUpdate4EnabledsoundFlowAnalysisEnabledCaseHeadOrDefaultInfo"JoinedPatternVariableInconsistencyJoinedPatternVariableLocationMapPatternEntryRecordPatternFieldRelationalOperatorKindRelationalOperatorResolutionSwitchExpressionMemberInfoSwitchStatementMemberInfoTypeAnalyzerTypeAnalyzerErrorsTypeAnalyzerErrorsBaseTypeAnalyzerOptionsjanalyzeSwitchExpressionanalyzeSwitchStatementObjectMapStringint	_severityIterablemaxWithotheranalyzeObjectPatternanalyzeRecordPatternanalyzeRecordPatternSchemaSharedTypeViewListboolNode!TypeAnalysisNullShortingInterface
-ExpressionVariableSharedTypeSchemaView	StatementPatternErroroverrideFlowAnalysis_dotShorthandsisEmptyTypeAnalyzerOperationsTypeDeclarationTypeTypeDeclarationAssignedVariablePatternResultdispatchPatternanalyzeDeclaredVariablePatternMatchContextflowgetMatchedValueTypeassignedVariableserrors"duplicateAssignmentPatternVariablevariableoriginal	duplicate
-operationsvariableTypeirrefutableContextSharedDynamicTypeSharedInvalidTypeisSubtypeOf'patternTypeMismatchInIrrefutableContextpatterncontextmatchedTyperequiredTypepromoteForPattern	knownTypeassignedVariablePattern'duplicateAssignmentPatternVariableError,patternTypeMismatchInIrrefutableContextErrormatchedValueTypetypeToSchemapromotedTypeinnerPatternPatternResultmatchFailsIfWrongTypematchedTypeIsSubtypeOfRequiredpushSubpatternwithUnnecessaryWildcardKindpopSubpatternunknownTypeConstantPatternResult$refutablePatternInIrrefutableContextanalyzeExpressionconstantPattern_endpatternsEnabledtypeAnalyzerOptionsswitchScrutineecaseExpressionTypeMismatchcaseExpression	scrutineecaseExpressionTypescrutineeTypeexpressionType)refutablePatternInIrrefutableContextErrorcaseExpressionTypeMismatchErrorassertInErrorRecoveryDeclaredVariablePatternResultvariableTypeFromInitializerTypepatternVariablePromotionKeysdeclaredVariablePattern
-staticTypeisFinalisVariableFinalisLateisImplicitlyTypedsetVariableTypecomponentVariablesaddassignMatchedPatternVariablepushDotShorthandContextExpressionTypeAnalysisResultdispatchExpressionpopDotShorthandContexttypecontinueNullShortingnullShortingDepthSharedDynamicTypeSchemaViewisBottomType
-handleExitfinishNullShortingnode
-expressionifTrueifFalse	variablesIfCaseStatementResulthandleNoCollectionElementhandleNoGuardifCaseStatement_beginifCaseStatement_afterExpression_finishJoinedPatternVariableslocationsinglePatternguardboolType_checkGuardTypeifCaseStatement_thenBegin_analyzeIfElementCommonmatchedExpressionTypenonBooleanGuardError	guardTypehandleNoStatement#handle_ifCaseStatement_afterPattern_analyzeIfCommon	conditionvoidifStatement_conditionBeginhandle_ifElement_conditionEndifStatement_thenBeginhandle_ifStatement_conditionEndIntTypeAnalysisResultisTypeSchemaSatisfiedintType
-typeSchema
-doubleTypeconvertedToDoubleelementTypeelementsListPatternResultmatchListTypedynamicType	errorTypeobjectQuestionTypelistTypematchMayFailEvenIfCorrectTypelengthisRestPatternElementiduplicateRestPatternmapOrListPatterngetRestPatternElementPatternhandleListPatternRestElementisAssignableToduplicateRestPatternErrorslistTypeSchemaelementdispatchPatternSchemamatchIterableTypeSchematypeSchemaGlbUnnecessaryWildcardKindlogicalAndPatternOperandLogicalOrPatternResultmakeRefutablelogicalOrPattern_beginwithPromotionKeysMapEntryentriesentrykeyvaluecontainsKeylogicalOrPattern_afterLhs handle_logicalOrPattern_afterLhscopyPromotionData	sourceKeydestinationKeylogicalOrPattern_endtypeArgumentsMapPatternResultkeyType	valueTypematchMapTypemapTypesoundFlowAnalysisEnabledrestPatternInMapgetMapPatternEntryhandleMapPatternEntryhandleMapPatternRestElementemptyMapPatternemptyMapPatternErrorrestPatternErrorsmapTypeSchemakeyTypeSchemavalueTypeSchemaisAssertNullCheckOrAssertPatternResultnullCheckOrAssertPattern_begin matchedTypeIsStrictlyNonNullablenullCheckOrAssertPattern_end%matchedTypeIsStrictlyNonNullableErrormakeTypeSchemaNullablefieldsObjectPatternResult#_reportDuplicateRecordPatternFields&downwardInferObjectPatternRequiredTyperesolveObjectPatternPropertyGetobjectPatternreceiverTypefieldnamepushPropertySubpatternpropertyMemberunpromotedPropertyTypepopPropertySubpattern!duplicateRecordPatternFieldErrorsPatternAssignmentAnalysisResultpatternAssignment_afterRhs
-isNotEmptypatternAssignment_endpatternSchemaPatternForInResulthasAwaitstreamTypeSchemaiterableTypeSchemamatchStreamTypematchIterableType#patternForInExpressionIsNotIterablepatternForIn_afterExpressionforEach_bodyBegindispatchBodyforEach_endpatternForIn_end(patternForInExpressionIsNotIterableError(PatternVariableDeclarationAnalysisResult+patternVariableDeclaration_afterInitializerpatternVariableDeclaration_endinitializerTypeRecordPatternResult
-recordType
-positionalfillednamedSharedRecordTypeView_matchRecordTypeShaperecordTypeSchema resolveRelationalPatternOperatorRelationalPatternResultparameterTypekindequals	notEqualsmakeNullableisDotShorthandequalityRelationalPattern_endnotEqual nonEqualityRelationalPattern_end)relationalPatternOperandTypeNotAssignableoperandType
-returnType6relationalPatternOperatorReturnTypeNotAssignableToBool*operatorReturnTypeNotAssignableToBoolErrorargumentTypeNotAssignableErrorSwitchExpressionResulthandleSwitchScrutineeswitchStatement_expressionEnd	neverTypegreatestClosureOfSchematopTypegetSwitchExpressionMemberInfo!switchStatement_beginAlternatives switchStatement_beginAlternativehandleSwitchBeforeAlternative	caseIndexsubIndexheadhandleCaseHeadhandleDefaultswitchStatement_endAlternativeswitchStatement_endAlternatives	hasLabelsswitchStatement_afterCaselubfinishExpressionCaseinferenceUpdate3EnabledswitchStatement_endnonBooleanGuardErrors
-guardTypes!SwitchStatementTypeAnalysisResultgetSwitchStatementMemberInfoheads	headIndexPatternVariableInfosharedCaseScopehandleCase_afterCaseHeadsvaluesbodydispatchStatement	statementswitchCaseCompletesNormallyhandleMergedStatementCaseisTerminatingisAlwaysExhaustiveTypeisLegacySwitchExhaustive
-hasDefaultisExhaustivelastCaseTerminates requiresExhaustivenessValidation!switchCaseCompletesNormallyErrorsdeclareinitializedWildcardPatternResultdeclaredTypeunnecessaryWildcardKindunnecessaryWildcardPatternanalyzeIfElementlast$2
-removeLast$1analyzeIfStatementanalyzeIfCaseStatementhandle_ifStatement_thenEndifStatement_endifStatement_elseBeginhandle_ifStatement_elseEndanalyzeIfCaseElementdispatchCollectionElementhandle_ifElement_thenEndhandle_ifElement_elseEndnonBooleanConditionkeysvariableName	identical	component _structurallyEqualAfterNormTypes!inconsistentJoinedPatternVariablefinishJoinedPatternVariableinconsistencynonedifferentFinalityOrTypeSharedNamedTypeView
-namedTypesIteratorpositionalTypesiteratormoveNextcurrentduplicateRecordPatternFieldobjectOrRecordPattern	normalizeunwrapTypeViewisStructurallyEqualTo!TypeAnalysisNullShortingInterfaceTypeAnalyzerErrorsBase·3Áøô¿<¯Q{§'°    €Ù   #../flow_analysis/flow_analysis.dart     ../types/shared_type.dart  +   null_shorting.dart  H   type_analysis_result.dart  l   type_analyzer_operations.dartÀ ÊÛ À· ‹Â M€›€×€Ø*Gk“”å‚.‚D‚H‚†‚£‚º‚Õ‚ï‚óƒAƒXƒYƒ¦ƒğ„:„P„y„z„Æ„ç…………8…U…e…k…m…n…§…Ñ…é…ô…õ†5†E†F†„†›†œ†×†ğ†ñ‡8‡u‡“‡”‡«‡¬‡è‡éˆ-ˆ[ˆ‰ˆˆÆˆÊˆË‰‰A‰z‰€‰¶‰õŠŠ!Š4Š8Š:Š;ŠzŠŸŠÓŠäŠå‹-‹@‹B‹C‹‹¦‹½‹¾‹û‹ı‹şŒMŒyŒÈŒßŒã!i·×êë4Jcd{“«ÆÌÎÏ(F^hiÍÖØÙ+Pv™š»Óô‘‘‘‘‘l‘ ‘¤‘â’’’6’P’T’“’Ó’Ô““%“&“t“v“w“Ç“û“ÿ”=”^”u””ª”Ä”È”ô”ú•I•Š•Ñ•Ò––4–5–†–Ô—!—5—S—T—¢—ğ˜:˜†˜Ï˜ò™™™:™S™k™ˆ™¥™«™­™®™üšMš‡š‹šØ›(›y›Êœœfœ—œ›œì:ÏŞâ1}ÊŸŸcŸ¨Ÿ¬Ÿı N › é¡4¡„¡¡”¡ä¢2¢‚¢Ó¢æ¢ê£6£}£À£Ä¤¤9¤=¤‡¤Ô¥%¥s¥À¦¦a¦u¦y¦»§
-§$§s§Ã¨¨)¨-¨x¨È©©*©>©U©o©Š©¥©½©Æ©ìªªªªIª_ªsªŒª˜ªİªã«/«€«««æ«ç«ı¬¬¬&¬4¬H¬U¬_¬c¬q¬r¬~¬Î¬Ï­­>­­€­Œ­Û­í­î®&®U®V® ®í¯¯¯\¯j¯p¯ª¯°¯æ°%°+°E°Œ°Û°í±±
-±L±€±Ë±ğ²'²E²q²€²¹²ê³³.³M³\³d³j³k³¸³ó³ÿ´!´n´u´®´Ôµµ8µƒµ¿µó¶¶7¶b¶’¶Ÿ¶¥¶Á¶æ···X·†·µ·è¸¸T¸~¸…¸‰¸Š¸Û¹¹U¹l¹Œ¹Ò¹×¹ØººLºRºŒº’ºÅºê»9»F»d»‡»±»¸»ú¼¼;¼Z¼~¼…¼Ç¼õ½"½<½c½‡½½–½â¾/¾}¾Í¿¿&¿M¿›¿³¿ÍÀ @À @À @À @GÀ @MÀ @gÀ @´À @µÀ @ûÀ AEÀ A”À AšÀ AÔÀ AÚÀ B'À BTÀ BZÀ BƒÀ BºÀ C	À CÀ C3À C9À C{À CŒÀ CÇÀ CıÀ D#À D\À DÀ D¨À DÑÀ DŞÀ DäÀ EÀ E-À E^À EeÀ EƒÀ E•À E«À EçÀ FÀ FÀ F3À F_À FÀ FÌÀ FñÀ GBÀ GZÀ G©À GÑÀ GùÀ H)À HVÀ HcÀ HmÀ HuÀ H{À H¡À HÇÀ HøÀ I-À IuÀ IŸÀ I¦À IªÀ I«À IâÀ IèÀ JÀ J:À J‰À JÔÀ KÀ K?À KbÀ KfÀ KgÀ KµÀ KıÀ LMÀ L•À LâÀ MÀ MÀ MAÀ MGÀ M“À MİÀ MãÀ MıÀ NDÀ N“À N¥À N¼À NÕÀ N÷À NıÀ O?À O_À OªÀ OåÀ PÀ PDÀ PvÀ P¨À PéÀ Q%À QYÀ QtÀ QÀ QÈÀ QîÀ QûÀ RÀ RÀ RBÀ R_À RfÀ R²À RşÀ S5À SxÀ S«À SçÀ T8À TZÀ T„À T¦À TòÀ UÀ U;À UFÀ UqÀ U¶À UõÀ V#À VAÀ VuÀ V­À V×À VŞÀ VâÀ VãÀ W-À WvÀ W˜À WÀ W¸À WõÀ XÀ XÀ X=À X^À XÀ X“À X”À X´À XúÀ Y À Y5À YWÀ Y]À Y‰À YÏÀ YÛÀ YêÀ YñÀ ZÀ Z/À Z3À Z4À Z|À ZÇÀ ZÍÀ [À [mÀ [¶À [ĞÀ [ÖÀ \'À \pÀ \vÀ \ŸÀ \ÃÀ \ØÀ \ûÀ ]"À ])À ]KÀ ]—À ]¨À ]ÙÀ ^ À ^À ^RÀ ^mÀ ^À ^¶À ^¼À ^ãÀ _À _EÀ _…À _‹À _œÀ _ À _¡À _ÑÀ ` À `:À `@À `À `ØÀ aÀ a%À auÀ aÄÀ bÀ bÀ beÀ bÀ b”À báÀ c-À cuÀ cÂÀ c÷À d-À dEÀ diÀ d‡À dµÀ dÕÀ dïÀ eÀ e)À e0À eAÀ ecÀ e›À e­À eËÀ eÒÀ fÀ f4À fmÀ f¥À fØÀ fíÀ g:À gRÀ g‚À gÆÀ gÏÀ gŞÀ gåÀ h	À h,À h=À hWÀ h{À h¸À h¿À hàÀ hÿÀ iÀ i=À iLÀ i‚À i‹À iËÀ iØÀ iöÀ iüÀ j'À jRÀ jÀ jµÀ jãÀ kÀ k1À k8À k<À k=À kÀ kÇÀ kÍÀ lÀ lgÀ l®À l´À mÀ m.À m4À mÀ mĞÀ nÀ nhÀ nÀ n¶À nÊÀ nåÀ núÀ oÀ o'À o?À odÀ ojÀ o{À oÀ oÕÀ oçÀ pÀ pÀ pSÀ pnÀ p§À pßÀ qÀ q'À qtÀ qŒÀ q¼À r À r	À rÀ rÀ r À rCÀ rTÀ rnÀ r’À rÏÀ rÖÀ r×À sÀ s0À sQÀ spÀ s‰À s®À s½À sóÀ süÀ t<À tIÀ tgÀ tmÀ t˜À tÃÀ tğÀ uÀ uDÀ uvÀ u’À u™À uÀ uÀ uéÀ vÀ vÀ vgÀ vµÀ vßÀ våÀ w1À w€À wµÀ wØÀ wòÀ x
-À x-À xGÀ xcÀ xÀ xˆÀ x™À xÀÀ yÀ y9À y^À yÀ yÌÀ yĞÀ yÑÀ zÀ z?À zEÀ z“À záÀ {À {À {_À {¯À {æÀ |À |À |/À |EÀ |]À |cÀ |tÀ |›À |ëÀ }À };À }lÀ }™À }À }À }áÀ }çÀ ~À ~JÀ ~eÀ ~À ~´À ~ÒÀ ~ßÀ 	À 0À NÀ YÀ ƒÀ £À ÁÀ çÀ ùÀ €#À €*À €.À €/À €~À €ÊÀ €åÀ €ëÀ <À SÀ YÀ “À ™À İÀ ‚À ‚[À ‚oÀ ‚À ‚²À ‚¹À ‚ûÀ ƒÀ ƒ8À ƒWÀ ƒdÀ ƒ¦À ƒÀÀ ƒÉÀ ƒîÀ „À „MÀ „yÀ „³À „İÀ „ìÀ …À …'À …-À …oÀ …‹À …°À …ÏÀ …ôÀ †<À †CÀ †TÀ †sÀ †¤À †ÔÀ †öÀ ‡!À ‡LÀ ‡œÀ ‡ÀÀ ‡ëÀ ˆÀ ˆÀ ˆ"À ˆIÀ ˆÀ ˆ°À ˆïÀ ‰%À ‰@À ‰wÀ ‰À ‰œÀ ‰¼À ‰ÆÀ ‰ûÀ Š
-À Š2À ŠÀ ŠÀ Š¥À Š«À ŠáÀ ‹À ‹UÀ ‹{À ‹ÁÀ ‹ıÀ Œ1À ŒLÀ ŒuÀ Œ À ŒÈÀ ŒÕÀ ŒÛÀ ŒıÀ À ]À ‘À ÉÀ óÀ úÀ şÀ ÿÀ MÀ ˜À «À ±À ËÀ ıÀ 'À IÀ PÀ oÀ ½À ÃÀ ÄÀ àÀ  À &À 'À MÀ rÀ ™À ÄÀ ‘	À ‘+À ‘rÀ ‘ŠÀ ‘—À ‘áÀ ‘ëÀ ‘úÀ ’.À ’6À ’UÀ ’wÀ ’™À ’ªÀ ’òÀ ’üÀ “À “
-À “5À “gÀ “kÀ “lÀ “»À “şÀ ”À ”>À ”DÀ ”}À ”§À ”öÀ •À •À •$À •*À •lÀ •}À •’À •½À •÷À – À –À –À –/À –DÀ –oÀ –©À –²À –½À –ÄÀ –ğÀ —2À —6À —7À —†À —»À —ÁÀ —ÛÀ ˜'À ˜LÀ ˜nÀ ˜À ˜—À ˜›À ˜œÀ ˜êÀ ™-À ™3À ™„À ™ŠÀ ™ÄÀ ™ÊÀ šÀ š<À š‹À šÀ š«À š¹À š¿À ›À ›<À ›rÀ ›˜À ›ÑÀ œÀ œÀ œFÀ œSÀ œsÀ œœÀ œ¢À œ³À œÖÀ À À &À VÀ „À À –À ³À À À ^À …À «À úÀ ŸCÀ ŸIÀ ŸoÀ Ÿ›À ŸÉÀ ŸŞÀ ŸìÀ  À  KÀ  VÀ  ]À  ‰À  ÏÀ  öÀ ¡!À ¡bÀ ¡ŠÀ ¡ÙÀ ¢'À ¢WÀ ¢¤À ¢ïÀ £(À £XÀ £©À £úÀ ¤	À ¤DÀ ¤dÀ ¤ŒÀ ¤ºÀ ¤ÅÀ ¤ÍÀ ¤ÓÀ ¥ À ¥nÀ ¥‚À ¥£À ¥ÊÀ ¥ûÀ ¦0À ¦ZÀ ¦aÀ ¦eÀ ¦fÀ ¦´À ¦ïÀ ¦õÀ §À §ZÀ §¡À §íÀ ¨<À ¨`À ¨ƒÀ ¨‡À ¨ˆÀ ¨ÕÀ ©!À ©<À ©BÀ ©’À ©©À ©¯À ©éÀ ©ïÀ ª=À ªjÀ ª¹À ªÍÀ «À «#À «EÀ «LÀ «À «ªÀ «ÈÀ «ìÀ ¬À ¬4À ¬_À ¬“À ¬ À ¬áÀ ­À ­-À ­ZÀ ­À ­ÊÀ ­ôÀ ® À ®LÀ ®†À ®®À ®ØÀ ¯À ¯À ¯DÀ ¯wÀ ¯£À ¯«À ¯±À ¯çÀ ¯ÿÀ °À °"À °QÀ °À °íÀ ±À ±:À ±@À ±\À ±À ± À ±äÀ ±ëÀ ±üÀ ±ıÀ ²%À ²UÀ ²wÀ ²¢À ²ãÀ ²ùÀ ³À ³ À ³(À ³.À ³/À ³_À ³À ³ÒÀ ³íÀ ´7À ´_À ´°À ´çÀ µÀ µÀ µCÀ µˆÀ µªÀ µáÀ µüÀ ¶3À ¶KÀ ¶XÀ ¶xÀ ¶‚À ¶¶À ¶¾À ¶ÄÀ ·À ·?À ·xÀ ·À ·äÀ ¸ À ¸TÀ ¸oÀ ¸˜À ¸ÃÀ ¸ëÀ ¸øÀ ¸şÀ ¹À ¹;À ¹À ¹…À ¹¦À ¹ÈÀ ¹üÀ º4À ºfÀ º’À º¼À ºÃÀ ºÇÀ ºÈÀ »À »_À »rÀ »xÀ »’À »ÃÀ ¼À ¼À ¼;À ¼BÀ ¼cÀ ¼‰À ¼¥À ¼ÏÀ ¼ıÀ ½À ½À ½À ½À ½=À ½bÀ ½³À ½ÎÀ ¾À ¾*À ¾5À ¾VÀ ¾|À ¾À ¾ØÀ ¾âÀ ¾êÀ ¾ğÀ ¿À ¿BÀ ¿~À ¿…À ¿‰À ¿ŠÀ ¿ÕÀ ÀÀ À\À ÀbÀ ÀªÀ ÀÁÀ ÀÇÀ ÁÀ ÁÀ Á:À ÁƒÀ ÁÒÀ ÁäÀ Â À ÂÀ Â#À ÂeÀ ÂvÀ Â¬À ÂŞÀ ÃÀ ÃjÀ Ã„À Ã®À ÃµÀ ÃèÀ Ä!À ÄRÀ ÄmÀ Ä–À Ä£À ÄÃÀ ÄìÀ ÅÀ ÅTÀ ÅÀ ÅœÀ ÅÇÀ ÅÔÀ ÅÚÀ Æ(À Æ@À ÆiÀ ÆjÀ Æ™À ÆÊÀ ÆÿÀ Ç,À Ç]À Ç‡À ÇÀ Ç’À Ç“À ÇÛÀ È,À ÈYÀ È_À ÈyÀ È·À ÈÓÀ ÈïÀ ÈöÀ É
-À É:À ÉgÀ ÉpÀ É}À ÉÆÀ ÊÀ ÊeÀ Ê‹À Ê°À Ê¶À ÊºÀ Ê»À Ë	À Ë+À Ë1À Ë~À Ë›À Ë¡À ËÛÀ ËáÀ Ì#À ÌVÀ Ì¥À Ì¹À ÌöÀ ÌıÀ Í?À ÍxÀ Í³À Í´À ÍşÀ Î#À Î8À Î?À Î[À Î€À ÎŸÀ Î¦À Î§À ÎñÀ ÏÀ ÏQÀ Ï~À Ï«À ÏÜÀ ĞÀ ĞÀ ĞÀ ĞTÀ ĞÀ Ğ³À ĞùÀ Ñ5À ÑiÀ Ñ„À Ñ­À ÑØÀ Ò À ÒÀ ÒÀ ÒÀ Ò%À ÒcÀ Ò¯À ÒÔÀ ÒÿÀ Ó À ÓHÀ ÓbÀ ÓoÀ Ó¿À ÔÀ ÔUÀ ÔƒÀ Ô¯À ÔÖÀ ÔğÀ ÕÀ Õ0À Õ?À ÕaÀ ÕœÀ Õ·À Õ¿À ÖÀ Ö4À Ö:À ÖnÀ ÖoÀ Ö“À ÖµÀ ×À ×5À ×mÀ ×—À ×À ×¢À ×£À ×íÀ Ø8À Ø>À ØXÀ Ø¡À ØËÀ ØÏÀ ØĞÀ ÙÀ Ù!À ÙnÀ Ù¤À ÙªÀ ÙÜÀ ÚÀ Ú-À ÚBÀ ÚVÀ Ú\À ÚmÀ Ú¶À ÚúÀ ÛÀ ÛHÀ ÛÀ Û¹À ÛÎÀ ÜÀ Ü3À ÜUÀ Ü‡À Ü·À ÜûÀ İÀ İÀ İÀ İCÀ İ“À İ¹À İßÀ İåÀ ŞÀ Ş+À Ş[À ŞÀ Ş”À Ş›À ŞŸÀ Ş À ŞØÀ ŞŞÀ ŞïÀ ß-À ß3À ßBÀ ß{À ßÀ ß³À ß¹À à	À àÀ à]À àœÀ àÎÀ àæÀ áÀ á À áDÀ áoÀ ávÀ á‡À áÔÀ âÀ âFÀ â‚À â¹À âËÀ âçÀ âîÀ ã	À ã
-À ã?À ãjÀ ãŸÀ ã×À ãöÀ ä'À äUÀ äÀ ä¹À äÈÀ åÀ å4À åNÀ åtÀ å¢À å±À åİÀ ååÀ åëÀ æÀ æ À æYÀ æ‘À æ¦À æóÀ çÀ ç-À ç]À ç¡À çªÀ ç¹À çÀÀ çäÀ çåÀ èÀ èÀ è3À èPÀ èQÀ ètÀ è”À èºÀ èêÀ éÀ é%À é)À é*À égÀ é«À é±À éÿÀ êNÀ êyÀ êÀ êÍÀ ëÀ ëÀ ëIÀ ë—À ë¦À ë»À ëÙÀ ëôÀ ëûÀ ìÀ ìUÀ ìÀ ì À ìµÀ ì¼À ì×À íÀ í À í7À í>À íwÀ í¯À íÄÀ îÀ î+À îMÀ î}À îÁÀ îÊÀ îÙÀ îàÀ ïÀ ïÀ ï'À ïKÀ ïˆÀ ïÀ ïºÀ ïŞÀ ğÀ ğ?À ğcÀ ğjÀ ğnÀ ğoÀ ğ¼À ğŞÀ ğäÀ ñ1À ñNÀ ñTÀ ñÀ ñ”À ñÖÀ ò	À òXÀ òlÀ ò©À ò°À òòÀ ó-À ómÀ ónÀ ó§À óâÀ óãÀ ôÀ ôZÀ ô‚À ôÓÀ õÀ õ8À õRÀ õÀ õËÀ ö
-À öHÀ öPÀ ölÀ örÀ ösÀ ö©À öÙÀ ÷ À ÷À ÷À ÷À ÷/À ÷XÀ ÷˜À ÷ÆÀ øÀ ø"À ø<À øcÀ ø¡À øàÀ ù+À ù3À ù9À ùrÀ ù•À ùºÀ ùáÀ ùêÀ úÀ úÀ ú2À úWÀ úvÀ ú}À ú~À úÀ úÃÀ ûÀ ûÀ û-À û6À ûVÀ ûŠÀ û¼À ûçÀ ûñÀ ü À ü7À ü?À üwÀ ü¥À üİÀ ı	À ıÀ ıKÀ ıQÀ ı…À ı†À ıÁÀ ıúÀ ş À şfÀ ş¢À şÖÀ şñÀ ÿÀ ÿEÀ ÿmÀ ÿzÀ ÿ€À ÿÀ ÿ¾À ÿíÀ À À 5À ZÀ }À ¡À ¨À ÌÀ îÀ:ÀnÀ¦ÀĞÀ×ÀÛÀÜÀÀÀ1ÀeÀ¢À©ÀÙÀÀLÀ™ÀºÀÔÀúÀ	À,À4À:ÀˆÀŒÀÀÕÀ$À4À:À…À«À±ÀşÀ'À-ÀgÀmÀ–ÀÑÀ À2ÀJÀPÀ’À£ÀÙÀÀ:ÀsÀ¤À¿ÀèÀõÀûÀ	JÀ	VÀ	nÀ	uÀ	²À	âÀ
-À
-?À
-QÀ
-XÀ
-‡À
-ÅÀ
-ËÀ
-ÌÀ
-ôÀÀXÀ€À¾ÀËÀùÀÿÀKÀaÀ‹ÀœÀ±À÷À#À,À9ÀhÀnÀ‰À´ÀëÀÀ*ÀnÀÀÖÀóÀÀPÀ_ÀgÀÀªÀÇÀÒÀÀSÀpÀŸÀ®À¶À¼ÀäÀÀ5ÀjÀœÀÒÀÀBÀIÀMÀNÀ‡ÀÀ§ÀáÀ2À}ÀÄÀèÀÀÀÀZÀ`À¬ÀäÀêÀ6ÀMÀ†À›ÀµÀÇÀèÀîÀÿÀ ÀPÀÀ­À´ÀûÀ2ÀCÀaÀhÀƒÀ®À÷ÀøÀDÀpÀšÀ¹ÀÒÀûÀÀUÀ€ÀĞÀèÀÀ4À„ÀÕÀÀHÀ…À•À¾ÀÇÀñÀÀOÀ›ÀÏÀÀ2ÀzÀ«ÀÆÀåÀ$ÀbÀ}À›À¯ÀÉÀàÀşÀÀ$ÀBÀlÀ¢ÀìÀûÀ À À FÀ mÀ À ·À úÀ!À!EÀ!nÀ!—À!±À!ëÀ" À"<À"KÀ"˜À"ÈÀ"øÀ#@À#NÀ#šÀ#­À#ÑÀ$À$)À$dÀ$uÀ$¯À$¹À$ñÀ%7À%tÀ%ÂÀ&
-À&4À&>À&hÀ&±À&ÊÀ&ÜÀ&íÀ'À'À'CÀ'|À'„À'ĞÀ(
-À(#À(0À(eÀ(À(¨À(µÀ)À)&À)>À)KÀ)yÀ)À)™À)¡À)§À)İÀ*À*(À*@À*tÀ*’À*™À*À*À*æÀ*ìÀ+7À+}À+ÀÀ+ÔÀ+îÀ,À,À,À,SÀ,dÀ,‚À,‰À,¤À,ÎÀ-À-3À-WÀ-À-ÅÀ-ùÀ.:À.zÀ.ªÀ.êÀ/À/WÀ/™À/ßÀ/ûÀ0BÀ0ƒÀ0¡À0ÇÀ0øÀ1À1/À1OÀ1nÀ1yÀ1”À1³À1òÀ20À2KÀ2iÀ2}À2—À2®À2ÌÀ2ãÀ2òÀ3À3:À3pÀ3ºÀ3ÉÀ3ŞÀ3ëÀ4À40À4PÀ4zÀ4½À4ÊÀ5À5BÀ5`À5À5¹À5ÎÀ6
-À6À6fÀ6²À6âÀ70À7XÀ7fÀ7¬À7îÀ8À8-À89À8„À8•À8²À8üÀ9À9HÀ9qÀ9µÀ9½À9ıÀ:#À:bÀ:À: À:ÍÀ:ÚÀ;À;NÀ;uÀ;ŠÀ;¼À;øÀ<;À<FÀ<NÀ<’À<İÀ=À=HÀ=nÀ=vÀ=ÁÀ=øÀ>6À>\À>À>¯À>öÀ?BÀ?JÀ?kÀ?yÀ?—À?ÂÀ?ËÀ@À@À@UÀ@lÀ@—À@­À@ÈÀ@øÀA.ÀAqÀA£ÀA°ÀAôÀB$ÀB*ÀBVÀBˆÀB¦ÀBÈÀBöÀC@ÀCdÀC°ÀCäÀDÀD	ÀDÀDÀDTÀDkÀDqÀDÀÀEÀEBÀEHÀEbÀEhÀE™ÀEÓÀEâÀEùÀFÀF8ÀF?ÀF‰ÀF¶ÀFôÀGÀGÀGÀGMÀGSÀG£ÀG©ÀGãÀGéÀHÀH;ÀHŠÀH—ÀH²ÀHİÀHäÀI&ÀIaÀIšÀIØÀJ ÀJ^ÀJ”ÀJ±ÀJÜÀK	ÀK3ÀKBÀKJÀKPÀKQÀKlÀKŒÀK½ÀKäÀLÀLÀLÀL:ÀL@ÀLAÀLxÀL¡ÀLàÀM	ÀM ÀMGÀMPÀMVÀM|ÀM°ÀMèÀNÀNÀNÀNÀNlÀN™ÀNŸÀN¹ÀNïÀOÀO!ÀOAÀObÀO“ÀO—ÀO˜ÀOŞÀP*ÀPeÀPkÀP¹ÀP¿ÀPïÀQ0ÀQ1ÀQwÀQ¹ÀQèÀQîÀR)ÀRJÀRPÀRyÀR¬ÀRÁÀRâÀRçÀRèÀS9ÀS?ÀSŒÀSÛÀT#ÀT)ÀTOÀTpÀT¿ÀTÑÀTÖÀT×ÀU&ÀU7ÀU=ÀUWÀU“ÀU”ÀUÚÀV!ÀVOÀVUÀV”ÀV´ÀVºÀVâÀWÀWÀWaÀW›ÀWÄÀWâÀWèÀWéÀXÀXÀXpÀX«ÀX±ÀXşÀY;ÀY<ÀY`ÀYyÀY®ÀYíÀZÀZ*ÀZ0ÀZ1ÀZtÀZ¿ÀZÀÀZûÀ[EÀ[FÀ[À[ÃÀ[ÄÀ\À\TÀ\ZÀ\¨À\ôÀ]=À]CÀ]hÀ]¡À]ŞÀ]ßÀ^/À^pÀ^vÀ^ÄÀ_À_\À_bÀ_†À_ÉÀ`À`	À`IÀ`’À`“À`ÒÀaÀaÀaIÀa…Àa†ÀaÉÀbÀbÀbFÀb€ÀbÀbÈÀcÀcÀcXÀcŸÀc ÀcïÀd(Àd)ÀdqÀdwÀdÇÀdïÀdõÀe<Àe^ÀerÀe…Àe§Àe¬Àe­ÀeıÀfÀfÀfaÀf²ÀfÊÀfĞÀgÀg-Àg>ÀgZÀguÀg{Àg|Àg¬Àg²ÀgúÀh2ÀhbÀhhÀhÀh¥Àh¶ÀhÒÀhíÀhóÀhôÀi2Ài8Ài^Ài¨Ài©ÀièÀiîÀjÀj<ÀjSÀjjÀj†Àj‹ÀjŒÀjÉÀjÏÀjÿÀkHÀkIÀk~Àk„ÀkĞÀkøÀkşÀlMÀlœÀlìÀm<ÀmBÀmÀm¤ÀmÆÀmÜÀmøÀnÀnÀn ÀnlÀn¹ÀoÀo	Ào9ÀofÀogÀo¶ÀpÀpKÀpQÀp¡ÀpİÀpãÀqÀq<Àq=Àq‰ÀqÕÀrÀrÀrGÀrqÀrrÀr´ÀrºÀsÀsDÀstÀsšÀs«ÀsÇÀsâÀsèÀséÀt8Àt†Àt–ÀtœÀtÙÀtßÀu,ÀuIÀuOÀuiÀuœÀuÀuÎÀuöÀu÷ÀvFÀv“Àv™ÀváÀwÀwfÀwgÀw°ÀwØÀwÙÀxÀx8Àx9ÀxˆÀxÌÀxîÀyÀyÀyÀydÀy~ÀyÈÀzÀz7Àz=ÀzAÀzBÀzÀzŞÀ{À{]À{À{«À{áÀ{çÀ{èÀ|8À|jÀ|pÀ|¾À}	À}À}]À}oÀ}”À}™À}šÀ}éÀ~9À~UÀ~•À~–À~çÀ"ÀiÀjÀ¨ÀÈÀÎÀ€À€`À€qÀ€À€¾À€ßÀ€úÀÀ<ÀIÀmÀÀ±ÀâÀèÀ‚À‚ À‚!À‚]À‚{À‚À‚·À‚ÙÀ‚ùÀƒÀƒÀƒ,ÀƒAÀƒGÀƒXÀƒˆÀƒ´ÀƒİÀƒøÀ„À„BÀ„OÀ„sÀ„¦À„ÈÀ„÷À„ıÀ…AÀ…EÀ…FÀ…À…ŞÀ†,À†{À†À†ÏÀ‡
-À‡À‡!À‡%À‡&À‡LÀ‡qÀ‡¥À‡ÚÀˆÀˆÀˆ&ÀˆqÀˆ¥ÀˆíÀˆõÀ‰À‰À‰bÀ‰‰À‰¯À‰ãÀŠ-ÀŠHÀŠpÀŠ‘ÀŠ¼ÀŠëÀ‹À‹BÀ‹LÀ‹—À‹ŞÀ‹õÀŒ!ÀŒSÀŒnÀŒÀŒªÀŒÔÀÀ'ÀFÀYÀ~À¥À±ÀŞÀÀ?ÀfÀrÀ–ÀßÀÀ7ÀYÀ}ÀŒÀ˜À¢ÀªÀÈÀïÀÀ,ÀLÀgÀ¯ÀéÀ‘7À‘jÀ‘¦À‘³À‘øÀ’À’
-À’À’À’À’^À’¥À’ÅÀ’ôÀ“(À“NÀ“TÀ“‹À“×À“üÀ”À”À”)À”AÀ”sÀ”¡À”ßÀ• À•!À•;À•gÀ•ˆÀ•ŸÀ•©À•¿À•ÎÀ•üÀ–À–À–MÀ–UÀ–rÀ–xÀ–¡À–´À–ºÀ–ëÀ–şÀ—À—À—1À—DÀ—HÀ—IÀ—À—¹À—ÎÀ˜À˜À˜+À˜pÀ˜À˜ÙÀ˜úÀ™À™]À™}À™ÆÀ™òÀš
-Àš*ÀšHÀšUÀšfÀš‹Àš•ÀšÀš£Àš¼ÀšÀÀšÁÀšêÀ›À›À›$À›\À›”À›åÀ›éÀ›ëÀ›ìÀœ=Àœ}Àœ Àœ·ÀœÑÀœìÀÀÀ6À>À@ÀhÀ¶ÀğÀÀ8À`ÀÀ§À­À®ÀéÀïÀŸ.ÀŸ[ÀŸ{ÀŸšÀŸºÀŸÀÀŸÁÀŸıÀ #À OÀ iÀ ¢À ÜÀ âÀ ãÀ¡-À¡LÀ¡sÀ¡À¡¬À¡²À¡³À¡éÀ¡ïÀ¢À¢HÀ¢IÀ¢–À¢áÀ£À£.À£NÀ£oÀ£uÀ£vÀ£ÅÀ¤À¤?À¤]À¤|À¤‚À¤ƒÀ¤ÌÀ¤ÿÀ¥'À¥EÀ¥dÀ¥„À¥ŠÀ¥‹À¥×À¦À¦À¦^À¦ŸÀ¦¥À¦äÀ§À§*À§NÀ§pÀ§vÀ§wÀ§ÅÀ§ÿÀ¨À¨VÀ¨À¨éÀ¨õÀ©'À©EÀ©`À©À©ŸÀ©¥À©¦À©÷À©ıÀªLÀªÀª•ÀªÕÀ«À«À«:À«@À«AÀ«À«ßÀ¬À¬1À¬PÀ¬qÀ¬wÀ¬xÀ¬ÃÀ¬ßÀ­ À­>À­\À­bÀ­cÀ­À­¤À­åÀ®/À®0À®€À®ÉÀ®ØÀ®ŞÀ¯.À¯eÀ¯‹À¯¨À¯ÄÀ¯ÊÀ¯ËÀ°À°cÀ°­À°ÑÀ°ïÀ±À± À±"À±#À±qÀ±¬À±ÔÀ² À²pÀ²ÁÀ³À³&À³,À³uÀ³•À³—À³˜À³ÎÀ³ÒÀ´À´,À´JÀ´KÀ´qÀ´rÀ´¿ÀµÀµ`Àµ¨ÀµĞÀ¶À¶À¶)À¶*À¶PÀ¶QÀ¶xÀ¶yÀ¶‘À¶´À¶ßÀ·À·AÀ·lÀ·˜À·À·     €Ø      *   G   k     	”ƒØ”‚Œ€ñ/// Information supplied by the client to [TypeAnalyzer.analyzeSwitchExpression]
-/// or [TypeAnalyzer.analyzeSwitchStatement] about a single case head or
-/// `default` clause.
-///
-/// The client is free to `implement` or `extend` this class.‚¥‚¥‚¥‚¼‚¼‚¼‚×‚×‚×…e… ……  …!…0…/  …<…K…J  …Y
-…_…^   ‚õaƒOƒOK/// For a `case` clause, the case pattern.  For a `default` clause, `null`. ƒ[„n„n€î/// The pattern variables declared in [pattern]. Some of them are joins of
-/// individual pattern variable declarations. We don't know their types
-/// until we do type analysis. So, some of these variables might become
-/// not consistent. „|€„„û„ûh/// For a `case` clause that has a guard clause, the expression following
-/// `when`.  Otherwise `null`.     ‹C€¹‹C‹I ‹Y‹Y‹Y‹t‹t‹t‹À:‹À ‹À‹Ï  ‹Ñ‹à‹ß  ‹ä‹ó‹ò   ‹‹¡‹¡  ‹¨‹¶‹¶      ‹ş‚Ï‹ş'"/// Information supplied by the client to [TypeAnalyzer.analyzeObjectPattern],
-/// [TypeAnalyzer.analyzeRecordPattern], or
-/// [TypeAnalyzer.analyzeRecordPatternSchema] about a single field in a record
-/// or object pattern.
-///
-/// The client is free to `implement` or `extend` this class.:::OOOfef fx    —¦¥  ¯¾½   k}ääi/// The client specific node from which this object was created.  It can be
-/// used for error reporting. í[DDF/// If not `null` then the field is named, otherwise it is positional. LZZ      Ù@Ù,/// Information about a relational operator. œ{œ œ¸  ¿ÎÍ  ×æå  ø‘‘   -!JJ  R"gg  x      ‘‚Z‘‘è€Æ/// Information supplied by the client to [TypeAnalyzer.analyzeSwitchExpression]
-/// about an individual `case` or `default` clause.
-///
-/// The client is free to `implement` or `extend` this class.’’’’’’’8’8’8“(K“( “(“B  “D“S“R  “X“g“f   ’V{’Í’Í</// The [CaseHeadOrDefaultInfo] associated with this clause. ’ÖM““//// The body of the `case` or `default` clause.     “w†5“w”C€Å/// Information supplied by the client to [TypeAnalyzer.analyzeSwitchStatement]
-/// about an individual `case` or `default` clause.
-///
-/// The client is free to `implement` or `extend` this class.”`”`”`”w”w”w”‘”‘”‘”¬”¬”¬™€Œ™ ™™7  ™>™M™L  ™W™f™e  ™o™~™}  ™Œ™›™š   ”Ê•Ê•Ê€¹/// The list of case heads for this case.
-///
-/// The reason this is a list rather than a single head is because the front
-/// end merges together cases that share a body at parse time. •Ô^–)–)G/// Is `true` if the group of `case` and `default` clauses has a label. –7—M—M€÷/// The statements following this `case` or `default` clause.  If this list is
-/// empty, and this is not the last `case` or `default` clause, this clause
-/// will be considered to share a body with the `case` or `default` clause
-/// that follows. —VÃ™™‘/// The merged set of pattern variables from [heads]. If there is more than
-/// one element in [heads], these variables are joins of individual pattern
-/// variable declarations. Some of these variables might be already not
-/// consistent, because they are present not in every head. We don't know
-/// their types until we do type analysis. So, some of these variables
-/// might become not consistent.     À›ì•5À›ìÀœŒ€/// Interface used by the shared [TypeAnalyzer] logic to report error conditions
-/// up to the client during the "visit" phase of type analysis.Àœ¢Àœ¢Àœ¢Àœ¹Àœ¹Àœ¹ÀœÓÀœÓÀœÓÀœîÀœîÀœîÀ	À	À	À À À À8À8À8    ÀjBÀøÀø€ƒ/// Called if pattern support is disabled and a case constant's static type
-/// doesn't properly match the scrutinee's static type. ÀÀ.À-  À<"ÀQÀP  ÀdÀsÀr  À… À”À“   À°ÀŸ6ÀŸ6y/// Called for variable that is assigned more than once.
-///
-/// Returns an error object that is passed on to the caller. ÀŸ_ÀŸrÀŸq  ÀŸÀŸ‘ÀŸ  ÀŸÀŸ°ÀŸ¯   ÀŸÃÀ À 9/// Called for a pair of named fields have the same name. À '&À 9À 8  À SÀ dÀ c  À m3À ™À ˜  À ¦4À ÒÀ Ñ   À å€ÌÀ¡5À¡5G/// Called for a duplicate rest pattern found in a list or map pattern. À¡P!À¡bÀ¡a  À¡wÀ¡†À¡…  À¡“À¡¢À¡¡   À¡µ€’À¢À¢Y/// Called if a map pattern does not have elements.
-///
-/// [pattern] is the map pattern. À¢,À¢>À¢=   À¢K)À£
-À£
-€³/// Called when both branches have variables with the same name, but these
-/// variables either don't have the same finality, or their `NORM` types
-/// are not structurally equal. À£2À£EÀ£D  À£RÀ£eÀ£d   À£x	À¤À¤€˜/// Called when a null-assert or null-check pattern is used with the matched
-/// type that is strictly non-nullable, so the null check is not necessary. À¤CÀ¤UÀ¤T  À¤aÀ¤pÀ¤o   À¤…À¥À¥w/// Called when the matched type of a cast pattern is a subtype of the
-/// required type, so the cast is not necessary. À¥+À¥=À¥<  À¥IÀ¥XÀ¥W  À¥hÀ¥wÀ¥v   À¥€‚À¥ßÀ¥ßI/// Called if the static type of a condition is not assignable to `bool`. À¥ôÀ¦	À¦   À¦bÀ¦ìÀ¦ì€Ê/// Called if in a pattern `for-in` statement or element, the [expression]
-/// that should be an `Iterable` (or dynamic) is actually not.
-///
-/// [expressionType] is the actual type of the [expression]. À§À§%À§$  À§.À§CÀ§B  À§RÀ§aÀ§`   À§y‚+À¨ıÀ¨ıo/// Called if, for a pattern in an irrefutable context, the matched type of
-/// the pattern is not assignable to the required type.
-///
-/// [pattern] is the AST node of the pattern with the type error, [context] is
-/// the containing AST node that established an irrefutable context,
-/// [matchedType] is the matched type, and [requiredType] is the required
-/// type. À©+À©=À©<  À©IÀ©XÀ©W  À©dÀ©sÀ©r  À©ƒÀ©’À©‘   À©¨—ÀªİÀªİ"/// Called if a refutable pattern is illegally used in an irrefutable context.
-///
-/// [pattern] is the AST node of the refutable pattern, and [context] is the
-/// containing AST node that established an irrefutable context.
-///
-/// TODO(paulberry): move this error reporting to the parser. À«À«À«  À«#À«2À«1   À«C3À«çÀ«ç€™/// Called if the operand of the [pattern] has the type [operandType], which
-/// is not assignable to [parameterType] of the invoked relational operator. À¬À¬)À¬(  À¬5À¬DÀ¬C  À¬TÀ¬cÀ¬b   À¬z€çÀ¬çÀ¬çb/// Called if the [returnType] of the invoked relational operator is not
-/// assignable to `bool`. À­$À­6À­5  À­BÀ­QÀ­P   À­e€ÉÀ­íÀ­í{/// Called if a rest pattern found inside a map pattern.
-///
-/// [node] is the map pattern.  [element] is the rest pattern. À­ÿÀ®À®  À®À®%À®$   À®2—À¯mÀ¯m(/// Called if one of the case bodies of a switch statement completes normally
-/// (other than the last case body), and the "patterns" feature is not
-/// enabled.
-///
-/// [node] is the AST node of the switch statement.  [caseIndex] is the index
-/// of the merged case with the erroneous case body. À¯À¯£À¯¢  À¯¬À¯ºÀ¯¹   À¯ÍRÀ°´À°´€Û/// Called when a wildcard pattern appears in the context where it is not
-/// necessary, e.g. `0 && var _` vs. `[var _]`, and does not add anything
-/// to type promotion, e.g. `final x = 0; if (x case int _ && > 0) {}`. À°ÕÀ°çÀ°æ  À°ó%À±À±    À±#‚sÀ±#À±»€ˆ/// Base class for error reporting callbacks that might be reported either in
-/// the "pre-visit" or the "visit" phase of type analysis.     À±Ö¾À³|À³|’/// Called when the [TypeAnalyzer] encounters a condition which should be
-/// impossible if the user's code is free from static errors, but which might
-/// arise as a result of error recovery.  To verify this invariant, the client
-/// should double check (preferably using an assertion) that at least one
-/// error is reported.
-///
-/// Note that the error might be reported after this method is called.    À³˜„À³˜À´w/// Options affecting the behavior of [TypeAnalyzer].
-///
-/// The client is free to `implement` or `extend` this class. À¶{"À¶{ À¶{À¶  À¶•À¶¤À¶£  À¶¸%À¶ÇÀ¶Æ  À¶ã3À¶òÀ¶ñ  À·#À·+À·*  À·E%À·TÀ·S  À·p&À·À·~   À´.À´9À´9  À´M"À´XÀ´X  À´tÀµİÀµİS/// Indicates whether initializers of implicitly typed variables should be
-/// accounted for by SSA analysis.  (In an ideal world, they always would be,
-/// but due to https://github.com/dart-lang/language/issues/1785, they weren't
-/// always, and we need to be able to replicate the old behavior when
-/// analyzing old language versions). À¶ À¶À¶  À¶,"À¶7À¶7  À¶S#À¶^À¶^       …n„Ë…n…¬8/// The kind of inconsistency identified for a variable. ‡®9‡´ ‡´‡Ö  ‡×‡İ‡Ü   …Ó…ë…ë/// No inconsistency.…ï…ñ…ğ…÷L†7†7=/// Only one branch of a logical-or pattern has the variable.†@†B†A†HQ††††;/// Not every case of a shared case scope has the variable.†–†˜†—†P†Ù†Ù8/// The shared case scope has a label or `default` case.†ë†í†ì†ó€‡w‡w/// The finality or type of the variable components is not the same.
-/// This is reported for both logical-or and shared cases.‡‡‡‡–‡ ‡     ‡ë€ŞˆRˆRA/// Returns the most serious inconsistency for `this` or [other]. ˆ_(ˆƒˆ‚   ˆÍj‰5‰5B/// Returns the most serious inconsistency for `this` or [others]. ‰E3‰s‰r    Š;Š;Š>/// The location where the join of a pattern variable happens.  Š¡AŠÕŠÕ1/// A single pattern, from `logical-or` patterns. ŠçW‹/‹/E/// A shared `case` scope, when multiple `case`s share the same body.     ÏÏ-X/// Kinds of relational pattern operators that shared analysis needs to
-/// distinguish.  H``/// The operator `==` k!ƒƒ/// The operator `!=` ‘CÏÏ;/// Any relational pattern operator other than `==` or `!=`            ™®À‚<™®©0{/// Type analysis logic to be shared between the analyzer and front end.  The
-/// intention is that the client's main type inference visitor class can include
-/// this mix-in and call shared analysis logic as needed.
-///
-/// Concrete methods in this mixin, typically named `analyzeX` for some `X`,
-/// are intended to be called by the client in order to analyze an AST node (or
-/// equivalent) of type `X`; a client's `visit` method shouldn't have to do much
-/// than call the corresponding `analyze` method, passing in AST node's children
-/// and other properties, possibly take some client-specific actions with the
-/// returned value (such as storing intermediate inference results), and then
-/// return the returned value up the call stack.
-///
-/// Abstract methods in this mixin are intended to be implemented by the client;
-/// these are called by the `analyzeX` methods to report analysis results, to
-/// query the client-specific information (e.g. to obtain the client's
-/// representation of core types), and to trigger recursive analysis of child
-/// AST nodes.
-///
-/// Note that calling an `analyzeX` method is guaranteed to call `dispatch` on
-/// all its subexpressions.  However, we don't specify the precise order in
-/// which this will happen, nor do we always specify which callbacks will be
-/// invoked during analysis, because these details are considered part of the
-/// implementation of type analysis, not its API.  Instead, we specify the
-/// effect that each method has on a conceptual "stack" of entities.
-///
-/// In documentation, the entities in the stack are listed in low-to-high order.
-/// So, for example, if the documentation says the stack contains "(K, L)", then
-/// an entity of kind L is on the top of the stack, with an entity of kind K
-/// under it.  This low-to-high order is used when describing pushes and pops
-/// too, so, for example a method documented with "pushes (K, L)" pushes K
-/// first, then L, whereas a method documented with "pops (K, L)" pops L first,
-/// then K.
-///
-/// In the paragraph above, "K" and "L" are just variables for illustrating the
-/// conventions.  The actual kinds used by the analyzer are concepts from the
-/// language itself such as "Statement", "Expression", "Pattern", etc.  See the
-/// `Kind` enum in `test/mini_ir.dart` for a discussion of all possible kinds of
-/// stack entries.
-///
-/// If multiple stack entries share a kind, we will sometimes add a name to
-/// clarify which stack entry is which, e.g. analyzeIfStatement pushes
-/// "(Expression condition, Statement ifTrue, Statement ifFalse)".
-///
-/// We'll also use the convention that "n * K" represents n consecutive entities
-/// in the stack, each with kind K.
-///
-/// The kind associated with all pushes and pops is statically known (and
-/// documented, and unit tested), and entities never change from one kind to
-/// another.  This fact gives the client considerable freedom in how to actually
-/// represent the stack in practice; for example, they might choose to ignore
-/// some kinds entirely, or represent certain kinds with a block of multiple
-/// stack entries instead of just one.  Or they might choose to multiple stacks,
-/// one for each kind.  It's also possible that some clients won't need to keep
-/// a stack at all.
-///
-/// Reasons a client might want to actually have a stack include:
-/// - Constructing a lowered intermediate representation of the code as a side
-///   effect of analysis,
-/// - Building up a symbolic representation of the program's runtime behavior,
-/// - Or keeping track of AST nodes that need to be replaced (e.g. replacing an
-///   `integer literal` node with a `double literal` node when int->double
-///   conversion happens).
-///
-/// The unit tests in the `_fe_analyzer_shared` package associate a simple
-/// intermediate representation with each stack entry, and also record the kind
-/// of each entry in order to verify that when an entity is popped, it has the
-/// expected kind.©@©@©@©W©W©W©q©q©q©Œ©Œ©Œ©§©§©§©¿©¿©¿©È"©È©È©î©î©î ªšJ«³«³/// Cached context types and their respective dot shorthand nodes.
-///
-/// The [SharedTypeSchemaView] is used to resolve dot shorthand heads. We
-/// save the corresponding dot shorthand [Node] to make sure we aren't caching
-/// two context types for the same node.«â«ã«Ä«á«Å«à«Æ«Ì«é€‡¬i¬i    ¬tY¬È¬È   ¬t¬u¬Ñ€­­I­Ij/// Queries whether the [_dotShorthands] stack is empty, meaning that we have
-/// no cached context types.   ­‚j­á­á   ­‚­ƒ­ğd®@®@5/// Options affecting the behavior of [TypeAnalyzer].    Y®XŠ0°l°lÔ/// Analyzes a non-wildcard variable pattern appearing in an assignment
-/// context.  [node] is the pattern itself, and [variable] is the variable
-/// being referenced.
-///
-/// Returns an [AssignedVariablePatternResult] with information about reported
-/// errors.
-///
-/// See [dispatchPattern] for the meaning of [context].
-///
-/// For wildcard patterns in an assignment context,
-/// [analyzeDeclaredVariablePattern] should be used instead.
-///
-/// Stack effect: none. °I°Ó°Ò  °ß°è°ç  °ñ°û°ú   ¸ŒJ¹/¹/€‰/// Computes the type schema for a variable pattern appearing in an assignment
-/// context.  [variable] is the variable being referenced. ¹Y¹c¹b   ¹Ú†8ºÕºÕ€à/// Analyzes a cast pattern.  [innerPattern] is the sub-pattern] and
-/// [requiredType] is the type to cast to.
-///
-/// See [dispatchPattern] for the meaning of [context].
-///
-/// Stack effect: pushes (Pattern innerPattern). ºîV»>»=  »J»\»[  »h»z»y  »‹$»¤»£   À @€À @~À @~L/// Computes the type schema for a cast pattern.
-///
-/// Stack effect: none.   À @·ˆòÀ B¢À B¢¹/// Analyzes a constant pattern.  [node] is the pattern itself, and
-/// [expression] is the constant expression.  Depending on the client's
-/// representation, [node] and [expression] might or might not be identical.
-///
-/// See [dispatchPattern] for the meaning of [context].
-///
-/// Returns a [ConstantPatternResult] with the static type of [expression]
-/// and information about reported errors.
-///
-/// Stack effect: pushes (Expression). À B¾IÀ CÀ C   À C	À CÀ C  À CÀ C(À C'   À I­¸À JÀ JP/// Computes the type schema for a constant pattern.
-///
-/// Stack effect: none.   À Ki‹xÀ N$À N$‚{/// Analyzes a variable pattern in a non-assignment context.  [node] is the
-/// pattern itself, [variable] is the variable, [declaredType] is the
-/// explicitly declared type (if present).  [variableName] is the name of the
-/// variable; this is used to match up corresponding variables in the
-/// different branches of logical-or patterns, as well as different switch
-/// cases that share a body.
-///
-/// See [dispatchPattern] for the meaning of [context].
-///
-/// Returns a [DeclaredVariablePatternResult] with the static type of the
-/// variable (possibly inferred) and information about reported errors.
-///
-/// Stack effect: none. À NHIÀ N‹À NŠ  À N—À N À NŸ  À N©À N³À N²  À NÀÀ NÈÀ NÇ  À NÙÀ NêÀ Né   À Vå­À WÏÀ WÏ€Ê/// Computes the type schema for a variable pattern in a non-assignment
-/// context (or a wildcard pattern).  [declaredType] is the explicitly
-/// declared type (if present).
-///
-/// Stack effect: none. À WùÀ X
-À X	   À X–œÀ YÀ Ya/// Analyzes a dot shorthand.
-/// Saves the [context] for when we resolve the dot shorthand head. À Y$À Y0À Y/  À Y9À YOÀ YN   À Z6…iÀ \°À \°‚R/// Analyzes an expression.  [node] is the expression to analyze, and
-/// [schema] is the type schema which should be used for type inference.
-///
-/// If [continueNullShorting] is `false` (the default), then any null shorting
-/// that starts inside [node] will be terminated, and the returned type will
-/// be nullable, to reflect the fact that null-aware expressions might
-/// evaluate to `null`.
-///
-/// If [continueNullShorting] is `true`, then null shorting that starts inside
-/// [node] will be allowed to continue into the containing expression.
-///
-/// Stack effect: pushes (Expression). À \ÇÀ \ÓÀ \Ò  À \ÜÀ \òÀ \ñ  À \ÿ!À ]À ]  À ]À _£‹˜À dÀ d„-/// Analyzes a collection element of the form
-/// `if (expression case pattern) ifTrue` or
-/// `if (expression case pattern) ifTrue else ifFalse`.
-///
-/// [node] should be the AST node for the entire element, [expression] for
-/// the expression, [pattern] for the pattern to match, [ifTrue] for the
-/// "then" branch, and [ifFalse] for the "else" branch (if present).
-///
-/// [variables] should be a map from variable name to the variable the client
-/// wishes to use to represent that variable.  This is used to join together
-/// variables that appear in different branches of logical-or patterns.
-///
-/// Returns a [IfCaseStatementResult] with the static type of [expression] and
-/// information about reported errors.
-///
-/// Stack effect: pushes (Expression scrutinee, Pattern, Expression guard,
-/// CollectionElement ifTrue, CollectionElement ifFalse).  If there is no
-/// `else` clause, the representation for `ifFalse` will be pushed by
-/// [handleNoCollectionElement].  If there is no guard, the representation
-/// for `guard` will be pushed by [handleNoGuard]. À d1À d@À d?  À dIÀ d^À d]  À dmÀ dÀ d~  À d‹(À d«À dª  À d¹À dÏÀ dÎ  À dÙÀ dèÀ dç  À dóÀ eÀ e  À eÀ e!À e    À k?Š]À nÀ nƒ#/// Analyzes a statement of the form `if (expression case pattern) ifTrue` or
-/// `if (expression case pattern) ifTrue else ifFalse`.
-///
-/// [node] should be the AST node for the entire statement, [expression] for
-/// the expression, [pattern] for the pattern to match, [ifTrue] for the
-/// "then" branch, and [ifFalse] for the "else" branch (if present).
-///
-/// Returns a [IfCaseStatementResult] with the static type of [expression] and
-/// information about reported errors.
-///
-/// Stack effect: pushes (Expression scrutinee, Pattern, Expression guard,
-/// Statement ifTrue, Statement ifFalse).  If there is no `else` clause, the
-/// representation for `ifFalse` will be pushed by [handleNoStatement].  If
-/// there is no guard, the representation for `guard` will be pushed by
-/// [handleNoGuard]. À nºÀ nÅÀ nÄ  À nÎÀ nÚÀ nÙ  À néÀ nòÀ nñ  À nşÀ oÀ o
-  À oÀ o À o  À o+À o7À o6  À oCÀ oZÀ oY   À u „/À wßÀ wß‚#/// Analyzes a collection element of the form `if (condition) ifTrue` or
-/// `if (condition) ifTrue else ifFalse`.
-///
-/// [node] should be the AST node for the entire element, [condition] for
-/// the condition expression, [ifTrue] for the "then" branch, and [ifFalse]
-/// for the "else" branch (if present).
-///
-/// Stack effect: pushes (Expression condition, CollectionElement ifTrue,
-/// CollectionElement ifFalse).  Note that if there is no `else` clause, the
-/// representation for `ifFalse` will be pushed by
-/// [handleNoCollectionElement]. À wöÀ xÀ x  À xÀ x#À x"  À x1À x@À x?  À xKÀ x[À xZ  À xgÀ xyÀ xx   À yÓƒÉÀ {íÀ {í‚ /// Analyzes a statement of the form `if (condition) ifTrue` or
-/// `if (condition) ifTrue else ifFalse`.
-///
-/// [node] should be the AST node for the entire statement, [condition] for
-/// the condition expression, [ifTrue] for the "then" branch, and [ifFalse]
-/// for the "else" branch (if present).
-///
-/// Stack effect: pushes (Expression condition, Statement ifTrue, Statement
-/// ifFalse).  Note that if there is no `else` clause, the representation for
-/// `ifFalse` will be pushed by [handleNoStatement]. À |À |À |  À |À |%À |$  À |3À |>À |=  À |IÀ |UÀ |T   À } ‚À ~À ~\/// Analyzes an integer literal, given the type schema [schema].
-///
-/// Stack effect: none. À ~+À ~AÀ ~@   À €1ÌÀ øÀ ø™/// Analyzes a list pattern.  [node] is the pattern itself, [elementType] is
-/// the list element type (if explicitly supplied), and [elements] is the
-/// list of subpatterns.
-///
-/// Returns a [ListPatternResult] with the required type and information about
-/// reported errors.
-///
-/// See [dispatchPattern] for the meaning of [context].
-///
-/// Stack effect: pushes (n * Pattern) where n = elements.length. À ‚IÀ ‚SÀ ‚R  À ‚_À ‚hÀ ‚g  À ‚sÀ ‚„À ‚ƒ  À ‚”À ‚©À ‚¨   À …iÀ âÀ â€Á/// Computes the type schema for a list pattern.  [elementType] is the list
-/// element type (if explicitly supplied), and [elements] is the list of
-/// subpatterns.
-///
-/// Stack effect: none. À $À À   À +À @À ?   À “nƒÇÀ ”À ”/// Analyzes a logical-and pattern.  [node] is the pattern itself, and [lhs]
-/// and [rhs] are the left and right sides of the `&&` operator.
-///
-/// See [dispatchPattern] for the meaning of [context].
-///
-/// Stack effect: pushes (Pattern left, Pattern right) À ”«IÀ ”îÀ ”í  À ”úÀ •À •  À •À •À •  À •À • À •   À —9aÀ —òÀ —ò€›/// Computes the type schema for a logical-and pattern.  [lhs] and [rhs] are
-/// the left and right sides of the `&&` operator.
-///
-/// Stack effect: none. À ˜À ˜À ˜  À ˜À ˜!À ˜    À ˜ÆÀ š#À š#V/// Analyzes a logical-or pattern.  [node] is the pattern itself, and [lhs]
-/// and [rhs] are the left and right sides of the `||` operator.
-///
-/// Returns a [LogicalOrPatternResult] with information about reported errors.
-///
-/// See [dispatchPattern] for the meaning of [context].
-///
-/// Stack effect: pushes (Pattern left, Pattern right) À š@IÀ šƒÀ š‚  À šÀ š˜À š—  À š¡À š§À š¦  À š¯À šµÀ š´   À ¦h‚À §&À §&€ /// Computes the type schema for a logical-or pattern.  [lhs] and [rhs] are
-/// the left and right sides of the `|` or `&` operator.
-///
-/// Stack effect: none. À §DÀ §JÀ §I  À §NÀ §TÀ §S   À ¨Š’<À ªWÀ ªW /// Analyzes a map pattern.  [node] is the pattern itself, [typeArguments]
-/// contain explicit type arguments (if specified), and [elements] is the
-/// list of subpatterns.
-///
-/// Returns a [MapPatternResult] with the required type and information about
-/// reported errors.
-///
-/// See [dispatchPattern] for the meaning of [context].
-///
-/// Stack effect: pushes (n * MapPatternElement) where n = elements.length. À ªnIÀ ª±À ª°  À ª½À ªÆÀ ªÅ  À ªÑPÀ «À «  À «'À «<À «;   À ºÊ„¾À »©À »©€¿/// Computes the type schema for a map pattern.  [typeArguments] contain
-/// explicit type arguments (if specified), and [elements] is the list of
-/// subpatterns.
-///
-/// Stack effect: none. À »ÇPÀ ¼À ¼
-  À ¼À ¼2À ¼1   À ¿ŒˆÀ ÁbÀ Áb›/// Analyzes a null-check or null-assert pattern.  [node] is the pattern
-/// itself, [innerPattern] is the sub-pattern, and [isAssert] indicates
-/// whether this is a null-check or a null-assert pattern.
-///
-/// Returns a [NullCheckOrAssertPatternResult] with information about
-/// reported errors.
-///
-/// See [dispatchPattern] for the meaning of [context].
-///
-/// Stack effect: pushes (Pattern innerPattern). À Á‡IÀ ÁÊÀ ÁÉ  À ÁÖÀ ÁßÀ ÁŞ  À ÁèÀ ÁñÀ Áğ  À ÂÀ ÂÀ Â   À Ç•ƒ$À ÈÀ È€Û/// Computes the type schema for a null-check or null-assert pattern.
-/// [innerPattern] is the sub-pattern and [isAssert] indicates whether this is
-/// a null-check or a null-assert pattern.
-///
-/// Stack effect: none. À È»À ÈÄÀ ÈÃ  À È×À ÈæÀ Èå   À Ê½ŒäÀ Ì@À Ì@U/// Analyzes an object pattern.  [node] is the pattern itself, and [fields]
-/// is the list of subpatterns.
-///
-/// Returns a [ObjectPatternResult] with the required type and information
-/// about reported errors.
-///
-/// See [dispatchPattern] for the meaning of [context].
-///
-/// Stack effect: pushes (n * Pattern) where n = fields.length. À ÌZIÀ ÌÀ Ìœ  À Ì©À Ì²À Ì±  À Ì½7À ÌïÀ Ìî   À ×¥)À ØoÀ Øo€¬/// Computes the type schema for an object pattern.  [type] is the type
-/// specified with the object name, and with the type arguments applied.
-///
-/// Stack effect: none. À ØŠÀ ØšÀ Ø™   À ØÒ…ÌÀ ÙşÀ Ùş€ÿ/// Analyzes a patternAssignment expression of the form `pattern = rhs`.
-///
-/// [node] should be the AST node for the entire expression, [pattern] for
-/// the pattern, and [rhs] for the right hand side.
-///
-/// Stack effect: pushes (Expression, Pattern). À ÚÀ Ú(À Ú'  À Ú1À Ú:À Ú9  À ÚFÀ ÚRÀ ÚQ   À Ş¢Š†À à¸À à¸ß/// Analyzes a `pattern-for-in` statement or element.
-///
-/// Statement:
-/// `for (<keyword> <pattern> in <expression>) <statement>`
-///
-/// Element:
-/// `for (<keyword> <pattern> in <expression>) <body>`
-///
-/// Stack effect: pushes (Expression, Pattern).
-///
-/// Returns a [PatternForInResult] containing information on reported errors.
-///
-/// Note, however, that the caller is responsible for reporting an error if
-/// the static type of [expression] is potentially nullable. À àÒÀ àáÀ àà  À àêÀ àùÀ àø  À áÀ áÀ á  À á$À á9À á8  À áH%À ábÀ áa   À é,‡AÀ ëtÀ ët‚/// Analyzes a patternVariableDeclaration node of the form
-/// `var pattern = initializer` or `final pattern = initializer`.
-///
-/// [node] should be the AST node for the entire declaration, [pattern] for
-/// the pattern, and [initializer] for the initializer.  [isFinal] indicates
-/// whether this is a final declaration.
-///
-/// Returns a [PatternVariableDeclarationAnalysisResult] holding the static
-/// type of the initializer and the type schema of the [pattern].
-///
-/// Stack effect: pushes (Expression, Pattern). À ë›	À ë¡À ë   À ëªÀ ë³À ë²  À ë¿À ëËÀ ëÊ  À ëİÀ ëìÀ ëë   À ğq‘iÀ ñóÀ ñóT/// Analyzes a record pattern.  [node] is the pattern itself, and [fields]
-/// is the list of subpatterns.
-///
-/// Returns a [RecordPatternResult] with the required type and information
-/// about reported errors.
-///
-/// See [dispatchPattern] for the meaning of [context].
-///
-/// Stack effect: pushes (n * Pattern) where n = fields.length. À òIÀ òPÀ òO  À ò\À òeÀ òd  À òp7À ò¢À ò¡   ÀŞ‚­ÀHÀHN/// Computes the type schema for a record pattern.
-///
-/// Stack effect: none. Ài7À›Àš   À½À·À·î/// Analyzes a relational pattern.  [node] is the pattern itself, and
-/// [operand] is a constant expression that will be passed to the relational
-/// operator.
-///
-/// This method will invoke [resolveRelationalPatternOperator] to obtain
-/// information about the operator.
-///
-/// Returns a [RelationalPatternResult] with the type of the [operand] and
-/// information about reported errors.
-///
-/// See [dispatchPattern] for the meaning of [context].
-///
-/// Stack effect: pushes (Expression). ÀÕIÀÀ  À$À-À,  À6ÀBÀA   ÀP¾À¾À¾R/// Computes the type schema for a relational pattern.
-///
-/// Stack effect: none.   À–ŠÀmÀm./// Analyzes an expression of the form `switch (expression) { cases }`.
-///
-/// Returns a [SwitchExpressionResult] with the static type of the switch
-/// expression and information about reported errors.
-///
-/// Stack effect: pushes (Expression, n * ExpressionCase), where n is the
-/// number of cases. ÀŠÀ–À•  ÀŸÀ«Àª  À¹À¾À½  ÀËÀáÀà   À* ™lÀ+¨À+¨€Ö/// Analyzes a statement of the form `switch (expression) { cases }`.
-///
-/// Stack effect: pushes (Expression, n * StatementCase), where n is the
-/// number of cases after merging together cases that share a body. À+ÄÀ+ÏÀ+Î  À+ØÀ+äÀ+ã  À+òÀ+ıÀ+ü   ÀDƒ ÀEªÀEªv/// Analyzes a variable declaration of the form `type variable;` or
-/// `var variable;`.
-///
-/// [node] should be the AST node for the entire declaration, [variable] for
-/// the variable, and [declaredType] for the type (if present).  [isFinal]
-/// indicates whether this is a final declaration.
-///
-/// Stack effect: none.
-///
-/// Returns the inferred type of the variable. ÀE×	ÀEİÀEÜ  ÀEæÀEğÀEï  ÀEıÀFÀF  ÀF!ÀF0ÀF/   ÀG‡ÀH"ÀH"€â/// Analyzes a wildcard pattern.  [node] is the pattern.
-///
-/// Returns a [WildcardPatternResult] with information about reported errors.
-///
-/// See [dispatchPattern] for the meaning of [context].
-///
-/// Stack effect: none. ÀH?VÀHÀH  ÀH›ÀH­ÀH¬  ÀH¶%ÀHĞÀHÏ   ÀN vÀNĞÀNĞ€’/// Computes the type schema for a wildcard pattern.  [declaredType] is the
-/// explicitly declared type (if present).
-///
-/// Stack effect: none. ÀNó%ÀOÀO   ÀOš•ÀPöÀPöH/// Calls the appropriate `analyze` method according to the form of
-/// collection [element], and then adjusts the stack as needed to combine
-/// any sub-structures into a single collection element.
-///
-/// For example, if [element] is an `if` element, calls [analyzeIfElement].
-///
-/// Stack effect: pushes (CollectionElement). ÀQÀQÀQ  ÀQÀQ'ÀQ&   ÀQ3³ÀR˜ÀR˜7/// Calls the appropriate `analyze` method according to the form of
-/// [node], and then adjusts the stack as needed to combine any
-/// sub-structures into a single expression.
-///
-/// For example, if [node] is a switch expression, calls
-/// [analyzeSwitchExpression].
-///
-/// Stack effect: pushes (Expression). ÀR°ÀR¼ÀR»  ÀRÅÀRÛÀRÚ   ÀRêëÀT_ÀT_X/// Calls the appropriate `analyze` method according to the form of [pattern].
-///
-/// [context] keeps track of other contextual information pertinent to the
-/// matching of the [pattern], such as the context of the top-level pattern,
-/// and the information accumulated while matching previous patterns.
-///
-/// Stack effect: pushes (Pattern). ÀTtIÀT·ÀT¶  ÀTÃÀTÉÀTÈ   ÀTÙ€¹ÀUnÀUnw/// Calls the appropriate `analyze...Schema` method according to the form of
-/// [pattern].
-///
-/// Stack effect: none. ÀU„ÀUŠÀU‰   ÀU–zÀVéÀVé=/// Calls the appropriate `analyze` method according to the form of
-/// [statement], and then adjusts the stack as needed to combine any
-/// sub-structures into a single statement.
-///
-/// For example, if [statement] is a switch statement, calls
-/// [analyzeSwitchStatement].
-///
-/// Stack effect: pushes (Statement). ÀVûÀWÀW   ÀW€ÓÀWrÀWrL/// Infers the type for the [pattern], should be a subtype of [matchedType]. ÀWŸ#ÀW¸ÀW·  ÀWÈÀWÚÀWÙ   ÀWëOÀYÀY/// Called after visiting an expression case.
-///
-/// [node] is the enclosing switch expression, and [caseIndex] is the index of
-/// this code path within the switch expression's cases.
-///
-/// Stack effect: pops (CaseHead, Expression) and pushes (ExpressionCase). ÀYÀY&ÀY%  ÀY+ÀY0ÀY/   ÀY>€ñÀYCÀYC  ÀYdÀYnÀYm  ÀY}/ÀY¥ÀY¤  ÀY²9ÀYßÀYŞ  ÀYñÀZ ÀYÿ  ÀZÀZ%ÀZ$   ÀZ3€‹ÀZ‹ÀZ‹@/// Returns the most recently cached dot shorthand context type.   ÀZÂ€‚À[#À[#8/// If the [element] is a map pattern entry, returns it. À[6À[<À[;   À[HzÀ[šÀ[šF/// If [node] is [isRestPatternElement], returns its optional pattern. À[·	À[½À[¼   À[Æ‚À]£À]£“/// Returns an [SwitchExpressionMemberInfo] object describing the [index]th
-/// `case` or `default` clause in the switch expression [node].
-///
-/// Note: it is allowed for the client's AST nodes for `case` and `default`
-/// clauses to implement [SwitchExpressionMemberInfo], in which case this
-/// method can simply return the [index]th `case` or `default` clause.
-///
-/// See [analyzeSwitchExpression]. À]ÁÀ]ÍÀ]Ì  À]Ò	À]×À]Ö   À]á‚&À_ËÀ_Ë–/// Returns a [SwitchStatementMemberInfo] object describing the [caseIndex]th
-/// `case` or `default` clause in the switch statement [node].
-///
-/// Note: it is allowed for the client's AST nodes for `case` and `default`
-/// clauses to implement [SwitchStatementMemberInfo], in which case this
-/// method can simply return the [caseIndex]th `case` or `default` clause.
-///
-/// See [analyzeSwitchStatement]. À_èÀ_óÀ_ò  À_øÀ_ıÀ_ü   À`€†À`PÀ`P=/// Called after visiting the pattern in `if-case` statement. À`uÀ`‰À`ˆ   À`•oÀ`ÙÀ`Ù</// Called after visiting the expression of an `if` element. À`÷	À`ıÀ`ü   Àa|ÀaPÀaP@/// Called after visiting the `else` element of an `if` element. Àai	ÀaoÀan  ÀatÀazÀay   Àaˆ{ÀaĞÀaĞ@/// Called after visiting the `then` element of an `if` element. Àaé	ÀaïÀaî  ÀaôÀaúÀaù   ÀbxÀbMÀbM>/// Called after visiting the expression of an `if` statement. ÀbmÀbxÀbw   Àbƒ€ŒÀbÏÀbÏD/// Called after visiting the `else` statement of an `if` statement. ÀbêÀbõÀbô  ÀbúÀcÀc   Àc€‹Àc_Àc_D/// Called after visiting the `then` statement of an `if` statement. ÀczÀc…Àc„  ÀcŠÀc•Àc”   Àc¢€…ÀcöÀcöL/// Called after visiting the left hand side of a logical-or (`||`) pattern. ÀdÀd Àd   Àd+€ÀeCÀeC/// Called after visiting a merged set of `case` / `default` clauses.
-///
-/// [node] is the enclosing switch statement, [caseIndex] is the index of the
-/// merged `case` or `default` group.
-///
-/// Stack effect: pops (numHeads * CaseHead) and pushes (CaseHeads). ÀebÀemÀel  ÀevÀe{Àez  Àe‰ÀeÀeœ   Àe¯ËÀgÀgX/// Called after visiting a single `case` clause, consisting of a pattern and
-/// an optional guard.
-///
-/// [node] is the enclosing switch statement or switch expression,
-/// [caseIndex] is the index of the `case` clause, and [subIndex] is the index
-/// of the case head.
-///
-/// Stack effect: pops (Pattern, Expression) and pushes (CaseHead). Àg1	Àg7Àg6  ÀgBÀgPÀgO  Àg^ÀglÀgk   Àg~tÀh–Àh–/// Called after visiting a `default` clause.
-///
-/// [node] is the enclosing switch statement or switch expression and
-/// [caseIndex] is the index of the `default` clause.
-/// [subIndex] is the index of the case head.
-///
-/// Stack effect: pushes (CaseHead). Àh©	Àh¯Àh®  ÀhºÀhÈÀhÇ  ÀhÖÀhäÀhã   Àhö€±ÀieÀiec/// Called after visiting a rest element in a list pattern.
-///
-/// Stack effect: pushes (Pattern). Ài‚Ài‹ÀiŠ  Ài•Ài›Àiš   Ài«€ßÀj%Àj%n/// Called after visiting an entry element in a map pattern.
-///
-/// Stack effect: pushes (MapPatternElement). Àj@ÀjIÀjH  ÀjWÀj]Àj\  ÀjnÀj~Àj}   Àj€¹ÀkÀkl/// Called after visiting a rest element in a map pattern.
-///
-/// Stack effect: pushes (MapPatternElement). Àk"Àk+Àk*  Àk5Àk;Àk:   ÀkK‚ÓÀm«Àm«‚B/// Called after visiting a merged statement case.
-///
-/// [node] is enclosing switch statement, [caseIndex] is the index of the
-/// merged `case` or `default` group.
-///
-/// If [isTerminating] is `true`, then flow analysis has determined that the
-/// case ends in a construct that doesn't complete normally (e.g. a `break`,
-/// `return`, `continue`, `throw`, or infinite loop); the client can use this
-/// to determine whether a jump is needed to the end of the switch statement.
-///
-/// Stack effect: pops (CaseHeads, numStatements * Statement) and pushes
-/// (StatementCase). ÀmÊÀmÕÀmÔ  ÀmàÀmîÀmí  ÀmüÀnÀn
-   Àn"CÀo@Ào@/// Called when visiting a syntactic construct where there is an implicit
-/// no-op collection element.  For example, this is called in place of the
-/// missing `else` part of an `if` element that lacks an `else` clause.
-///
-/// Stack effect: pushes (CollectionElement). ÀoZ	Ào`Ào_   ÀoiÒÀqÀq”/// Called when visiting a `case` that lacks a guard clause.  Since the lack
-/// of a guard clause is semantically equivalent to `when true`, this method
-/// should behave similarly to visiting the boolean literal `true`.
-///
-/// [node] is the enclosing switch statement, switch expression, or `if`, and
-/// [caseIndex] is the index of the `case` within [node].
-///
-/// Stack effect: pushes (Expression). Àq!	Àq'Àq&  Àq,Àq1Àq0   Àq?1ÀrNÀrN€ÿ/// Called when visiting a syntactic construct where there is an implicit
-/// no-op statement.  For example, this is called in place of the missing
-/// `else` part of an `if` statement that lacks an `else` clause.
-///
-/// Stack effect: pushes (Statement). Àr`ÀrkÀrj   ÀrtsÀs{Às{€÷/// Called before visiting a single `case` or `default` clause.
-///
-/// [node] is the enclosing switch statement or switch expression and
-/// [caseIndex] is the index of the `case` or `default` clause.
-/// [subIndex] is the index of the case head. Às	Às¤Às£  Às¯Às½Às¼  ÀsËÀsÙÀsØ   Àsë°ÀupÀupk/// Called after visiting the scrutinee part of a switch statement or switch
-/// expression.  This is a hook to allow the client to start exhaustiveness
-/// analysis.
-///
-/// [type] is the static type of the scrutinee expression.
-///
-/// TODO(paulberry): move exhaustiveness analysis into the shared code and
-/// eliminate this method.
-///
-/// Stack effect: none. Àu†Àu–Àu•   ÀuŸVÀuÕÀuÕ./// Queries whether [node] is a dot shorthand. ÀuäÀuğÀuï   ÀuùlÀw"Àw"/// Queries whether the switch statement or expression represented by [node]
-/// was exhaustive.  [expressionType] is the static type of the scrutinee.
-///
-/// Will only be called if the switch statement or expression lacks a
-/// `default` clause, and patterns support is disabled. Àw;	ÀwAÀw@  ÀwFÀwVÀwU   ÀwinÀw·Àw·F/// Returns whether [node] is a rest element in a list or map pattern. ÀwÌ	ÀwÒÀwÑ   ÀwÛ\ÀxÀx4/// Queries whether [pattern] is a variable pattern. Àx)Àx/Àx.   Àx;€×ÀxÓÀxÓ€/// Pops the top of the [_dotShorthands] stack when we're finished resolving
-/// the dot shorthand head that requires the recent-most context.   Ày*Ày…Ày…e/// Pushes the [node] and [context] onto the stack to use when we resolve the
-/// dot shorthand head. Ày	Ày£Ày¢  Ày¨Ày¾Ày½   ÀzD¢À{;À{;€Ö/// Returns the type of the property in [receiverType] that corresponds to
-/// the name of the [field].  If the property cannot be resolved, the client
-/// should report an error, and return `dynamic` for recovery. À{aÀ{sÀ{r  À{…$À{À{  À{¯0À{ÛÀ{Ú   À{ê®À};À};&/// Resolves the relational operator for [node] assuming that the value being
-/// matched has static type [matchedValueType].
-///
-/// If no operator is found, `null` should be returned.  (This could happen
-/// either because the code is invalid, or because [matchedValueType] is
-/// `dynamic`). À}aÀ}jÀ}i  À}sÀ}ƒÀ}‚   À}œ€øÀ~\À~\€´/// Records that type inference has assigned a [type] to a [variable].  This
-/// is called once per variable, regardless of whether the variable's type is
-/// explicit or inferred. À~lÀ~vÀ~u  À~À~À~   À~˜€ĞÀ3À3€‡/// Computes the type that should be inferred for an implicitly typed variable
-/// whose initializer expression has static type [type]. ÀSÀcÀb   Àl‚³À€À€€/// Common functionality shared by [analyzeIfStatement] and
-/// [analyzeIfCaseStatement].
-///
-/// Stack effect: pushes (Statement ifTrue, Statement ifFalse). À€(À€3À€2  À€8À€CÀ€B  À€JÀ€VÀ€U   À‚#ƒ!À‚àÀ‚à€­/// Common functionality shared by [analyzeIfElement] and
-/// [analyzeIfCaseElement].
-///
-/// Stack effect: pushes (CollectionElement ifTrue,
-/// CollectionElement ifFalse). À‚ı	ÀƒÀƒ  ÀƒÀƒÀƒ  ÀƒÀƒ$Àƒ#  Àƒ0Àƒ9Àƒ8   À…HÜÀ…OÀ…O  À…_À…kÀ…j  À…vÀ…†À……   À‡(ŠëÀ‡-À‡-  À‡PÀ‡gÀ‡f  À‡u.À‡’À‡‘  À‡©-À‡»À‡º  À‡Ş/ÀˆÀˆ   À’…0À’İÀ’İ€©/// If the shape described by [fields] is the same as the shape of the
-/// [matchedType], returns matched types for each field in [fields].
-/// Otherwise returns `null`. À’ø.À“!À“   À“, À“BÀ“A   À—KƒtÀ—”À—”5/// Reports errors for duplicate named record fields. À—½À—ÆÀ—Å  À—Ò.À—ûÀ—ú   ÀšÃ%ÀšÈÀšÈ  ÀšîÀšşÀšı  À›À›À›       ‹Â M€›€×€Ø*Gk“”å‚.‚D‚H‚†‚£‚º‚Õ‚ï‚óƒAƒXƒYƒ¦ƒğ„:„P„y„z„Æ„ç…………8…U…e…k…m…n…§…Ñ…é…ô…õ†5†E†F†„†›†œ†×†ğ†ñ‡8‡u‡“‡”‡«‡¬‡è‡éˆ-ˆ[ˆ‰ˆˆÆˆÊˆË‰‰A‰z‰€‰¶‰õŠŠ!Š4Š8Š:Š;ŠzŠŸŠÓŠäŠå‹-‹@‹B‹C‹‹¦‹½‹¾‹û‹ı‹şŒMŒyŒÈŒßŒã!i·×êë4Jcd{“«ÆÌÎÏ(F^hiÍÖØÙ+Pv™š»Óô‘‘‘‘‘l‘ ‘¤‘â’’’6’P’T’“’Ó’Ô““%“&“t“v“w“Ç“û“ÿ”=”^”u””ª”Ä”È”ô”ú•I•Š•Ñ•Ò––4–5–†–Ô—!—5—S—T—¢—ğ˜:˜†˜Ï˜ò™™™:™S™k™ˆ™¥™«™­™®™üšMš‡š‹šØ›(›y›Êœœfœ—œ›œì:ÏŞâ1}ÊŸŸcŸ¨Ÿ¬Ÿı N › é¡4¡„¡¡”¡ä¢2¢‚¢Ó¢æ¢ê£6£}£À£Ä¤¤9¤=¤‡¤Ô¥%¥s¥À¦¦a¦u¦y¦»§
-§$§s§Ã¨¨)¨-¨x¨È©©*©>©U©o©Š©¥©½©Æ©ìªªªªIª_ªsªŒª˜ªİªã«/«€«««æ«ç«ı¬¬¬&¬4¬H¬U¬_¬c¬q¬r¬~¬Î¬Ï­­>­­€­Œ­Û­í­î®&®U®V® ®í¯¯¯\¯j¯p¯ª¯°¯æ°%°+°E°Œ°Û°í±±
-±L±€±Ë±ğ²'²E²q²€²¹²ê³³.³M³\³d³j³k³¸³ó³ÿ´!´n´u´®´Ôµµ8µƒµ¿µó¶¶7¶b¶’¶Ÿ¶¥¶Á¶æ···X·†·µ·è¸¸T¸~¸…¸‰¸Š¸Û¹¹U¹l¹Œ¹Ò¹×¹ØººLºRºŒº’ºÅºê»9»F»d»‡»±»¸»ú¼¼;¼Z¼~¼…¼Ç¼õ½"½<½c½‡½½–½â¾/¾}¾Í¿¿&¿M¿›¿³¿ÍÀ @À @À @À @GÀ @MÀ @gÀ @´À @µÀ @ûÀ AEÀ A”À AšÀ AÔÀ AÚÀ B'À BTÀ BZÀ BƒÀ BºÀ C	À CÀ C3À C9À C{À CŒÀ CÇÀ CıÀ D#À D\À DÀ D¨À DÑÀ DŞÀ DäÀ EÀ E-À E^À EeÀ EƒÀ E•À E«À EçÀ FÀ FÀ F3À F_À FÀ FÌÀ FñÀ GBÀ GZÀ G©À GÑÀ GùÀ H)À HVÀ HcÀ HmÀ HuÀ H{À H¡À HÇÀ HøÀ I-À IuÀ IŸÀ I¦À IªÀ I«À IâÀ IèÀ JÀ J:À J‰À JÔÀ KÀ K?À KbÀ KfÀ KgÀ KµÀ KıÀ LMÀ L•À LâÀ MÀ MÀ MAÀ MGÀ M“À MİÀ MãÀ MıÀ NDÀ N“À N¥À N¼À NÕÀ N÷À NıÀ O?À O_À OªÀ OåÀ PÀ PDÀ PvÀ P¨À PéÀ Q%À QYÀ QtÀ QÀ QÈÀ QîÀ QûÀ RÀ RÀ RBÀ R_À RfÀ R²À RşÀ S5À SxÀ S«À SçÀ T8À TZÀ T„À T¦À TòÀ UÀ U;À UFÀ UqÀ U¶À UõÀ V#À VAÀ VuÀ V­À V×À VŞÀ VâÀ VãÀ W-À WvÀ W˜À WÀ W¸À WõÀ XÀ XÀ X=À X^À XÀ X“À X”À X´À XúÀ Y À Y5À YWÀ Y]À Y‰À YÏÀ YÛÀ YêÀ YñÀ ZÀ Z/À Z3À Z4À Z|À ZÇÀ ZÍÀ [À [mÀ [¶À [ĞÀ [ÖÀ \'À \pÀ \vÀ \ŸÀ \ÃÀ \ØÀ \ûÀ ]"À ])À ]KÀ ]—À ]¨À ]ÙÀ ^ À ^À ^RÀ ^mÀ ^À ^¶À ^¼À ^ãÀ _À _EÀ _…À _‹À _œÀ _ À _¡À _ÑÀ ` À `:À `@À `À `ØÀ aÀ a%À auÀ aÄÀ bÀ bÀ beÀ bÀ b”À báÀ c-À cuÀ cÂÀ c÷À d-À dEÀ diÀ d‡À dµÀ dÕÀ dïÀ eÀ e)À e0À eAÀ ecÀ e›À e­À eËÀ eÒÀ fÀ f4À fmÀ f¥À fØÀ fíÀ g:À gRÀ g‚À gÆÀ gÏÀ gŞÀ gåÀ h	À h,À h=À hWÀ h{À h¸À h¿À hàÀ hÿÀ iÀ i=À iLÀ i‚À i‹À iËÀ iØÀ iöÀ iüÀ j'À jRÀ jÀ jµÀ jãÀ kÀ k1À k8À k<À k=À kÀ kÇÀ kÍÀ lÀ lgÀ l®À l´À mÀ m.À m4À mÀ mĞÀ nÀ nhÀ nÀ n¶À nÊÀ nåÀ núÀ oÀ o'À o?À odÀ ojÀ o{À oÀ oÕÀ oçÀ pÀ pÀ pSÀ pnÀ p§À pßÀ qÀ q'À qtÀ qŒÀ q¼À r À r	À rÀ rÀ r À rCÀ rTÀ rnÀ r’À rÏÀ rÖÀ r×À sÀ s0À sQÀ spÀ s‰À s®À s½À sóÀ süÀ t<À tIÀ tgÀ tmÀ t˜À tÃÀ tğÀ uÀ uDÀ uvÀ u’À u™À uÀ uÀ uéÀ vÀ vÀ vgÀ vµÀ vßÀ våÀ w1À w€À wµÀ wØÀ wòÀ x
-À x-À xGÀ xcÀ xÀ xˆÀ x™À xÀÀ yÀ y9À y^À yÀ yÌÀ yĞÀ yÑÀ zÀ z?À zEÀ z“À záÀ {À {À {_À {¯À {æÀ |À |À |/À |EÀ |]À |cÀ |tÀ |›À |ëÀ }À };À }lÀ }™À }À }À }áÀ }çÀ ~À ~JÀ ~eÀ ~À ~´À ~ÒÀ ~ßÀ 	À 0À NÀ YÀ ƒÀ £À ÁÀ çÀ ùÀ €#À €*À €.À €/À €~À €ÊÀ €åÀ €ëÀ <À SÀ YÀ “À ™À İÀ ‚À ‚[À ‚oÀ ‚À ‚²À ‚¹À ‚ûÀ ƒÀ ƒ8À ƒWÀ ƒdÀ ƒ¦À ƒÀÀ ƒÉÀ ƒîÀ „À „MÀ „yÀ „³À „İÀ „ìÀ …À …'À …-À …oÀ …‹À …°À …ÏÀ …ôÀ †<À †CÀ †TÀ †sÀ †¤À †ÔÀ †öÀ ‡!À ‡LÀ ‡œÀ ‡ÀÀ ‡ëÀ ˆÀ ˆÀ ˆ"À ˆIÀ ˆÀ ˆ°À ˆïÀ ‰%À ‰@À ‰wÀ ‰À ‰œÀ ‰¼À ‰ÆÀ ‰ûÀ Š
-À Š2À ŠÀ ŠÀ Š¥À Š«À ŠáÀ ‹À ‹UÀ ‹{À ‹ÁÀ ‹ıÀ Œ1À ŒLÀ ŒuÀ Œ À ŒÈÀ ŒÕÀ ŒÛÀ ŒıÀ À ]À ‘À ÉÀ óÀ úÀ şÀ ÿÀ MÀ ˜À «À ±À ËÀ ıÀ 'À IÀ PÀ oÀ ½À ÃÀ ÄÀ àÀ  À &À 'À MÀ rÀ ™À ÄÀ ‘	À ‘+À ‘rÀ ‘ŠÀ ‘—À ‘áÀ ‘ëÀ ‘úÀ ’.À ’6À ’UÀ ’wÀ ’™À ’ªÀ ’òÀ ’üÀ “À “
-À “5À “gÀ “kÀ “lÀ “»À “şÀ ”À ”>À ”DÀ ”}À ”§À ”öÀ •À •À •$À •*À •lÀ •}À •’À •½À •÷À – À –À –À –/À –DÀ –oÀ –©À –²À –½À –ÄÀ –ğÀ —2À —6À —7À —†À —»À —ÁÀ —ÛÀ ˜'À ˜LÀ ˜nÀ ˜À ˜—À ˜›À ˜œÀ ˜êÀ ™-À ™3À ™„À ™ŠÀ ™ÄÀ ™ÊÀ šÀ š<À š‹À šÀ š«À š¹À š¿À ›À ›<À ›rÀ ›˜À ›ÑÀ œÀ œÀ œFÀ œSÀ œsÀ œœÀ œ¢À œ³À œÖÀ À À &À VÀ „À À –À ³À À À ^À …À «À úÀ ŸCÀ ŸIÀ ŸoÀ Ÿ›À ŸÉÀ ŸŞÀ ŸìÀ  À  KÀ  VÀ  ]À  ‰À  ÏÀ  öÀ ¡!À ¡bÀ ¡ŠÀ ¡ÙÀ ¢'À ¢WÀ ¢¤À ¢ïÀ £(À £XÀ £©À £úÀ ¤	À ¤DÀ ¤dÀ ¤ŒÀ ¤ºÀ ¤ÅÀ ¤ÍÀ ¤ÓÀ ¥ À ¥nÀ ¥‚À ¥£À ¥ÊÀ ¥ûÀ ¦0À ¦ZÀ ¦aÀ ¦eÀ ¦fÀ ¦´À ¦ïÀ ¦õÀ §À §ZÀ §¡À §íÀ ¨<À ¨`À ¨ƒÀ ¨‡À ¨ˆÀ ¨ÕÀ ©!À ©<À ©BÀ ©’À ©©À ©¯À ©éÀ ©ïÀ ª=À ªjÀ ª¹À ªÍÀ «À «#À «EÀ «LÀ «À «ªÀ «ÈÀ «ìÀ ¬À ¬4À ¬_À ¬“À ¬ À ¬áÀ ­À ­-À ­ZÀ ­À ­ÊÀ ­ôÀ ® À ®LÀ ®†À ®®À ®ØÀ ¯À ¯À ¯DÀ ¯wÀ ¯£À ¯«À ¯±À ¯çÀ ¯ÿÀ °À °"À °QÀ °À °íÀ ±À ±:À ±@À ±\À ±À ± À ±äÀ ±ëÀ ±üÀ ±ıÀ ²%À ²UÀ ²wÀ ²¢À ²ãÀ ²ùÀ ³À ³ À ³(À ³.À ³/À ³_À ³À ³ÒÀ ³íÀ ´7À ´_À ´°À ´çÀ µÀ µÀ µCÀ µˆÀ µªÀ µáÀ µüÀ ¶3À ¶KÀ ¶XÀ ¶xÀ ¶‚À ¶¶À ¶¾À ¶ÄÀ ·À ·?À ·xÀ ·À ·äÀ ¸ À ¸TÀ ¸oÀ ¸˜À ¸ÃÀ ¸ëÀ ¸øÀ ¸şÀ ¹À ¹;À ¹À ¹…À ¹¦À ¹ÈÀ ¹üÀ º4À ºfÀ º’À º¼À ºÃÀ ºÇÀ ºÈÀ »À »_À »rÀ »xÀ »’À »ÃÀ ¼À ¼À ¼;À ¼BÀ ¼cÀ ¼‰À ¼¥À ¼ÏÀ ¼ıÀ ½À ½À ½À ½À ½=À ½bÀ ½³À ½ÎÀ ¾À ¾*À ¾5À ¾VÀ ¾|À ¾À ¾ØÀ ¾âÀ ¾êÀ ¾ğÀ ¿À ¿BÀ ¿~À ¿…À ¿‰À ¿ŠÀ ¿ÕÀ ÀÀ À\À ÀbÀ ÀªÀ ÀÁÀ ÀÇÀ ÁÀ ÁÀ Á:À ÁƒÀ ÁÒÀ ÁäÀ Â À ÂÀ Â#À ÂeÀ ÂvÀ Â¬À ÂŞÀ ÃÀ ÃjÀ Ã„À Ã®À ÃµÀ ÃèÀ Ä!À ÄRÀ ÄmÀ Ä–À Ä£À ÄÃÀ ÄìÀ ÅÀ ÅTÀ ÅÀ ÅœÀ ÅÇÀ ÅÔÀ ÅÚÀ Æ(À Æ@À ÆiÀ ÆjÀ Æ™À ÆÊÀ ÆÿÀ Ç,À Ç]À Ç‡À ÇÀ Ç’À Ç“À ÇÛÀ È,À ÈYÀ È_À ÈyÀ È·À ÈÓÀ ÈïÀ ÈöÀ É
-À É:À ÉgÀ ÉpÀ É}À ÉÆÀ ÊÀ ÊeÀ Ê‹À Ê°À Ê¶À ÊºÀ Ê»À Ë	À Ë+À Ë1À Ë~À Ë›À Ë¡À ËÛÀ ËáÀ Ì#À ÌVÀ Ì¥À Ì¹À ÌöÀ ÌıÀ Í?À ÍxÀ Í³À Í´À ÍşÀ Î#À Î8À Î?À Î[À Î€À ÎŸÀ Î¦À Î§À ÎñÀ ÏÀ ÏQÀ Ï~À Ï«À ÏÜÀ ĞÀ ĞÀ ĞÀ ĞTÀ ĞÀ Ğ³À ĞùÀ Ñ5À ÑiÀ Ñ„À Ñ­À ÑØÀ Ò À ÒÀ ÒÀ ÒÀ Ò%À ÒcÀ Ò¯À ÒÔÀ ÒÿÀ Ó À ÓHÀ ÓbÀ ÓoÀ Ó¿À ÔÀ ÔUÀ ÔƒÀ Ô¯À ÔÖÀ ÔğÀ ÕÀ Õ0À Õ?À ÕaÀ ÕœÀ Õ·À Õ¿À ÖÀ Ö4À Ö:À ÖnÀ ÖoÀ Ö“À ÖµÀ ×À ×5À ×mÀ ×—À ×À ×¢À ×£À ×íÀ Ø8À Ø>À ØXÀ Ø¡À ØËÀ ØÏÀ ØĞÀ ÙÀ Ù!À ÙnÀ Ù¤À ÙªÀ ÙÜÀ ÚÀ Ú-À ÚBÀ ÚVÀ Ú\À ÚmÀ Ú¶À ÚúÀ ÛÀ ÛHÀ ÛÀ Û¹À ÛÎÀ ÜÀ Ü3À ÜUÀ Ü‡À Ü·À ÜûÀ İÀ İÀ İÀ İCÀ İ“À İ¹À İßÀ İåÀ ŞÀ Ş+À Ş[À ŞÀ Ş”À Ş›À ŞŸÀ Ş À ŞØÀ ŞŞÀ ŞïÀ ß-À ß3À ßBÀ ß{À ßÀ ß³À ß¹À à	À àÀ à]À àœÀ àÎÀ àæÀ áÀ á À áDÀ áoÀ ávÀ á‡À áÔÀ âÀ âFÀ â‚À â¹À âËÀ âçÀ âîÀ ã	À ã
-À ã?À ãjÀ ãŸÀ ã×À ãöÀ ä'À äUÀ äÀ ä¹À äÈÀ åÀ å4À åNÀ åtÀ å¢À å±À åİÀ ååÀ åëÀ æÀ æ À æYÀ æ‘À æ¦À æóÀ çÀ ç-À ç]À ç¡À çªÀ ç¹À çÀÀ çäÀ çåÀ èÀ èÀ è3À èPÀ èQÀ ètÀ è”À èºÀ èêÀ éÀ é%À é)À é*À égÀ é«À é±À éÿÀ êNÀ êyÀ êÀ êÍÀ ëÀ ëÀ ëIÀ ë—À ë¦À ë»À ëÙÀ ëôÀ ëûÀ ìÀ ìUÀ ìÀ ì À ìµÀ ì¼À ì×À íÀ í À í7À í>À íwÀ í¯À íÄÀ îÀ î+À îMÀ î}À îÁÀ îÊÀ îÙÀ îàÀ ïÀ ïÀ ï'À ïKÀ ïˆÀ ïÀ ïºÀ ïŞÀ ğÀ ğ?À ğcÀ ğjÀ ğnÀ ğoÀ ğ¼À ğŞÀ ğäÀ ñ1À ñNÀ ñTÀ ñÀ ñ”À ñÖÀ ò	À òXÀ òlÀ ò©À ò°À òòÀ ó-À ómÀ ónÀ ó§À óâÀ óãÀ ôÀ ôZÀ ô‚À ôÓÀ õÀ õ8À õRÀ õÀ õËÀ ö
-À öHÀ öPÀ ölÀ örÀ ösÀ ö©À öÙÀ ÷ À ÷À ÷À ÷À ÷/À ÷XÀ ÷˜À ÷ÆÀ øÀ ø"À ø<À øcÀ ø¡À øàÀ ù+À ù3À ù9À ùrÀ ù•À ùºÀ ùáÀ ùêÀ úÀ úÀ ú2À úWÀ úvÀ ú}À ú~À úÀ úÃÀ ûÀ ûÀ û-À û6À ûVÀ ûŠÀ û¼À ûçÀ ûñÀ ü À ü7À ü?À üwÀ ü¥À üİÀ ı	À ıÀ ıKÀ ıQÀ ı…À ı†À ıÁÀ ıúÀ ş À şfÀ ş¢À şÖÀ şñÀ ÿÀ ÿEÀ ÿmÀ ÿzÀ ÿ€À ÿÀ ÿ¾À ÿíÀ À À 5À ZÀ }À ¡À ¨À ÌÀ îÀ:ÀnÀ¦ÀĞÀ×ÀÛÀÜÀÀÀ1ÀeÀ¢À©ÀÙÀÀLÀ™ÀºÀÔÀúÀ	À,À4À:ÀˆÀŒÀÀÕÀ$À4À:À…À«À±ÀşÀ'À-ÀgÀmÀ–ÀÑÀ À2ÀJÀPÀ’À£ÀÙÀÀ:ÀsÀ¤À¿ÀèÀõÀûÀ	JÀ	VÀ	nÀ	uÀ	²À	âÀ
-À
-?À
-QÀ
-XÀ
-‡À
-ÅÀ
-ËÀ
-ÌÀ
-ôÀÀXÀ€À¾ÀËÀùÀÿÀKÀaÀ‹ÀœÀ±À÷À#À,À9ÀhÀnÀ‰À´ÀëÀÀ*ÀnÀÀÖÀóÀÀPÀ_ÀgÀÀªÀÇÀÒÀÀSÀpÀŸÀ®À¶À¼ÀäÀÀ5ÀjÀœÀÒÀÀBÀIÀMÀNÀ‡ÀÀ§ÀáÀ2À}ÀÄÀèÀÀÀÀZÀ`À¬ÀäÀêÀ6ÀMÀ†À›ÀµÀÇÀèÀîÀÿÀ ÀPÀÀ­À´ÀûÀ2ÀCÀaÀhÀƒÀ®À÷ÀøÀDÀpÀšÀ¹ÀÒÀûÀÀUÀ€ÀĞÀèÀÀ4À„ÀÕÀÀHÀ…À•À¾ÀÇÀñÀÀOÀ›ÀÏÀÀ2ÀzÀ«ÀÆÀåÀ$ÀbÀ}À›À¯ÀÉÀàÀşÀÀ$ÀBÀlÀ¢ÀìÀûÀ À À FÀ mÀ À ·À úÀ!À!EÀ!nÀ!—À!±À!ëÀ" À"<À"KÀ"˜À"ÈÀ"øÀ#@À#NÀ#šÀ#­À#ÑÀ$À$)À$dÀ$uÀ$¯À$¹À$ñÀ%7À%tÀ%ÂÀ&
-À&4À&>À&hÀ&±À&ÊÀ&ÜÀ&íÀ'À'À'CÀ'|À'„À'ĞÀ(
-À(#À(0À(eÀ(À(¨À(µÀ)À)&À)>À)KÀ)yÀ)À)™À)¡À)§À)İÀ*À*(À*@À*tÀ*’À*™À*À*À*æÀ*ìÀ+7À+}À+ÀÀ+ÔÀ+îÀ,À,À,À,SÀ,dÀ,‚À,‰À,¤À,ÎÀ-À-3À-WÀ-À-ÅÀ-ùÀ.:À.zÀ.ªÀ.êÀ/À/WÀ/™À/ßÀ/ûÀ0BÀ0ƒÀ0¡À0ÇÀ0øÀ1À1/À1OÀ1nÀ1yÀ1”À1³À1òÀ20À2KÀ2iÀ2}À2—À2®À2ÌÀ2ãÀ2òÀ3À3:À3pÀ3ºÀ3ÉÀ3ŞÀ3ëÀ4À40À4PÀ4zÀ4½À4ÊÀ5À5BÀ5`À5À5¹À5ÎÀ6
-À6À6fÀ6²À6âÀ70À7XÀ7fÀ7¬À7îÀ8À8-À89À8„À8•À8²À8üÀ9À9HÀ9qÀ9µÀ9½À9ıÀ:#À:bÀ:À: À:ÍÀ:ÚÀ;À;NÀ;uÀ;ŠÀ;¼À;øÀ<;À<FÀ<NÀ<’À<İÀ=À=HÀ=nÀ=vÀ=ÁÀ=øÀ>6À>\À>À>¯À>öÀ?BÀ?JÀ?kÀ?yÀ?—À?ÂÀ?ËÀ@À@À@UÀ@lÀ@—À@­À@ÈÀ@øÀA.ÀAqÀA£ÀA°ÀAôÀB$ÀB*ÀBVÀBˆÀB¦ÀBÈÀBöÀC@ÀCdÀC°ÀCäÀDÀD	ÀDÀDÀDTÀDkÀDqÀDÀÀEÀEBÀEHÀEbÀEhÀE™ÀEÓÀEâÀEùÀFÀF8ÀF?ÀF‰ÀF¶ÀFôÀGÀGÀGÀGMÀGSÀG£ÀG©ÀGãÀGéÀHÀH;ÀHŠÀH—ÀH²ÀHİÀHäÀI&ÀIaÀIšÀIØÀJ ÀJ^ÀJ”ÀJ±ÀJÜÀK	ÀK3ÀKBÀKJÀKPÀKQÀKlÀKŒÀK½ÀKäÀLÀLÀLÀL:ÀL@ÀLAÀLxÀL¡ÀLàÀM	ÀM ÀMGÀMPÀMVÀM|ÀM°ÀMèÀNÀNÀNÀNÀNlÀN™ÀNŸÀN¹ÀNïÀOÀO!ÀOAÀObÀO“ÀO—ÀO˜ÀOŞÀP*ÀPeÀPkÀP¹ÀP¿ÀPïÀQ0ÀQ1ÀQwÀQ¹ÀQèÀQîÀR)ÀRJÀRPÀRyÀR¬ÀRÁÀRâÀRçÀRèÀS9ÀS?ÀSŒÀSÛÀT#ÀT)ÀTOÀTpÀT¿ÀTÑÀTÖÀT×ÀU&ÀU7ÀU=ÀUWÀU“ÀU”ÀUÚÀV!ÀVOÀVUÀV”ÀV´ÀVºÀVâÀWÀWÀWaÀW›ÀWÄÀWâÀWèÀWéÀXÀXÀXpÀX«ÀX±ÀXşÀY;ÀY<ÀY`ÀYyÀY®ÀYíÀZÀZ*ÀZ0ÀZ1ÀZtÀZ¿ÀZÀÀZûÀ[EÀ[FÀ[À[ÃÀ[ÄÀ\À\TÀ\ZÀ\¨À\ôÀ]=À]CÀ]hÀ]¡À]ŞÀ]ßÀ^/À^pÀ^vÀ^ÄÀ_À_\À_bÀ_†À_ÉÀ`À`	À`IÀ`’À`“À`ÒÀaÀaÀaIÀa…Àa†ÀaÉÀbÀbÀbFÀb€ÀbÀbÈÀcÀcÀcXÀcŸÀc ÀcïÀd(Àd)ÀdqÀdwÀdÇÀdïÀdõÀe<Àe^ÀerÀe…Àe§Àe¬Àe­ÀeıÀfÀfÀfaÀf²ÀfÊÀfĞÀgÀg-Àg>ÀgZÀguÀg{Àg|Àg¬Àg²ÀgúÀh2ÀhbÀhhÀhÀh¥Àh¶ÀhÒÀhíÀhóÀhôÀi2Ài8Ài^Ài¨Ài©ÀièÀiîÀjÀj<ÀjSÀjjÀj†Àj‹ÀjŒÀjÉÀjÏÀjÿÀkHÀkIÀk~Àk„ÀkĞÀkøÀkşÀlMÀlœÀlìÀm<ÀmBÀmÀm¤ÀmÆÀmÜÀmøÀnÀnÀn ÀnlÀn¹ÀoÀo	Ào9ÀofÀogÀo¶ÀpÀpKÀpQÀp¡ÀpİÀpãÀqÀq<Àq=Àq‰ÀqÕÀrÀrÀrGÀrqÀrrÀr´ÀrºÀsÀsDÀstÀsšÀs«ÀsÇÀsâÀsèÀséÀt8Àt†Àt–ÀtœÀtÙÀtßÀu,ÀuIÀuOÀuiÀuœÀuÀuÎÀuöÀu÷ÀvFÀv“Àv™ÀváÀwÀwfÀwgÀw°ÀwØÀwÙÀxÀx8Àx9ÀxˆÀxÌÀxîÀyÀyÀyÀydÀy~ÀyÈÀzÀz7Àz=ÀzAÀzBÀzÀzŞÀ{À{]À{À{«À{áÀ{çÀ{èÀ|8À|jÀ|pÀ|¾À}	À}À}]À}oÀ}”À}™À}šÀ}éÀ~9À~UÀ~•À~–À~çÀ"ÀiÀjÀ¨ÀÈÀÎÀ€À€`À€qÀ€À€¾À€ßÀ€úÀÀ<ÀIÀmÀÀ±ÀâÀèÀ‚À‚ À‚!À‚]À‚{À‚À‚·À‚ÙÀ‚ùÀƒÀƒÀƒ,ÀƒAÀƒGÀƒXÀƒˆÀƒ´ÀƒİÀƒøÀ„À„BÀ„OÀ„sÀ„¦À„ÈÀ„÷À„ıÀ…AÀ…EÀ…FÀ…À…ŞÀ†,À†{À†À†ÏÀ‡
-À‡À‡!À‡%À‡&À‡LÀ‡qÀ‡¥À‡ÚÀˆÀˆÀˆ&ÀˆqÀˆ¥ÀˆíÀˆõÀ‰À‰À‰bÀ‰‰À‰¯À‰ãÀŠ-ÀŠHÀŠpÀŠ‘ÀŠ¼ÀŠëÀ‹À‹BÀ‹LÀ‹—À‹ŞÀ‹õÀŒ!ÀŒSÀŒnÀŒÀŒªÀŒÔÀÀ'ÀFÀYÀ~À¥À±ÀŞÀÀ?ÀfÀrÀ–ÀßÀÀ7ÀYÀ}ÀŒÀ˜À¢ÀªÀÈÀïÀÀ,ÀLÀgÀ¯ÀéÀ‘7À‘jÀ‘¦À‘³À‘øÀ’À’
-À’À’À’À’^À’¥À’ÅÀ’ôÀ“(À“NÀ“TÀ“‹À“×À“üÀ”À”À”)À”AÀ”sÀ”¡À”ßÀ• À•!À•;À•gÀ•ˆÀ•ŸÀ•©À•¿À•ÎÀ•üÀ–À–À–MÀ–UÀ–rÀ–xÀ–¡À–´À–ºÀ–ëÀ–şÀ—À—À—1À—DÀ—HÀ—IÀ—À—¹À—ÎÀ˜À˜À˜+À˜pÀ˜À˜ÙÀ˜úÀ™À™]À™}À™ÆÀ™òÀš
-Àš*ÀšHÀšUÀšfÀš‹Àš•ÀšÀš£Àš¼ÀšÀÀšÁÀšêÀ›À›À›$À›\À›”À›åÀ›éÀ›ëÀ›ìÀœ=Àœ}Àœ Àœ·ÀœÑÀœìÀÀÀ6À>À@ÀhÀ¶ÀğÀÀ8À`ÀÀ§À­À®ÀéÀïÀŸ.ÀŸ[ÀŸ{ÀŸšÀŸºÀŸÀÀŸÁÀŸıÀ #À OÀ iÀ ¢À ÜÀ âÀ ãÀ¡-À¡LÀ¡sÀ¡À¡¬À¡²À¡³À¡éÀ¡ïÀ¢À¢HÀ¢IÀ¢–À¢áÀ£À£.À£NÀ£oÀ£uÀ£vÀ£ÅÀ¤À¤?À¤]À¤|À¤‚À¤ƒÀ¤ÌÀ¤ÿÀ¥'À¥EÀ¥dÀ¥„À¥ŠÀ¥‹À¥×À¦À¦À¦^À¦ŸÀ¦¥À¦äÀ§À§*À§NÀ§pÀ§vÀ§wÀ§ÅÀ§ÿÀ¨À¨VÀ¨À¨éÀ¨õÀ©'À©EÀ©`À©À©ŸÀ©¥À©¦À©÷À©ıÀªLÀªÀª•ÀªÕÀ«À«À«:À«@À«AÀ«À«ßÀ¬À¬1À¬PÀ¬qÀ¬wÀ¬xÀ¬ÃÀ¬ßÀ­ À­>À­\À­bÀ­cÀ­À­¤À­åÀ®/À®0À®€À®ÉÀ®ØÀ®ŞÀ¯.À¯eÀ¯‹À¯¨À¯ÄÀ¯ÊÀ¯ËÀ°À°cÀ°­À°ÑÀ°ïÀ±À± À±"À±#À±qÀ±¬À±ÔÀ² À²pÀ²ÁÀ³À³&À³,À³uÀ³•À³—À³˜À³ÎÀ³ÒÀ´À´,À´JÀ´KÀ´qÀ´rÀ´¿ÀµÀµ`Àµ¨ÀµĞÀ¶À¶À¶)À¶*À¶PÀ¶QÀ¶xÀ¶yÀ¶‘À¶´À¶ßÀ·À·AÀ·lÀ·˜À·À·    CaseHeadOrDefaultInfo"JoinedPatternVariableInconsistencyJoinedPatternVariableLocationMapPatternEntryRecordPatternFieldRelationalOperatorKindRelationalOperatorResolutionSwitchExpressionMemberInfoSwitchStatementMemberInfoTypeAnalyzerTypeAnalyzerErrorsTypeAnalyzerErrorsBaseTypeAnalyzerOptions  ¬

@@ -19,23 +19,20 @@ void main() {
     recordedCalls.clear();
     FlutterLocalNotificationsPlatform.instance =
         AndroidFlutterLocalNotificationsPlugin();
-    defaultMessenger.setMockMethodCallHandler(
-      channel,
-      (MethodCall call) async {
-        recordedCalls.add(call);
-        switch (call.method) {
-          case 'initialize':
-            return true;
-          case 'zonedSchedule':
-          case 'cancel':
-          case 'requestNotificationsPermission':
-          case 'resolvePlatformSpecificImplementation':
-            return null;
-          default:
-            return true;
-        }
-      },
-    );
+    defaultMessenger.setMockMethodCallHandler(channel, (MethodCall call) async {
+      recordedCalls.add(call);
+      switch (call.method) {
+        case 'initialize':
+          return true;
+        case 'zonedSchedule':
+        case 'cancel':
+        case 'requestNotificationsPermission':
+        case 'resolvePlatformSpecificImplementation':
+          return null;
+        default:
+          return true;
+      }
+    });
   });
 
   tearDown(() {

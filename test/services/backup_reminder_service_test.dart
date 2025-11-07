@@ -19,7 +19,9 @@ void main() {
     test('shouldNotify returns false when recent backup exists', () async {
       final service = await BackupReminderService.create();
       final recent = DateTime.now().toUtc().subtract(const Duration(days: 3));
-      final result = await service.shouldNotify(_settings(lastBackupAt: recent));
+      final result = await service.shouldNotify(
+        _settings(lastBackupAt: recent),
+      );
       expect(result, isFalse);
     });
 
@@ -33,9 +35,15 @@ void main() {
     test('shouldNotify respects cooldown after markNotified', () async {
       final service = await BackupReminderService.create();
       final stale = DateTime.now().toUtc().subtract(const Duration(days: 10));
-      expect(await service.shouldNotify(_settings(lastBackupAt: stale)), isTrue);
+      expect(
+        await service.shouldNotify(_settings(lastBackupAt: stale)),
+        isTrue,
+      );
       await service.markNotified();
-      expect(await service.shouldNotify(_settings(lastBackupAt: stale)), isFalse);
+      expect(
+        await service.shouldNotify(_settings(lastBackupAt: stale)),
+        isFalse,
+      );
     });
   });
 }

@@ -29,10 +29,7 @@ class JournalStore {
     entries.removeWhere((raw) => raw['id'] == entry.id);
     entries.insert(0, serialized);
 
-    final normalized = _normalize(
-      entries,
-      retention ?? _defaultRetention,
-    );
+    final normalized = _normalize(entries, retention ?? _defaultRetention);
     await _persistEntries(prefs, normalized);
   }
 
@@ -80,17 +77,11 @@ class JournalStore {
     }
   }
 
-  static Future<void> deleteEntry(
-    String id, {
-    Duration? retention,
-  }) async {
+  static Future<void> deleteEntry(String id, {Duration? retention}) async {
     final prefs = await SharedPreferences.getInstance();
     final rawEntries = await _loadRawEntries(prefs)
       ..removeWhere((raw) => raw['id'] == id);
-    final normalized = _normalize(
-      rawEntries,
-      retention ?? _defaultRetention,
-    );
+    final normalized = _normalize(rawEntries, retention ?? _defaultRetention);
     await _persistEntries(prefs, normalized);
   }
 

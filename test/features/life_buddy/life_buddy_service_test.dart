@@ -71,9 +71,11 @@ void main() {
     });
 
     test('aggregateCollectionBuffs ignores unknown or duplicate ids', () {
-      final totals = service.aggregateCollectionBuffs(
-        ['desk_focus', 'desk_focus', 'unknown_item'],
-      );
+      final totals = service.aggregateCollectionBuffs([
+        'desk_focus',
+        'desk_focus',
+        'unknown_item',
+      ]);
       expect(totals[LifeBuffType.focusXpMultiplier], closeTo(0.05, 1e-6));
       expect(totals.containsKey(LifeBuffType.sleepQualityBonus), isFalse);
     });

@@ -213,7 +213,8 @@ class CrossDomainAnalyticsBuilder {
       final restMinutes = summary?.restMinutes ?? 0;
       final workoutMinutes = summary?.workoutMinutes ?? 0;
       final journalSleep = journal?.sleepHours;
-      final moodScore = _moodScore(journal?.mood) ?? _energyScore(journal?.energyLevel);
+      final moodScore =
+          _moodScore(journal?.mood) ?? _energyScore(journal?.energyLevel);
       final energyScore = _energyScore(journal?.energyLevel);
 
       if (focusMinutes > bestFocusMinutes) {
@@ -270,17 +271,25 @@ class CrossDomainAnalyticsBuilder {
 
     return CrossDomainAnalytics(
       points: points,
-      focusSleepCorrelation: _pearsonCorrelation(focusSleepPairsX, focusSleepPairsY),
-      sleepMoodCorrelation: _pearsonCorrelation(sleepMoodPairsX, sleepMoodPairsY),
-      focusMoodCorrelation: _pearsonCorrelation(focusMoodPairsX, focusMoodPairsY),
+      focusSleepCorrelation: _pearsonCorrelation(
+        focusSleepPairsX,
+        focusSleepPairsY,
+      ),
+      sleepMoodCorrelation: _pearsonCorrelation(
+        sleepMoodPairsX,
+        sleepMoodPairsY,
+      ),
+      focusMoodCorrelation: _pearsonCorrelation(
+        focusMoodPairsX,
+        focusMoodPairsY,
+      ),
       averageFocusMinutes: focusSeries.isEmpty
           ? 0
           : _averageDouble(focusSeries),
       averageSleepMinutes: sleepSeries.isEmpty
           ? 0
           : _averageDouble(sleepSeries),
-      averageMoodScore:
-          moodSeries.isEmpty ? null : _averageDouble(moodSeries),
+      averageMoodScore: moodSeries.isEmpty ? null : _averageDouble(moodSeries),
       totalSleepDebtMinutes: totalSleepDebt,
       highlights: CrossDomainHighlights(
         bestFocusDate: bestFocusDate,

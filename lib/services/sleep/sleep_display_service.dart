@@ -9,7 +9,7 @@ abstract class SleepDisplayBridge {
 
 class MethodChannelSleepDisplayBridge implements SleepDisplayBridge {
   MethodChannelSleepDisplayBridge({MethodChannel? channel})
-      : _channel = channel ?? const MethodChannel(_channelName);
+    : _channel = channel ?? const MethodChannel(_channelName);
 
   static const _channelName = 'dev.life_app/sleep_display';
 

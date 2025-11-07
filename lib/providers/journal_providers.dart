@@ -54,9 +54,7 @@ class JournalEntriesNotifier extends AsyncNotifier<List<JournalEntry>> {
 
   Duration _currentRetention({bool listen = true}) {
     final premium = listen
-        ? ref.watch(
-            premiumStatusProvider.select((status) => status.isPremium),
-          )
+        ? ref.watch(premiumStatusProvider.select((status) => status.isPremium))
         : ref.read(premiumStatusProvider).isPremium;
     return premium ? _premiumRetention : _freeRetention;
   }
@@ -84,12 +82,13 @@ final journalReminderProvider = FutureProvider<JournalReminderSettings>((
   return JournalReminderService.load();
 });
 
-final journalBuddyCommentProvider =
-    FutureProvider<LifeBuddyComment?>((ref) async {
-      final entries = await ref.watch(journalEntriesProvider.future);
-      const engine = LifeBuddyCommentEngine();
-      return engine.generate(entries);
-    });
+final journalBuddyCommentProvider = FutureProvider<LifeBuddyComment?>((
+  ref,
+) async {
+  final entries = await ref.watch(journalEntriesProvider.future);
+  const engine = LifeBuddyCommentEngine();
+  return engine.generate(entries);
+});
 
 class JournalSummary {
   const JournalSummary({

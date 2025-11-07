@@ -22,7 +22,10 @@ Future<DailySummaryRepository> _summaryRepo(Ref ref) async {
 }
 
 final crossDomainAnalyticsProvider =
-    FutureProvider.family<CrossDomainAnalytics, CrossDomainRange>((ref, range) async {
+    FutureProvider.family<CrossDomainAnalytics, CrossDomainRange>((
+      ref,
+      range,
+    ) async {
       final repo = await _summaryRepo(ref);
       final settings = await ref.watch(settingsFutureProvider.future);
       final today = _dateOnly(DateTime.now());
@@ -35,12 +38,10 @@ final crossDomainAnalyticsProvider =
       );
 
       final journalEntries = await JournalStore.loadEntries();
-      final filteredJournal = journalEntries.where(
-        (entry) {
-          final date = _dateOnly(entry.date);
-          return !date.isBefore(_dateOnly(start)) && date.isBefore(endExclusive);
-        },
-      );
+      final filteredJournal = journalEntries.where((entry) {
+        final date = _dateOnly(entry.date);
+        return !date.isBefore(_dateOnly(start)) && date.isBefore(endExclusive);
+      });
 
       return CrossDomainAnalyticsBuilder.build(
         start: start,
@@ -49,4 +50,3 @@ final crossDomainAnalyticsProvider =
         journalEntries: filteredJournal,
       );
     });
-

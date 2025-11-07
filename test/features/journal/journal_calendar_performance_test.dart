@@ -44,6 +44,7 @@ void main() {
     void captureTimings(List<ui.FrameTiming> captured) {
       timings.addAll(captured);
     }
+
     tester.binding.addTimingsCallback(captureTimings);
 
     final listFinder = find.byType(ListView);

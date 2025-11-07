@@ -35,7 +35,8 @@ class ModernCard extends StatelessWidget {
         color: backgroundColor ?? theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: borderColor ?? theme.colorScheme.outline.withValues(alpha: 0.08),
+          color:
+              borderColor ?? theme.colorScheme.outline.withValues(alpha: 0.08),
           width: 1,
         ),
       ),
@@ -53,10 +54,7 @@ class ModernCard extends StatelessWidget {
       );
     }
 
-    return Padding(
-      padding: margin ?? EdgeInsets.zero,
-      child: content,
-    );
+    return Padding(padding: margin ?? EdgeInsets.zero, child: content);
   }
 }
 
@@ -94,7 +92,8 @@ class ModernIconCard extends StatelessWidget {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: iconBackgroundColor ??
+              color:
+                  iconBackgroundColor ??
                   theme.colorScheme.primaryContainer.withValues(alpha: 0.4),
               borderRadius: BorderRadius.circular(14),
             ),
@@ -110,25 +109,16 @@ class ModernIconCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: theme.textTheme.titleMedium,
-                ),
+                Text(title, style: theme.textTheme.titleMedium),
                 if (subtitle != null) ...[
                   const SizedBox(height: 4),
-                  Text(
-                    subtitle!,
-                    style: theme.textTheme.bodyMedium,
-                  ),
+                  Text(subtitle!, style: theme.textTheme.bodyMedium),
                 ],
               ],
             ),
           ),
           // Trailing widget
-          if (trailing != null) ...[
-            const SizedBox(width: 12),
-            trailing!,
-          ],
+          if (trailing != null) ...[const SizedBox(width: 12), trailing!],
         ],
       ),
     );
@@ -177,15 +167,14 @@ class ModernStatCard extends StatelessWidget {
                     color: color.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Icon(
-                    icon,
-                    size: 20,
-                    color: color,
-                  ),
+                  child: Icon(icon, size: 20, color: color),
                 ),
               if (trend != null)
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: trendUp
                         ? Colors.green.withValues(alpha: 0.1)
@@ -224,10 +213,7 @@ class ModernStatCard extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           // Label
-          Text(
-            label,
-            style: theme.textTheme.bodyMedium,
-          ),
+          Text(label, style: theme.textTheme.bodyMedium),
         ],
       ),
     );

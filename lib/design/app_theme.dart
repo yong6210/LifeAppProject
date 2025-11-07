@@ -14,91 +14,91 @@ class AppTheme {
   static const _neutralSubtitleDark = Color(0xFFA1A8B5);
 
   // Accent colors for feature categorization - more refined palette
-  static const accentBlue = Color(0xFF4F7CFF);      // Focus
-  static const accentGreen = Color(0xFF10B981);     // Workout
-  static const accentPurple = Color(0xFF8B5CF6);    // Sleep
-  static const accentOrange = Color(0xFFF59E0B);    // Rest
+  static const accentBlue = Color(0xFF4F7CFF); // Focus
+  static const accentGreen = Color(0xFF10B981); // Workout
+  static const accentPurple = Color(0xFF8B5CF6); // Sleep
+  static const accentOrange = Color(0xFFF59E0B); // Rest
 
   static ColorScheme get _fallbackLightScheme => const ColorScheme(
-        brightness: Brightness.light,
-        // More refined primary - less saturated, more professional
-        primary: Color(0xFF4F7CFF),
-        onPrimary: Colors.white,
-        primaryContainer: Color(0xFFE0E9FF),
-        onPrimaryContainer: Color(0xFF0D1B3E),
-        // Softer secondary colors
-        secondary: Color(0xFF6B7CFF),
-        onSecondary: Colors.white,
-        secondaryContainer: Color(0xFFE5E8FF),
-        onSecondaryContainer: Color(0xFF1A1D3A),
-        // Balanced tertiary with better contrast
-        tertiary: Color(0xFF10B981),
-        onTertiary: Colors.white,
-        tertiaryContainer: Color(0xFFD1FAE5),
-        onTertiaryContainer: Color(0xFF064E3B),
-        // Refined error colors
-        error: Color(0xFFEF4444),
-        onError: Colors.white,
-        errorContainer: Color(0xFFFFE5E5),
-        onErrorContainer: Color(0xFF7F1D1D),
-        // Clean surface colors
-        surface: Color(0xFFFFFFFF),
-        onSurface: Color(0xFF1F2937),
-        surfaceBright: Color(0xFFFFFFFF),
-        surfaceContainerLowest: _surfaceBackgroundLight,
-        surfaceContainerHighest: Color(0xFFF3F4F6),
-        onSurfaceVariant: Color(0xFF4B5563),
-        outline: Color(0xFFD1D5DB),
-        shadow: Colors.black,
-        inverseSurface: Color(0xFF1F2937),
-        onInverseSurface: Colors.white,
-        inversePrimary: Color(0xFFA5C4FF),
-        surfaceTint: Colors.transparent,
-      ).harmonized();
+    brightness: Brightness.light,
+    // More refined primary - less saturated, more professional
+    primary: Color(0xFF4F7CFF),
+    onPrimary: Colors.white,
+    primaryContainer: Color(0xFFE0E9FF),
+    onPrimaryContainer: Color(0xFF0D1B3E),
+    // Softer secondary colors
+    secondary: Color(0xFF6B7CFF),
+    onSecondary: Colors.white,
+    secondaryContainer: Color(0xFFE5E8FF),
+    onSecondaryContainer: Color(0xFF1A1D3A),
+    // Balanced tertiary with better contrast
+    tertiary: Color(0xFF10B981),
+    onTertiary: Colors.white,
+    tertiaryContainer: Color(0xFFD1FAE5),
+    onTertiaryContainer: Color(0xFF064E3B),
+    // Refined error colors
+    error: Color(0xFFEF4444),
+    onError: Colors.white,
+    errorContainer: Color(0xFFFFE5E5),
+    onErrorContainer: Color(0xFF7F1D1D),
+    // Clean surface colors
+    surface: Color(0xFFFFFFFF),
+    onSurface: Color(0xFF1F2937),
+    surfaceBright: Color(0xFFFFFFFF),
+    surfaceContainerLowest: _surfaceBackgroundLight,
+    surfaceContainerHighest: Color(0xFFF3F4F6),
+    onSurfaceVariant: Color(0xFF4B5563),
+    outline: Color(0xFFD1D5DB),
+    shadow: Colors.black,
+    inverseSurface: Color(0xFF1F2937),
+    onInverseSurface: Colors.white,
+    inversePrimary: Color(0xFFA5C4FF),
+    surfaceTint: Colors.transparent,
+  ).harmonized();
 
   static ColorScheme get _fallbackDarkScheme => const ColorScheme(
-        brightness: Brightness.dark,
-        // Refined dark mode primary
-        primary: Color(0xFF7C9EFF),
-        onPrimary: Color(0xFF0A1A3E),
-        primaryContainer: Color(0xFF2D4B8C),
-        onPrimaryContainer: Color(0xFFE0E9FF),
-        // Refined dark mode secondary
-        secondary: Color(0xFF8B9AFF),
-        onSecondary: Color(0xFF141732),
-        secondaryContainer: Color(0xFF3A4470),
-        onSecondaryContainer: Color(0xFFE5E8FF),
-        // Refined dark mode tertiary
-        tertiary: Color(0xFF34D399),
-        onTertiary: Color(0xFF064E3B),
-        tertiaryContainer: Color(0xFF065F46),
-        onTertiaryContainer: Color(0xFFD1FAE5),
-        // Refined dark mode error
-        error: Color(0xFFF87171),
-        onError: Color(0xFF7F1D1D),
-        errorContainer: Color(0xFF991B1B),
-        onErrorContainer: Color(0xFFFFE5E5),
-        // Sophisticated dark surfaces
-        surface: Color(0xFF111318),
-        onSurface: Color(0xFFE5E7EB),
-        surfaceDim: Color(0xFF0A0B0F),
-        surfaceContainerLowest: _surfaceBackgroundDark,
-        surfaceContainerHighest: Color(0xFF2D3139),
-        onSurfaceVariant: Color(0xFFD1D5DB),
-        outline: Color(0xFF4B5563),
-        shadow: Colors.black,
-        inverseSurface: Color(0xFFF3F4F6),
-        onInverseSurface: Color(0xFF111827),
-        inversePrimary: Color(0xFF4F7CFF),
-        surfaceTint: Colors.transparent,
-      ).harmonized();
+    brightness: Brightness.dark,
+    // Refined dark mode primary
+    primary: Color(0xFF7C9EFF),
+    onPrimary: Color(0xFF0A1A3E),
+    primaryContainer: Color(0xFF2D4B8C),
+    onPrimaryContainer: Color(0xFFE0E9FF),
+    // Refined dark mode secondary
+    secondary: Color(0xFF8B9AFF),
+    onSecondary: Color(0xFF141732),
+    secondaryContainer: Color(0xFF3A4470),
+    onSecondaryContainer: Color(0xFFE5E8FF),
+    // Refined dark mode tertiary
+    tertiary: Color(0xFF34D399),
+    onTertiary: Color(0xFF064E3B),
+    tertiaryContainer: Color(0xFF065F46),
+    onTertiaryContainer: Color(0xFFD1FAE5),
+    // Refined dark mode error
+    error: Color(0xFFF87171),
+    onError: Color(0xFF7F1D1D),
+    errorContainer: Color(0xFF991B1B),
+    onErrorContainer: Color(0xFFFFE5E5),
+    // Sophisticated dark surfaces
+    surface: Color(0xFF111318),
+    onSurface: Color(0xFFE5E7EB),
+    surfaceDim: Color(0xFF0A0B0F),
+    surfaceContainerLowest: _surfaceBackgroundDark,
+    surfaceContainerHighest: Color(0xFF2D3139),
+    onSurfaceVariant: Color(0xFFD1D5DB),
+    outline: Color(0xFF4B5563),
+    shadow: Colors.black,
+    inverseSurface: Color(0xFFF3F4F6),
+    onInverseSurface: Color(0xFF111827),
+    inversePrimary: Color(0xFF4F7CFF),
+    surfaceTint: Colors.transparent,
+  ).harmonized();
 
   static ThemeData lightTheme({ColorScheme? dynamicColor}) {
-    final scheme =
-        (dynamicColor?.harmonized() ?? _fallbackLightScheme).copyWith(
-      surface: Colors.white,
-      surfaceContainerLowest: _surfaceBackgroundLight,
-    );
+    final scheme = (dynamicColor?.harmonized() ?? _fallbackLightScheme)
+        .copyWith(
+          surface: Colors.white,
+          surfaceContainerLowest: _surfaceBackgroundLight,
+        );
 
     final base = ThemeData(
       colorScheme: scheme,
@@ -263,9 +263,7 @@ class AppTheme {
         side: BorderSide.none,
         labelStyle: textTheme.labelMedium,
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
       // Clean list tile design
       listTileTheme: base.listTileTheme.copyWith(
@@ -288,9 +286,7 @@ class AppTheme {
         backgroundColor: scheme.surface,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       ),
       navigationBarTheme: base.navigationBarTheme.copyWith(
         backgroundColor: scheme.surface.withValues(alpha: 0.95),
@@ -333,8 +329,7 @@ class AppTheme {
   }
 
   static ThemeData darkTheme({ColorScheme? dynamicColor}) {
-    final scheme =
-        (dynamicColor?.harmonized() ?? _fallbackDarkScheme).copyWith(
+    final scheme = (dynamicColor?.harmonized() ?? _fallbackDarkScheme).copyWith(
       surface: const Color(0xFF111318),
       surfaceContainerLowest: _surfaceBackgroundDark,
     );
@@ -495,9 +490,7 @@ class AppTheme {
         side: BorderSide.none,
         labelStyle: textTheme.labelMedium,
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
       listTileTheme: base.listTileTheme.copyWith(
         iconColor: scheme.primary,
@@ -519,9 +512,7 @@ class AppTheme {
         backgroundColor: scheme.surface,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       ),
       navigationBarTheme: base.navigationBarTheme.copyWith(
         backgroundColor: scheme.surface.withValues(alpha: 0.95),

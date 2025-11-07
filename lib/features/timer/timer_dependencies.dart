@@ -240,14 +240,16 @@ class TimerDependencies {
     WorkoutCueService? workoutCues,
   }) : audio = audio ?? TimerAudioService(),
        notifications = notifications ?? DefaultTimerNotificationBridge(),
-       foreground = foreground ??
-            (_isAndroid
-                ? DefaultTimerForegroundBridge()
-                : const NoopTimerForegroundBridge()),
-       background = background ??
-            (_isAndroid
-                ? DefaultTimerBackgroundBridge()
-                : const NoopTimerBackgroundBridge()),
+       foreground =
+           foreground ??
+           (_isAndroid
+               ? DefaultTimerForegroundBridge()
+               : const NoopTimerForegroundBridge()),
+       background =
+           background ??
+           (_isAndroid
+               ? DefaultTimerBackgroundBridge()
+               : const NoopTimerBackgroundBridge()),
        workoutCues = workoutCues ?? WorkoutCueService();
 
   final TimerAudioEngine audio;
