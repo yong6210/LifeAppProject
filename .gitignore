@@ -104,3 +104,13 @@ app.*.map.json
 # Documentation
 ########################################
 docs/
+docs/workspace_notes/
+notes/
+scratch_plan.md
+
+########################################
+# Project-specific artifacts
+########################################
+artifacts/
+analyze.log
+error_log.txt
