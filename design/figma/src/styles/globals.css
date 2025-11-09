@@ -1,0 +1,257 @@
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-size: 17px;
+  
+  /* Life Buddy Brand Colors - Mindful Lab Palette */
+  /* Base Colors */
+  --midnight-blue: #0F1419;
+  --midnight-blue-light: #1a2028;
+  --dusk-lavender: #2d2438;
+  --deep-navy: #141b2d;
+  
+  /* Calming Primaries */
+  --eucalyptus: #52C9A5;
+  --eucalyptus-light: #6fd4b3;
+  --eucalyptus-dark: #42a689;
+  
+  --teal: #4ECDC4;
+  --teal-light: #6fd9d1;
+  --teal-dark: #3fb3ac;
+  
+  /* Energetic Accents */
+  --coral: #FF6B6B;
+  --coral-light: #ff8585;
+  --coral-dark: #ff5252;
+  
+  --electric-violet: #B06FF9;
+  --electric-violet-light: #c18cfa;
+  --electric-violet-dark: #9f5ae6;
+  
+  --lime: #A8E063;
+  --lime-light: #b8e67f;
+  --lime-dark: #95cc54;
+  
+  /* Functional */
+  --paper: #f8f6f4;
+  --paper-dark: #e8e6e4;
+  --success: #52C9A5;
+  --warning: #FFB347;
+  --error: #FF6B6B;
+  
+  /* iOS Light Mode Design System */
+  --background: #F2F2F7;
+  --foreground: #000000;
+  --card: #FFFFFF;
+  --card-foreground: #000000;
+  --popover: #FFFFFF;
+  --popover-foreground: #000000;
+  --primary: #52C9A5;
+  --primary-foreground: #ffffff;
+  --secondary: #F2F2F7;
+  --secondary-foreground: #000000;
+  --muted: #F2F2F7;
+  --muted-foreground: #8E8E93;
+  --accent: #4ECDC4;
+  --accent-foreground: #FFFFFF;
+  --destructive: #FF6B6B;
+  --destructive-foreground: #ffffff;
+  --border: #C6C6C8;
+  --input: #C6C6C8;
+  --input-background: #FFFFFF;
+  --switch-background: #E5E5EA;
+  --ring: #52C9A5;
+  --chart-1: #4ECDC4;
+  --chart-2: #52C9A5;
+  --chart-3: #B06FF9;
+  --chart-4: #FF6B6B;
+  --chart-5: #A8E063;
+  --radius: 0.75rem;
+  
+  /* Life Buddy Activity Colors */
+  --focus-primary: #4ECDC4;
+  --focus-secondary: #6fd9d1;
+  --focus-bg: rgba(78, 205, 196, 0.12);
+  
+  --move-primary: #FF6B6B;
+  --move-secondary: #ff8585;
+  --move-bg: rgba(255, 107, 107, 0.12);
+  
+  --rest-primary: #B06FF9;
+  --rest-secondary: #c18cfa;
+  --rest-bg: rgba(176, 111, 249, 0.12);
+  
+  --journal-primary: #A8E063;
+  --journal-secondary: #b8e67f;
+  --journal-bg: rgba(168, 224, 99, 0.12);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --radius-sm: 10px;
+  --radius-md: 12px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* iOS Typography */
+@layer base {
+  .ios-largeTitle {
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: 0.01em;
+  }
+  
+  .ios-title1 {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  
+  .ios-title2 {
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+  
+  .ios-title3 {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  
+  .ios-headline {
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+  
+  .ios-body {
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1.47;
+  }
+  
+  .ios-callout {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+  
+  .ios-subheadline {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.47;
+  }
+  
+  .ios-footnote {
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.38;
+  }
+  
+  .ios-caption1 {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.33;
+  }
+  
+  .ios-caption2 {
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 1.27;
+  }
+}
+
+@layer utilities {
+  /* iOS Card */
+  .ios-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* iOS Module (Widget style) */
+  .ios-module {
+    background: white;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* iOS Section Header */
+  .ios-section-header {
+    font-size: 13px;
+    font-weight: 400;
+    text-transform: uppercase;
+    color: #8E8E93;
+    padding: 16px 20px 8px 20px;
+    letter-spacing: -0.08px;
+  }
+  
+  /* iOS Animations */
+  .ios-spring {
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.175);
+  }
+  
+  .ios-ease {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Theme Surfaces */
+  .focus-surface {
+    background: var(--focus-bg);
+  }
+  
+  .focus-accent {
+    color: var(--focus-primary);
+  }
+  
+  .move-surface {
+    background: var(--move-bg);
+  }
+  
+  .move-accent {
+    color: var(--move-primary);
+  }
+  
+  .sleep-surface {
+    background: var(--rest-bg);
+  }
+  
+  .sleep-accent {
+    color: var(--rest-primary);
+  }
+  
+  /* iOS Progress Rings */
+  .ios-ring-focus {
+    stroke: var(--focus-primary);
+  }
+  
+  .ios-ring-move {
+    stroke: var(--move-primary);
+  }
+  
+  .ios-ring-sleep {
+    stroke: var(--rest-primary);
+  }
+}
