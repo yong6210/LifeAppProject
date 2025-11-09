@@ -64,6 +64,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
+  http: ^1.2.2
   path_provider_platform_interface: ^2.1.2
   fake_cloud_firestore: ^4.0.0
   firebase_auth_mocks: ^0.15.1

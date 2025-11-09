@@ -48,6 +48,38 @@ devices, and ready for future subscription and wearable integrations.
    flutter run --dart-define=FLAVOR=dev
    ```
 
+## Figma Assets & Specs
+Design still lives in Figma; the repo only stores the assets Flutter needs.
+
+1. Ask design for the file key and node IDs you want to export (Figma → Inspect).
+2. Add or update entries inside `tool/figma_assets.json`:
+   ```json
+   {
+     "fileKey": "ABCD1234efGhIjkLmN",
+     "assets": [
+       {
+         "nodeId": "12:345",
+         "name": "journal_calendar_cell",
+         "format": "png",
+         "scale": 2,
+         "output": "journal"
+       }
+     ]
+   }
+   ```
+3. Generate a personal access token at <https://www.figma.com/developers/api>.
+4. Pull the assets (they land in `assets/figma_exports/`):
+   ```bash
+   FIGMA_PERSONAL_TOKEN=xx dart run tool/pull_figma_assets.dart \
+     --manifest=tool/figma_assets.json \
+     --out=assets/figma_exports
+   ```
+5. Commit the downloaded files alongside code changes so everyone stays in sync.
+
+The script uses the Figma Images API, so it works for PNG/SVG and can render
+multiple densities (set `scale`). For complex animations export Lottie JSON from
+Figma/AE and drop it into `assets/figma_exports/animations/`.
+
 ## Project Layout
 - `lib/main.dart` – App bootstrap, localization, and home shell.
 - `lib/features/` – Timer, backup, stats, journal, onboarding, subscription,

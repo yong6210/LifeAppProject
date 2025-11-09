@@ -565,6 +565,7 @@ class _JournalCalendar extends StatelessWidget {
                     crossAxisCount: 7,
                     mainAxisSpacing: 8,
                     crossAxisSpacing: 8,
+                    childAspectRatio: 0.78,
                   ),
                   itemBuilder: (context, index) {
                     final day = days[index];

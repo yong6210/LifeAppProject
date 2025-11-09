@@ -1,0 +1,12 @@
+{
+  "fileKey": "REPLACE_WITH_FIGMA_FILE_KEY",
+  "assets": [
+    {
+      "nodeId": "0:1",
+      "name": "example_component",
+      "format": "png",
+      "scale": 2,
+      "output": "placeholder"
+    }
+  ]
+}
