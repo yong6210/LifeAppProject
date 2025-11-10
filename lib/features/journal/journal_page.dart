@@ -6,7 +6,6 @@ import 'package:life_app/design/app_theme.dart';
 import 'package:life_app/features/journal/journal_entry.dart';
 import 'package:life_app/providers/journal_providers.dart';
 import 'package:life_app/services/journal/life_buddy_comment_service.dart';
-import 'package:life_app/widgets/modern_animations.dart';
 
 /// Stage 0 journal page with 30-day retention and monthly recap.
 class JournalPage extends ConsumerStatefulWidget {
@@ -53,13 +52,68 @@ class _JournalPageState extends ConsumerState<JournalPage> {
         : fallbackDate;
     final selectedEntry = entryMap[effectiveDate];
 
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Sleep & Mood Journal')),
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: isDark
+                ? [
+                    const Color(0xFF1a1a20),
+                    const Color(0xFF0F1419),
+                    const Color(0xFF0a0a0f),
+                  ]
+                : [
+                    const Color(0xFFF5F5FA),
+                    const Color(0xFFE8F0FE),
+                    const Color(0xFFFFFFFF),
+                  ],
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              // Custom AppBar
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [AppTheme.teal, AppTheme.eucalyptus],
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Icon(
+                        Icons.book_outlined,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      'Sleep & Mood Journal',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w700,
+                        color: isDark ? Colors.white : theme.colorScheme.onSurface,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Form(
+                  key: _formKey,
+                  child: ListView(
+                    padding: const EdgeInsets.all(16),
+                    children: [
             _JournalCalendar(
               entries: entriesAsync,
               selectedDate: effectiveDate,
@@ -126,7 +180,12 @@ class _JournalPageState extends ConsumerState<JournalPage> {
                   ref.read(journalEntriesProvider.notifier).deleteEntry(entry),
               onSelect: (entry) => _handleTimelineTap(entry, entries),
             ),
-          ],
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

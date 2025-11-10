@@ -324,10 +324,16 @@ String _segmentTypeLabel(String type, AppLocalizations l10n) {
 }
 
 class TimerPage extends ConsumerStatefulWidget {
-  const TimerPage({super.key, this.initialMode, this.autoStart = false});
+  const TimerPage({
+    super.key,
+    this.initialMode,
+    this.autoStart = false,
+    this.useForegroundTask = true,
+  });
 
   final String? initialMode;
   final bool autoStart;
+  final bool useForegroundTask;
 
   @override
   ConsumerState<TimerPage> createState() => _TimerPageState();
@@ -734,8 +740,8 @@ class _TimerPageState extends ConsumerState<TimerPage> {
       modeHeader.add(const SizedBox(height: 4));
     }
 
-    return WithForegroundTask(
-      child: Scaffold(
+    Widget buildTimerScaffold() {
+      return Scaffold(
         appBar: AppBar(
           title: Text(l10n.tr('timer_title')),
           actions: [
@@ -752,6 +758,7 @@ class _TimerPageState extends ConsumerState<TimerPage> {
               },
             ),
             IconButton(
+              key: const Key('timer-open-workout-navigator'),
               tooltip: l10n.tr('timer_workout_navigator_button'),
               icon: const Icon(Icons.route_outlined),
               onPressed: () async {
@@ -866,8 +873,14 @@ class _TimerPageState extends ConsumerState<TimerPage> {
             ],
           ),
         ),
-      ),
-    );
+      );
+    }
+
+    final scaffold = buildTimerScaffold();
+    if (!widget.useForegroundTask) {
+      return scaffold;
+    }
+    return WithForegroundTask(child: scaffold);
   }
 }
 

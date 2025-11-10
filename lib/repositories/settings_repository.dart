@@ -90,4 +90,17 @@ class SettingsRepository {
         ..occurredAt = DateTime.now().toUtc(),
     );
   }
+
+  // Convenience methods for updating timer durations
+  Future<void> updateFocusMinutes(int minutes) async {
+    await update((settings) => settings.focusMinutes = minutes);
+  }
+
+  Future<void> updateRestMinutes(int minutes) async {
+    await update((settings) => settings.restMinutes = minutes);
+  }
+
+  Future<void> updateWorkoutMinutes(int minutes) async {
+    await update((settings) => settings.workoutMinutes = minutes);
+  }
 }

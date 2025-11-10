@@ -7,11 +7,10 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:life_app/core/firebase/firebase_initializer.dart';
 import 'package:life_app/design/app_theme.dart';
-import 'package:life_app/features/home/home_dashboard.dart';
-import 'package:life_app/features/stats/stats_page.dart';
+import 'package:life_app/features/home/improved_home_dashboard.dart';
+import 'package:life_app/features/more/more_page.dart';
 import 'package:life_app/features/account/account_page.dart';
 import 'package:life_app/features/onboarding/onboarding_page.dart';
-import 'package:life_app/features/journal/journal_page.dart';
 import 'package:life_app/models/settings.dart';
 import 'package:life_app/providers/settings_providers.dart';
 import 'package:life_app/providers/backup_providers.dart';
@@ -20,6 +19,7 @@ import 'package:life_app/services/notification_service.dart';
 import 'package:life_app/services/background/workmanager_scheduler.dart';
 import 'package:life_app/services/subscription/revenuecat_service.dart';
 import 'package:life_app/l10n/app_localizations.dart';
+import 'package:life_app/widgets/ios_tab_bar.dart';
 
 Future<void> main() async {
   await runZonedGuarded(
@@ -144,41 +144,39 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
       }
     });
     final tabs = const [
-      HomeDashboardTab(),
-      StatsPage(),
-      JournalPage(),
+      ImprovedHomeDashboard(),
+      MorePage(),
       AccountPage(),
     ];
+
+    // iOS-style tab bar items with Life Buddy colors
+    final tabItems = [
+      const IOSTabItem(
+        icon: Icons.home_outlined,
+        label: '홈',
+        color: AppTheme.teal,
+      ),
+      const IOSTabItem(
+        icon: Icons.grid_view_rounded,
+        label: '더보기',
+        color: AppTheme.eucalyptus,
+      ),
+      const IOSTabItem(
+        icon: Icons.person_outline,
+        label: '프로필',
+        color: AppTheme.coral,
+      ),
+    ];
+
     return Scaffold(
       body: IndexedStack(index: _currentIndex, children: tabs),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _currentIndex,
-        onDestinationSelected: (index) {
+      bottomNavigationBar: IOSTabBar(
+        currentIndex: _currentIndex,
+        onTap: (index) {
           if (_currentIndex == index) return;
           setState(() => _currentIndex = index);
         },
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home_rounded),
-            label: '메인',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.auto_graph_outlined),
-            selectedIcon: Icon(Icons.auto_graph_rounded),
-            label: '분석',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.book_outlined),
-            selectedIcon: Icon(Icons.book_rounded),
-            label: '저널',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person),
-            label: '프로필',
-          ),
-        ],
+        items: tabItems,
       ),
     );
   }

@@ -155,7 +155,10 @@ void main() {
       find.text('Timer accuracy samples', skipOffstage: false),
       findsOneWidget,
     );
-    expect(find.byIcon(Icons.ios_share_outlined), findsOneWidget);
+    expect(
+      find.byIcon(Icons.ios_share_outlined, skipOffstage: false),
+      findsOneWidget,
+    );
   });
 
   testWidgets('accessibility toggle updates controller', (tester) async {

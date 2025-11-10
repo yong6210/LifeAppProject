@@ -21,7 +21,6 @@ import 'package:life_app/services/backup/backup_metrics.dart';
 import 'package:life_app/services/diagnostics/timer_diagnostics_service.dart';
 import 'package:life_app/services/subscription/revenuecat_service.dart';
 import 'package:life_app/l10n/app_localizations.dart';
-import 'package:life_app/widgets/modern_animations.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
@@ -102,9 +101,64 @@ class AccountPage extends ConsumerWidget {
       },
     );
 
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.tr('account_title'))),
-      body: RefreshIndicator(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: isDark
+                ? [
+                    const Color(0xFF1a1a20),
+                    const Color(0xFF0F1419),
+                    const Color(0xFF0a0a0f),
+                  ]
+                : [
+                    const Color(0xFFF5F5FA),
+                    const Color(0xFFE8F0FE),
+                    const Color(0xFFFFFFFF),
+                  ],
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              // Custom AppBar
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [AppTheme.teal, AppTheme.eucalyptus],
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Icon(
+                        Icons.person_outline,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      l10n.tr('account_title'),
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w700,
+                        color: isDark ? Colors.white : theme.colorScheme.onSurface,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: RefreshIndicator(
         onRefresh: () async {
           await ref
               .read(revenueCatControllerProvider.notifier)
@@ -318,6 +372,11 @@ class AccountPage extends ConsumerWidget {
               onDelete: () => _confirmAccountDeletion(context, ref),
             ),
           ],
+        ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

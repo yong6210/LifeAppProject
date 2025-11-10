@@ -110,6 +110,25 @@ Figma/AE and drop it into `assets/figma_exports/animations/`.
   backup workflows (`test/backup_service_test.dart`). Add integration tests for
   new sync or backup flows as they evolve.
 
+### Timer page UI harness
+`TimerPage` depends on asynchronous providers (`settingsFutureProvider`,
+`todaySummaryProvider`, permissions, etc.) plus localization assets. When adding
+widget tests for timer entry points (app bar actions, quick cards, navigator
+overlays):
+- Follow the pattern in `test/features/timer/timer_page_workout_entry_test.dart`
+  by overriding the async providers with synchronous fakes and feeding a fake
+  `TimerController`.
+- Use the `_TestAppLocalizationsDelegate` helper (see the same test file) so the
+  widget tree does not try to load ARB files from disk; load the desired locale
+  once in `setUpAll` and hand it to the delegate.
+- Pump a `TimerPage(useForegroundTask: false)` to bypass the
+  `WithForegroundTask` wrapper that would otherwise stall tests.
+- Ensure the `TimerState` starts in the mode your scenario requires; the fake
+  controller in the test demonstrates how to pin the mode to `workout`.
+
+Replicate that harness whenever you need to cover additional timer UI flows so
+the tests remain deterministic and isolated from platform services.
+
 ## Roadmap & Open Work
 - Ship the DND prompt for focus mode and text-to-speech cues for workout mode
   (see checklist section 4).

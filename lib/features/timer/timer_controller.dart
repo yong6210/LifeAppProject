@@ -131,6 +131,26 @@ class TimerController extends Notifier<TimerState> {
   }
 
   Future<void> setPreset(String mode, int minutes) async {
+    // Update settings based on mode
+    final settingsRepo = await ref.read(settingsRepoProvider.future);
+
+    switch (mode) {
+      case 'focus':
+        await settingsRepo.updateFocusMinutes(minutes);
+        break;
+      case 'rest':
+        await settingsRepo.updateRestMinutes(minutes);
+        break;
+      case 'workout':
+        await settingsRepo.updateWorkoutMinutes(minutes);
+        break;
+      case 'sleep':
+        // Sleep doesn't use timer presets in the same way
+        break;
+    }
+
+    // Invalidate settings and reload plan with new settings
+    ref.invalidate(settingsFutureProvider);
     await selectMode(mode);
   }
 

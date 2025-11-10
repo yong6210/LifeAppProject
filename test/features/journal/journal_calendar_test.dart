@@ -97,6 +97,10 @@ void main() {
     final container = ProviderScope.containerOf(context, listen: false);
     final entriesState = container.read(journalEntriesProvider);
     expect(entriesState.hasValue, isTrue);
+
+    final listFinder = find.byType(ListView);
+    await tester.drag(listFinder, const Offset(0, -200));
+    await tester.pumpAndSettle();
     expect(
       find.byKey(const Key('journal-detail-card'), skipOffstage: false),
       findsOneWidget,
@@ -160,19 +164,40 @@ void main() {
       await tester.pumpAndSettle();
 
       final listFinder = find.byType(ListView);
+      final scrollableFinder = find.descendant(
+        of: find.byType(JournalPage),
+        matching: find.byType(Scrollable),
+      );
+
       await tester.drag(listFinder, const Offset(0, -800));
       await tester.pumpAndSettle();
       await tester.drag(listFinder, const Offset(0, -800));
+      await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(
+        find.text('Timeline'),
+        400,
+        scrollable: scrollableFinder.last,
+      );
       await tester.pumpAndSettle();
 
       final deleteButtons = find.byTooltip('기록 삭제');
       expect(deleteButtons, findsWidgets);
-      final timelineCard = find.ancestor(
-        of: deleteButtons.first,
-        matching: find.byType(Card),
+
+      final timelineCard =
+          find.byKey(const ValueKey('timeline-entry-focus-day'));
+      await tester.pump();
+      expect(timelineCard, findsOneWidget);
+      await tester.scrollUntilVisible(
+        timelineCard,
+        400,
+        scrollable: scrollableFinder.last,
       );
+      await tester.ensureVisible(timelineCard);
+      // Tap the card directly (using GestureDetector, not InkWell)
       await tester.tap(timelineCard);
       await tester.pumpAndSettle();
+      final exception = tester.takeException();
+      expect(exception, isNull, reason: 'Unexpected exception $exception');
 
       final sheetFinder = find.byKey(const Key('journal-entry-detail-sheet'));
       expect(sheetFinder, findsOneWidget);

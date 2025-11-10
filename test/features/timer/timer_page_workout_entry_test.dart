@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,6 +19,24 @@ import 'package:life_app/services/subscription/revenuecat_service.dart';
 import 'package:life_app/services/audio/sleep_sound_catalog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:riverpod/src/framework.dart' show Override;
+
+late AppLocalizations _testLocalizations;
+
+class _TestAppLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
+  const _TestAppLocalizationsDelegate();
+
+  @override
+  bool isSupported(Locale locale) => true;
+
+  @override
+  Future<AppLocalizations> load(Locale locale) =>
+      SynchronousFuture(_testLocalizations);
+
+  @override
+  bool shouldReload(covariant LocalizationsDelegate<AppLocalizations> old) =>
+      false;
+}
 
 class _FakeTimerController extends TimerController {
   static Settings template = Settings();
@@ -149,6 +168,10 @@ TodaySummary _summaryWithWorkoutGap() {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
+  setUpAll(() async {
+    _testLocalizations = await AppLocalizations.load(const Locale('en'));
+  });
+
   setUp(() {
     SharedPreferences.setMockInitialValues(const <String, Object>{});
     AnalyticsService.setTestConsent(
@@ -162,7 +185,7 @@ void main() {
   });
 
   testWidgets(
-    'workout navigator entry points open navigator and log analytics',
+    'workout quick card opens navigator and logs analytics',
     (tester) async {
       Future<void> pumpTimerPage({
         required Settings settings,
@@ -204,44 +227,40 @@ void main() {
             ],
             child: MaterialApp(
               localizationsDelegates: const [
-                AppLocalizations.delegate,
+                _TestAppLocalizationsDelegate(),
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
                 GlobalCupertinoLocalizations.delegate,
               ],
               locale: const Locale('en'),
               supportedLocales: AppLocalizations.supportedLocales,
-              home: const TimerPage(),
+              home: const TimerPage(useForegroundTask: false),
             ),
           ),
         );
         await tester.pump();
-        await tester.pump(const Duration(milliseconds: 200));
+        for (var i = 0; i < 10; i++) {
+          if (find.byType(TimerPage).evaluate().isNotEmpty) {
+            break;
+          }
+          await tester.pump(const Duration(milliseconds: 50));
+        }
+        final timerContext = tester.element(find.byType(TimerPage));
+        final container = ProviderScope.containerOf(
+          timerContext,
+          listen: false,
+        );
+        final settingsValue = container.read(settingsFutureProvider);
+        expect(
+          settingsValue,
+          isA<AsyncData<Settings>>(),
+          reason: 'settingsFutureProvider should resolve in tests',
+        );
+        final timerState = container.read(timerControllerProvider);
+        expect(timerState.mode, equals('workout'));
       }
 
-      // Scenario 1: App bar icon
-      final appBarEvents = <String>[];
-      AnalyticsService.setTestObserver((name, _) => appBarEvents.add(name));
-      final settings = _baseSettings();
-      final summary = _summaryWithWorkoutGap();
-      await pumpTimerPage(settings: settings, summary: summary);
-
-      await tester.tap(find.byTooltip('Open Workout Navigator'));
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 200));
-
-      expect(find.byType(WorkoutNavigatorPage), findsOneWidget);
-      expect(appBarEvents.contains('workout_navigator_open'), isTrue);
-      await tester.pageBack();
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 200));
-      AnalyticsService.setTestObserver(null);
-
-      // Clear tree before next scenario.
-      await tester.pumpWidget(const SizedBox.shrink());
-      await tester.pump();
-
-      // Scenario 2: Coach card action
+      // Quick card action entry point
       SharedPreferences.setMockInitialValues(const <String, Object>{});
       final coachEvents = <String, List<Map<String, Object?>>>{
         'coach_action': <Map<String, Object?>>[],
@@ -262,6 +281,11 @@ void main() {
       await tester.pump(const Duration(milliseconds: 100));
       final workoutCardFinder = find.byWidgetPredicate(
         (widget) => widget.runtimeType.toString() == '_WorkoutQuickCard',
+      );
+      expect(
+        workoutCardFinder,
+        findsOneWidget,
+        reason: 'Workout quick card should be visible in workout mode',
       );
       final quickCardWidget = tester.widget(workoutCardFinder);
       // ignore: avoid_dynamic_calls

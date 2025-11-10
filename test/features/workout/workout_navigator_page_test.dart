@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -9,13 +10,31 @@ import 'package:life_app/features/workout/workout_navigator_page.dart';
 import 'package:life_app/features/workout/models/workout_navigator_models.dart';
 import 'package:life_app/l10n/app_localizations.dart';
 
+late AppLocalizations _testLocalizations;
+
+class _TestAppLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
+  const _TestAppLocalizationsDelegate();
+
+  @override
+  bool isSupported(Locale locale) => true;
+
+  @override
+  Future<AppLocalizations> load(Locale locale) =>
+      SynchronousFuture(_testLocalizations);
+
+  @override
+  bool shouldReload(covariant LocalizationsDelegate<AppLocalizations> old) =>
+      false;
+}
+
 MaterialApp _buildApp() {
   return MaterialApp(
     home: const WorkoutNavigatorPage(),
     locale: const Locale('en'),
     supportedLocales: AppLocalizations.supportedLocales,
     localizationsDelegates: const [
-      AppLocalizations.delegate,
+      _TestAppLocalizationsDelegate(),
       GlobalMaterialLocalizations.delegate,
       GlobalCupertinoLocalizations.delegate,
       GlobalWidgetsLocalizations.delegate,
@@ -26,13 +45,16 @@ MaterialApp _buildApp() {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
+  setUpAll(() async {
+    _testLocalizations = await AppLocalizations.load(const Locale('en'));
+  });
+
   setUp(() {
     SharedPreferences.setMockInitialValues({});
   });
 
   testWidgets('tapping discipline cards updates selection', (tester) async {
     await tester.pumpWidget(ProviderScope(child: _buildApp()));
-
     await tester.pumpAndSettle();
     final pageFinder = find.byType(WorkoutNavigatorPage, skipOffstage: false);
     expect(pageFinder, findsWidgets);

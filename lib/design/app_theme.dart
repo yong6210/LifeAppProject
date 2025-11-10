@@ -2,94 +2,118 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-/// Refined design system with sophisticated color palette and modern aesthetics.
-/// Removes AI-generated feel with carefully curated colors and professional spacing.
+/// Life Buddy design system - Inspired by Figma design
+/// Mindful Lab Palette with iOS aesthetics
 class AppTheme {
-  // Refined neutral backgrounds - softer and more sophisticated
-  static const _surfaceBackgroundLight = Color(0xFFFAFAFC);
-  static const _surfaceBackgroundDark = Color(0xFF0A0B0F);
+  // iOS Light/Dark backgrounds
+  static const _surfaceBackgroundLight = Color(0xFFF2F2F7); // iOS Light BG
+  static const _surfaceBackgroundDark = Color(0xFF0F1419); // Midnight Blue
 
-  // Professional subtitle colors with better readability
-  static const _neutralSubtitleLight = Color(0xFF6B7280);
+  // Muted text colors
+  static const _neutralSubtitleLight = Color(0xFF8E8E93); // iOS Gray
   static const _neutralSubtitleDark = Color(0xFFA1A8B5);
 
-  // Accent colors for feature categorization - more refined palette
-  static const accentBlue = Color(0xFF4F7CFF); // Focus
-  static const accentGreen = Color(0xFF10B981); // Workout
-  static const accentPurple = Color(0xFF8B5CF6); // Sleep
-  static const accentOrange = Color(0xFFF59E0B); // Rest
+  // Life Buddy Brand Colors - Mindful Lab Palette
+
+  // Primary Colors
+  static const eucalyptus = Color(0xFF52C9A5); // Primary green
+  static const eucalyptusLight = Color(0xFF6FD4B3);
+  static const eucalyptusDark = Color(0xFF42A689);
+
+  static const teal = Color(0xFF4ECDC4); // Primary teal
+  static const tealLight = Color(0xFF6FD9D1);
+  static const tealDark = Color(0xFF3FB3AC);
+
+  // Energetic Accents
+  static const coral = Color(0xFFFF6B6B); // Move/Energy
+  static const coralLight = Color(0xFFFF8585);
+  static const coralDark = Color(0xFFFF5252);
+
+  static const electricViolet = Color(0xFFB06FF9); // Rest/Sleep
+  static const electricVioletLight = Color(0xFFC18CFA);
+  static const electricVioletDark = Color(0xFF9F5AE6);
+
+  static const lime = Color(0xFFA8E063); // Journal/Growth
+  static const limeLight = Color(0xFFB8E67F);
+  static const limeDark = Color(0xFF95CC54);
+
+  // Activity-specific colors (for backward compatibility)
+  static const accentBlue = teal; // Focus
+  static const accentGreen = coral; // Workout/Move
+  static const accentPurple = electricViolet; // Sleep/Rest
+  static const accentOrange = lime; // Journal
 
   static ColorScheme get _fallbackLightScheme => const ColorScheme(
     brightness: Brightness.light,
-    // More refined primary - less saturated, more professional
-    primary: Color(0xFF4F7CFF),
+    // Life Buddy primary - Eucalyptus/Teal blend
+    primary: eucalyptus, // #52C9A5
     onPrimary: Colors.white,
-    primaryContainer: Color(0xFFE0E9FF),
-    onPrimaryContainer: Color(0xFF0D1B3E),
-    // Softer secondary colors
-    secondary: Color(0xFF6B7CFF),
+    primaryContainer: Color(0xFFD4F4E9), // Light eucalyptus tint
+    onPrimaryContainer: Color(0xFF064E3B),
+    // Secondary - Teal accent
+    secondary: teal, // #4ECDC4
     onSecondary: Colors.white,
-    secondaryContainer: Color(0xFFE5E8FF),
-    onSecondaryContainer: Color(0xFF1A1D3A),
-    // Balanced tertiary with better contrast
-    tertiary: Color(0xFF10B981),
+    secondaryContainer: Color(0xFFD4F4F2), // Light teal tint
+    onSecondaryContainer: Color(0xFF0A3836),
+    // Tertiary - Coral for energy
+    tertiary: coral, // #FF6B6B
     onTertiary: Colors.white,
-    tertiaryContainer: Color(0xFFD1FAE5),
-    onTertiaryContainer: Color(0xFF064E3B),
-    // Refined error colors
-    error: Color(0xFFEF4444),
+    tertiaryContainer: Color(0xFFFFE5E5),
+    onTertiaryContainer: Color(0xFF7F1D1D),
+    // Error - Using coral
+    error: coral, // #FF6B6B
     onError: Colors.white,
     errorContainer: Color(0xFFFFE5E5),
     onErrorContainer: Color(0xFF7F1D1D),
-    // Clean surface colors
-    surface: Color(0xFFFFFFFF),
-    onSurface: Color(0xFF1F2937),
-    surfaceBright: Color(0xFFFFFFFF),
-    surfaceContainerLowest: _surfaceBackgroundLight,
-    surfaceContainerHighest: Color(0xFFF3F4F6),
-    onSurfaceVariant: Color(0xFF4B5563),
-    outline: Color(0xFFD1D5DB),
+    // iOS-style surface colors
+    surface: Colors.white, // #FFFFFF
+    onSurface: Colors.black, // #000000
+    surfaceBright: Colors.white,
+    surfaceContainerLowest: _surfaceBackgroundLight, // #F2F2F7
+    surfaceContainerHighest: Color(0xFFE5E5EA), // iOS secondary bg
+    onSurfaceVariant: Color(0xFF8E8E93), // iOS gray
+    outline: Color(0xFFC6C6C8), // iOS separator
     shadow: Colors.black,
-    inverseSurface: Color(0xFF1F2937),
+    inverseSurface: Color(0xFF1C1C1E),
     onInverseSurface: Colors.white,
-    inversePrimary: Color(0xFFA5C4FF),
+    inversePrimary: eucalyptusLight,
     surfaceTint: Colors.transparent,
   ).harmonized();
 
   static ColorScheme get _fallbackDarkScheme => const ColorScheme(
     brightness: Brightness.dark,
-    // Refined dark mode primary
-    primary: Color(0xFF7C9EFF),
-    onPrimary: Color(0xFF0A1A3E),
-    primaryContainer: Color(0xFF2D4B8C),
-    onPrimaryContainer: Color(0xFFE0E9FF),
-    // Refined dark mode secondary
-    secondary: Color(0xFF8B9AFF),
-    onSecondary: Color(0xFF141732),
-    secondaryContainer: Color(0xFF3A4470),
-    onSecondaryContainer: Color(0xFFE5E8FF),
-    // Refined dark mode tertiary
-    tertiary: Color(0xFF34D399),
-    onTertiary: Color(0xFF064E3B),
-    tertiaryContainer: Color(0xFF065F46),
-    onTertiaryContainer: Color(0xFFD1FAE5),
-    // Refined dark mode error
-    error: Color(0xFFF87171),
+    // Life Buddy dark mode - Lighter eucalyptus
+    primary: eucalyptusLight, // #6FD4B3
+    onPrimary: Color(0xFF064E3B),
+    primaryContainer: Color(0xFF0A6B53), // Darker eucalyptus
+    onPrimaryContainer: eucalyptusLight,
+    // Dark mode secondary - Light teal
+    secondary: tealLight, // #6FD9D1
+    onSecondary: Color(0xFF0A3836),
+    secondaryContainer: Color(0xFF0F4D4A),
+    onSecondaryContainer: tealLight,
+    // Dark mode tertiary - Light coral
+    tertiary: coralLight, // #FF8585
+    onTertiary: Color(0xFF7F1D1D),
+    tertiaryContainer: Color(0xFF991B1B),
+    onTertiaryContainer: coralLight,
+    // Dark mode error
+    error: coralLight, // #FF8585
     onError: Color(0xFF7F1D1D),
     errorContainer: Color(0xFF991B1B),
-    onErrorContainer: Color(0xFFFFE5E5),
-    // Sophisticated dark surfaces
-    surface: Color(0xFF111318),
-    onSurface: Color(0xFFE5E7EB),
-    surfaceDim: Color(0xFF0A0B0F),
-    surfaceContainerLowest: _surfaceBackgroundDark,
-    surfaceContainerHighest: Color(0xFF2D3139),
-    onSurfaceVariant: Color(0xFFD1D5DB),
+    onErrorContainer: coralLight,
+    // Dark gradient surfaces - matching Figma
+    surface: Color(0xFF111318), // Dark card bg
+    onSurface: Colors.white,
+    surfaceDim: Color(0xFF0A0E14), // Darkest gradient
+    surfaceContainerLowest: _surfaceBackgroundDark, // #0F1419
+    surfaceContainerHighest: Color(0xFF1C1C1E), // Lighter dark surface
+    onSurfaceVariant: Color(0xFFA1A8B5),
     outline: Color(0xFF4B5563),
     shadow: Colors.black,
-    inverseSurface: Color(0xFFF3F4F6),
-    onInverseSurface: Color(0xFF111827),
-    inversePrimary: Color(0xFF4F7CFF),
+    inverseSurface: Color(0xFFF2F2F7),
+    onInverseSurface: Colors.black,
+    inversePrimary: eucalyptus,
     surfaceTint: Colors.transparent,
   ).harmonized();
 
@@ -106,7 +130,7 @@ class AppTheme {
       brightness: Brightness.light,
     );
 
-    // Refined typography with better hierarchy
+    // iOS Typography system
     final textTheme = base.textTheme
         .apply(
           fontFamily: 'Pretendard',
@@ -114,87 +138,123 @@ class AppTheme {
           bodyColor: scheme.onSurface,
         )
         .copyWith(
-          // Display styles for hero sections
-          displayLarge: base.textTheme.displayLarge?.copyWith(
+          // iOS Large Title (34px, bold) -> displayLarge
+          displayLarge: const TextStyle(
+            fontSize: 34,
             fontWeight: FontWeight.w700,
-            letterSpacing: -1.2,
-            height: 1.1,
-          ),
-          displayMedium: base.textTheme.displayMedium?.copyWith(
-            fontWeight: FontWeight.w700,
-            letterSpacing: -0.8,
             height: 1.15,
+            letterSpacing: 0.34, // 0.01em
           ),
-          // Headline styles for section titles
-          headlineLarge: base.textTheme.headlineLarge?.copyWith(
+          // iOS Title 1 (28px, bold) -> displayMedium
+          displayMedium: const TextStyle(
+            fontSize: 28,
             fontWeight: FontWeight.w700,
-            letterSpacing: -0.8,
             height: 1.2,
+            letterSpacing: 0,
           ),
-          headlineMedium: base.textTheme.headlineMedium?.copyWith(
+          // iOS Title 2 (22px, semibold) -> headlineLarge
+          headlineLarge: const TextStyle(
+            fontSize: 22,
             fontWeight: FontWeight.w600,
-            letterSpacing: -0.4,
+            height: 1.25,
+            letterSpacing: 0,
+          ),
+          // iOS Title 3 (20px, semibold) -> headlineMedium
+          headlineMedium: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
             height: 1.3,
+            letterSpacing: 0,
           ),
-          headlineSmall: base.textTheme.headlineSmall?.copyWith(
+          // iOS Headline (17px, semibold) -> headlineSmall
+          headlineSmall: const TextStyle(
+            fontSize: 17,
             fontWeight: FontWeight.w600,
-            letterSpacing: -0.2,
+            height: 1.35,
+            letterSpacing: 0,
           ),
-          // Title styles for card headers
-          titleLarge: base.textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.w700,
-            letterSpacing: -0.3,
+          // iOS Body (17px, regular) -> titleLarge
+          titleLarge: const TextStyle(
+            fontSize: 17,
+            fontWeight: FontWeight.w400,
+            height: 1.47,
+            letterSpacing: 0,
           ),
-          titleMedium: base.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w600,
-            letterSpacing: -0.15,
-          ),
-          titleSmall: base.textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
-          // Body styles for content
-          bodyLarge: base.textTheme.bodyLarge?.copyWith(
-            height: 1.6,
-            letterSpacing: 0.1,
-            color: _neutralSubtitleLight,
-          ),
-          bodyMedium: base.textTheme.bodyMedium?.copyWith(
-            height: 1.6,
-            letterSpacing: 0.1,
-            color: _neutralSubtitleLight,
-          ),
-          bodySmall: base.textTheme.bodySmall?.copyWith(
+          // iOS Callout (16px, regular) -> titleMedium
+          titleMedium: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
             height: 1.5,
+            letterSpacing: 0,
+          ),
+          // iOS Subheadline (15px, regular) -> titleSmall
+          titleSmall: const TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w400,
+            height: 1.47,
+            letterSpacing: 0,
+          ),
+          // iOS Body (17px, regular) -> bodyLarge
+          bodyLarge: TextStyle(
+            fontSize: 17,
+            fontWeight: FontWeight.w400,
+            height: 1.47,
+            letterSpacing: 0,
             color: _neutralSubtitleLight,
           ),
-          // Label styles for UI elements
-          labelLarge: base.textTheme.labelLarge?.copyWith(
-            fontWeight: FontWeight.w600,
-            letterSpacing: 0.2,
+          // iOS Callout (16px, regular) -> bodyMedium
+          bodyMedium: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+            height: 1.5,
+            letterSpacing: 0,
+            color: _neutralSubtitleLight,
           ),
-          labelMedium: base.textTheme.labelMedium?.copyWith(
-            fontWeight: FontWeight.w600,
-            letterSpacing: 0.15,
+          // iOS Footnote (13px, regular) -> bodySmall
+          bodySmall: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w400,
+            height: 1.38,
+            letterSpacing: 0,
+            color: _neutralSubtitleLight,
+          ),
+          // iOS Subheadline (15px, regular) -> labelLarge
+          labelLarge: const TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w400,
+            height: 1.47,
+            letterSpacing: 0,
+          ),
+          // iOS Caption1 (12px, regular) -> labelMedium
+          labelMedium: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w400,
+            height: 1.33,
+            letterSpacing: 0,
+          ),
+          // iOS Caption2 (11px, regular) -> labelSmall
+          labelSmall: const TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w400,
+            height: 1.27,
+            letterSpacing: 0,
           ),
         );
 
     return base.copyWith(
       scaffoldBackgroundColor: _surfaceBackgroundLight,
       textTheme: textTheme,
-      // Refined card design - cleaner shadows, better spacing
+      // iOS Card design - minimal shadows, clean borders
       cardTheme: CardThemeData(
         elevation: 0,
         margin: EdgeInsets.zero,
         color: scheme.surface,
         surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-          side: BorderSide(
-            color: scheme.outline.withValues(alpha: 0.08),
-            width: 1,
-          ),
+          borderRadius: BorderRadius.circular(12), // iOS style 12px
+          side: BorderSide.none, // No border for iOS cards
         ),
-        shadowColor: scheme.shadow.withValues(alpha: 0.04),
+        shadowColor: Colors.black.withValues(alpha: 0.05),
       ),
       appBarTheme: base.appBarTheme.copyWith(
         elevation: 0,
@@ -340,7 +400,7 @@ class AppTheme {
       useMaterial3: true,
     );
 
-    // Refined dark mode typography - matching light theme hierarchy
+    // iOS Typography system - Dark mode
     final textTheme = base.textTheme
         .apply(
           fontFamily: 'Pretendard',
@@ -348,82 +408,134 @@ class AppTheme {
           bodyColor: scheme.onSurface,
         )
         .copyWith(
-          displayLarge: base.textTheme.displayLarge?.copyWith(
+          // iOS Large Title (34px, bold) -> displayLarge
+          displayLarge: const TextStyle(
+            fontSize: 34,
             fontWeight: FontWeight.w700,
-            letterSpacing: -1.2,
-            height: 1.1,
-          ),
-          displayMedium: base.textTheme.displayMedium?.copyWith(
-            fontWeight: FontWeight.w700,
-            letterSpacing: -0.8,
             height: 1.15,
+            letterSpacing: 0.34,
+            color: Colors.white,
           ),
-          headlineLarge: base.textTheme.headlineLarge?.copyWith(
+          // iOS Title 1 (28px, bold) -> displayMedium
+          displayMedium: const TextStyle(
+            fontSize: 28,
             fontWeight: FontWeight.w700,
-            letterSpacing: -0.8,
             height: 1.2,
+            letterSpacing: 0,
+            color: Colors.white,
           ),
-          headlineMedium: base.textTheme.headlineMedium?.copyWith(
+          // iOS Title 2 (22px, semibold) -> headlineLarge
+          headlineLarge: const TextStyle(
+            fontSize: 22,
             fontWeight: FontWeight.w600,
-            letterSpacing: -0.4,
+            height: 1.25,
+            letterSpacing: 0,
+            color: Colors.white,
+          ),
+          // iOS Title 3 (20px, semibold) -> headlineMedium
+          headlineMedium: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
             height: 1.3,
+            letterSpacing: 0,
+            color: Colors.white,
           ),
-          headlineSmall: base.textTheme.headlineSmall?.copyWith(
+          // iOS Headline (17px, semibold) -> headlineSmall
+          headlineSmall: const TextStyle(
+            fontSize: 17,
             fontWeight: FontWeight.w600,
-            letterSpacing: -0.2,
+            height: 1.35,
+            letterSpacing: 0,
+            color: Colors.white,
           ),
-          titleLarge: base.textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.w700,
-            letterSpacing: -0.3,
+          // iOS Body (17px, regular) -> titleLarge
+          titleLarge: const TextStyle(
+            fontSize: 17,
+            fontWeight: FontWeight.w400,
+            height: 1.47,
+            letterSpacing: 0,
+            color: Colors.white,
           ),
-          titleMedium: base.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w600,
-            letterSpacing: -0.15,
-          ),
-          titleSmall: base.textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
-          bodyLarge: base.textTheme.bodyLarge?.copyWith(
-            height: 1.6,
-            letterSpacing: 0.1,
-            color: _neutralSubtitleDark,
-          ),
-          bodyMedium: base.textTheme.bodyMedium?.copyWith(
-            height: 1.6,
-            letterSpacing: 0.1,
-            color: _neutralSubtitleDark,
-          ),
-          bodySmall: base.textTheme.bodySmall?.copyWith(
+          // iOS Callout (16px, regular) -> titleMedium
+          titleMedium: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
             height: 1.5,
+            letterSpacing: 0,
+            color: Colors.white,
+          ),
+          // iOS Subheadline (15px, regular) -> titleSmall
+          titleSmall: const TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w400,
+            height: 1.47,
+            letterSpacing: 0,
+            color: Colors.white,
+          ),
+          // iOS Body (17px, regular) -> bodyLarge
+          bodyLarge: TextStyle(
+            fontSize: 17,
+            fontWeight: FontWeight.w400,
+            height: 1.47,
+            letterSpacing: 0,
             color: _neutralSubtitleDark,
           ),
-          labelLarge: base.textTheme.labelLarge?.copyWith(
-            fontWeight: FontWeight.w600,
-            letterSpacing: 0.2,
+          // iOS Callout (16px, regular) -> bodyMedium
+          bodyMedium: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+            height: 1.5,
+            letterSpacing: 0,
+            color: _neutralSubtitleDark,
           ),
-          labelMedium: base.textTheme.labelMedium?.copyWith(
-            fontWeight: FontWeight.w600,
-            letterSpacing: 0.15,
+          // iOS Footnote (13px, regular) -> bodySmall
+          bodySmall: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w400,
+            height: 1.38,
+            letterSpacing: 0,
+            color: _neutralSubtitleDark,
+          ),
+          // iOS Subheadline (15px, regular) -> labelLarge
+          labelLarge: const TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w400,
+            height: 1.47,
+            letterSpacing: 0,
+            color: Colors.white,
+          ),
+          // iOS Caption1 (12px, regular) -> labelMedium
+          labelMedium: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w400,
+            height: 1.33,
+            letterSpacing: 0,
+            color: Colors.white,
+          ),
+          // iOS Caption2 (11px, regular) -> labelSmall
+          labelSmall: const TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w400,
+            height: 1.27,
+            letterSpacing: 0,
+            color: Colors.white,
           ),
         );
 
     return base.copyWith(
       scaffoldBackgroundColor: _surfaceBackgroundDark,
       textTheme: textTheme,
-      // Refined dark card design with subtle borders
+      // iOS Card design - Dark mode
       cardTheme: CardThemeData(
         elevation: 0,
         margin: EdgeInsets.zero,
         color: scheme.surface,
         surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-          side: BorderSide(
-            color: scheme.outline.withValues(alpha: 0.15),
-            width: 1,
-          ),
+          borderRadius: BorderRadius.circular(12), // iOS style 12px
+          side: BorderSide.none, // No border for iOS cards
         ),
-        shadowColor: Colors.transparent,
+        shadowColor: Colors.black.withValues(alpha: 0.2),
       ),
       appBarTheme: base.appBarTheme.copyWith(
         elevation: 0,

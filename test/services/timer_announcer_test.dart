@@ -1,36 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:life_app/features/timer/timer_plan.dart';
 import 'package:life_app/features/timer/timer_state.dart';
 import 'package:life_app/l10n/app_localizations.dart';
 import 'package:life_app/services/accessibility/timer_announcer.dart';
 
-AppLocalizations? _englishL10n;
+late AppLocalizations _testL10n;
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  Future<(BuildContext, AppLocalizations)> pumpL10n(WidgetTester tester) async {
+  Future<BuildContext> pumpHost(WidgetTester tester) async {
     await tester.pumpWidget(
-      MaterialApp(
-        localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: const SizedBox(key: ValueKey('l10n-host')),
+      const Directionality(
+        textDirection: TextDirection.ltr,
+        child: SizedBox(key: ValueKey('l10n-host')),
       ),
     );
     await tester.pump();
-    await tester.pump();
-    final context = tester.firstElement(find.byType(SizedBox));
-    _englishL10n ??= await tester.runAsync<AppLocalizations?>(
-      () => AppLocalizations.load(const Locale('en')),
-    );
-    return (context, _englishL10n!);
+    return tester.firstElement(find.byKey(const ValueKey('l10n-host')));
   }
 
   TimerState buildState({
@@ -58,6 +46,14 @@ void main() {
     );
   }
 
+  setUpAll(() {
+    _testL10n = AppLocalizations.testing(translations: const {
+      'timer_announcer_minutes_seconds': '{minutes}m {seconds}s',
+      'timer_announcer_seconds_only': '{seconds}s',
+      'timer_announcer_segment': '{segment} · {time}',
+    });
+  });
+
   setUp(() {
     final binding = TestWidgetsFlutterBinding.ensureInitialized();
     binding.platformDispatcher.accessibilityFeaturesTestValue =
@@ -67,7 +63,7 @@ void main() {
   testWidgets('announces once per interval and on segment change', (
     tester,
   ) async {
-    final (context, l10n) = await pumpL10n(tester);
+    final context = await pumpHost(tester);
     final events = <String>[];
     final announcer = TimerAnnouncer(
       minInterval: const Duration(seconds: 30),
@@ -100,8 +96,8 @@ void main() {
           segments[0].duration.inSeconds + segments[1].duration.inSeconds,
     );
 
-    announcer.maybeAnnounce(context: context, state: state1, l10n: l10n);
-    announcer.maybeAnnounce(context: context, state: state1, l10n: l10n);
+    announcer.maybeAnnounce(context: context, state: state1, l10n: _testL10n);
+    announcer.maybeAnnounce(context: context, state: state1, l10n: _testL10n);
 
     final state2 = state1.copyWith(
       currentSegmentIndex: 1,
@@ -109,7 +105,7 @@ void main() {
       remainingSeconds: 45,
     );
 
-    announcer.maybeAnnounce(context: context, state: state2, l10n: l10n);
+    announcer.maybeAnnounce(context: context, state: state2, l10n: _testL10n);
 
     expect(events.length, 2);
     expect(events.first, contains('Deep focus'));
@@ -123,7 +119,7 @@ void main() {
     binding.platformDispatcher.accessibilityFeaturesTestValue =
         const FakeAccessibilityFeatures();
 
-    final (context, l10n) = await pumpL10n(tester);
+    final context = await pumpHost(tester);
     final events = <String>[];
     final announcer = TimerAnnouncer(
       announce: (message, direction) {
@@ -147,7 +143,7 @@ void main() {
       remaining: 30,
     );
 
-    announcer.maybeAnnounce(context: context, state: state, l10n: l10n);
+    announcer.maybeAnnounce(context: context, state: state, l10n: _testL10n);
     expect(events, isEmpty);
   });
 }

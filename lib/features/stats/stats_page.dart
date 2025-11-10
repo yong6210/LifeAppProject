@@ -8,18 +8,43 @@ import 'package:life_app/l10n/app_localizations.dart';
 import 'package:life_app/providers/stats_providers.dart';
 import 'package:life_app/utils/date_range.dart';
 import 'package:life_app/widgets/modern_animations.dart';
+import 'package:life_app/widgets/glass_card.dart';
 
 class StatsPage extends ConsumerWidget {
   const StatsPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return DefaultTabController(
       length: 3,
       child: Scaffold(
+        backgroundColor: isDark
+            ? const Color(0xFF0F1419)
+            : theme.colorScheme.surfaceContainerLowest,
         appBar: AppBar(
-          title: Text(context.l10n.tr('stats_appbar_title')),
+          title: Text(
+            context.l10n.tr('stats_appbar_title'),
+            style: TextStyle(
+              color: isDark ? Colors.white : theme.colorScheme.onSurface,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
           bottom: TabBar(
+            indicatorColor: AppTheme.eucalyptus,
+            indicatorWeight: 3,
+            labelColor: isDark ? Colors.white : theme.colorScheme.primary,
+            unselectedLabelColor: isDark
+                ? Colors.white.withValues(alpha: 0.5)
+                : theme.colorScheme.onSurfaceVariant,
+            labelStyle: const TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+            ),
             tabs: [
               Tab(text: context.l10n.tr('stats_tab_daily')),
               Tab(text: context.l10n.tr('stats_tab_weekly')),
@@ -122,91 +147,221 @@ class _TotalsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     final metrics = [
       _Metric(
         l10n.tr('session_type_focus'),
         totals.focusMinutes,
-        AppTheme.accentBlue,
+        AppTheme.teal,
       ),
       _Metric(
         l10n.tr('session_type_rest'),
         totals.restMinutes,
-        AppTheme.accentOrange,
+        AppTheme.lime,
       ),
       _Metric(
         l10n.tr('session_type_workout'),
         totals.workoutMinutes,
-        AppTheme.accentGreen,
+        AppTheme.coral,
       ),
       _Metric(
         l10n.tr('session_type_sleep'),
         totals.sleepMinutes,
-        AppTheme.accentPurple,
+        AppTheme.electricViolet,
       ),
     ];
 
+    // Calculate percentages for visual representation
+    final total = totals.totalMinutes;
+    final focusPercent = total > 0 ? (totals.focusMinutes / total) : 0.0;
+    final restPercent = total > 0 ? (totals.restMinutes / total) : 0.0;
+    final workoutPercent = total > 0 ? (totals.workoutMinutes / total) : 0.0;
+    final sleepPercent = total > 0 ? (totals.sleepMinutes / total) : 0.0;
+
     return FadeInAnimation(
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: theme.colorScheme.surface,
-          border: Border.all(
-            color: theme.colorScheme.outline.withValues(alpha: 0.08),
-            width: 1,
-          ),
-        ),
+      child: GlassCard(
         padding: const EdgeInsets.all(20),
+        borderRadius: 20,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: isDark
+              ? [
+                  AppTheme.eucalyptus.withValues(alpha: 0.1),
+                  AppTheme.teal.withValues(alpha: 0.05),
+                ]
+              : [
+                  Colors.white.withValues(alpha: 0.95),
+                  Colors.white.withValues(alpha: 0.85),
+                ],
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              l10n.tr('stats_totals_title'),
-              style: theme.textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Wrap(
-              spacing: 12,
-              runSpacing: 12,
-              children: metrics
-                  .map((metric) => _MetricChip(metric: metric))
-                  .toList(growable: false),
-            ),
-            const SizedBox(height: 16),
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primaryContainer.withValues(
-                  alpha: 0.3,
-                ),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.timeline,
-                    color: theme.colorScheme.primary,
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [AppTheme.eucalyptus, AppTheme.teal],
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(
+                    Icons.auto_graph,
+                    color: Colors.white,
                     size: 20,
                   ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      l10n.tr('stats_totals_overall', {
-                        'duration': _formatMinutes(totals.totalMinutes, l10n),
-                      }),
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  l10n.tr('stats_totals_title'),
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: isDark ? Colors.white : theme.colorScheme.onSurface,
                   ),
-                ],
-              ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            // Circular activity breakdown
+            Row(
+              children: [
+                // Segmented ring showing activity distribution
+                SizedBox(
+                  width: 120,
+                  height: 120,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      SizedBox(
+                        width: 120,
+                        height: 120,
+                        child: CustomPaint(
+                          painter: _ActivityRingPainter(
+                            focusPercent: focusPercent,
+                            restPercent: restPercent,
+                            workoutPercent: workoutPercent,
+                            sleepPercent: sleepPercent,
+                          ),
+                        ),
+                      ),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            _formatMinutes(totals.totalMinutes, l10n),
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                              color:
+                                  isDark ? Colors.white : theme.colorScheme.onSurface,
+                            ),
+                          ),
+                          Text(
+                            'Total',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: isDark
+                                  ? Colors.white.withValues(alpha: 0.6)
+                                  : theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 24),
+                Expanded(
+                  child: Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: metrics
+                        .map((metric) => _MetricChip(metric: metric))
+                        .toList(growable: false),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
       ),
     );
+  }
+}
+
+/// Custom painter for activity ring showing distribution
+class _ActivityRingPainter extends CustomPainter {
+  _ActivityRingPainter({
+    required this.focusPercent,
+    required this.restPercent,
+    required this.workoutPercent,
+    required this.sleepPercent,
+  });
+
+  final double focusPercent;
+  final double restPercent;
+  final double workoutPercent;
+  final double sleepPercent;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    final radius = min(size.width, size.height) / 2;
+    final strokeWidth = 12.0;
+
+    // Background ring
+    final bgPaint = Paint()
+      ..color = Colors.white.withValues(alpha: 0.1)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth
+      ..strokeCap = StrokeCap.round;
+
+    canvas.drawCircle(center, radius - strokeWidth / 2, bgPaint);
+
+    // Draw segments
+    const startAngle = -pi / 2; // Start from top
+    var currentAngle = startAngle;
+
+    final segments = [
+      (focusPercent, AppTheme.teal),
+      (restPercent, AppTheme.lime),
+      (workoutPercent, AppTheme.coral),
+      (sleepPercent, AppTheme.electricViolet),
+    ];
+
+    for (final (percent, color) in segments) {
+      if (percent > 0) {
+        final sweepAngle = 2 * pi * percent;
+        final paint = Paint()
+          ..color = color
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = strokeWidth
+          ..strokeCap = StrokeCap.round;
+
+        canvas.drawArc(
+          Rect.fromCircle(center: center, radius: radius - strokeWidth / 2),
+          currentAngle,
+          sweepAngle,
+          false,
+          paint,
+        );
+
+        currentAngle += sweepAngle;
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _ActivityRingPainter oldDelegate) {
+    return oldDelegate.focusPercent != focusPercent ||
+        oldDelegate.restPercent != restPercent ||
+        oldDelegate.workoutPercent != workoutPercent ||
+        oldDelegate.sleepPercent != sleepPercent;
   }
 }
 
@@ -219,6 +374,7 @@ class _WeeklyHighlightCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final localeTag = Localizations.localeOf(context).toLanguageTag();
     final formatter = DateFormat.yMMMd(localeTag);
     final dateLabel = formatter.format(highlight.date.toLocal());
@@ -226,28 +382,38 @@ class _WeeklyHighlightCard extends StatelessWidget {
       'date': dateLabel,
       'minutes': '${highlight.focusMinutes}',
     });
+
     return ScaleInAnimation(
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: AppTheme.accentOrange.withValues(alpha: 0.1),
-          border: Border.all(
-            color: AppTheme.accentOrange.withValues(alpha: 0.2),
-            width: 1,
-          ),
-        ),
+      child: GlassCard(
         padding: const EdgeInsets.all(20),
+        borderRadius: 20,
+        gradient: LinearGradient(
+          colors: [
+            AppTheme.lime.withValues(alpha: isDark ? 0.18 : 0.12),
+            AppTheme.lime.withValues(alpha: isDark ? 0.08 : 0.05),
+          ],
+        ),
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(12),
+              width: 56,
+              height: 56,
               decoration: BoxDecoration(
-                color: AppTheme.accentOrange.withValues(alpha: 0.2),
+                gradient: LinearGradient(
+                  colors: [AppTheme.lime, AppTheme.limeLight],
+                ),
                 shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: AppTheme.lime.withValues(alpha: 0.4),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.emoji_events,
-                color: AppTheme.accentOrange,
+                color: Colors.white,
                 size: 28,
               ),
             ),
@@ -258,12 +424,22 @@ class _WeeklyHighlightCard extends StatelessWidget {
                 children: [
                   Text(
                     l10n.tr('stats_highlight_title'),
-                    style: theme.textTheme.titleMedium?.copyWith(
+                    style: TextStyle(
+                      fontSize: 16,
                       fontWeight: FontWeight.w700,
+                      color: isDark ? Colors.white : theme.colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 6),
-                  Text(body, style: theme.textTheme.bodyMedium),
+                  Text(
+                    body,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: isDark
+                          ? Colors.white.withValues(alpha: 0.7)
+                          : theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -317,19 +493,36 @@ class _TrendListState extends ConsumerState<_TrendList> {
     final l10n = context.l10n;
     final entries = widget.entries;
     if (entries.every((e) => e.totals.totalMinutes == 0)) {
-      return Card(
-        child: Padding(
+      return FadeInAnimation(
+        child: GlassCard(
           padding: const EdgeInsets.all(24),
+          borderRadius: 20,
           child: Column(
             children: [
-              const Icon(Icons.insights_outlined, size: 32),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: AppTheme.eucalyptus.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(
+                  Icons.insights_outlined,
+                  size: 32,
+                  color: AppTheme.eucalyptus,
+                ),
+              ),
               const SizedBox(height: 12),
               Text(
                 l10n.tr('stats_trend_empty_title'),
-                style: Theme.of(context).textTheme.bodyMedium,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
               ),
               const SizedBox(height: 4),
-              Text(l10n.tr('stats_trend_empty_body')),
+              Text(
+                l10n.tr('stats_trend_empty_body'),
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
             ],
           ),
         ),
@@ -337,24 +530,24 @@ class _TrendListState extends ConsumerState<_TrendList> {
     }
 
     final showTable = _showTable;
-    final maxTotal = entries
-        .fold<int>(0, (prev, e) => max(prev, e.totals.totalMinutes))
-        .clamp(1, 999999);
 
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
+    return FadeInAnimation(
+      child: GlassCard(
+        padding: EdgeInsets.zero,
+        borderRadius: 20,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.all(16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     _trendTitle(widget.bucket, l10n),
-                    style: Theme.of(context).textTheme.titleMedium,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                   _TrendAccessibilityToggle(
                     showTable: showTable,
@@ -363,28 +556,121 @@ class _TrendListState extends ConsumerState<_TrendList> {
                 ],
               ),
             ),
-            const Divider(height: 1),
+            Divider(
+              height: 1,
+              color: Colors.white.withValues(alpha: 0.1),
+            ),
             if (showTable)
               _TrendDataTable(entries: entries, bucket: widget.bucket)
             else
               ...entries.reversed.map((entry) {
-                final ratio = entry.totals.totalMinutes / maxTotal;
                 return Semantics(
                   label: l10n.tr('stats_trend_row_semantics', {
                     'label': _labelForEntry(widget.bucket, entry.range, l10n),
                     'value': _formatMinutes(entry.totals.totalMinutes, l10n),
                   }),
-                  child: ListTile(
-                    title: Text(
-                      _labelForEntry(widget.bucket, entry.range, l10n),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
                     ),
-                    subtitle: Column(
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(height: 8),
-                        LinearProgressIndicator(
-                          value: ratio.isFinite ? ratio : 0,
-                          minHeight: 6,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              _labelForEntry(widget.bucket, entry.range, l10n),
+                              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Text(
+                              _formatMinutes(entry.totals.totalMinutes, l10n),
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                fontWeight: FontWeight.w700,
+                                color: AppTheme.eucalyptus,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        // Stacked bar showing activity breakdown
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: SizedBox(
+                            height: 12,
+                            child: LayoutBuilder(
+                              builder: (context, constraints) {
+                                final totalWidth = constraints.maxWidth;
+                                final total = entry.totals.totalMinutes;
+                                if (total == 0) {
+                                  return Container(
+                                    color: Colors.white.withValues(alpha: 0.1),
+                                  );
+                                }
+
+                                return Row(
+                                  children: [
+                                    if (entry.totals.focusMinutes > 0)
+                                      Container(
+                                        width: totalWidth *
+                                            (entry.totals.focusMinutes / total),
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              AppTheme.teal,
+                                              AppTheme.teal.withValues(alpha: 0.8),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    if (entry.totals.restMinutes > 0)
+                                      Container(
+                                        width: totalWidth *
+                                            (entry.totals.restMinutes / total),
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              AppTheme.lime,
+                                              AppTheme.lime.withValues(alpha: 0.8),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    if (entry.totals.workoutMinutes > 0)
+                                      Container(
+                                        width: totalWidth *
+                                            (entry.totals.workoutMinutes / total),
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              AppTheme.coral,
+                                              AppTheme.coral.withValues(alpha: 0.8),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    if (entry.totals.sleepMinutes > 0)
+                                      Container(
+                                        width: totalWidth *
+                                            (entry.totals.sleepMinutes / total),
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              AppTheme.electricViolet,
+                                              AppTheme.electricViolet
+                                                  .withValues(alpha: 0.8),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
                         ),
                         const SizedBox(height: 8),
                         Wrap(
@@ -422,12 +708,6 @@ class _TrendListState extends ConsumerState<_TrendList> {
                           ],
                         ),
                       ],
-                    ),
-                    trailing: Text(
-                      _formatMinutes(entry.totals.totalMinutes, l10n),
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
                     ),
                   ),
                 );

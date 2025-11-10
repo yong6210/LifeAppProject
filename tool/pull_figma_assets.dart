@@ -40,6 +40,7 @@ Future<void> main(List<String> args) async {
       'Create one in https://www.figma.com/developers/api and re-run with '
       '`FIGMA_PERSONAL_TOKEN=... dart run tool/pull_figma_assets.dart`.',
     );
+    return; // Unreachable, but helps type inference
   }
 
   final manifestFile = File(manifestPath);
@@ -75,6 +76,7 @@ Future<void> main(List<String> args) async {
   for (final raw in assets) {
     final asset = _FigmaAsset.fromJson(raw.cast<String, dynamic>());
     try {
+      // figmaToken is guaranteed non-null after the check above
       await _downloadAsset(asset, fileKey, figmaToken, outDir.path);
       stdout.writeln('✓ ${asset.name}.${asset.format}');
     } catch (err) {
