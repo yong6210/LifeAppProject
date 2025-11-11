@@ -141,8 +141,6 @@ class _ModernButtonState extends State<ModernButton>
     double minHeight,
     Widget content,
   ) {
-    final theme = Theme.of(context);
-
     switch (widget.variant) {
       case ModernButtonVariant.filled:
         return FilledButton(

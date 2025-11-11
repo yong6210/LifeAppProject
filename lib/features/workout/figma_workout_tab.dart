@@ -69,7 +69,6 @@ class FigmaWorkoutTab extends ConsumerStatefulWidget {
 class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
     with SingleTickerProviderStateMixin {
   late AnimationController _energyController;
-  WorkoutLightPreset? _selectedPreset;
 
   @override
   void initState() {
@@ -87,10 +86,6 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
   }
 
   Future<void> _handleStartWorkout(WorkoutLightPreset preset) async {
-    setState(() {
-      _selectedPreset = preset;
-    });
-
     final controller = ref.read(timerControllerProvider.notifier);
     await controller.startWorkoutLightPreset(preset.id);
 
@@ -122,9 +117,6 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
   Future<void> _handleReset() async {
     final controller = ref.read(timerControllerProvider.notifier);
     await controller.reset();
-    setState(() {
-      _selectedPreset = null;
-    });
   }
 
   @override

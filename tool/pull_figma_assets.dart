@@ -56,7 +56,7 @@ Future<void> main(List<String> args) async {
   }
 
   final assets =
-      (manifestJson['assets'] as List<dynamic>? ?? const []).cast<Map>();
+      (manifestJson['assets'] as List<dynamic>? ?? const []).cast<Map<dynamic, dynamic>>();
   if (assets.isEmpty) {
     stdout.writeln('No assets defined in $manifestPath. Nothing to download.');
     return;

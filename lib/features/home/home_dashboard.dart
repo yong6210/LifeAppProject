@@ -422,7 +422,6 @@ class _GreetingSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final theme = Theme.of(context);
     return FadeInAnimation(
       duration: const Duration(milliseconds: 500),
       child: Column(
@@ -1097,44 +1096,6 @@ class _PremiumUpsellCard extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _GlassPanel extends StatelessWidget {
-  const _GlassPanel({
-    required this.child,
-    this.gradient,
-    this.accent,
-    this.padding,
-    this.borderRadius,
-  });
-
-  final Widget child;
-  final Gradient? gradient;
-  final Color? accent;
-  final EdgeInsetsGeometry? padding;
-  final BorderRadius? borderRadius;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final radius = borderRadius ?? BorderRadius.circular(20);
-
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: radius,
-        color: theme.colorScheme.surface,
-        boxShadow: [
-          BoxShadow(
-            color: theme.colorScheme.shadow.withValues(alpha: 0.08),
-            blurRadius: 20,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      padding: padding ?? const EdgeInsets.all(24),
-      child: child,
     );
   }
 }
