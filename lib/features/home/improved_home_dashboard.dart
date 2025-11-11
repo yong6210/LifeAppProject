@@ -73,7 +73,7 @@ class ImprovedHomeDashboard extends ConsumerWidget {
     }
 
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF000000) : const Color(0xFFF8F9FA),
+      backgroundColor: isDark ? const Color(0xFF000000) : const Color(0xFFF0F4E8),
       body: SafeArea(
         child: RefreshIndicator(
           color: AppTheme.eucalyptus,
@@ -108,20 +108,6 @@ class ImprovedHomeDashboard extends ConsumerWidget {
                 ),
                 const SizedBox(height: 16),
 
-                // 오늘의 진행상황
-                _TodayProgressCard(
-                  focusMinutes: todaySummary.focus,
-                  focusGoal: focusGoal,
-                  focusProgress: focusProgress,
-                  workoutMinutes: todaySummary.workout,
-                  workoutGoal: workoutGoal,
-                  workoutProgress: workoutProgress,
-                  sleepMinutes: todaySummary.sleep,
-                  sleepGoal: sleepGoalHours * 60,
-                  sleepProgress: sleepProgress,
-                ),
-                const SizedBox(height: 16),
-
                 // 빠른 시작
                 Text(
                   '빠른 시작',
@@ -133,7 +119,7 @@ class ImprovedHomeDashboard extends ConsumerWidget {
                 ),
                 const SizedBox(height: 12),
 
-                // 2x2 그리드 (카카오페이 스타일)
+                // 4x1 그리드 (카카오페이 스타일)
                 GridView.count(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
@@ -199,6 +185,30 @@ class ImprovedHomeDashboard extends ConsumerWidget {
                       },
                     ),
                   ],
+                ),
+                const SizedBox(height: 20),
+
+                // 오늘의 기록
+                Text(
+                  '오늘의 기록',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: isDark ? Colors.white : Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                _TodayProgressCard(
+                  focusMinutes: todaySummary.focus,
+                  focusGoal: focusGoal,
+                  focusProgress: focusProgress,
+                  workoutMinutes: todaySummary.workout,
+                  workoutGoal: workoutGoal,
+                  workoutProgress: workoutProgress,
+                  sleepMinutes: todaySummary.sleep,
+                  sleepGoal: sleepGoalHours * 60,
+                  sleepProgress: sleepProgress,
                 ),
                 const SizedBox(height: 32),
               ],
@@ -481,18 +491,6 @@ class _TodayProgressCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '오늘의 기록',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: isDark
-                  ? Colors.white.withValues(alpha: 0.7)
-                  : Colors.black54,
-            ),
-          ),
-          const SizedBox(height: 12),
-
           _ProgressRow(
             icon: Icons.psychology_outlined,
             label: '집중',
