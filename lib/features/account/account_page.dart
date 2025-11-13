@@ -108,19 +108,19 @@ class AccountPage extends ConsumerWidget {
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
             colors: isDark
                 ? [
-                    const Color(0xFF1a1a20),
-                    const Color(0xFF0F1419),
-                    const Color(0xFF0a0a0f),
+                    const Color(0xFF000000),
+                    const Color(0xFF1A1A1A),
                   ]
                 : [
-                    const Color(0xFFF5F5FA),
-                    const Color(0xFFE8F0FE),
-                    const Color(0xFFFFFFFF),
+                    const Color(0xFFD8E5E0), // Darker pastel mint
+                    const Color(0xFFD0E4D8), // Darker pastel sage green
+                    const Color(0xFFD8E0DD), // Darker pastel aqua
                   ],
+            stops: isDark ? const [0.0, 1.0] : const [0.0, 0.5, 1.0],
           ),
         ),
         child: SafeArea(

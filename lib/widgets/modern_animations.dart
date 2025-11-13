@@ -222,10 +222,9 @@ class _ScaleInAnimationState extends State<ScaleInAnimation>
 
 /// Modern page route with slide transition
 class ModernPageRoute<T> extends PageRouteBuilder<T> {
-  ModernPageRoute({required Widget page, RouteSettings? settings})
+  ModernPageRoute({required Widget page, super.settings})
     : super(
         pageBuilder: (context, animation, secondaryAnimation) => page,
-        settings: settings,
         transitionDuration: const Duration(milliseconds: 300),
         reverseTransitionDuration: const Duration(milliseconds: 250),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {

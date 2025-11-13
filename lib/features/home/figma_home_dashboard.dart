@@ -1065,7 +1065,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                 ),
                 const SizedBox(width: 4),
                 Text(
-                  '${totalMinutes}분',
+                  '$totalMinutes분',
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: color,
                     fontWeight: FontWeight.w600,

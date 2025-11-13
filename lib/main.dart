@@ -7,7 +7,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:life_app/core/firebase/firebase_initializer.dart';
 import 'package:life_app/design/app_theme.dart';
-import 'package:life_app/features/home/improved_home_dashboard.dart';
+import 'package:life_app/features/home/home_dashboard.dart';
 import 'package:life_app/features/more/more_page.dart';
 import 'package:life_app/features/account/account_page.dart';
 import 'package:life_app/features/onboarding/onboarding_page.dart';
@@ -144,7 +144,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
       }
     });
     final tabs = const [
-      ImprovedHomeDashboard(),
+      HomeDashboardTab(),
       MorePage(),
       AccountPage(),
     ];

@@ -90,7 +90,7 @@ class _ModernButtonState extends State<ModernButton>
         break;
     }
 
-    Widget content = Row(
+    final Widget content = Row(
       mainAxisSize: widget.fullWidth ? MainAxisSize.max : MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [

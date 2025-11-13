@@ -39,15 +39,17 @@ tasks.register<Delete>("clean") {
 }
 
 // ---- 외부 모듈 네임스페이스 예시 (있을 때만) ----
-project(":isar_flutter_libs") {
-    plugins.withId("com.android.library") {
-        extensions.configure<LibraryExtension> {
-            namespace = "dev.isar.isar_flutter_libs"
-            compileSdk = 36
-        }
-        // Legacy plugin uses API 30; skip the new verify task that fails due to missing attrs.
-        tasks.matching { it.name == "verifyReleaseResources" }.configureEach {
-            enabled = false
+subprojects {
+    if (project.name == "isar_flutter_libs") {
+        plugins.withId("com.android.library") {
+            extensions.configure<LibraryExtension> {
+                namespace = "dev.isar.isar_flutter_libs"
+                compileSdk = 36
+            }
+            // Legacy plugin uses API 30; skip the new verify task that fails due to missing attrs.
+            tasks.matching { it.name == "verifyReleaseResources" }.configureEach {
+                enabled = false
+            }
         }
     }
 }

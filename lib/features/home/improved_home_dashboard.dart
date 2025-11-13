@@ -73,145 +73,146 @@ class ImprovedHomeDashboard extends ConsumerWidget {
     }
 
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF000000) : const Color(0xFFF0F4E8),
-      body: SafeArea(
-        child: RefreshIndicator(
-          color: AppTheme.eucalyptus,
-          onRefresh: () async {
-            ref.invalidate(settingsFutureProvider);
-            ref.invalidate(todaySummaryProvider);
-          },
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // 인사말
-                Text(
-                  greeting,
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w800,
-                    color: isDark ? Colors.white : Colors.black,
-                    height: 1.2,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFFFFF8F0), // Warm cream
+              Color(0xFFFFF0F5), // Light pink
+              Color(0xFFF0F8FF), // Light blue
+            ],
+            stops: [0.0, 0.5, 1.0],
+          ),
+        ),
+        child: SafeArea(
+          child: RefreshIndicator(
+            color: AppTheme.eucalyptus,
+            onRefresh: () async {
+              ref.invalidate(settingsFutureProvider);
+              ref.invalidate(todaySummaryProvider);
+            },
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // 인사말
+                  Text(
+                    greeting,
+                    style: const TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.black,
+                      height: 1.2,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 20),
+                  const SizedBox(height: 20),
 
-                // Life Buddy 카드 (컴팩트)
-                _LifeBuddyCard(
-                  message: buddyMessage,
-                  icon: buddyIcon,
-                  color: buddyColor,
-                  progress: totalProgress,
-                ),
-                const SizedBox(height: 16),
-
-                // 빠른 시작
-                Text(
-                  '빠른 시작',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: isDark ? Colors.white : Colors.black,
+                  // 큰 Life Buddy 캐릭터 카드
+                  _BigCharacterCard(
+                    message: buddyMessage,
+                    color: buddyColor,
+                    progress: totalProgress,
+                    totalMinutes: todaySummary.focus + todaySummary.workout + todaySummary.sleep,
                   ),
-                ),
-                const SizedBox(height: 12),
+                  const SizedBox(height: 18),
 
-                // 4x1 그리드 (카카오페이 스타일)
-                GridView.count(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  crossAxisCount: 4,
-                  mainAxisSpacing: 8,
-                  crossAxisSpacing: 8,
-                  childAspectRatio: 0.8,
-                  children: [
-                    _QuickActionCard(
-                      title: '집중',
-                      icon: Icons.psychology_outlined,
-                      color: AppTheme.teal,
-                      isDark: isDark,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute<void>(
-                            builder: (_) => const FigmaTimerTab(),
-                          ),
-                        );
-                      },
-                    ),
-                    _QuickActionCard(
-                      title: '운동',
-                      icon: Icons.fitness_center_outlined,
-                      color: AppTheme.coral,
-                      isDark: isDark,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute<void>(
-                            builder: (_) => const FigmaWorkoutTab(),
-                          ),
-                        );
-                      },
-                    ),
-                    _QuickActionCard(
-                      title: '수면',
-                      icon: Icons.bedtime_outlined,
-                      color: AppTheme.electricViolet,
-                      isDark: isDark,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute<void>(
-                            builder: (_) => const FigmaSleepTab(),
-                          ),
-                        );
-                      },
-                    ),
-                    _QuickActionCard(
-                      title: '저널',
-                      icon: Icons.book_outlined,
-                      color: AppTheme.lime,
-                      isDark: isDark,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute<void>(
-                            builder: (_) => const JournalPage(),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-
-                // 오늘의 기록
-                Text(
-                  '오늘의 기록',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: isDark ? Colors.white : Colors.black,
+                  // 활동 카드 그리드 (2x2)
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _CharacterActivityCard(
+                          emoji: '🧠',
+                          title: '집중',
+                          minutes: todaySummary.focus,
+                          goal: focusGoal,
+                          progress: focusProgress,
+                          color: AppTheme.teal,
+                          height: 190,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute<void>(
+                                builder: (_) => const FigmaTimerTab(),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: _CharacterActivityCard(
+                          emoji: '💪',
+                          title: '운동',
+                          minutes: todaySummary.workout,
+                          goal: workoutGoal,
+                          progress: workoutProgress,
+                          color: AppTheme.coral,
+                          height: 190,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute<void>(
+                                builder: (_) => const FigmaWorkoutTab(),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                const SizedBox(height: 12),
-
-                _TodayProgressCard(
-                  focusMinutes: todaySummary.focus,
-                  focusGoal: focusGoal,
-                  focusProgress: focusProgress,
-                  workoutMinutes: todaySummary.workout,
-                  workoutGoal: workoutGoal,
-                  workoutProgress: workoutProgress,
-                  sleepMinutes: todaySummary.sleep,
-                  sleepGoal: sleepGoalHours * 60,
-                  sleepProgress: sleepProgress,
-                ),
-                const SizedBox(height: 32),
-              ],
+                  const SizedBox(height: 14),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _CharacterActivityCard(
+                          emoji: '😴',
+                          title: '수면',
+                          minutes: (todaySummary.sleep / 60).round(),
+                          goal: sleepGoalHours,
+                          progress: sleepProgress,
+                          color: AppTheme.electricViolet,
+                          unit: 'h',
+                          height: 190,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute<void>(
+                                builder: (_) => const FigmaSleepTab(),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: _CharacterActivityCard(
+                          emoji: '📝',
+                          title: '저널',
+                          minutes: 0,
+                          goal: 1,
+                          progress: 0,
+                          color: AppTheme.lime,
+                          unit: '개',
+                          height: 190,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute<void>(
+                                builder: (_) => const JournalPage(),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 32),
+                ],
+              ),
             ),
           ),
         ),
@@ -220,222 +221,110 @@ class ImprovedHomeDashboard extends ConsumerWidget {
   }
 }
 
-/// 빠른 액션 카드 (카카오페이 스타일)
-class _QuickActionCard extends StatelessWidget {
-  const _QuickActionCard({
-    required this.title,
-    required this.icon,
-    required this.color,
-    required this.isDark,
-    required this.onTap,
-  });
-
-  final String title;
-  final IconData icon;
-  final Color color;
-  final bool isDark;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Ink(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(
-            color: isDark ? const Color(0xFF1A1A1A) : Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.15),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(icon, color: color, size: 22),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
-                  color: isDark ? Colors.white : Colors.black87,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Life Buddy 카드 - 캐릭터와 메시지 (애니메이션 추가)
-class _LifeBuddyCard extends StatefulWidget {
-  const _LifeBuddyCard({
+/// 큰 Life Buddy 캐릭터 카드
+class _BigCharacterCard extends StatelessWidget {
+  const _BigCharacterCard({
     required this.message,
-    required this.icon,
     required this.color,
     required this.progress,
+    required this.totalMinutes,
   });
 
   final String message;
-  final IconData icon;
   final Color color;
   final int progress;
-
-  @override
-  State<_LifeBuddyCard> createState() => _LifeBuddyCardState();
-}
-
-class _LifeBuddyCardState extends State<_LifeBuddyCard>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _scaleAnimation;
-  late Animation<double> _bounceAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 2000),
-      vsync: this,
-    )..repeat(reverse: true);
-
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.05).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeInOut,
-      ),
-    );
-
-    _bounceAnimation = Tween<double>(begin: 0.0, end: -8.0).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeInOut,
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
+  final int totalMinutes;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    String emoji;
+    if (progress == 0) {
+      emoji = '😴';
+    } else if (progress < 30) {
+      emoji = '🌱';
+    } else if (progress < 70) {
+      emoji = '✨';
+    } else {
+      emoji = '🎉';
+    }
 
     return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1A1A1A) : Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            color.withValues(alpha: 0.15),
+            color.withValues(alpha: 0.05),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(28),
       ),
       child: Row(
         children: [
-          // Life Buddy 아바타 (애니메이션, 컴팩트)
-          AnimatedBuilder(
-            animation: _controller,
-            builder: (context, child) {
-              return Transform.translate(
-                offset: Offset(0, _bounceAnimation.value),
-                child: Transform.scale(
-                  scale: _scaleAnimation.value,
-                  child: Container(
-                    width: 56,
-                    height: 56,
-                    decoration: BoxDecoration(
-                      color: widget.color.withValues(alpha: 0.15),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      widget.icon,
-                      size: 28,
-                      color: widget.color,
-                    ),
-                  ),
-                ),
-              );
-            },
+          // 큰 이모지
+          Text(
+            emoji,
+            style: const TextStyle(fontSize: 80),
           ),
-          const SizedBox(width: 12),
-
-          // 메시지와 진행률 (컴팩트)
+          const SizedBox(width: 20),
+          // 메시지와 진행률
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.message,
+                  message,
                   style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: isDark ? Colors.white : Colors.black87,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                    color: color,
+                    height: 1.3,
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 8),
-                Row(
+                Text(
+                  '오늘 $totalMinutes분 활동했어요',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey[700],
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 14),
+                // 진행률 바
+                Stack(
                   children: [
-                    Expanded(
-                      child: Container(
-                        height: 6,
-                        decoration: BoxDecoration(
-                          color: isDark
-                              ? Colors.white.withValues(alpha: 0.1)
-                              : Colors.black.withValues(alpha: 0.08),
-                          borderRadius: BorderRadius.circular(3),
-                        ),
-                        child: FractionallySizedBox(
-                          alignment: Alignment.centerLeft,
-                          widthFactor: widget.progress / 100,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: widget.color,
-                              borderRadius: BorderRadius.circular(3),
-                            ),
-                          ),
-                        ),
+                    Container(
+                      height: 12,
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(6),
                       ),
                     ),
-                    const SizedBox(width: 8),
-                    Text(
-                      '${widget.progress}%',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w700,
-                        color: widget.color,
+                    FractionallySizedBox(
+                      widthFactor: progress / 100,
+                      child: Container(
+                        height: 12,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [color, color.withValues(alpha: 0.8)],
+                          ),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
                       ),
                     ),
                   ],
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  '$progress% 완료',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: color,
+                  ),
                 ),
               ],
             ),
@@ -446,167 +335,131 @@ class _LifeBuddyCardState extends State<_LifeBuddyCard>
   }
 }
 
-/// 오늘의 진행상황 카드
-class _TodayProgressCard extends StatelessWidget {
-  const _TodayProgressCard({
-    required this.focusMinutes,
-    required this.focusGoal,
-    required this.focusProgress,
-    required this.workoutMinutes,
-    required this.workoutGoal,
-    required this.workoutProgress,
-    required this.sleepMinutes,
-    required this.sleepGoal,
-    required this.sleepProgress,
-  });
-
-  final int focusMinutes;
-  final int focusGoal;
-  final double focusProgress;
-  final int workoutMinutes;
-  final int workoutGoal;
-  final double workoutProgress;
-  final int sleepMinutes;
-  final int sleepGoal;
-  final double sleepProgress;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1A1A1A) : Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _ProgressRow(
-            icon: Icons.psychology_outlined,
-            label: '집중',
-            value: focusMinutes,
-            goal: focusGoal,
-            unit: '분',
-            progress: focusProgress,
-            color: AppTheme.teal,
-          ),
-          const SizedBox(height: 12),
-
-          _ProgressRow(
-            icon: Icons.fitness_center_outlined,
-            label: '운동',
-            value: workoutMinutes,
-            goal: workoutGoal,
-            unit: '분',
-            progress: workoutProgress,
-            color: AppTheme.coral,
-          ),
-          const SizedBox(height: 12),
-
-          _ProgressRow(
-            icon: Icons.bedtime_outlined,
-            label: '수면',
-            value: (sleepMinutes / 60).toStringAsFixed(1),
-            goal: (sleepGoal / 60).toStringAsFixed(0),
-            unit: '시간',
-            progress: sleepProgress,
-            color: AppTheme.electricViolet,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ProgressRow extends StatelessWidget {
-  const _ProgressRow({
-    required this.icon,
-    required this.label,
-    required this.value,
+/// 캐릭터 중심 활동 카드
+class _CharacterActivityCard extends StatelessWidget {
+  const _CharacterActivityCard({
+    required this.emoji,
+    required this.title,
+    required this.minutes,
     required this.goal,
-    required this.unit,
     required this.progress,
     required this.color,
+    required this.height,
+    required this.onTap,
+    this.unit = '분',
   });
 
-  final IconData icon;
-  final String label;
-  final dynamic value;
-  final dynamic goal;
-  final String unit;
+  final String emoji;
+  final String title;
+  final int minutes;
+  final int goal;
   final double progress;
   final Color color;
+  final double height;
+  final VoidCallback onTap;
+  final String unit;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-
-    return Row(
-      children: [
-        Container(
-          width: 32,
-          height: 32,
-          decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.15),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(icon, color: color, size: 18),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    label,
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: isDark ? Colors.white : Colors.black87,
-                    ),
-                  ),
-                  Text(
-                    '$value / $goal $unit',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: isDark
-                          ? Colors.white.withValues(alpha: 0.5)
-                          : Colors.black45,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 6),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(3),
-                child: LinearProgressIndicator(
-                  value: progress / 100,
-                  backgroundColor: isDark
-                      ? Colors.white.withValues(alpha: 0.1)
-                      : Colors.black.withValues(alpha: 0.08),
-                  valueColor: AlwaysStoppedAnimation<Color>(color),
-                  minHeight: 4,
-                ),
-              ),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: height,
+        padding: const EdgeInsets.all(18),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.white,
+              color.withValues(alpha: 0.08),
             ],
           ),
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(
+            color: color.withValues(alpha: 0.15),
+            width: 2,
+          ),
         ),
-      ],
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 이모지
+            Text(
+              emoji,
+              style: const TextStyle(fontSize: 48),
+            ),
+            // 진행률과 정보
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.grey[600],
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      '$minutes',
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.w900,
+                        color: color,
+                        height: 1,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 4),
+                      child: Text(
+                        '/$goal$unit',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey[500],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                // 진행률 바
+                Stack(
+                  children: [
+                    Container(
+                      height: 6,
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(3),
+                      ),
+                    ),
+                    FractionallySizedBox(
+                      widthFactor: (progress / 100).clamp(0.0, 1.0),
+                      child: Container(
+                        height: 6,
+                        decoration: BoxDecoration(
+                          color: color,
+                          borderRadius: BorderRadius.circular(3),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
+
+
 

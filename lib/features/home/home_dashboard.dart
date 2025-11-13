@@ -1,4 +1,3 @@
-import 'dart:ui';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -158,23 +157,37 @@ class HomeDashboardTab extends ConsumerWidget {
       ),
     ];
 
-    return SafeArea(
-      child: RefreshIndicator(
-        color: theme.colorScheme.primary,
-        onRefresh: () async {
-          ref.invalidate(settingsFutureProvider);
-          ref.invalidate(todaySummaryProvider);
-          ref.invalidate(latestSleepSoundSummaryProvider);
-          ref.invalidate(streakCountProvider);
-        },
-        child: ListView(
-          physics: const BouncingScrollPhysics(
-            parent: AlwaysScrollableScrollPhysics(),
+    return Scaffold(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              const Color(0xFFD8E5E0), // Darker pastel mint
+              const Color(0xFFD0E4D8), // Darker pastel sage green
+              const Color(0xFFD8E0DD), // Darker pastel aqua
+            ],
+            stops: const [0.0, 0.5, 1.0],
           ),
-          padding: EdgeInsets.zero,
-          children: [
+        ),
+        child: SafeArea(
+          child: RefreshIndicator(
+            color: theme.colorScheme.primary,
+            onRefresh: () async {
+              ref.invalidate(settingsFutureProvider);
+              ref.invalidate(todaySummaryProvider);
+              ref.invalidate(latestSleepSoundSummaryProvider);
+              ref.invalidate(streakCountProvider);
+            },
+            child: ListView(
+              physics: const BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics(),
+              ),
+              padding: EdgeInsets.zero,
+              children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 40),
+              padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -184,30 +197,15 @@ class HomeDashboardTab extends ConsumerWidget {
                     onOpenStats: openStats,
                     onOpenSettings: openAccount,
                   ),
-                  const SizedBox(height: 28),
+                  const SizedBox(height: 20),
                   _GreetingSection(
                     greeting: greeting,
                     subtitle: greetingSubtitle,
                   ),
-                  if (banner != null) ...[const SizedBox(height: 24), banner],
-                  const SizedBox(height: 36),
-                  _SectionLabel(
-                    text: l10n.tr('home_dashboard_quick_start_title'),
-                  ),
-                  const SizedBox(height: 20),
-                  _QuickActionsRow(actions: quickActions),
-                  const SizedBox(height: 36),
-                  _SectionLabel(text: l10n.tr('home_dashboard_routines_title')),
-                  const SizedBox(height: 20),
-                  _RoutineCarousel(
-                    cards: routineCards,
-                    locale: locale,
-                    l10n: l10n,
-                    streakDays: streakDays,
-                  ),
-                  const SizedBox(height: 36),
+                  if (banner != null) ...[const SizedBox(height: 20), banner],
+                  const SizedBox(height: 28),
                   _SectionLabel(text: l10n.tr('home_dashboard_progress_title')),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 16),
                   _DailyProgressCard(
                     l10n: l10n,
                     locale: locale,
@@ -216,11 +214,20 @@ class HomeDashboardTab extends ConsumerWidget {
                     sleepMinutes: todaySummary.sleep,
                     focusTarget: focusGoalMinutes,
                   ),
-                  const SizedBox(height: 36),
+                  const SizedBox(height: 28),
+                  _SectionLabel(text: l10n.tr('home_dashboard_routines_title')),
+                  const SizedBox(height: 16),
+                  _RoutineCarousel(
+                    cards: routineCards,
+                    locale: locale,
+                    l10n: l10n,
+                    streakDays: streakDays,
+                  ),
+                  const SizedBox(height: 28),
                   _SectionLabel(
                     text: l10n.tr('home_dashboard_integrations_title'),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 16),
                   _IntegrationsRow(
                     wearablesTitle: l10n.tr(
                       'home_dashboard_integrations_wearables_title',
@@ -249,6 +256,8 @@ class HomeDashboardTab extends ConsumerWidget {
               ),
             ),
           ],
+        ),
+      ),
         ),
       ),
     );
@@ -508,56 +517,73 @@ class _QuickActionButtonState extends State<_QuickActionButton> {
   @override
   Widget build(BuildContext context) {
     final accent = widget.config.accent;
-    final theme = Theme.of(context);
     return AnimatedScale(
       duration: const Duration(milliseconds: 120),
-      scale: _pressed ? 0.96 : 1,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(18),
-          color: theme.colorScheme.surface,
-          border: Border.all(
-            color: theme.colorScheme.outline.withValues(alpha: 0.08),
-            width: 1,
-          ),
-        ),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: widget.config.onTap,
-            onTapDown: (_) => _setPressed(true),
-            onTapCancel: () => _setPressed(false),
-            onTapUp: (_) => _setPressed(false),
-            borderRadius: BorderRadius.circular(18),
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 56,
-                    height: 56,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(14),
-                      color: accent.withValues(alpha: 0.12),
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      widget.config.emoji,
-                      style: const TextStyle(fontSize: 28),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    widget.config.label,
-                    style: theme.textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
+      scale: _pressed ? 0.95 : 1,
+      child: GestureDetector(
+        onTap: widget.config.onTap,
+        onTapDown: (_) => _setPressed(true),
+        onTapCancel: () => _setPressed(false),
+        onTapUp: (_) => _setPressed(false),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(22),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: accent.withValues(alpha: 0.25),
+                blurRadius: 20,
+                offset: const Offset(0, 8),
               ),
-            ),
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 64,
+                height: 64,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(18),
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      accent,
+                      accent.withValues(alpha: 0.7),
+                    ],
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: accent.withValues(alpha: 0.4),
+                      blurRadius: 15,
+                      offset: const Offset(0, 6),
+                    ),
+                  ],
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  widget.config.emoji,
+                  style: const TextStyle(fontSize: 32),
+                ),
+              ),
+              const SizedBox(height: 14),
+              Text(
+                widget.config.label,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  color: accent,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
         ),
       ),
@@ -638,7 +664,6 @@ class _RoutineCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final todayLabel = l10n.tr('home_dashboard_routine_stat_today', {
       'value': _formatMinutesLabel(data.minutes, locale: locale),
     });
@@ -651,37 +676,108 @@ class _RoutineCard extends StatelessWidget {
         width: 300,
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: theme.colorScheme.surface,
-            border: Border.all(
-              color: theme.colorScheme.outline.withValues(alpha: 0.08),
-              width: 1,
+            borderRadius: BorderRadius.circular(24),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Colors.white,
+                data.accent.withValues(alpha: 0.05),
+              ],
             ),
+            boxShadow: [
+              BoxShadow(
+                color: data.accent.withValues(alpha: 0.2),
+                blurRadius: 25,
+                offset: const Offset(0, 10),
+              ),
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.05),
+                blurRadius: 15,
+                offset: const Offset(0, 5),
+              ),
+            ],
           ),
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(26),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                width: 56,
-                height: 56,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(14),
-                  color: data.accent.withValues(alpha: 0.12),
-                ),
-                child: Icon(data.icon, color: data.accent, size: 26),
+              Row(
+                children: [
+                  Container(
+                    width: 64,
+                    height: 64,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(18),
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          data.accent,
+                          data.accent.withValues(alpha: 0.75),
+                        ],
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: data.accent.withValues(alpha: 0.4),
+                          blurRadius: 15,
+                          offset: const Offset(0, 6),
+                        ),
+                      ],
+                    ),
+                    child: Icon(data.icon, color: Colors.white, size: 30),
+                  ),
+                  const Spacer(),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: data.accent.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.check_circle,
+                          size: 14,
+                          color: data.accent,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          '${data.minutes}분',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: data.accent,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 20),
               Text(
                 data.title,
-                style: theme.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w700,
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w800,
+                  color: data.accent,
+                  height: 1.2,
                 ),
               ),
               const SizedBox(height: 8),
               Text(
                 data.description,
-                style: theme.textTheme.bodyMedium?.copyWith(height: 1.6),
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey[700],
+                  fontWeight: FontWeight.w500,
+                  height: 1.6,
+                ),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -702,19 +798,54 @@ class _RoutineCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 20),
-              FilledButton(
-                onPressed: data.onPrimary,
-                style: FilledButton.styleFrom(
-                  backgroundColor: data.accent,
-                  foregroundColor: Colors.white,
-                  minimumSize: const Size.fromHeight(52),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      data.accent,
+                      data.accent.withValues(alpha: 0.8),
+                    ],
                   ),
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: data.accent.withValues(alpha: 0.4),
+                      blurRadius: 15,
+                      offset: const Offset(0, 6),
+                    ),
+                  ],
                 ),
-                child: Text(
-                  data.primaryLabel,
-                  style: const TextStyle(fontWeight: FontWeight.w600),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: data.onPrimary,
+                    borderRadius: BorderRadius.circular(16),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      alignment: Alignment.center,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            data.primaryLabel,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 16,
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          const Icon(
+                            Icons.arrow_forward_rounded,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -783,75 +914,290 @@ class _DailyProgressCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final total = focusMinutes + workoutMinutes + sleepMinutes;
-    final theme = Theme.of(context);
+    final focusProgress = focusTarget <= 0 ? 0.0 : (focusMinutes / focusTarget).clamp(0.0, 1.0);
+    final workoutProgress = (workoutMinutes / 60).clamp(0.0, 1.0);
+    final sleepProgress = (sleepMinutes / 480).clamp(0.0, 1.0);
+    final overallProgress = ((focusProgress + workoutProgress + sleepProgress) / 3 * 100).round();
+
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        color: theme.colorScheme.surface,
-        border: Border.all(
-          color: theme.colorScheme.outline.withValues(alpha: 0.08),
-          width: 1,
+        borderRadius: BorderRadius.circular(28),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Colors.white,
+            Colors.white.withValues(alpha: 0.9),
+          ],
         ),
+        boxShadow: [
+          BoxShadow(
+            color: AppTheme.accentBlue.withValues(alpha: 0.08),
+            blurRadius: 30,
+            offset: const Offset(0, 10),
+          ),
+          BoxShadow(
+            color: AppTheme.accentGreen.withValues(alpha: 0.06),
+            blurRadius: 20,
+            offset: const Offset(0, 5),
+          ),
+        ],
       ),
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(28),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                l10n.tr('home_dashboard_progress_title'),
-                style: theme.textTheme.titleLarge?.copyWith(
-                  color: theme.colorScheme.onSurface,
-                  fontWeight: FontWeight.w700,
-                ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.tr('home_dashboard_progress_title'),
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w800,
+                      color: Color(0xFF1A1A1A),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Today\'s Activity',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[600],
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
               ),
-              const Spacer(),
               Container(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
+                  horizontal: 16,
+                  vertical: 10,
                 ),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.primaryContainer,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  l10n.tr('duration_minutes_only', {'minutes': '$total'}),
-                  style: theme.textTheme.titleSmall?.copyWith(
-                    color: theme.colorScheme.onPrimaryContainer,
-                    fontWeight: FontWeight.w700,
+                  gradient: LinearGradient(
+                    colors: [
+                      AppTheme.accentBlue,
+                      AppTheme.accentBlue.withValues(alpha: 0.8),
+                    ],
                   ),
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppTheme.accentBlue.withValues(alpha: 0.3),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.timer_outlined, color: Colors.white, size: 18),
+                    const SizedBox(width: 6),
+                    Text(
+                      l10n.tr('duration_minutes_only', {'minutes': '$total'}),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 15,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
+          const SizedBox(height: 32),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _CircularProgressMetric(
+                label: l10n.tr('timer_mode_focus'),
+                value: focusMinutes,
+                target: focusTarget,
+                progress: focusProgress,
+                color: AppTheme.accentBlue,
+                icon: Icons.psychology_rounded,
+              ),
+              _CircularProgressMetric(
+                label: l10n.tr('timer_mode_workout'),
+                value: workoutMinutes,
+                target: 60,
+                progress: workoutProgress,
+                color: AppTheme.accentGreen,
+                icon: Icons.fitness_center_rounded,
+              ),
+              _CircularProgressMetric(
+                label: l10n.tr('timer_mode_sleep'),
+                value: (sleepMinutes / 60).round(),
+                target: 8,
+                progress: sleepProgress,
+                color: AppTheme.accentPurple,
+                icon: Icons.nights_stay_rounded,
+                isSleep: true,
+              ),
+            ],
+          ),
           const SizedBox(height: 24),
-          _MetricProgressRow(
-            label: l10n.tr('timer_mode_focus'),
-            minutes: focusMinutes,
-            target: focusTarget,
-            locale: locale,
-            color: AppTheme.accentBlue,
-          ),
-          const SizedBox(height: 20),
-          _MetricProgressRow(
-            label: l10n.tr('timer_mode_workout'),
-            minutes: workoutMinutes,
-            target: 60,
-            locale: locale,
-            color: AppTheme.accentGreen,
-          ),
-          const SizedBox(height: 20),
-          _MetricProgressRow(
-            label: l10n.tr('timer_mode_sleep'),
-            minutes: sleepMinutes,
-            target: 480,
-            locale: locale,
-            color: AppTheme.accentPurple,
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  AppTheme.accentBlue.withValues(alpha: 0.1),
+                  AppTheme.accentGreen.withValues(alpha: 0.1),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.05),
+                        blurRadius: 8,
+                      ),
+                    ],
+                  ),
+                  child: Icon(
+                    Icons.trending_up_rounded,
+                    color: overallProgress >= 70
+                        ? AppTheme.accentGreen
+                        : overallProgress >= 40
+                            ? Colors.orange
+                            : Colors.grey,
+                    size: 20,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Overall Progress',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey[700],
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Text(
+                      '$overallProgress% Complete',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                        color: Color(0xFF1A1A1A),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
       ),
+    );
+  }
+}
+
+class _CircularProgressMetric extends StatelessWidget {
+  const _CircularProgressMetric({
+    required this.label,
+    required this.value,
+    required this.target,
+    required this.progress,
+    required this.color,
+    required this.icon,
+    this.isSleep = false,
+  });
+
+  final String label;
+  final int value;
+  final int target;
+  final double progress;
+  final Color color;
+  final IconData icon;
+  final bool isSleep;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            SizedBox(
+              width: 80,
+              height: 80,
+              child: CircularProgressIndicator(
+                value: progress,
+                strokeWidth: 8,
+                backgroundColor: color.withValues(alpha: 0.15),
+                valueColor: AlwaysStoppedAnimation<Color>(color),
+                strokeCap: StrokeCap.round,
+              ),
+            ),
+            Container(
+              width: 64,
+              height: 64,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    color.withValues(alpha: 0.2),
+                    color.withValues(alpha: 0.1),
+                  ],
+                ),
+              ),
+              child: Icon(
+                icon,
+                color: color,
+                size: 28,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Text(
+          '$value',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w800,
+            color: color,
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 11,
+            color: Colors.grey[600],
+            fontWeight: FontWeight.w600,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        Text(
+          isSleep ? '/ ${target}h' : '/ $target min',
+          style: TextStyle(
+            fontSize: 10,
+            color: Colors.grey[500],
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
     );
   }
 }
@@ -940,6 +1286,10 @@ class _IntegrationsRow extends StatelessWidget {
             title: wearablesTitle,
             subtitle: wearablesSubtitle,
             onTap: onOpenWearables,
+            gradientColors: const [
+              Color(0xFF667EEA), // Purple-blue
+              Color(0xFF764BA2), // Deep purple
+            ],
           ),
         ),
         const SizedBox(width: 12),
@@ -949,6 +1299,10 @@ class _IntegrationsRow extends StatelessWidget {
             title: backupTitle,
             subtitle: backupSubtitle,
             onTap: onOpenBackup,
+            gradientColors: const [
+              Color(0xFFF093FB), // Pink
+              Color(0xFFF5576C), // Coral
+            ],
           ),
         ),
       ],
@@ -962,62 +1316,95 @@ class _IntegrationCard extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.onTap,
+    required this.gradientColors,
   });
 
   final IconData icon;
   final String title;
   final String subtitle;
   final VoidCallback onTap;
+  final List<Color> gradientColors;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(18),
-        color: theme.colorScheme.surface,
-        border: Border.all(
-          color: theme.colorScheme.outline.withValues(alpha: 0.08),
-          width: 1,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(24),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: gradientColors,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: gradientColors[0].withValues(alpha: 0.3),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
+            ),
+          ],
         ),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(18),
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 56,
+              height: 56,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                color: Colors.white.withValues(alpha: 0.3),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.white.withValues(alpha: 0.2),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Icon(icon, color: Colors.white, size: 28),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w800,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              subtitle,
+              style: TextStyle(
+                fontSize: 13,
+                color: Colors.white.withValues(alpha: 0.9),
+                fontWeight: FontWeight.w500,
+                height: 1.5,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
               children: [
-                Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: theme.colorScheme.primaryContainer.withValues(
-                      alpha: 0.5,
-                    ),
-                  ),
-                  child: Icon(icon, color: theme.colorScheme.primary, size: 24),
-                ),
-                const SizedBox(height: 16),
                 Text(
-                  title,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
+                  'Open',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.white.withValues(alpha: 0.9),
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
-                const SizedBox(height: 6),
-                Text(
-                  subtitle,
-                  style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+                const SizedBox(width: 4),
+                Icon(
+                  Icons.arrow_forward_rounded,
+                  color: Colors.white.withValues(alpha: 0.9),
+                  size: 18,
                 ),
               ],
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -1039,62 +1426,164 @@ class _PremiumUpsellCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        color: theme.colorScheme.primaryContainer.withValues(alpha: 0.4),
-        border: Border.all(
-          color: theme.colorScheme.primary.withValues(alpha: 0.15),
-          width: 1,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(28),
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFFFFD89B), // Gold
+              Color(0xFFFF6B95), // Pink
+              Color(0xFF9B59B6), // Purple
+            ],
+            stops: [0.0, 0.5, 1.0],
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFFFF6B95).withValues(alpha: 0.4),
+              blurRadius: 30,
+              offset: const Offset(0, 15),
+            ),
+          ],
         ),
-      ),
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 56,
-            height: 56,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-              color: theme.colorScheme.primary,
+        padding: const EdgeInsets.all(28),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 64,
+                  height: 64,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(18),
+                    color: Colors.white.withValues(alpha: 0.3),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.white.withValues(alpha: 0.3),
+                        blurRadius: 15,
+                        offset: const Offset(0, 5),
+                      ),
+                    ],
+                  ),
+                  child: const Icon(
+                    Icons.auto_awesome,
+                    color: Colors.white,
+                    size: 32,
+                  ),
+                ),
+                const Spacer(),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: const Row(
+                    children: [
+                      Icon(Icons.stars, color: Colors.white, size: 16),
+                      SizedBox(width: 4),
+                      Text(
+                        'PREMIUM',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 11,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            child: const Icon(
-              Icons.auto_awesome,
-              color: Colors.white,
-              size: 28,
-            ),
-          ),
-          const SizedBox(height: 20),
-          Text(
-            title,
-            style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            subtitle,
-            style: theme.textTheme.bodyMedium?.copyWith(height: 1.6),
-          ),
-          const SizedBox(height: 20),
-          FilledButton(
-            onPressed: onTap,
-            style: FilledButton.styleFrom(
-              backgroundColor: theme.colorScheme.primary,
-              foregroundColor: Colors.white,
-              minimumSize: const Size.fromHeight(52),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(14),
+            const SizedBox(height: 24),
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 26,
+                fontWeight: FontWeight.w900,
+                color: Colors.white,
+                height: 1.2,
               ),
             ),
-            child: Text(
-              ctaLabel,
-              style: const TextStyle(fontWeight: FontWeight.w600),
+            const SizedBox(height: 10),
+            Text(
+              subtitle,
+              style: TextStyle(
+                fontSize: 15,
+                color: Colors.white.withValues(alpha: 0.95),
+                fontWeight: FontWeight.w500,
+                height: 1.6,
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 24),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.1),
+                    blurRadius: 15,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: onTap,
+                  borderRadius: BorderRadius.circular(16),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 18),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ShaderMask(
+                          shaderCallback: (bounds) => const LinearGradient(
+                            colors: [
+                              Color(0xFFFF6B95),
+                              Color(0xFF9B59B6),
+                            ],
+                          ).createShader(bounds),
+                          child: Text(
+                            ctaLabel,
+                            style: const TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        ShaderMask(
+                          shaderCallback: (bounds) => const LinearGradient(
+                            colors: [
+                              Color(0xFFFF6B95),
+                              Color(0xFF9B59B6),
+                            ],
+                          ).createShader(bounds),
+                          child: const Icon(
+                            Icons.arrow_forward_rounded,
+                            color: Colors.white,
+                            size: 22,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

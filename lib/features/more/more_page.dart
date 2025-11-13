@@ -18,10 +18,27 @@ class MorePage extends ConsumerWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF000000) : const Color(0xFFF0F4E8),
-      body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: isDark
+                ? [
+                    const Color(0xFF000000),
+                    const Color(0xFF1A1A1A),
+                  ]
+                : [
+                    const Color(0xFFD8E5E0), // Darker pastel mint
+                    const Color(0xFFD0E4D8), // Darker pastel sage green
+                    const Color(0xFFD8E0DD), // Darker pastel aqua
+                  ],
+            stops: isDark ? const [0.0, 1.0] : const [0.0, 0.5, 1.0],
+          ),
+        ),
+        child: SafeArea(
+          child: CustomScrollView(
+            slivers: [
             // 헤더
             SliverToBoxAdapter(
               child: Padding(
@@ -200,6 +217,7 @@ class MorePage extends ConsumerWidget {
           ],
         ),
       ),
+        ),
     );
   }
 }
