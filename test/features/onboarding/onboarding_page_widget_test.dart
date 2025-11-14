@@ -12,6 +12,8 @@ import 'package:life_app/providers/remote_config_providers.dart';
 import 'package:life_app/services/remote_config/remote_config_service.dart';
 import 'package:life_app/providers/settings_providers.dart';
 
+import '../../helpers/fake_settings_mutation_controller.dart';
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -110,9 +112,10 @@ void main() {
       await pumpOnboarding(
         tester,
         snapshot: const RemoteConfigSnapshot(onboardingVariant: 'short_intro'),
+        overrideMutationProvider: false,
         extraOverrides: [
           settingsMutationControllerProvider.overrideWith(
-            () => _TestSettingsMutationController(
+            () => FakeSettingsMutationController(
               onSavePreset: (data) => capturedPreset = data,
               onComplete: () => completeCalled = true,
             ),
@@ -140,6 +143,7 @@ Future<void> pumpOnboarding(
   WidgetTester tester, {
   required RemoteConfigSnapshot snapshot,
   List<Override> extraOverrides = const <Override>[],
+  bool overrideMutationProvider = true,
 }) async {
   final l10n = AppLocalizations.testing(translations: _testTranslations);
   final view = tester.view;
@@ -152,14 +156,20 @@ Future<void> pumpOnboarding(
     view.devicePixelRatio = originalDevicePixelRatio;
   });
 
+  final overrides = <Override>[
+    remoteConfigProvider.overrideWithValue(
+      AsyncValue<RemoteConfigSnapshot>.data(snapshot),
+    ),
+    if (overrideMutationProvider)
+      settingsMutationControllerProvider.overrideWith(
+        () => FakeSettingsMutationController(),
+      ),
+    ...extraOverrides,
+  ];
+
   await tester.pumpWidget(
     ProviderScope(
-      overrides: [
-        remoteConfigProvider.overrideWithValue(
-          AsyncValue<RemoteConfigSnapshot>.data(snapshot),
-        ),
-        ...extraOverrides,
-      ],
+      overrides: overrides,
       child: MaterialApp(
         localizationsDelegates: [
           _TestLocalizationsDelegate(l10n),
@@ -183,23 +193,6 @@ Future<void> pumpOnboarding(
       break;
     }
     await tester.pump(const Duration(milliseconds: 50));
-  }
-}
-
-class _TestSettingsMutationController extends SettingsMutationController {
-  _TestSettingsMutationController({this.onSavePreset, this.onComplete});
-
-  final void Function(Map<String, int>)? onSavePreset;
-  final VoidCallback? onComplete;
-
-  @override
-  Future<void> savePreset(Map<String, int> data) async {
-    onSavePreset?.call(data);
-  }
-
-  @override
-  Future<void> completeOnboarding() async {
-    onComplete?.call();
   }
 }
 

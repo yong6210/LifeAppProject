@@ -100,6 +100,7 @@ Future<void> _pumpDashboard(
   );
 
   await tester.pump();
+  await tester.pump(const Duration(milliseconds: 600));
 }
 
 class _FakeAuthController extends AuthController {

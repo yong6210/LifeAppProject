@@ -13,6 +13,8 @@ import 'package:life_app/services/audio/sleep_sound_catalog.dart';
 import 'package:life_app/services/audio/timer_audio_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../helpers/fake_settings_mutation_controller.dart';
+
 class FakeTimerAudio implements TimerAudioEngine {
   bool initCalled = false;
   bool enabled = false;
@@ -267,6 +269,9 @@ void main() {
           addSessionProvider.overrideWith((ref, session) async {
             recordedSessions.add(session);
           }),
+          settingsMutationControllerProvider.overrideWith(
+            () => FakeSettingsMutationController(),
+          ),
         ],
       );
     }

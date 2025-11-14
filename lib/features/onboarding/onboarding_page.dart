@@ -209,12 +209,16 @@ class _InfoPageView extends StatelessWidget {
     final l10n = context.l10n;
     return LayoutBuilder(
       builder: (context, constraints) {
+        final targetHeight = constraints.maxHeight.isFinite
+            ? constraints.maxHeight
+            : MediaQuery.of(context).size.height;
         return SingleChildScrollView(
           padding: const EdgeInsets.all(24),
           child: ConstrainedBox(
-            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            constraints: BoxConstraints(minHeight: targetHeight),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 const SizedBox(height: 32),
                 Icon(
@@ -234,7 +238,7 @@ class _InfoPageView extends StatelessWidget {
                   l10n.tr(page.bodyKey),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
-                const Spacer(),
+                const SizedBox(height: 32),
               ],
             ),
           ),
@@ -260,12 +264,16 @@ class _PersonaSelectionView extends ConsumerWidget {
     final l10n = context.l10n;
     return LayoutBuilder(
       builder: (context, constraints) {
+        final targetHeight = constraints.maxHeight.isFinite
+            ? constraints.maxHeight
+            : MediaQuery.of(context).size.height;
         return SingleChildScrollView(
           padding: const EdgeInsets.all(24),
           child: ConstrainedBox(
-            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            constraints: BoxConstraints(minHeight: targetHeight),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 const SizedBox(height: 32),
                 Text(
@@ -333,7 +341,7 @@ class _PersonaSelectionView extends ConsumerWidget {
                     ),
                   ),
                 ),
-                const Spacer(),
+                const SizedBox(height: 32),
               ],
             ),
           ),
