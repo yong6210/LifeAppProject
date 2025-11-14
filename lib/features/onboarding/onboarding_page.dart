@@ -82,16 +82,20 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
           Padding(
             padding: const EdgeInsets.all(24),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  l10n.tr('onboarding_progress', {
-                    'current': '${displayIndex + 1}',
-                    'total': '$totalPages',
-                  }),
+                Expanded(
+                  child: Text(
+                    l10n.tr('onboarding_progress', {
+                      'current': '${displayIndex + 1}',
+                      'total': '$totalPages',
+                    }),
+                  ),
                 ),
-                FilledButton(
-                  onPressed: () async {
+                const SizedBox(width: 16),
+                SizedBox(
+                  width: 160,
+                  child: FilledButton(
+                    onPressed: () async {
                     final navigator = Navigator.of(context);
                     final currentPage = totalPages > 0
                         ? pages[displayIndex]
@@ -131,7 +135,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                         : l10n.tr('onboarding_next_button'),
                   ),
                 ),
-              ],
+              ),
+              ]
             ),
           ),
         ],

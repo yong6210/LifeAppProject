@@ -54,7 +54,7 @@ class CommunityChallengesPage extends ConsumerWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        heroTag: 'community_fab',
+        heroTag: null,
         onPressed: () => _showCreateSheet(context, ref),
         icon: const Icon(Icons.add),
         label: Text(context.l10n.tr('community_new_challenge')),

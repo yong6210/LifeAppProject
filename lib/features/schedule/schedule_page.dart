@@ -36,7 +36,7 @@ class _SchedulePageState extends ConsumerState<SchedulePage> {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        heroTag: 'schedule_fab',
+        heroTag: null,
         icon: const Icon(Icons.add),
         label: Text(l10n.tr('schedule_add_block')),
         onPressed: () async {
