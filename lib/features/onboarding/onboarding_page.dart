@@ -110,7 +110,11 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                         curve: Curves.easeInOut,
                       );
                     } else {
-                      await ref.read(completeOnboardingProvider.future);
+                      await ref
+                          .read(
+                            settingsMutationControllerProvider.notifier,
+                          )
+                          .completeOnboarding();
                       await AnalyticsService.logEvent('onboarding_complete', {
                         'variant': variant,
                         'duration_sec': DateTime.now()
@@ -279,8 +283,11 @@ class _PersonaSelectionView extends ConsumerWidget {
                       'variant': variant,
                       'choice': template.titleKey,
                     });
-                    await ref.read(savePresetProvider(template.minutes).future);
-                    await ref.read(completeOnboardingProvider.future);
+                    final mutations = ref.read(
+                      settingsMutationControllerProvider.notifier,
+                    );
+                    await mutations.savePreset(template.minutes);
+                    await mutations.completeOnboarding();
                     await AnalyticsService.logEvent('onboarding_complete', {
                       'variant': variant,
                       'duration_sec': DateTime.now()

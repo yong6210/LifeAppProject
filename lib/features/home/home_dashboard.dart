@@ -12,6 +12,7 @@ import 'package:life_app/features/subscription/paywall_page.dart';
 import 'package:life_app/features/timer/timer_page.dart';
 import 'package:life_app/features/workout/workout_navigator_page.dart';
 import 'package:life_app/l10n/app_localizations.dart';
+import 'package:life_app/models/settings.dart';
 import 'package:life_app/providers/auth_providers.dart';
 import 'package:life_app/providers/session_providers.dart';
 import 'package:life_app/providers/settings_providers.dart';
@@ -19,6 +20,7 @@ import 'package:life_app/providers/sleep_analysis_providers.dart';
 import 'package:life_app/providers/stats_providers.dart';
 import 'package:life_app/providers/sync_providers.dart';
 import 'package:life_app/widgets/modern_animations.dart';
+import 'package:life_app/widgets/modern_section.dart';
 
 class HomeDashboardTab extends ConsumerWidget {
   const HomeDashboardTab({super.key});
@@ -39,18 +41,9 @@ class HomeDashboardTab extends ConsumerWidget {
 
     final authState = ref.watch(authControllerProvider);
     final settingsAsync = ref.watch(settingsFutureProvider);
-    final settings = settingsAsync.asData?.value;
-    final todaySummary = ref
-        .watch(todaySummaryProvider)
-        .maybeWhen(data: (value) => value, orElse: () => const TodaySummary());
+    final todaySummaryAsync = ref.watch(todaySummaryProvider);
     final syncState = ref.watch(syncControllerProvider);
-    final streakDays = ref
-        .watch(streakCountProvider)
-        .maybeWhen(data: (value) => value, orElse: () => 0);
-
-    final focusGoalMinutes = ((settings?.focusMinutes ?? 25) * 4)
-        .clamp(0, 600)
-        .toInt();
+    final streakAsync = ref.watch(streakCountProvider);
 
     final banner = _buildSyncBanner(
       context: context,
@@ -58,6 +51,13 @@ class HomeDashboardTab extends ConsumerWidget {
       authState: authState,
       l10n: l10n,
     );
+
+    Future<void> refreshDashboard() async {
+      ref.invalidate(settingsFutureProvider);
+      ref.invalidate(todaySummaryProvider);
+      ref.invalidate(latestSleepSoundSummaryProvider);
+      ref.invalidate(streakCountProvider);
+    }
 
     void openTimer(String mode, {bool autoStart = false}) {
       Navigator.push(
@@ -121,41 +121,128 @@ class HomeDashboardTab extends ConsumerWidget {
       ),
     ];
 
-    final routineCards = [
-      _RoutineCardData(
-        title: l10n.tr('timer_mode_focus'),
-        description: l10n.tr('home_dashboard_card_focus_description'),
-        minutes: todaySummary.focus,
-        accent: AppTheme.accentBlue,
-        icon: Icons.timer_outlined,
-        primaryLabel: l10n.tr('home_dashboard_action_start'),
-        secondaryLabel: l10n.tr('home_dashboard_action_customize'),
-        onPrimary: () => openTimer('focus', autoStart: true),
-        onSecondary: () => openTimer('focus'),
-      ),
-      _RoutineCardData(
-        title: l10n.tr('timer_mode_workout'),
-        description: l10n.tr('home_dashboard_card_workout_description'),
-        minutes: todaySummary.workout,
-        accent: AppTheme.accentGreen,
-        icon: Icons.fitness_center_outlined,
-        primaryLabel: l10n.tr('home_dashboard_action_explore'),
-        secondaryLabel: l10n.tr('home_dashboard_action_customize'),
-        onPrimary: openWorkout,
-        onSecondary: openWorkout,
-      ),
-      _RoutineCardData(
-        title: l10n.tr('timer_mode_sleep'),
-        description: l10n.tr('home_dashboard_card_sleep_description'),
-        minutes: todaySummary.sleep,
-        accent: AppTheme.accentPurple,
-        icon: Icons.nights_stay_outlined,
-        primaryLabel: l10n.tr('home_dashboard_action_start'),
-        secondaryLabel: l10n.tr('home_dashboard_action_customize'),
-        onPrimary: () => openTimer('sleep', autoStart: true),
-        onSecondary: () => openTimer('sleep'),
-      ),
-    ];
+    Widget buildDataSections(Settings settings, TodaySummary todaySummary) {
+      final focusGoalMinutes = ((settings.focusMinutes ?? 25) * 4)
+          .clamp(0, 600)
+          .toInt();
+      final streakDays = streakAsync.maybeWhen(
+        data: (value) => value,
+        orElse: () => 0,
+      );
+      final routineCards = [
+        _RoutineCardData(
+          title: l10n.tr('timer_mode_focus'),
+          description: l10n.tr('home_dashboard_card_focus_description'),
+          minutes: todaySummary.focus,
+          accent: AppTheme.accentBlue,
+          icon: Icons.timer_outlined,
+          primaryLabel: l10n.tr('home_dashboard_action_start'),
+          secondaryLabel: l10n.tr('home_dashboard_action_customize'),
+          onPrimary: () => openTimer('focus', autoStart: true),
+          onSecondary: () => openTimer('focus'),
+        ),
+        _RoutineCardData(
+          title: l10n.tr('timer_mode_workout'),
+          description: l10n.tr('home_dashboard_card_workout_description'),
+          minutes: todaySummary.workout,
+          accent: AppTheme.accentGreen,
+          icon: Icons.fitness_center_outlined,
+          primaryLabel: l10n.tr('home_dashboard_action_explore'),
+          secondaryLabel: l10n.tr('home_dashboard_action_customize'),
+          onPrimary: openWorkout,
+          onSecondary: openWorkout,
+        ),
+        _RoutineCardData(
+          title: l10n.tr('timer_mode_sleep'),
+          description: l10n.tr('home_dashboard_card_sleep_description'),
+          minutes: todaySummary.sleep,
+          accent: AppTheme.accentPurple,
+          icon: Icons.nights_stay_outlined,
+          primaryLabel: l10n.tr('home_dashboard_action_start'),
+          secondaryLabel: l10n.tr('home_dashboard_action_customize'),
+          onPrimary: () => openTimer('sleep', autoStart: true),
+          onSecondary: () => openTimer('sleep'),
+        ),
+      ];
+
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _SectionLabel(text: l10n.tr('home_dashboard_progress_title')),
+          const SizedBox(height: 16),
+          _DailyProgressCard(
+            l10n: l10n,
+            locale: locale,
+            focusMinutes: todaySummary.focus,
+            workoutMinutes: todaySummary.workout,
+            sleepMinutes: todaySummary.sleep,
+            focusTarget: focusGoalMinutes,
+          ),
+          const SizedBox(height: 28),
+          _SectionLabel(text: l10n.tr('home_dashboard_routines_title')),
+          const SizedBox(height: 16),
+          _RoutineCarousel(
+            cards: routineCards,
+            locale: locale,
+            l10n: l10n,
+            streakDays: streakDays,
+          ),
+          const SizedBox(height: 28),
+          _SectionLabel(text: l10n.tr('home_dashboard_integrations_title')),
+          const SizedBox(height: 16),
+          _IntegrationsRow(
+            wearablesTitle: l10n.tr(
+              'home_dashboard_integrations_wearables_title',
+            ),
+            wearablesSubtitle: l10n.tr(
+              'home_dashboard_integrations_wearables_subtitle',
+            ),
+            backupTitle: l10n.tr(
+              'home_dashboard_integrations_backup_title',
+            ),
+            backupSubtitle: l10n.tr(
+              'home_dashboard_integrations_backup_subtitle',
+            ),
+            onOpenWearables: openAccount,
+            onOpenBackup: openBackup,
+          ),
+          const SizedBox(height: 36),
+          _PremiumUpsellCard(
+            title: l10n.tr('home_dashboard_premium_title'),
+            subtitle: l10n.tr('home_dashboard_premium_subtitle'),
+            ctaLabel: l10n.tr('home_dashboard_premium_cta'),
+            onTap: openPremium,
+          ),
+          const SizedBox(height: 20),
+        ],
+      );
+    }
+
+    Widget buildAsyncSections() {
+      return settingsAsync.when(
+        data: (settings) {
+          return todaySummaryAsync.when(
+            data: (todaySummary) => buildDataSections(settings, todaySummary),
+            loading: () => const _HomeDashboardLoading(),
+            error: (error, stack) => _HomeDashboardError(
+              title: l10n.tr('home_dashboard_state_error_title'),
+              message: l10n.tr('home_dashboard_state_error_message'),
+              errorDescription: error.toString(),
+              onRetry: refreshDashboard,
+            ),
+          );
+        },
+        loading: () => const _HomeDashboardLoading(),
+        error: (error, stack) => _HomeDashboardError(
+          title: l10n.tr('home_dashboard_state_error_title'),
+          message: l10n.tr('generic_settings_error', {'error': '$error'}),
+          errorDescription: error.toString(),
+          onRetry: refreshDashboard,
+        ),
+      );
+    }
+
+    final asyncSections = buildAsyncSections();
 
     return Scaffold(
       body: Container(
@@ -164,9 +251,9 @@ class HomeDashboardTab extends ConsumerWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              const Color(0xFFD8E5E0), // Darker pastel mint
-              const Color(0xFFD0E4D8), // Darker pastel sage green
-              const Color(0xFFD8E0DD), // Darker pastel aqua
+              const Color(0xFFD8E5E0),
+              const Color(0xFFD0E4D8),
+              const Color(0xFFD8E0DD),
             ],
             stops: const [0.0, 0.5, 1.0],
           ),
@@ -174,90 +261,44 @@ class HomeDashboardTab extends ConsumerWidget {
         child: SafeArea(
           child: RefreshIndicator(
             color: theme.colorScheme.primary,
-            onRefresh: () async {
-              ref.invalidate(settingsFutureProvider);
-              ref.invalidate(todaySummaryProvider);
-              ref.invalidate(latestSleepSoundSummaryProvider);
-              ref.invalidate(streakCountProvider);
-            },
+            onRefresh: refreshDashboard,
             child: ListView(
               physics: const BouncingScrollPhysics(
                 parent: AlwaysScrollableScrollPhysics(),
               ),
               padding: EdgeInsets.zero,
               children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _DashboardAppBar(
-                    appName: l10n.tr('app_title'),
-                    dateLabel: dateLabel,
-                    onOpenStats: openStats,
-                    onOpenSettings: openAccount,
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _DashboardAppBar(
+                        appName: l10n.tr('app_title'),
+                        dateLabel: dateLabel,
+                        onOpenStats: openStats,
+                        onOpenSettings: openAccount,
+                      ),
+                      const SizedBox(height: 20),
+                      _GreetingSection(
+                        greeting: greeting,
+                        subtitle: greetingSubtitle,
+                      ),
+                      if (banner != null) ...[const SizedBox(height: 20), banner],
+                      const SizedBox(height: 28),
+                      _SectionLabel(
+                        text: l10n.tr('home_dashboard_quick_start_title'),
+                      ),
+                      const SizedBox(height: 12),
+                      _QuickActionsRow(actions: quickActions),
+                      const SizedBox(height: 28),
+                      asyncSections,
+                    ],
                   ),
-                  const SizedBox(height: 20),
-                  _GreetingSection(
-                    greeting: greeting,
-                    subtitle: greetingSubtitle,
-                  ),
-                  if (banner != null) ...[const SizedBox(height: 20), banner],
-                  const SizedBox(height: 28),
-                  _SectionLabel(text: l10n.tr('home_dashboard_progress_title')),
-                  const SizedBox(height: 16),
-                  _DailyProgressCard(
-                    l10n: l10n,
-                    locale: locale,
-                    focusMinutes: todaySummary.focus,
-                    workoutMinutes: todaySummary.workout,
-                    sleepMinutes: todaySummary.sleep,
-                    focusTarget: focusGoalMinutes,
-                  ),
-                  const SizedBox(height: 28),
-                  _SectionLabel(text: l10n.tr('home_dashboard_routines_title')),
-                  const SizedBox(height: 16),
-                  _RoutineCarousel(
-                    cards: routineCards,
-                    locale: locale,
-                    l10n: l10n,
-                    streakDays: streakDays,
-                  ),
-                  const SizedBox(height: 28),
-                  _SectionLabel(
-                    text: l10n.tr('home_dashboard_integrations_title'),
-                  ),
-                  const SizedBox(height: 16),
-                  _IntegrationsRow(
-                    wearablesTitle: l10n.tr(
-                      'home_dashboard_integrations_wearables_title',
-                    ),
-                    wearablesSubtitle: l10n.tr(
-                      'home_dashboard_integrations_wearables_subtitle',
-                    ),
-                    backupTitle: l10n.tr(
-                      'home_dashboard_integrations_backup_title',
-                    ),
-                    backupSubtitle: l10n.tr(
-                      'home_dashboard_integrations_backup_subtitle',
-                    ),
-                    onOpenWearables: openAccount,
-                    onOpenBackup: openBackup,
-                  ),
-                  const SizedBox(height: 36),
-                  _PremiumUpsellCard(
-                    title: l10n.tr('home_dashboard_premium_title'),
-                    subtitle: l10n.tr('home_dashboard_premium_subtitle'),
-                    ctaLabel: l10n.tr('home_dashboard_premium_cta'),
-                    onTap: openPremium,
-                  ),
-                  const SizedBox(height: 20),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
         ),
       ),
     );
@@ -586,6 +627,119 @@ class _QuickActionButtonState extends State<_QuickActionButton> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _HomeDashboardLoading extends StatelessWidget {
+  const _HomeDashboardLoading();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: const [
+        ModernSkeleton(width: 180, height: 20, borderRadius: 12),
+        SizedBox(height: 16),
+        _HomeLoadingCard(height: 150),
+        SizedBox(height: 24),
+        ModernSkeleton(width: 200, height: 20, borderRadius: 12),
+        SizedBox(height: 16),
+        _HomeLoadingCard(height: 220),
+        SizedBox(height: 24),
+        ModernSkeleton(width: 220, height: 20, borderRadius: 12),
+        SizedBox(height: 12),
+        _HomeLoadingCard(height: 100),
+      ],
+    );
+  }
+}
+
+class _HomeLoadingCard extends StatelessWidget {
+  const _HomeLoadingCard({required this.height});
+
+  final double height;
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(18),
+      child: ModernSkeleton(
+        width: double.infinity,
+        height: height,
+        borderRadius: 0,
+      ),
+    );
+  }
+}
+
+class _HomeDashboardError extends StatelessWidget {
+  const _HomeDashboardError({
+    required this.title,
+    required this.message,
+    required this.onRetry,
+    this.errorDescription,
+  });
+
+  final String title;
+  final String message;
+  final String? errorDescription;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
+    final retryLabel = context.l10n.tr('home_dashboard_state_retry');
+
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: colorScheme.errorContainer,
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.warning_amber_rounded, color: colorScheme.error),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  title,
+                  style: textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: colorScheme.onErrorContainer,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            message,
+            style: textTheme.bodyMedium?.copyWith(
+              color: colorScheme.onErrorContainer,
+            ),
+          ),
+          if (errorDescription != null && errorDescription!.isNotEmpty) ...[
+            const SizedBox(height: 4),
+            Text(
+              errorDescription!,
+              style: textTheme.bodySmall?.copyWith(
+                color: colorScheme.onErrorContainer.withValues(alpha: 0.8),
+              ),
+            ),
+          ],
+          const SizedBox(height: 16),
+          FilledButton(
+            onPressed: onRetry,
+            child: Text(retryLabel),
+          ),
+        ],
       ),
     );
   }

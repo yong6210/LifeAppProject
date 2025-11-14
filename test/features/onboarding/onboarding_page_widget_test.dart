@@ -104,19 +104,19 @@ void main() {
       tester,
     ) async {
       SharedPreferences.setMockInitialValues({});
-      Map<String, dynamic>? capturedPreset;
+      Map<String, int>? capturedPreset;
       var completeCalled = false;
 
       await pumpOnboarding(
         tester,
         snapshot: const RemoteConfigSnapshot(onboardingVariant: 'short_intro'),
         extraOverrides: [
-          savePresetProvider.overrideWith((ref, data) async {
-            capturedPreset = data;
-          }),
-          completeOnboardingProvider.overrideWith((ref) async {
-            completeCalled = true;
-          }),
+          settingsMutationControllerProvider.overrideWith(
+            () => _TestSettingsMutationController(
+              onSavePreset: (data) => capturedPreset = data,
+              onComplete: () => completeCalled = true,
+            ),
+          ),
         ],
       );
 
@@ -183,6 +183,23 @@ Future<void> pumpOnboarding(
       break;
     }
     await tester.pump(const Duration(milliseconds: 50));
+  }
+}
+
+class _TestSettingsMutationController extends SettingsMutationController {
+  _TestSettingsMutationController({this.onSavePreset, this.onComplete});
+
+  final void Function(Map<String, int>)? onSavePreset;
+  final VoidCallback? onComplete;
+
+  @override
+  Future<void> savePreset(Map<String, int> data) async {
+    onSavePreset?.call(data);
+  }
+
+  @override
+  Future<void> completeOnboarding() async {
+    onComplete?.call();
   }
 }
 

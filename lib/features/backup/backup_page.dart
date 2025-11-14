@@ -253,9 +253,9 @@ class _PreferredProviderSection extends ConsumerWidget {
               onChanged: (value) async {
                 if (value == null) return;
                 try {
-                  await ref.read(
-                    updateBackupPreferredProviderProvider(value).future,
-                  );
+                  await ref
+                      .read(settingsMutationControllerProvider.notifier)
+                      .updateBackupPreferredProvider(value);
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(

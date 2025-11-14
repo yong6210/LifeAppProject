@@ -79,7 +79,9 @@ class _TimerInitDialogState extends ConsumerState<TimerInitDialog> {
               'sleep': sleep,
             };
             try {
-              await ref.read(savePresetProvider(input).future);
+              await ref
+                  .read(settingsMutationControllerProvider.notifier)
+                  .savePreset(input);
               if (context.mounted) {
                 Navigator.pop(context, true);
               }

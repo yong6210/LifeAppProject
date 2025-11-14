@@ -1807,9 +1807,9 @@ class _PersonalizationSettingsCard extends ConsumerWidget {
               ),
               onChanged: (value) async {
                 await handleAction(() async {
-                  await ref.read(
-                    setRoutinePersonalizationEnabledProvider(value).future,
-                  );
+                  await ref
+                      .read(settingsMutationControllerProvider.notifier)
+                      .setRoutinePersonalizationEnabled(value);
                   await AnalyticsService.logEvent('personalization_toggle', {
                     'enabled': value,
                   });
@@ -1824,9 +1824,11 @@ class _PersonalizationSettingsCard extends ConsumerWidget {
               onChanged: suggestionsEnabled
                   ? (value) async {
                       await handleAction(() async {
-                        await ref.read(
-                          setRoutinePersonalizationSyncProvider(value).future,
-                        );
+                        await ref
+                            .read(
+                              settingsMutationControllerProvider.notifier,
+                            )
+                            .setRoutinePersonalizationSync(value);
                         await AnalyticsService.logEvent(
                           'personalization_sync_toggle',
                           {'enabled': value},
@@ -1848,7 +1850,9 @@ class _PersonalizationSettingsCard extends ConsumerWidget {
               onChanged: (value) async {
                 if (value == null) return;
                 await handleAction(() async {
-                  await ref.read(setLifeBuddyToneProvider(value).future);
+                  await ref
+                      .read(settingsMutationControllerProvider.notifier)
+                      .setLifeBuddyTone(value);
                   await AnalyticsService.logEvent(
                     'personalization_tone_select',
                     {'tone': value},
