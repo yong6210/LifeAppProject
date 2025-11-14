@@ -27,11 +27,11 @@ final sleepSoundCatalogProvider = FutureProvider<SleepSoundCatalog>((
   return SleepSoundCatalog.load();
 });
 
-final settingsMutationControllerProvider = AutoDisposeAsyncNotifierProvider<
-    SettingsMutationController,
-    void>(SettingsMutationController.new);
+final settingsMutationControllerProvider =
+    AsyncNotifierProvider.autoDispose<SettingsMutationController, void>(
+        SettingsMutationController.new);
 
-class SettingsMutationController extends AutoDisposeAsyncNotifier<void> {
+class SettingsMutationController extends AsyncNotifier<void> {
   @override
   FutureOr<void> build() {}
 

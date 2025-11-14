@@ -67,9 +67,9 @@ void main() {
     final events = <String>[];
     final announcer = TimerAnnouncer(
       minInterval: const Duration(seconds: 30),
-      announce: (message, direction) {
+      sendAnnouncement: (view, message, direction) {
         events.add(message);
-        return Future.value();
+        return Future<void>.value();
       },
     );
 
@@ -122,9 +122,9 @@ void main() {
     final context = await pumpHost(tester);
     final events = <String>[];
     final announcer = TimerAnnouncer(
-      announce: (message, direction) {
+      sendAnnouncement: (view, message, direction) {
         events.add(message);
-        return Future.value();
+        return Future<void>.value();
       },
     );
     final segments = [

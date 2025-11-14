@@ -15,8 +15,6 @@ class ImprovedHomeDashboard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
 
     final now = DateTime.now();
     final hour = now.hour;
@@ -51,24 +49,19 @@ class ImprovedHomeDashboard extends ConsumerWidget {
 
     // Life Buddy 메시지
     String buddyMessage;
-    IconData buddyIcon;
     Color buddyColor;
 
     if (totalProgress == 0) {
       buddyMessage = '오늘 하루를 시작해볼까요?';
-      buddyIcon = Icons.wb_sunny_outlined;
       buddyColor = AppTheme.lime;
     } else if (totalProgress < 30) {
       buddyMessage = '좋은 시작이에요!';
-      buddyIcon = Icons.favorite_border;
       buddyColor = AppTheme.teal;
     } else if (totalProgress < 70) {
       buddyMessage = '멋져요! 계속 해봐요!';
-      buddyIcon = Icons.stars_outlined;
       buddyColor = AppTheme.eucalyptus;
     } else {
       buddyMessage = '와! 오늘 정말 최고예요!';
-      buddyIcon = Icons.celebration_outlined;
       buddyColor = AppTheme.coral;
     }
 

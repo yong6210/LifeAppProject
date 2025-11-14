@@ -143,7 +143,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
           if (!mounted) return;
           final completed = await Navigator.push<bool>(
             context,
-            MaterialPageRoute<void>(builder: (_) => const OnboardingPage()),
+            MaterialPageRoute<bool>(builder: (_) => const OnboardingPage()),
           );
           if (!mounted) return;
           if (completed != true) {

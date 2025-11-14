@@ -132,7 +132,8 @@ class _FakeTimerController extends TimerController {
 }
 
 class _SilentAnnouncer extends TimerAnnouncer {
-  _SilentAnnouncer() : super(announce: (mode, message) async {});
+  _SilentAnnouncer()
+      : super(sendAnnouncement: (view, message, direction) async {});
 }
 
 SleepSoundCatalog _emptyCatalog() {

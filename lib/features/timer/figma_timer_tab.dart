@@ -159,7 +159,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                       shape: BoxShape.circle,
                       gradient: RadialGradient(
                         colors: [
-                          AppTheme.electricViolet.withOpacity(0.3 + _glowController.value * 0.2),
+                          AppTheme.electricViolet.withValues(alpha: 0.3 + _glowController.value * 0.2),
                           Colors.transparent,
                         ],
                       ),
@@ -181,7 +181,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                       shape: BoxShape.circle,
                       gradient: RadialGradient(
                         colors: [
-                          AppTheme.teal.withOpacity(0.3 + (1 - _glowController.value) * 0.2),
+                          AppTheme.teal.withValues(alpha: 0.3 + (1 - _glowController.value) * 0.2),
                           Colors.transparent,
                         ],
                       ),
@@ -264,7 +264,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                       '${_selectedPreset.duration} min session',
                       style: theme.textTheme.titleMedium?.copyWith(
                         color: isDark
-                            ? AppTheme.electricViolet.withOpacity(0.8)
+                            ? AppTheme.electricViolet.withValues(alpha: 0.8)
                             : AppTheme.electricViolet,
                         fontWeight: FontWeight.w600,
                       ),
@@ -285,7 +285,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                                 shape: BoxShape.circle,
                                 boxShadow: [
                                   BoxShadow(
-                                    color: AppTheme.electricViolet.withOpacity(
+                                    color: AppTheme.electricViolet.withValues(alpha: 
                                       0.3 + _glowController.value * 0.3,
                                     ),
                                     blurRadius: 60,
@@ -327,7 +327,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                               isRunning ? '⚡ Focus Mode Active' : 'Ready to focus',
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 color: isDark
-                                    ? AppTheme.electricViolet.withOpacity(0.8)
+                                    ? AppTheme.electricViolet.withValues(alpha: 0.8)
                                     : AppTheme.electricViolet,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -369,7 +369,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: AppTheme.electricViolet.withOpacity(0.5),
+                                color: AppTheme.electricViolet.withValues(alpha: 0.5),
                                 blurRadius: 24,
                                 offset: const Offset(0, 8),
                               ),
@@ -431,12 +431,12 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                                   end: Alignment.bottomRight,
                                   colors: isDark
                                       ? [
-                                          AppTheme.electricViolet.withOpacity(0.3),
-                                          AppTheme.teal.withOpacity(0.2),
+                                          AppTheme.electricViolet.withValues(alpha: 0.3),
+                                          AppTheme.teal.withValues(alpha: 0.2),
                                         ]
                                       : [
-                                          AppTheme.electricViolet.withOpacity(0.15),
-                                          AppTheme.teal.withOpacity(0.1),
+                                          AppTheme.electricViolet.withValues(alpha: 0.15),
+                                          AppTheme.teal.withValues(alpha: 0.1),
                                         ],
                                 )
                               : null,
@@ -463,7 +463,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                                 '${preset.duration} minutes',
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: isDark
-                                      ? AppTheme.electricViolet.withOpacity(0.8)
+                                      ? AppTheme.electricViolet.withValues(alpha: 0.8)
                                       : AppTheme.electricViolet,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -502,7 +502,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                                   'Your brain works best in focused bursts. Eliminate distractions and let your mind enter the flow state. Deep work creates neural pathways that make you smarter!',
                                   style: theme.textTheme.bodyMedium?.copyWith(
                                     color: isDark
-                                        ? Colors.white.withOpacity(0.7)
+                                        ? Colors.white.withValues(alpha: 0.7)
                                         : theme.colorScheme.onSurfaceVariant,
                                     height: 1.5,
                                   ),

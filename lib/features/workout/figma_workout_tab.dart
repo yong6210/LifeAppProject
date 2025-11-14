@@ -178,7 +178,7 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                       shape: BoxShape.circle,
                       gradient: RadialGradient(
                         colors: [
-                          AppTheme.coral.withOpacity(0.2 + _energyController.value * 0.15),
+                          AppTheme.coral.withValues(alpha: 0.2 + _energyController.value * 0.15),
                           Colors.transparent,
                         ],
                       ),
@@ -200,7 +200,7 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                       shape: BoxShape.circle,
                       gradient: RadialGradient(
                         colors: [
-                          const Color(0xFFFFA726).withOpacity(
+                          const Color(0xFFFFA726).withValues(alpha: 
                             0.2 + (1 - _energyController.value) * 0.15,
                           ),
                           Colors.transparent,
@@ -285,7 +285,7 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                       'Feel the energy ⚡',
                       style: theme.textTheme.titleMedium?.copyWith(
                         color: isDark
-                            ? AppTheme.coral.withOpacity(0.8)
+                            ? AppTheme.coral.withValues(alpha: 0.8)
                             : AppTheme.coral,
                         fontWeight: FontWeight.w600,
                       ),
@@ -300,12 +300,12 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                         end: Alignment.bottomRight,
                         colors: isDark
                             ? [
-                                AppTheme.coral.withOpacity(0.2),
-                                const Color(0xFFFFA726).withOpacity(0.15),
+                                AppTheme.coral.withValues(alpha: 0.2),
+                                const Color(0xFFFFA726).withValues(alpha: 0.15),
                               ]
                             : [
-                                AppTheme.coral.withOpacity(0.12),
-                                const Color(0xFFFFA726).withOpacity(0.08),
+                                AppTheme.coral.withValues(alpha: 0.12),
+                                const Color(0xFFFFA726).withValues(alpha: 0.08),
                               ],
                       ),
                       shadowColor: AppTheme.coral,
@@ -335,7 +335,7 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                       '$todayWorkoutMinutes / 30 min',
                                       style: theme.textTheme.bodyMedium?.copyWith(
                                         color: isDark
-                                            ? AppTheme.coral.withOpacity(0.8)
+                                            ? AppTheme.coral.withValues(alpha: 0.8)
                                             : AppTheme.coral,
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -362,8 +362,8 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                   height: 16,
                                   decoration: BoxDecoration(
                                     color: isDark
-                                        ? Colors.white.withOpacity(0.1)
-                                        : AppTheme.coral.withOpacity(0.15),
+                                        ? Colors.white.withValues(alpha: 0.1)
+                                        : AppTheme.coral.withValues(alpha: 0.15),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                 ),
@@ -385,7 +385,7 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                       builder: (context, child) {
                                         return Container(
                                           decoration: BoxDecoration(
-                                            color: Colors.white.withOpacity(
+                                            color: Colors.white.withValues(alpha: 
                                               0.2 + _energyController.value * 0.1,
                                             ),
                                             borderRadius: BorderRadius.circular(12),
@@ -411,8 +411,8 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
-                            AppTheme.coral.withOpacity(0.3),
-                            const Color(0xFFFFA726).withOpacity(0.2),
+                            AppTheme.coral.withValues(alpha: 0.3),
+                            const Color(0xFFFFA726).withValues(alpha: 0.2),
                           ],
                         ),
                         child: Column(
@@ -459,7 +459,7 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                               child: LinearProgressIndicator(
                                 value: workoutProgress / 100,
                                 minHeight: 8,
-                                backgroundColor: Colors.white.withOpacity(0.2),
+                                backgroundColor: Colors.white.withValues(alpha: 0.2),
                                 valueColor: AlwaysStoppedAnimation<Color>(AppTheme.coral),
                               ),
                             ),
@@ -545,12 +545,12 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                             end: Alignment.bottomRight,
                             colors: isDark
                                 ? [
-                                    AppTheme.coral.withOpacity(0.15),
-                                    const Color(0xFFFFA726).withOpacity(0.1),
+                                    AppTheme.coral.withValues(alpha: 0.15),
+                                    const Color(0xFFFFA726).withValues(alpha: 0.1),
                                   ]
                                 : [
-                                    Colors.white.withOpacity(0.95),
-                                    Colors.white.withOpacity(0.85),
+                                    Colors.white.withValues(alpha: 0.95),
+                                    Colors.white.withValues(alpha: 0.85),
                                   ],
                           ),
                           shadowColor: AppTheme.coral,
@@ -582,7 +582,7 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                           description,
                                           style: theme.textTheme.bodyMedium?.copyWith(
                                             color: isDark
-                                                ? AppTheme.coral.withOpacity(0.8)
+                                                ? AppTheme.coral.withValues(alpha: 0.8)
                                                 : AppTheme.coral,
                                           ),
                                         ),
@@ -598,7 +598,7 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                                 vertical: 6,
                                               ),
                                               decoration: BoxDecoration(
-                                                color: AppTheme.coral.withOpacity(0.15),
+                                                color: AppTheme.coral.withValues(alpha: 0.15),
                                                 borderRadius: BorderRadius.circular(12),
                                               ),
                                               child: Row(
@@ -626,7 +626,7 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                                 vertical: 6,
                                               ),
                                               decoration: BoxDecoration(
-                                                color: AppTheme.coral.withOpacity(0.15),
+                                                color: AppTheme.coral.withValues(alpha: 0.15),
                                                 borderRadius: BorderRadius.circular(12),
                                               ),
                                               child: Text(
@@ -664,8 +664,8 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                                       : null,
                                                   color: index >= intensityLevel
                                                       ? isDark
-                                                          ? Colors.white.withOpacity(0.1)
-                                                          : AppTheme.coral.withOpacity(0.2)
+                                                          ? Colors.white.withValues(alpha: 0.1)
+                                                          : AppTheme.coral.withValues(alpha: 0.2)
                                                       : null,
                                                   borderRadius: BorderRadius.circular(3),
                                                 ),
@@ -692,7 +692,7 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                   borderRadius: BorderRadius.circular(16),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: AppTheme.coral.withOpacity(0.4),
+                                      color: AppTheme.coral.withValues(alpha: 0.4),
                                       blurRadius: 16,
                                       offset: const Offset(0, 8),
                                     ),
@@ -759,7 +759,7 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                   'Movement releases endorphins and boosts your metabolism for hours! Even 10 minutes of exercise can increase your energy levels by 20%. Let\'s move! 🚀',
                                   style: theme.textTheme.bodyMedium?.copyWith(
                                     color: isDark
-                                        ? Colors.white.withOpacity(0.7)
+                                        ? Colors.white.withValues(alpha: 0.7)
                                         : theme.colorScheme.onSurfaceVariant,
                                     height: 1.5,
                                   ),

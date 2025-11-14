@@ -994,8 +994,8 @@ class FigmaHomeDashboard extends ConsumerWidget {
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          color.withOpacity(0.2),
-          color.withOpacity(0.1),
+          color.withValues(alpha: 0.2),
+          color.withValues(alpha: 0.1),
         ],
       ),
       shadowColor: color,
@@ -1013,12 +1013,12 @@ class FigmaHomeDashboard extends ConsumerWidget {
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [color, color.withOpacity(0.8)],
+                      colors: [color, color.withValues(alpha: 0.8)],
                     ),
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: color.withOpacity(0.4),
+                        color: color.withValues(alpha: 0.4),
                         blurRadius: 12,
                         offset: const Offset(0, 4),
                       ),
@@ -1036,7 +1036,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.15),
+                    color: Colors.white.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
@@ -1083,14 +1083,14 @@ class FigmaHomeDashboard extends ConsumerWidget {
                   Icon(
                     Icons.psychology,
                     size: 14,
-                    color: Colors.white.withOpacity(0.6),
+                    color: Colors.white.withValues(alpha: 0.6),
                   ),
                 if (workoutSteps > 0) ...[
                   const SizedBox(width: 4),
                   Icon(
                     Icons.fitness_center,
                     size: 14,
-                    color: Colors.white.withOpacity(0.6),
+                    color: Colors.white.withValues(alpha: 0.6),
                   ),
                 ],
                 if (restSteps > 0 || sleepSteps > 0) ...[
@@ -1098,7 +1098,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                   Icon(
                     Icons.nightlight_round,
                     size: 14,
-                    color: Colors.white.withOpacity(0.6),
+                    color: Colors.white.withValues(alpha: 0.6),
                   ),
                 ],
               ],

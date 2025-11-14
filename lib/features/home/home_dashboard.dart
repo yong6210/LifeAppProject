@@ -122,9 +122,7 @@ class HomeDashboardTab extends ConsumerWidget {
     ];
 
     Widget buildDataSections(Settings settings, TodaySummary todaySummary) {
-      final focusGoalMinutes = ((settings.focusMinutes ?? 25) * 4)
-          .clamp(0, 600)
-          .toInt();
+      final focusGoalMinutes = (settings.focusMinutes * 4).clamp(0, 600).toInt();
       final streakDays = streakAsync.maybeWhen(
         data: (value) => value,
         orElse: () => 0,
@@ -1349,63 +1347,6 @@ class _CircularProgressMetric extends StatelessWidget {
             fontSize: 10,
             color: Colors.grey[500],
             fontWeight: FontWeight.w500,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _MetricProgressRow extends StatelessWidget {
-  const _MetricProgressRow({
-    required this.label,
-    required this.minutes,
-    required this.target,
-    required this.locale,
-    required this.color,
-  });
-
-  final String label;
-  final int minutes;
-  final int target;
-  final Locale locale;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    final progress = target <= 0 ? 0.0 : (minutes / target).clamp(0.0, 1.0);
-    final theme = Theme.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Text(
-              label,
-              style: theme.textTheme.titleSmall?.copyWith(
-                color: theme.colorScheme.onSurface,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            const Spacer(),
-            Text(
-              '${_formatMinutesLabel(minutes, locale: locale)} / '
-              '${_formatMinutesLabel(target, locale: locale)}',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: LinearProgressIndicator(
-            value: progress,
-            minHeight: 8,
-            backgroundColor: color.withValues(alpha: 0.1),
-            valueColor: AlwaysStoppedAnimation<Color>(color),
           ),
         ),
       ],

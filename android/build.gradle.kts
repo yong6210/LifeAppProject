@@ -20,14 +20,6 @@ subprojects {
     }
 }
 
-// ---- (선택) build 디렉토리 통합 ----
-val newBuildDir = rootProject.layout.buildDirectory.dir("../../build").get()
-rootProject.layout.buildDirectory.value(newBuildDir)
-subprojects {
-    val newSubprojectBuildDir = newBuildDir.dir(project.name)
-    project.layout.buildDirectory.value(newSubprojectBuildDir)
-}
-
 // ---- app 먼저 평가 필요할 때만 사용 ----
 subprojects {
     project.evaluationDependsOn(":app")
