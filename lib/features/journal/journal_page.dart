@@ -176,6 +176,8 @@ class _JournalPageState extends ConsumerState<JournalPage> {
                         child: const Text('Add entry'),
                       ),
                       const SizedBox(height: 24),
+                      _SleepConsistencyBanner(summary: summaryAsync),
+                      const SizedBox(height: 16),
                       _MonthlyRecapCard(summary: summaryAsync),
                       const SizedBox(height: 16),
                       _BuddyCommentCard(comment: commentAsync),
@@ -1326,6 +1328,102 @@ extension _MoodColorShade on Color {
   }
 }
 
+class _SleepConsistencyBanner extends StatelessWidget {
+  const _SleepConsistencyBanner({required this.summary});
+
+  final AsyncValue<JournalSummary?> summary;
+
+  @override
+  Widget build(BuildContext context) {
+    return summary.when(
+      data: (value) {
+        if (value == null) {
+          return const SizedBox.shrink();
+        }
+        final theme = Theme.of(context);
+        final needsAttention =
+            value.averageSleepHours < 7 || value.sleepConsistencyScore < 70;
+        final headline = needsAttention
+            ? '수면 패턴을 조금 더 안정시켜봐요'
+            : '수면 루틴이 안정적으로 유지되고 있어요';
+        final subtitle = needsAttention
+            ? '최근 기록 중 7시간 이상 잔 날이 ${value.restorativeNights}일뿐이에요. 잠들기 전 루틴을 정리해 보세요.'
+            : '최근 기록 중 7시간 이상 잔 날이 ${value.restorativeNights}일이에요. 지금의 리듬을 계속 이어가요!';
+        final chipText =
+            '일관성 점수 ${value.sleepConsistencyScore.toStringAsFixed(0)}점';
+        final backgroundColor = needsAttention
+            ? theme.colorScheme.errorContainer.withValues(alpha: 0.35)
+            : theme.colorScheme.secondaryContainer.withValues(alpha: 0.4);
+
+        return Card(
+          elevation: 0,
+          color: backgroundColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      needsAttention
+                          ? Icons.auto_graph
+                          : Icons.bedtime_outlined,
+                      color: theme.colorScheme.primary,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        headline,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  subtitle,
+                  style: theme.textTheme.bodyMedium,
+                ),
+                const SizedBox(height: 12),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    Chip(label: Text(chipText)),
+                    Chip(
+                      label: Text(
+                        '평균 수면 ${value.averageSleepHours.toStringAsFixed(1)}시간',
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                /// TODO(analytics): Replace the textual summary with a compact trend chart once analytics data pipelines are available.
+                /// 현재는 수면 패턴을 문장으로만 보여주지만, 추세선을 시각화하기 위해 통계 모듈이 도입되면 미니 차트를 추가할 예정입니다.
+                Text(
+                  '7시간 이상 잔 날은 ${value.restorativeNights}일이에요. 수면 루틴을 기록하면서 패턴을 더 정밀하게 파악해 볼 수 있어요.',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+      error: (error, _) => const SizedBox.shrink(),
+      loading: () => const SizedBox.shrink(),
+    );
+  }
+}
+
 class _MonthlyRecapCard extends StatelessWidget {
   const _MonthlyRecapCard({required this.summary});
 
@@ -1352,12 +1450,18 @@ class _MonthlyRecapCard extends StatelessWidget {
         final lastEntryDate = DateFormat.yMMMMd().format(
           value.latestEntry.date,
         );
+        final consistencyLine =
+            '수면 일관성 점수는 ${value.sleepConsistencyScore.toStringAsFixed(0)}점이에요.';
+        final restorativeLine =
+            '7시간 이상 잔 날은 총 ${value.restorativeNights}일이었어요.';
         buffer
           ..writeln('지난 30일 동안 평균 수면은 $averageSleep시간이었어요.')
           ..writeln(
             '이번 주에는 ${value.entriesThisWeek}일 기록했고, 마지막 기록은 $lastEntryDate 기준이에요.',
           )
           ..writeln(streakLine)
+          ..writeln(restorativeLine)
+          ..writeln(consistencyLine)
           ..writeln(moodLine)
           ..writeln(energyLine);
 
