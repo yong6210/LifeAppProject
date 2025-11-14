@@ -204,32 +204,41 @@ class _InfoPageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return Padding(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 32),
-          Icon(
-            page.icon,
-            size: 64,
-            color: Theme.of(context).colorScheme.primary,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 32),
+                Icon(
+                  page.icon,
+                  size: 64,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                const SizedBox(height: 32),
+                Text(
+                  l10n.tr(page.titleKey),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  l10n.tr(page.bodyKey),
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                const Spacer(),
+              ],
+            ),
           ),
-          const SizedBox(height: 32),
-          Text(
-            l10n.tr(page.titleKey),
-            style: Theme.of(
-              context,
-            ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            l10n.tr(page.bodyKey),
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-          const Spacer(),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -248,74 +257,89 @@ class _PersonaSelectionView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    return Padding(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 32),
-          Text(
-            l10n.tr('onboarding_persona_heading'),
-            style: Theme.of(
-              context,
-            ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            l10n.tr('onboarding_persona_subtitle'),
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-          const SizedBox(height: 24),
-          ..._personaTemplates.map(
-            (template) => Card(
-              child: ListTile(
-                leading: Icon(
-                  template.icon,
-                  color: Theme.of(context).colorScheme.primary,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 32),
+                Text(
+                  l10n.tr('onboarding_persona_heading'),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
-                title: Text(l10n.tr(template.titleKey)),
-                subtitle: Text(l10n.tr(template.bodyKey)),
-                trailing: const Icon(Icons.chevron_right),
-                onTap: () async {
-                  try {
-                    AnalyticsService.logEvent('onboarding_step_complete', {
-                      'step_id': 'persona_selection',
-                      'variant': variant,
-                      'choice': template.titleKey,
-                    });
-                    final mutations = ref.read(
-                      settingsMutationControllerProvider.notifier,
-                    );
-                    await mutations.savePreset(template.minutes);
-                    await mutations.completeOnboarding();
-                    await AnalyticsService.logEvent('onboarding_complete', {
-                      'variant': variant,
-                      'duration_sec': DateTime.now()
-                          .difference(startedAt)
-                          .inSeconds,
-                      'choice': template.titleKey,
-                    });
-                    if (context.mounted) Navigator.pop(context, true);
-                  } catch (error) {
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            l10n.tr('onboarding_preset_error', {
-                              'error': '$error',
-                            }),
-                          ),
-                        ),
-                      );
-                    }
-                  }
-                },
-              ),
+                const SizedBox(height: 16),
+                Text(
+                  l10n.tr('onboarding_persona_subtitle'),
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                const SizedBox(height: 24),
+                ..._personaTemplates.map(
+                  (template) => Card(
+                    child: ListTile(
+                      leading: Icon(
+                        template.icon,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      title: Text(l10n.tr(template.titleKey)),
+                      subtitle: Text(l10n.tr(template.bodyKey)),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () async {
+                        try {
+                          AnalyticsService.logEvent(
+                            'onboarding_step_complete',
+                            {
+                              'step_id': 'persona_selection',
+                              'variant': variant,
+                              'choice': template.titleKey,
+                            },
+                          );
+                          final mutations = ref.read(
+                            settingsMutationControllerProvider.notifier,
+                          );
+                          await mutations.savePreset(template.minutes);
+                          await mutations.completeOnboarding();
+                          await AnalyticsService.logEvent(
+                            'onboarding_complete',
+                            {
+                              'variant': variant,
+                              'duration_sec': DateTime.now()
+                                  .difference(startedAt)
+                                  .inSeconds,
+                              'choice': template.titleKey,
+                            },
+                          );
+                          if (context.mounted) Navigator.pop(context, true);
+                        } catch (error) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  l10n.tr('onboarding_preset_error', {
+                                    'error': '$error',
+                                  }),
+                                ),
+                              ),
+                            );
+                          }
+                        }
+                      },
+                    ),
+                  ),
+                ),
+                const Spacer(),
+              ],
             ),
           ),
-          const Spacer(),
-        ],
-      ),
+        );
+      },
     );
   }
 }
