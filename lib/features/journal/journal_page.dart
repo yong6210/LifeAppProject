@@ -102,7 +102,9 @@ class _JournalPageState extends ConsumerState<JournalPage> {
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w700,
-                        color: isDark ? Colors.white : theme.colorScheme.onSurface,
+                        color: isDark
+                            ? Colors.white
+                            : theme.colorScheme.onSurface,
                       ),
                     ),
                   ],
@@ -114,72 +116,83 @@ class _JournalPageState extends ConsumerState<JournalPage> {
                   child: ListView(
                     padding: const EdgeInsets.all(16),
                     children: [
-            _JournalCalendar(
-              entries: entriesAsync,
-              selectedDate: effectiveDate,
-              visibleMonth: _visibleMonth,
-              onMonthChanged: _changeMonth,
-              onDateSelected: _handleDateSelected,
-            ),
-            const SizedBox(height: 16),
-            _EntryDetailCard(
-              selectedDate: effectiveDate,
-              entry: selectedEntry,
-              onWriteEntry: () => _prefillEntryForDate(effectiveDate),
-            ),
-            const SizedBox(height: 24),
-            const Divider(),
-            const SizedBox(height: 16),
-            _DatePickerField(
-              initialDate: _entryDate,
-              onChanged: (value) => setState(() => _entryDate = value),
-            ),
-            const SizedBox(height: 12),
-            _MoodChipSelector(
-              value: _selectedMood,
-              onChanged: (value) => setState(() => _selectedMood = value),
-            ),
-            const SizedBox(height: 12),
-            _EnergySelector(
-              value: _energyLevel,
-              onChanged: (value) => setState(() => _energyLevel = value),
-            ),
-            const SizedBox(height: 12),
-            Text('Sleep hours: ${_sleepHours.toStringAsFixed(1)} h'),
-            Slider(
-              min: 0,
-              max: 12,
-              divisions: 24,
-              value: _sleepHours,
-              label: _sleepHours.toStringAsFixed(1),
-              onChanged: (value) => setState(() => _sleepHours = value),
-            ),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: _notesController,
-              minLines: 3,
-              maxLines: 6,
-              decoration: const InputDecoration(
-                labelText: 'Notes (optional)',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 20),
-            FilledButton(onPressed: _submit, child: const Text('Add entry')),
-            const SizedBox(height: 24),
-            _MonthlyRecapCard(summary: summaryAsync),
-            const SizedBox(height: 16),
-            _BuddyCommentCard(comment: commentAsync),
-            const SizedBox(height: 24),
-            const Divider(),
-            Text('Timeline', style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 12),
-            _TimelineSection(
-              entries: entriesAsync,
-              onRemove: (entry) =>
-                  ref.read(journalEntriesProvider.notifier).deleteEntry(entry),
-              onSelect: (entry) => _handleTimelineTap(entry, entries),
-            ),
+                      _JournalCalendar(
+                        entries: entriesAsync,
+                        selectedDate: effectiveDate,
+                        visibleMonth: _visibleMonth,
+                        onMonthChanged: _changeMonth,
+                        onDateSelected: _handleDateSelected,
+                      ),
+                      const SizedBox(height: 16),
+                      _EntryDetailCard(
+                        selectedDate: effectiveDate,
+                        entry: selectedEntry,
+                        onWriteEntry: () => _prefillEntryForDate(effectiveDate),
+                      ),
+                      const SizedBox(height: 24),
+                      const Divider(),
+                      const SizedBox(height: 16),
+                      _DatePickerField(
+                        initialDate: _entryDate,
+                        onChanged: (value) =>
+                            setState(() => _entryDate = value),
+                      ),
+                      const SizedBox(height: 12),
+                      _MoodChipSelector(
+                        value: _selectedMood,
+                        onChanged: (value) =>
+                            setState(() => _selectedMood = value),
+                      ),
+                      const SizedBox(height: 12),
+                      _EnergySelector(
+                        value: _energyLevel,
+                        onChanged: (value) =>
+                            setState(() => _energyLevel = value),
+                      ),
+                      const SizedBox(height: 12),
+                      Text('Sleep hours: ${_sleepHours.toStringAsFixed(1)} h'),
+                      Slider(
+                        min: 0,
+                        max: 12,
+                        divisions: 24,
+                        value: _sleepHours,
+                        label: _sleepHours.toStringAsFixed(1),
+                        onChanged: (value) =>
+                            setState(() => _sleepHours = value),
+                      ),
+                      const SizedBox(height: 12),
+                      TextFormField(
+                        controller: _notesController,
+                        minLines: 3,
+                        maxLines: 6,
+                        decoration: const InputDecoration(
+                          labelText: 'Notes (optional)',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      FilledButton(
+                        onPressed: _submit,
+                        child: const Text('Add entry'),
+                      ),
+                      const SizedBox(height: 24),
+                      _MonthlyRecapCard(summary: summaryAsync),
+                      const SizedBox(height: 16),
+                      _BuddyCommentCard(comment: commentAsync),
+                      const SizedBox(height: 24),
+                      const Divider(),
+                      Text(
+                        'Timeline',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: 12),
+                      _TimelineSection(
+                        entries: entriesAsync,
+                        onRemove: (entry) => ref
+                            .read(journalEntriesProvider.notifier)
+                            .deleteEntry(entry),
+                        onSelect: (entry) => _handleTimelineTap(entry, entries),
+                      ),
                     ],
                   ),
                 ),

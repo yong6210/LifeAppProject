@@ -183,8 +183,9 @@ void main() {
       final deleteButtons = find.byTooltip('기록 삭제');
       expect(deleteButtons, findsWidgets);
 
-      final timelineCard =
-          find.byKey(const ValueKey('timeline-entry-focus-day'));
+      final timelineCard = find.byKey(
+        const ValueKey('timeline-entry-focus-day'),
+      );
       await tester.pump();
       expect(timelineCard, findsOneWidget);
       await tester.scrollUntilVisible(

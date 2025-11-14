@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui' show FlutterView;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -15,13 +14,14 @@ final timerAnnouncerProvider = Provider<TimerAnnouncer>((ref) {
 class TimerAnnouncer {
   TimerAnnouncer({
     this.minInterval = const Duration(seconds: 30),
-    Future<void> Function(FlutterView, String, TextDirection)? sendAnnouncement,
+    Future<void> Function(String, TextDirection)? sendAnnouncement,
   }) : _sendAnnouncement =
-            sendAnnouncement ?? SemanticsService.sendAnnouncement;
+           sendAnnouncement ??
+           // ignore: deprecated_member_use
+           SemanticsService.announce;
 
   final Duration minInterval;
-  final Future<void> Function(FlutterView, String, TextDirection)
-      _sendAnnouncement;
+  final Future<void> Function(String, TextDirection) _sendAnnouncement;
   DateTime? _lastAnnouncedAt;
   String? _lastSegmentId;
 
@@ -66,8 +66,7 @@ class TimerAnnouncer {
       'time': timeLabel,
     });
     final textDirection = Directionality.maybeOf(context) ?? TextDirection.ltr;
-    final view = View.of(context);
-    unawaited(_sendAnnouncement(view, message, textDirection));
+    unawaited(_sendAnnouncement(message, textDirection));
     _lastAnnouncedAt = now;
     _lastSegmentId = segmentId;
   }

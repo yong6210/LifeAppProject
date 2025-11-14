@@ -159,7 +159,9 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                       shape: BoxShape.circle,
                       gradient: RadialGradient(
                         colors: [
-                          AppTheme.electricViolet.withValues(alpha: 0.3 + _glowController.value * 0.2),
+                          AppTheme.electricViolet.withValues(
+                            alpha: 0.3 + _glowController.value * 0.2,
+                          ),
                           Colors.transparent,
                         ],
                       ),
@@ -181,7 +183,9 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                       shape: BoxShape.circle,
                       gradient: RadialGradient(
                         colors: [
-                          AppTheme.teal.withValues(alpha: 0.3 + (1 - _glowController.value) * 0.2),
+                          AppTheme.teal.withValues(
+                            alpha: 0.3 + (1 - _glowController.value) * 0.2,
+                          ),
                           Colors.transparent,
                         ],
                       ),
@@ -206,7 +210,9 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                           child: Icon(
                             Icons.arrow_back_ios_new,
                             size: 20,
-                            color: isDark ? Colors.white : AppTheme.electricViolet,
+                            color: isDark
+                                ? Colors.white
+                                : AppTheme.electricViolet,
                           ),
                         ),
                         const Spacer(),
@@ -215,7 +221,10 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                     const SizedBox(height: 16),
                     // Header badge
                     GlassCard(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
                       margin: const EdgeInsets.only(bottom: 16),
                       borderRadius: 20,
                       child: Row(
@@ -231,7 +240,9 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                             'Neural Focus',
                             style: theme.textTheme.titleSmall?.copyWith(
                               fontWeight: FontWeight.w600,
-                              color: isDark ? Colors.white : AppTheme.electricViolet,
+                              color: isDark
+                                  ? Colors.white
+                                  : AppTheme.electricViolet,
                             ),
                           ),
                           const SizedBox(width: 4),
@@ -246,10 +257,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                     // Preset name
                     ShaderMask(
                       shaderCallback: (bounds) => LinearGradient(
-                        colors: [
-                          AppTheme.electricViolet,
-                          AppTheme.teal,
-                        ],
+                        colors: [AppTheme.electricViolet, AppTheme.teal],
                       ).createShader(bounds),
                       child: Text(
                         _selectedPreset.name,
@@ -285,8 +293,8 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                                 shape: BoxShape.circle,
                                 boxShadow: [
                                   BoxShadow(
-                                    color: AppTheme.electricViolet.withValues(alpha: 
-                                      0.3 + _glowController.value * 0.3,
+                                    color: AppTheme.electricViolet.withValues(
+                                      alpha: 0.3 + _glowController.value * 0.3,
                                     ),
                                     blurRadius: 60,
                                     spreadRadius: 10,
@@ -318,16 +326,22 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                               style: theme.textTheme.displayLarge?.copyWith(
                                 fontSize: 56,
                                 fontWeight: FontWeight.w700,
-                                color: isDark ? Colors.white : theme.colorScheme.onSurface,
+                                color: isDark
+                                    ? Colors.white
+                                    : theme.colorScheme.onSurface,
                                 height: 1,
                               ),
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              isRunning ? '⚡ Focus Mode Active' : 'Ready to focus',
+                              isRunning
+                                  ? '⚡ Focus Mode Active'
+                                  : 'Ready to focus',
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 color: isDark
-                                    ? AppTheme.electricViolet.withValues(alpha: 0.8)
+                                    ? AppTheme.electricViolet.withValues(
+                                        alpha: 0.8,
+                                      )
                                     : AppTheme.electricViolet,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -349,7 +363,9 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                           child: Icon(
                             Icons.refresh,
                             size: 24,
-                            color: isDark ? Colors.white : AppTheme.electricViolet,
+                            color: isDark
+                                ? Colors.white
+                                : AppTheme.electricViolet,
                           ),
                         ),
                         const SizedBox(width: 24),
@@ -362,14 +378,13 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                             gradient: LinearGradient(
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
-                              colors: [
-                                AppTheme.electricViolet,
-                                AppTheme.teal,
-                              ],
+                              colors: [AppTheme.electricViolet, AppTheme.teal],
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: AppTheme.electricViolet.withValues(alpha: 0.5),
+                                color: AppTheme.electricViolet.withValues(
+                                  alpha: 0.5,
+                                ),
                                 blurRadius: 24,
                                 offset: const Offset(0, 8),
                               ),
@@ -401,7 +416,9 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                           child: Icon(
                             Icons.bolt,
                             size: 24,
-                            color: isDark ? Colors.white : AppTheme.electricViolet,
+                            color: isDark
+                                ? Colors.white
+                                : AppTheme.electricViolet,
                           ),
                         ),
                       ],
@@ -411,18 +428,21 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                     GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 12,
-                        mainAxisSpacing: 12,
-                        childAspectRatio: 1.4,
-                      ),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 12,
+                            mainAxisSpacing: 12,
+                            childAspectRatio: 1.4,
+                          ),
                       itemCount: presets.length,
                       itemBuilder: (context, index) {
                         final preset = presets[index];
                         final isSelected = preset.id == _selectedPreset.id;
                         return GlassCard(
-                          onTap: isRunning ? null : () => _handlePresetSelect(preset),
+                          onTap: isRunning
+                              ? null
+                              : () => _handlePresetSelect(preset),
                           padding: const EdgeInsets.all(16),
                           borderRadius: 20,
                           gradient: isSelected
@@ -431,16 +451,22 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                                   end: Alignment.bottomRight,
                                   colors: isDark
                                       ? [
-                                          AppTheme.electricViolet.withValues(alpha: 0.3),
+                                          AppTheme.electricViolet.withValues(
+                                            alpha: 0.3,
+                                          ),
                                           AppTheme.teal.withValues(alpha: 0.2),
                                         ]
                                       : [
-                                          AppTheme.electricViolet.withValues(alpha: 0.15),
+                                          AppTheme.electricViolet.withValues(
+                                            alpha: 0.15,
+                                          ),
                                           AppTheme.teal.withValues(alpha: 0.1),
                                         ],
                                 )
                               : null,
-                          shadowColor: isSelected ? AppTheme.electricViolet : null,
+                          shadowColor: isSelected
+                              ? AppTheme.electricViolet
+                              : null,
                           shadowOpacity: isSelected ? 0.3 : 0.2,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -455,7 +481,9 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                                 preset.name,
                                 style: theme.textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.w700,
-                                  color: isDark ? Colors.white : theme.colorScheme.onSurface,
+                                  color: isDark
+                                      ? Colors.white
+                                      : theme.colorScheme.onSurface,
                                 ),
                               ),
                               const SizedBox(height: 2),
@@ -463,7 +491,9 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                                 '${preset.duration} minutes',
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: isDark
-                                      ? AppTheme.electricViolet.withValues(alpha: 0.8)
+                                      ? AppTheme.electricViolet.withValues(
+                                          alpha: 0.8,
+                                        )
                                       : AppTheme.electricViolet,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -481,10 +511,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            '🧠',
-                            style: TextStyle(fontSize: 28),
-                          ),
+                          const Text('🧠', style: TextStyle(fontSize: 28)),
                           const SizedBox(width: 16),
                           Expanded(
                             child: Column(
@@ -494,7 +521,9 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                                   'Neural Boost Active',
                                   style: theme.textTheme.titleMedium?.copyWith(
                                     fontWeight: FontWeight.w700,
-                                    color: isDark ? Colors.white : theme.colorScheme.onSurface,
+                                    color: isDark
+                                        ? Colors.white
+                                        : theme.colorScheme.onSurface,
                                   ),
                                 ),
                                 const SizedBox(height: 8),

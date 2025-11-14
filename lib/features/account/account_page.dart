@@ -111,10 +111,7 @@ class AccountPage extends ConsumerWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: isDark
-                ? [
-                    const Color(0xFF000000),
-                    const Color(0xFF1A1A1A),
-                  ]
+                ? [const Color(0xFF000000), const Color(0xFF1A1A1A)]
                 : [
                     const Color(0xFFD8E5E0), // Darker pastel mint
                     const Color(0xFFD0E4D8), // Darker pastel sage green
@@ -151,7 +148,9 @@ class AccountPage extends ConsumerWidget {
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w700,
-                        color: isDark ? Colors.white : theme.colorScheme.onSurface,
+                        color: isDark
+                            ? Colors.white
+                            : theme.colorScheme.onSurface,
                       ),
                     ),
                   ],
@@ -159,220 +158,242 @@ class AccountPage extends ConsumerWidget {
               ),
               Expanded(
                 child: RefreshIndicator(
-        onRefresh: () async {
-          await ref
-              .read(revenueCatControllerProvider.notifier)
-              .refreshCustomerInfo();
-          ref.invalidate(settingsFutureProvider);
-          await ref.read(settingsFutureProvider.future);
-        },
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            _AccountStatusCard(
-              l10n: l10n,
-              user: user,
-              isLoading: isAuthLoading,
-              onSignIn: () async {
-                try {
-                  await ref
-                      .read(authControllerProvider.notifier)
-                      .signInAnonymously();
-                } catch (error) {
-                  if (context.mounted) {
-                    _showError(
-                      context,
-                      l10n.tr('error_login_failed', {'error': '$error'}),
-                    );
-                  }
-                }
-              },
-              onSignOut: () async {
-                try {
-                  await ref.read(authControllerProvider.notifier).signOut();
-                } catch (error) {
-                  if (context.mounted) {
-                    _showError(
-                      context,
-                      l10n.tr('error_logout_failed', {'error': '$error'}),
-                    );
-                  }
-                }
-              },
-            ),
-            const SizedBox(height: 16),
-            _SubscriptionStatusCard(
-              l10n: l10n,
-              status: premiumStatus,
-              onManageSubscription: () {
-                Navigator.push<void>(
-                  context,
-                  MaterialPageRoute<void>(builder: (_) => const PaywallPage()),
-                );
-              },
-            ),
-            const SizedBox(height: 16),
-            languageSection,
-            const SizedBox(height: 16),
-            _DataDisclosureCard(
-              l10n: l10n,
-              onViewDetails: () => _showDataRetentionDisclosure(context),
-            ),
-            const SizedBox(height: 16),
-            settingsAsync.when(
-              loading: () => const _LoadingCard(),
-              error: (error, _) => _ErrorCard(
-                title: l10n.tr('account_personalization_title'),
-                message: l10n.tr('generic_settings_error', {'error': '$error'}),
-              ),
-              data: (settings) =>
-                  _PersonalizationSettingsCard(l10n: l10n, settings: settings),
-            ),
-            const SizedBox(height: 16),
-            accessibilityAsync.when(
-              loading: () => const _LoadingCard(),
-              error: (error, _) => _ErrorCard(
-                title: l10n.tr('account_accessibility_title'),
-                message: '$error',
-              ),
-              data: (state) => _AccessibilitySettingsCard(
-                l10n: l10n,
-                reducedMotion: state.reducedMotion,
-                onChanged: (value) async {
-                  await ref
-                      .read(accessibilityControllerProvider.notifier)
-                      .setReducedMotion(value);
-                },
-              ),
-            ),
-            const SizedBox(height: 16),
-            _PrivacyPolicyCard(
-              l10n: l10n,
-              onOpen: () => _showPrivacyPolicy(context),
-            ),
-            const SizedBox(height: 16),
-            _OpenSourceLicensesCard(
-              l10n: l10n,
-              onOpen: () => _showLicenses(context),
-            ),
-            const SizedBox(height: 16),
-            settingsAsync.when(
-              loading: () =>
-                  _LoadingCard(title: l10n.tr('backup_loading_title')),
-              error: (error, _) => _ErrorCard(
-                title: l10n.tr('backup_error_title'),
-                message: error.toString(),
-              ),
-              data: (settings) => FutureBuilder<bool>(
-                future: ref
-                    .read(backupBannerServiceProvider.future)
-                    .then((service) => service.shouldShow(settings)),
-                builder: (context, snapshot) {
-                  final showBanner = snapshot.data ?? false;
-                  return _BackupHistoryCard(
-                    l10n: l10n,
-                    settings: settings,
-                    isPremium: isPremium,
-                    showReminderBanner: showBanner,
-                    onDismissReminder: () async {
-                      final service = await ref.read(
-                        backupBannerServiceProvider.future,
-                      );
-                      await service.snooze();
-                      if (context.mounted) {
-                        AnalyticsService.logEvent('backup_banner_dismiss');
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(l10n.tr('backup_banner_dismissed')),
-                          ),
-                        );
-                      }
-                    },
-                    onRequestPremium: () async {
-                      AnalyticsService.logEvent('premium_gate', {
-                        'feature': 'backup_history',
-                      });
-                      await Navigator.push<void>(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (_) => const PaywallPage(),
+                  onRefresh: () async {
+                    await ref
+                        .read(revenueCatControllerProvider.notifier)
+                        .refreshCustomerInfo();
+                    ref.invalidate(settingsFutureProvider);
+                    await ref.read(settingsFutureProvider.future);
+                  },
+                  child: ListView(
+                    padding: const EdgeInsets.all(16),
+                    children: [
+                      _AccountStatusCard(
+                        l10n: l10n,
+                        user: user,
+                        isLoading: isAuthLoading,
+                        onSignIn: () async {
+                          try {
+                            await ref
+                                .read(authControllerProvider.notifier)
+                                .signInAnonymously();
+                          } catch (error) {
+                            if (context.mounted) {
+                              _showError(
+                                context,
+                                l10n.tr('error_login_failed', {
+                                  'error': '$error',
+                                }),
+                              );
+                            }
+                          }
+                        },
+                        onSignOut: () async {
+                          try {
+                            await ref
+                                .read(authControllerProvider.notifier)
+                                .signOut();
+                          } catch (error) {
+                            if (context.mounted) {
+                              _showError(
+                                context,
+                                l10n.tr('error_logout_failed', {
+                                  'error': '$error',
+                                }),
+                              );
+                            }
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      _SubscriptionStatusCard(
+                        l10n: l10n,
+                        status: premiumStatus,
+                        onManageSubscription: () {
+                          Navigator.push<void>(
+                            context,
+                            MaterialPageRoute<void>(
+                              builder: (_) => const PaywallPage(),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      languageSection,
+                      const SizedBox(height: 16),
+                      _DataDisclosureCard(
+                        l10n: l10n,
+                        onViewDetails: () =>
+                            _showDataRetentionDisclosure(context),
+                      ),
+                      const SizedBox(height: 16),
+                      settingsAsync.when(
+                        loading: () => const _LoadingCard(),
+                        error: (error, _) => _ErrorCard(
+                          title: l10n.tr('account_personalization_title'),
+                          message: l10n.tr('generic_settings_error', {
+                            'error': '$error',
+                          }),
                         ),
-                      );
-                    },
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 16),
-            timerDiagnosticsAsync.when(
-              loading: () => const _LoadingCard(),
-              error: (error, _) => _ErrorCard(
-                title: l10n.tr('account_diagnostics_title'),
-                message: error.toString(),
-              ),
-              data: (samples) => _TimerDiagnosticsCard(
-                l10n: l10n,
-                samples: samples,
-                locale: Localizations.localeOf(context),
-                onClear: () async {
-                  final service = await ref.read(
-                    timerDiagnosticsServiceProvider.future,
-                  );
-                  await service.clearAccuracySamples();
-                  ref.invalidate(timerAccuracySamplesProvider);
-                },
-                onShare: () async {
-                  final service = await ref.read(
-                    timerDiagnosticsServiceProvider.future,
-                  );
-                  final csv = await service.exportAccuracySamplesAsCsv();
-                  if (csv.trim().isEmpty ||
-                      csv.trim() ==
-                          'recorded_at_utc,mode,segment_id,segment_label,skew_ms') {
-                    if (!context.mounted) return;
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          l10n.tr('account_diagnostics_share_empty'),
+                        data: (settings) => _PersonalizationSettingsCard(
+                          l10n: l10n,
+                          settings: settings,
                         ),
                       ),
-                    );
-                    return;
-                  }
-                  final dir = await getTemporaryDirectory();
-                  final filename =
-                      'life_app_timer_accuracy_${DateTime.now().millisecondsSinceEpoch}.csv';
-                  final file = File(p.join(dir.path, filename));
-                  await file.writeAsString(csv, flush: true);
-                  await SharePlus.instance.share(
-                    ShareParams(
-                      files: [
-                        XFile(
-                          file.path,
-                          mimeType: 'text/csv',
-                          name: 'timer_accuracy.csv',
+                      const SizedBox(height: 16),
+                      accessibilityAsync.when(
+                        loading: () => const _LoadingCard(),
+                        error: (error, _) => _ErrorCard(
+                          title: l10n.tr('account_accessibility_title'),
+                          message: '$error',
                         ),
-                      ],
-                      subject: l10n.tr('account_diagnostics_share_subject'),
-                      text: l10n.tr('account_diagnostics_share_body'),
-                    ),
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 16),
-            _AccountDeletionSection(
-              l10n: l10n,
-              isProcessing: deletionState.isLoading,
-              requiresReauth: deletionResult?.requiresReauthentication ?? false,
-              errorMessage: deletionState.maybeWhen(
-                error: (error, _) => error.toString(),
-                orElse: () => null,
-              ),
-              onDelete: () => _confirmAccountDeletion(context, ref),
-            ),
-          ],
-        ),
+                        data: (state) => _AccessibilitySettingsCard(
+                          l10n: l10n,
+                          reducedMotion: state.reducedMotion,
+                          onChanged: (value) async {
+                            await ref
+                                .read(accessibilityControllerProvider.notifier)
+                                .setReducedMotion(value);
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      _PrivacyPolicyCard(
+                        l10n: l10n,
+                        onOpen: () => _showPrivacyPolicy(context),
+                      ),
+                      const SizedBox(height: 16),
+                      _OpenSourceLicensesCard(
+                        l10n: l10n,
+                        onOpen: () => _showLicenses(context),
+                      ),
+                      const SizedBox(height: 16),
+                      settingsAsync.when(
+                        loading: () => _LoadingCard(
+                          title: l10n.tr('backup_loading_title'),
+                        ),
+                        error: (error, _) => _ErrorCard(
+                          title: l10n.tr('backup_error_title'),
+                          message: error.toString(),
+                        ),
+                        data: (settings) => FutureBuilder<bool>(
+                          future: ref
+                              .read(backupBannerServiceProvider.future)
+                              .then((service) => service.shouldShow(settings)),
+                          builder: (context, snapshot) {
+                            final showBanner = snapshot.data ?? false;
+                            return _BackupHistoryCard(
+                              l10n: l10n,
+                              settings: settings,
+                              isPremium: isPremium,
+                              showReminderBanner: showBanner,
+                              onDismissReminder: () async {
+                                final service = await ref.read(
+                                  backupBannerServiceProvider.future,
+                                );
+                                await service.snooze();
+                                if (context.mounted) {
+                                  AnalyticsService.logEvent(
+                                    'backup_banner_dismiss',
+                                  );
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        l10n.tr('backup_banner_dismissed'),
+                                      ),
+                                    ),
+                                  );
+                                }
+                              },
+                              onRequestPremium: () async {
+                                AnalyticsService.logEvent('premium_gate', {
+                                  'feature': 'backup_history',
+                                });
+                                await Navigator.push<void>(
+                                  context,
+                                  MaterialPageRoute<void>(
+                                    builder: (_) => const PaywallPage(),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      timerDiagnosticsAsync.when(
+                        loading: () => const _LoadingCard(),
+                        error: (error, _) => _ErrorCard(
+                          title: l10n.tr('account_diagnostics_title'),
+                          message: error.toString(),
+                        ),
+                        data: (samples) => _TimerDiagnosticsCard(
+                          l10n: l10n,
+                          samples: samples,
+                          locale: Localizations.localeOf(context),
+                          onClear: () async {
+                            final service = await ref.read(
+                              timerDiagnosticsServiceProvider.future,
+                            );
+                            await service.clearAccuracySamples();
+                            ref.invalidate(timerAccuracySamplesProvider);
+                          },
+                          onShare: () async {
+                            final service = await ref.read(
+                              timerDiagnosticsServiceProvider.future,
+                            );
+                            final csv = await service
+                                .exportAccuracySamplesAsCsv();
+                            if (csv.trim().isEmpty ||
+                                csv.trim() ==
+                                    'recorded_at_utc,mode,segment_id,segment_label,skew_ms') {
+                              if (!context.mounted) return;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    l10n.tr('account_diagnostics_share_empty'),
+                                  ),
+                                ),
+                              );
+                              return;
+                            }
+                            final dir = await getTemporaryDirectory();
+                            final filename =
+                                'life_app_timer_accuracy_${DateTime.now().millisecondsSinceEpoch}.csv';
+                            final file = File(p.join(dir.path, filename));
+                            await file.writeAsString(csv, flush: true);
+                            await SharePlus.instance.share(
+                              ShareParams(
+                                files: [
+                                  XFile(
+                                    file.path,
+                                    mimeType: 'text/csv',
+                                    name: 'timer_accuracy.csv',
+                                  ),
+                                ],
+                                subject: l10n.tr(
+                                  'account_diagnostics_share_subject',
+                                ),
+                                text: l10n.tr('account_diagnostics_share_body'),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      _AccountDeletionSection(
+                        l10n: l10n,
+                        isProcessing: deletionState.isLoading,
+                        requiresReauth:
+                            deletionResult?.requiresReauthentication ?? false,
+                        errorMessage: deletionState.maybeWhen(
+                          error: (error, _) => error.toString(),
+                          orElse: () => null,
+                        ),
+                        onDelete: () => _confirmAccountDeletion(context, ref),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -1825,9 +1846,7 @@ class _PersonalizationSettingsCard extends ConsumerWidget {
                   ? (value) async {
                       await handleAction(() async {
                         await ref
-                            .read(
-                              settingsMutationControllerProvider.notifier,
-                            )
+                            .read(settingsMutationControllerProvider.notifier)
                             .setRoutinePersonalizationSync(value);
                         await AnalyticsService.logEvent(
                           'personalization_sync_toggle',

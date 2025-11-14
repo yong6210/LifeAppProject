@@ -132,8 +132,7 @@ class _FakeTimerController extends TimerController {
 }
 
 class _SilentAnnouncer extends TimerAnnouncer {
-  _SilentAnnouncer()
-      : super(sendAnnouncement: (message, direction) async {});
+  _SilentAnnouncer() : super(sendAnnouncement: (message, direction) async {});
 }
 
 SleepSoundCatalog _emptyCatalog() {
@@ -185,126 +184,120 @@ void main() {
     AnalyticsService.setTestObserver(null);
   });
 
-  testWidgets(
-    'workout quick card opens navigator and logs analytics',
-    (tester) async {
-      Future<void> pumpTimerPage({
-        required Settings settings,
-        required TodaySummary summary,
-        List<Override> extraOverrides = const <Override>[],
-      }) async {
-        _FakeTimerController.template = settings;
-        final view = tester.view;
-        final originalPhysicalSize = view.physicalSize;
-        final originalDevicePixelRatio = view.devicePixelRatio;
-        view.physicalSize = const Size(1080, 1920);
-        view.devicePixelRatio = 1.0;
-        addTearDown(() {
-          view.physicalSize = originalPhysicalSize;
-          view.devicePixelRatio = originalDevicePixelRatio;
-        });
-        await tester.pumpWidget(
-          ProviderScope(
-            overrides: [
-              timerControllerProvider.overrideWith(_FakeTimerController.new),
-              timerPermissionStatusProvider.overrideWith(
-                (ref) async => const TimerPermissionStatus(
-                  notificationGranted: true,
-                  exactAlarmGranted: true,
-                  dndAccessGranted: true,
-                  microphoneGranted: true,
-                ),
-              ),
-              todaySummaryProvider.overrideWith(
-                (ref) => Stream<TodaySummary>.value(summary),
-              ),
-              settingsFutureProvider.overrideWith((ref) async => settings),
-              sleepSoundCatalogProvider.overrideWith(
-                (ref) async => _emptyCatalog(),
-              ),
-              isPremiumProvider.overrideWith((ref) => false),
-              timerAnnouncerProvider.overrideWithValue(_SilentAnnouncer()),
-              ...extraOverrides,
-            ],
-            child: MaterialApp(
-              localizationsDelegates: const [
-                _TestAppLocalizationsDelegate(),
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-                GlobalCupertinoLocalizations.delegate,
-              ],
-              locale: const Locale('en'),
-              supportedLocales: AppLocalizations.supportedLocales,
-              home: const TimerPage(useForegroundTask: false),
-            ),
-          ),
-        );
-        await tester.pump();
-        for (var i = 0; i < 10; i++) {
-          if (find.byType(TimerPage).evaluate().isNotEmpty) {
-            break;
-          }
-          await tester.pump(const Duration(milliseconds: 50));
-        }
-        final timerContext = tester.element(find.byType(TimerPage));
-        final container = ProviderScope.containerOf(
-          timerContext,
-          listen: false,
-        );
-        final settingsValue = container.read(settingsFutureProvider);
-        expect(
-          settingsValue,
-          isA<AsyncData<Settings>>(),
-          reason: 'settingsFutureProvider should resolve in tests',
-        );
-        final timerState = container.read(timerControllerProvider);
-        expect(timerState.mode, equals('workout'));
-      }
-
-      // Quick card action entry point
-      SharedPreferences.setMockInitialValues(const <String, Object>{});
-      final coachEvents = <String, List<Map<String, Object?>>>{
-        'coach_action': <Map<String, Object?>>[],
-        'workout_navigator_open': <Map<String, Object?>>[],
-        'workout_quick_card_tap': <Map<String, Object?>>[],
-      };
-      AnalyticsService.setTestObserver((name, params) {
-        coachEvents
-            .putIfAbsent(name, () => <Map<String, Object?>>[])
-            .add(params);
+  testWidgets('workout quick card opens navigator and logs analytics', (
+    tester,
+  ) async {
+    Future<void> pumpTimerPage({
+      required Settings settings,
+      required TodaySummary summary,
+      List<Override> extraOverrides = const <Override>[],
+    }) async {
+      _FakeTimerController.template = settings;
+      final view = tester.view;
+      final originalPhysicalSize = view.physicalSize;
+      final originalDevicePixelRatio = view.devicePixelRatio;
+      view.physicalSize = const Size(1080, 1920);
+      view.devicePixelRatio = 1.0;
+      addTearDown(() {
+        view.physicalSize = originalPhysicalSize;
+        view.devicePixelRatio = originalDevicePixelRatio;
       });
-
-      await pumpTimerPage(
-        settings: _baseSettings(),
-        summary: _summaryWithWorkoutGap(),
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            timerControllerProvider.overrideWith(_FakeTimerController.new),
+            timerPermissionStatusProvider.overrideWith(
+              (ref) async => const TimerPermissionStatus(
+                notificationGranted: true,
+                exactAlarmGranted: true,
+                dndAccessGranted: true,
+                microphoneGranted: true,
+              ),
+            ),
+            todaySummaryProvider.overrideWith(
+              (ref) => Stream<TodaySummary>.value(summary),
+            ),
+            settingsFutureProvider.overrideWith((ref) async => settings),
+            sleepSoundCatalogProvider.overrideWith(
+              (ref) async => _emptyCatalog(),
+            ),
+            isPremiumProvider.overrideWith((ref) => false),
+            timerAnnouncerProvider.overrideWithValue(_SilentAnnouncer()),
+            ...extraOverrides,
+          ],
+          child: MaterialApp(
+            localizationsDelegates: const [
+              _TestAppLocalizationsDelegate(),
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            locale: const Locale('en'),
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const TimerPage(useForegroundTask: false),
+          ),
+        ),
       );
-
-      await tester.pump(const Duration(milliseconds: 100));
-      final workoutCardFinder = find.byWidgetPredicate(
-        (widget) => widget.runtimeType.toString() == '_WorkoutQuickCard',
-      );
+      await tester.pump();
+      for (var i = 0; i < 10; i++) {
+        if (find.byType(TimerPage).evaluate().isNotEmpty) {
+          break;
+        }
+        await tester.pump(const Duration(milliseconds: 50));
+      }
+      final timerContext = tester.element(find.byType(TimerPage));
+      final container = ProviderScope.containerOf(timerContext, listen: false);
+      final settingsValue = container.read(settingsFutureProvider);
       expect(
-        workoutCardFinder,
-        findsOneWidget,
-        reason: 'Workout quick card should be visible in workout mode',
+        settingsValue,
+        isA<AsyncData<Settings>>(),
+        reason: 'settingsFutureProvider should resolve in tests',
       );
-      final quickCardWidget = tester.widget(workoutCardFinder);
-      // ignore: avoid_dynamic_calls
-      (quickCardWidget as dynamic).onOpen();
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 200));
+      final timerState = container.read(timerControllerProvider);
+      expect(timerState.mode, equals('workout'));
+    }
 
-      expect(find.byType(WorkoutNavigatorPage), findsOneWidget);
-      expect(coachEvents['workout_quick_card_tap']?.isNotEmpty, isTrue);
-      expect(coachEvents['workout_navigator_open']?.isNotEmpty, isTrue);
-      final sourceValues = coachEvents['workout_navigator_open']!
-          .map((event) => event['source'])
-          .toList();
-      expect(sourceValues, contains('quick_card'));
-      await tester.pageBack();
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 200));
-      AnalyticsService.setTestObserver(null);
-    },
-  );
+    // Quick card action entry point
+    SharedPreferences.setMockInitialValues(const <String, Object>{});
+    final coachEvents = <String, List<Map<String, Object?>>>{
+      'coach_action': <Map<String, Object?>>[],
+      'workout_navigator_open': <Map<String, Object?>>[],
+      'workout_quick_card_tap': <Map<String, Object?>>[],
+    };
+    AnalyticsService.setTestObserver((name, params) {
+      coachEvents.putIfAbsent(name, () => <Map<String, Object?>>[]).add(params);
+    });
+
+    await pumpTimerPage(
+      settings: _baseSettings(),
+      summary: _summaryWithWorkoutGap(),
+    );
+
+    await tester.pump(const Duration(milliseconds: 100));
+    final workoutCardFinder = find.byWidgetPredicate(
+      (widget) => widget.runtimeType.toString() == '_WorkoutQuickCard',
+    );
+    expect(
+      workoutCardFinder,
+      findsOneWidget,
+      reason: 'Workout quick card should be visible in workout mode',
+    );
+    final quickCardWidget = tester.widget(workoutCardFinder);
+    // ignore: avoid_dynamic_calls
+    (quickCardWidget as dynamic).onOpen();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 200));
+
+    expect(find.byType(WorkoutNavigatorPage), findsOneWidget);
+    expect(coachEvents['workout_quick_card_tap']?.isNotEmpty, isTrue);
+    expect(coachEvents['workout_navigator_open']?.isNotEmpty, isTrue);
+    final sourceValues = coachEvents['workout_navigator_open']!
+        .map((event) => event['source'])
+        .toList();
+    expect(sourceValues, contains('quick_card'));
+    await tester.pageBack();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 200));
+    AnalyticsService.setTestObserver(null);
+  });
 }

@@ -52,7 +52,11 @@ List<StatsTrendEntry> buildTrendEntries(
     var workout = 0;
     var sleep = 0;
     for (final summary in summaries) {
-      final date = DateTime(summary.date.year, summary.date.month, summary.date.day);
+      final date = DateTime(
+        summary.date.year,
+        summary.date.month,
+        summary.date.day,
+      );
       if (date.isBefore(range.start) || !date.isBefore(range.end)) {
         continue;
       }

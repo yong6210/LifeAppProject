@@ -29,24 +29,24 @@ final sleepSoundCatalogProvider = FutureProvider<SleepSoundCatalog>((
 
 final settingsMutationControllerProvider =
     AsyncNotifierProvider.autoDispose<SettingsMutationController, void>(
-        SettingsMutationController.new);
+      SettingsMutationController.new,
+    );
 
 class SettingsMutationController extends AsyncNotifier<void> {
   @override
   FutureOr<void> build() {}
 
   Future<void> savePreset(Map<String, int> data) => _mutate((repo) async {
-        await repo.update((s) {
-          if (data.containsKey('focus')) s.focusMinutes = data['focus']!;
-          if (data.containsKey('rest')) s.restMinutes = data['rest']!;
-          if (data.containsKey('workout')) s.workoutMinutes = data['workout']!;
-          if (data.containsKey('sleep')) s.sleepMinutes = data['sleep']!;
-        });
-      });
+    await repo.update((s) {
+      if (data.containsKey('focus')) s.focusMinutes = data['focus']!;
+      if (data.containsKey('rest')) s.restMinutes = data['rest']!;
+      if (data.containsKey('workout')) s.workoutMinutes = data['workout']!;
+      if (data.containsKey('sleep')) s.sleepMinutes = data['sleep']!;
+    });
+  });
 
-  Future<void> saveLastMode(String mode) => _mutate(
-        (repo) async => repo.update((s) => s.lastMode = mode),
-      );
+  Future<void> saveLastMode(String mode) =>
+      _mutate((repo) async => repo.update((s) => s.lastMode = mode));
 
   Future<void> updateBackupPreferredProvider(String provider) =>
       _mutate((repo) async {
@@ -87,8 +87,8 @@ class SettingsMutationController extends AsyncNotifier<void> {
   }
 
   Future<void> completeOnboarding() => _mutate(
-        (repo) async => repo.update((s) => s.hasCompletedOnboarding = true),
-      );
+    (repo) async => repo.update((s) => s.hasCompletedOnboarding = true),
+  );
 
   Future<void> updateSleepSmartAlarm(SleepSmartAlarmInput input) =>
       _mutate((repo) async {

@@ -155,11 +155,7 @@ class _TotalsCard extends StatelessWidget {
         totals.focusMinutes,
         AppTheme.teal,
       ),
-      _Metric(
-        l10n.tr('session_type_rest'),
-        totals.restMinutes,
-        AppTheme.lime,
-      ),
+      _Metric(l10n.tr('session_type_rest'), totals.restMinutes, AppTheme.lime),
       _Metric(
         l10n.tr('session_type_workout'),
         totals.workoutMinutes,
@@ -257,8 +253,9 @@ class _TotalsCard extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w700,
-                              color:
-                                  isDark ? Colors.white : theme.colorScheme.onSurface,
+                              color: isDark
+                                  ? Colors.white
+                                  : theme.colorScheme.onSurface,
                             ),
                           ),
                           Text(
@@ -427,7 +424,9 @@ class _WeeklyHighlightCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
-                      color: isDark ? Colors.white : theme.colorScheme.onSurface,
+                      color: isDark
+                          ? Colors.white
+                          : theme.colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 6),
@@ -514,9 +513,9 @@ class _TrendListState extends ConsumerState<_TrendList> {
               const SizedBox(height: 12),
               Text(
                 l10n.tr('stats_trend_empty_title'),
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 4),
               Text(
@@ -556,10 +555,7 @@ class _TrendListState extends ConsumerState<_TrendList> {
                 ],
               ),
             ),
-            Divider(
-              height: 1,
-              color: Colors.white.withValues(alpha: 0.1),
-            ),
+            Divider(height: 1, color: Colors.white.withValues(alpha: 0.1)),
             if (showTable)
               _TrendDataTable(entries: entries, bucket: widget.bucket)
             else
@@ -582,16 +578,16 @@ class _TrendListState extends ConsumerState<_TrendList> {
                           children: [
                             Text(
                               _labelForEntry(widget.bucket, entry.range, l10n),
-                              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                fontWeight: FontWeight.w600,
-                              ),
+                              style: Theme.of(context).textTheme.titleSmall
+                                  ?.copyWith(fontWeight: FontWeight.w600),
                             ),
                             Text(
                               _formatMinutes(entry.totals.totalMinutes, l10n),
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                fontWeight: FontWeight.w700,
-                                color: AppTheme.eucalyptus,
-                              ),
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.w700,
+                                    color: AppTheme.eucalyptus,
+                                  ),
                             ),
                           ],
                         ),
@@ -615,46 +611,57 @@ class _TrendListState extends ConsumerState<_TrendList> {
                                   children: [
                                     if (entry.totals.focusMinutes > 0)
                                       Container(
-                                        width: totalWidth *
+                                        width:
+                                            totalWidth *
                                             (entry.totals.focusMinutes / total),
                                         decoration: BoxDecoration(
                                           gradient: LinearGradient(
                                             colors: [
                                               AppTheme.teal,
-                                              AppTheme.teal.withValues(alpha: 0.8),
+                                              AppTheme.teal.withValues(
+                                                alpha: 0.8,
+                                              ),
                                             ],
                                           ),
                                         ),
                                       ),
                                     if (entry.totals.restMinutes > 0)
                                       Container(
-                                        width: totalWidth *
+                                        width:
+                                            totalWidth *
                                             (entry.totals.restMinutes / total),
                                         decoration: BoxDecoration(
                                           gradient: LinearGradient(
                                             colors: [
                                               AppTheme.lime,
-                                              AppTheme.lime.withValues(alpha: 0.8),
+                                              AppTheme.lime.withValues(
+                                                alpha: 0.8,
+                                              ),
                                             ],
                                           ),
                                         ),
                                       ),
                                     if (entry.totals.workoutMinutes > 0)
                                       Container(
-                                        width: totalWidth *
-                                            (entry.totals.workoutMinutes / total),
+                                        width:
+                                            totalWidth *
+                                            (entry.totals.workoutMinutes /
+                                                total),
                                         decoration: BoxDecoration(
                                           gradient: LinearGradient(
                                             colors: [
                                               AppTheme.coral,
-                                              AppTheme.coral.withValues(alpha: 0.8),
+                                              AppTheme.coral.withValues(
+                                                alpha: 0.8,
+                                              ),
                                             ],
                                           ),
                                         ),
                                       ),
                                     if (entry.totals.sleepMinutes > 0)
                                       Container(
-                                        width: totalWidth *
+                                        width:
+                                            totalWidth *
                                             (entry.totals.sleepMinutes / total),
                                         decoration: BoxDecoration(
                                           gradient: LinearGradient(

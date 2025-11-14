@@ -30,8 +30,8 @@ class FigmaHomeDashboard extends ConsumerWidget {
     final greeting = hour < 12
         ? l10n.tr('home_dashboard_greeting_morning')
         : hour < 18
-            ? l10n.tr('home_dashboard_greeting_afternoon')
-            : l10n.tr('home_dashboard_greeting_evening');
+        ? l10n.tr('home_dashboard_greeting_afternoon')
+        : l10n.tr('home_dashboard_greeting_evening');
 
     final settingsAsync = ref.watch(settingsFutureProvider);
     final settings = settingsAsync.asData?.value;
@@ -56,22 +56,30 @@ class FigmaHomeDashboard extends ConsumerWidget {
     final sleepGoalHours = 8;
     final sleepGoalMinutes = sleepGoalHours * 60;
 
-    final focusProgress =
-        ((todaySummary.focus / focusGoal) * 100).clamp(0.0, 100.0);
-    final workoutProgress =
-        ((todaySummary.workout / workoutGoal) * 100).clamp(0.0, 100.0);
-    final sleepProgress =
-        ((todaySummary.sleep / sleepGoalMinutes) * 100).clamp(0.0, 100.0);
+    final focusProgress = ((todaySummary.focus / focusGoal) * 100).clamp(
+      0.0,
+      100.0,
+    );
+    final workoutProgress = ((todaySummary.workout / workoutGoal) * 100).clamp(
+      0.0,
+      100.0,
+    );
+    final sleepProgress = ((todaySummary.sleep / sleepGoalMinutes) * 100).clamp(
+      0.0,
+      100.0,
+    );
 
     final completedGoals = [
       focusProgress >= 100,
       workoutProgress >= 100,
-      sleepProgress >= 100
+      sleepProgress >= 100,
     ].where((e) => e).length;
 
-    final totalProgress = ((focusProgress + workoutProgress + sleepProgress) / 3)
-        .round()
-        .clamp(0, 100);
+    final totalProgress =
+        ((focusProgress + workoutProgress + sleepProgress) / 3).round().clamp(
+          0,
+          100,
+        );
 
     return Scaffold(
       body: Container(
@@ -364,7 +372,10 @@ class FigmaHomeDashboard extends ConsumerWidget {
                   children: [
                     ShaderMask(
                       shaderCallback: (bounds) => LinearGradient(
-                        colors: [Colors.white, Colors.white.withValues(alpha: 0.88)],
+                        colors: [
+                          Colors.white,
+                          Colors.white.withValues(alpha: 0.88),
+                        ],
                       ).createShader(bounds),
                       child: Text(
                         totalProgress.toString(),
@@ -396,7 +407,9 @@ class FigmaHomeDashboard extends ConsumerWidget {
                     _buildProgressDot(workoutProgress >= 100, AppTheme.coral),
                     const SizedBox(width: 8),
                     _buildProgressDot(
-                        sleepProgress >= 100, AppTheme.electricViolet),
+                      sleepProgress >= 100,
+                      AppTheme.electricViolet,
+                    ),
                   ],
                 ),
               ],
@@ -432,12 +445,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
         shape: BoxShape.circle,
         color: isCompleted ? color : color.withValues(alpha: 0.3),
         boxShadow: isCompleted
-            ? [
-                BoxShadow(
-                  color: color.withValues(alpha: 0.6),
-                  blurRadius: 8,
-                ),
-              ]
+            ? [BoxShadow(color: color.withValues(alpha: 0.6), blurRadius: 8)]
             : null,
       ),
     );
@@ -730,7 +738,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                 gradient: LinearGradient(
                   colors: [
                     AppTheme.electricViolet,
-                    AppTheme.electricVioletLight
+                    AppTheme.electricVioletLight,
                   ],
                 ),
                 borderRadius: BorderRadius.circular(18),
@@ -793,7 +801,8 @@ class FigmaHomeDashboard extends ConsumerWidget {
                       minHeight: 6,
                       backgroundColor: Colors.white.withValues(alpha: 0.1),
                       valueColor: const AlwaysStoppedAnimation<Color>(
-                          AppTheme.electricViolet),
+                        AppTheme.electricViolet,
+                      ),
                     ),
                   ),
                 ],
@@ -944,10 +953,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                 padding: EdgeInsets.only(
                   right: index < routines.length - 1 ? 12 : 0,
                 ),
-                child: _buildRoutineCard(
-                  context: context,
-                  routine: routine,
-                ),
+                child: _buildRoutineCard(context: context, routine: routine),
               );
             },
           ),
@@ -993,10 +999,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
       gradient: LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
-        colors: [
-          color.withValues(alpha: 0.2),
-          color.withValues(alpha: 0.1),
-        ],
+        colors: [color.withValues(alpha: 0.2), color.withValues(alpha: 0.1)],
       ),
       shadowColor: color,
       shadowOpacity: 0.25,
@@ -1064,11 +1067,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
             // Duration and step icons
             Row(
               children: [
-                Icon(
-                  Icons.timer_outlined,
-                  size: 16,
-                  color: color,
-                ),
+                Icon(Icons.timer_outlined, size: 16, color: color),
                 const SizedBox(width: 4),
                 Text(
                   '$totalMinutes분',

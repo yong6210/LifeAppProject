@@ -96,47 +96,45 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                   width: 160,
                   child: FilledButton(
                     onPressed: () async {
-                    final navigator = Navigator.of(context);
-                    final currentPage = totalPages > 0
-                        ? pages[displayIndex]
-                        : null;
-                    if (currentPage != null) {
-                      await _logStepComplete(
-                        currentPage,
-                        variant,
-                        isManualPersonaSelection:
-                            currentPage is _OnboardingPersonaPage,
-                      );
-                    }
-                    if (displayIndex < totalPages - 1) {
-                      await _controller.nextPage(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeInOut,
-                      );
-                    } else {
-                      await ref
-                          .read(
-                            settingsMutationControllerProvider.notifier,
-                          )
-                          .completeOnboarding();
-                      await AnalyticsService.logEvent('onboarding_complete', {
-                        'variant': variant,
-                        'duration_sec': DateTime.now()
-                            .difference(_startedAt)
-                            .inSeconds,
-                      });
-                      if (!mounted) return;
-                      navigator.pop(true);
-                    }
-                  },
-                  child: Text(
-                    displayIndex == totalPages - 1
-                        ? l10n.tr('onboarding_start_button')
-                        : l10n.tr('onboarding_next_button'),
+                      final navigator = Navigator.of(context);
+                      final currentPage = totalPages > 0
+                          ? pages[displayIndex]
+                          : null;
+                      if (currentPage != null) {
+                        await _logStepComplete(
+                          currentPage,
+                          variant,
+                          isManualPersonaSelection:
+                              currentPage is _OnboardingPersonaPage,
+                        );
+                      }
+                      if (displayIndex < totalPages - 1) {
+                        await _controller.nextPage(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                        );
+                      } else {
+                        await ref
+                            .read(settingsMutationControllerProvider.notifier)
+                            .completeOnboarding();
+                        await AnalyticsService.logEvent('onboarding_complete', {
+                          'variant': variant,
+                          'duration_sec': DateTime.now()
+                              .difference(_startedAt)
+                              .inSeconds,
+                        });
+                        if (!mounted) return;
+                        navigator.pop(true);
+                      }
+                    },
+                    child: Text(
+                      displayIndex == totalPages - 1
+                          ? l10n.tr('onboarding_start_button')
+                          : l10n.tr('onboarding_next_button'),
+                    ),
                   ),
                 ),
-              ),
-              ]
+              ],
             ),
           ),
         ],
@@ -227,11 +225,9 @@ class _InfoPageView extends StatelessWidget {
                 const SizedBox(height: 32),
                 Text(
                   l10n.tr(page.titleKey),
-                  style: Theme.of(
-                    context,
-                  ).textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 Text(
@@ -274,11 +270,9 @@ class _PersonaSelectionView extends ConsumerWidget {
                 const SizedBox(height: 32),
                 Text(
                   l10n.tr('onboarding_persona_heading'),
-                  style: Theme.of(
-                    context,
-                  ).textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 Text(

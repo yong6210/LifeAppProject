@@ -71,6 +71,7 @@ final revenueCatControllerProvider =
 
 class RevenueCatController extends AsyncNotifier<RevenueCatState?> {
   static bool _configured = false;
+  static String? _currentAppUserId;
 
   @override
   Future<RevenueCatState?> build() async {
@@ -141,9 +142,7 @@ class RevenueCatController extends AsyncNotifier<RevenueCatState?> {
         'RevenueCat purchase unsupported on this platform',
       );
     }
-    final result = await Purchases.purchase(
-      PurchaseParams.package(package),
-    );
+    final result = await Purchases.purchase(PurchaseParams.package(package));
     await refreshCustomerInfo();
     return result;
   }
@@ -152,6 +151,9 @@ class RevenueCatController extends AsyncNotifier<RevenueCatState?> {
     if (!isRevenueCatSupportedPlatform()) {
       return false;
     }
+    final normalizedUserId = (appUserId != null && appUserId.isNotEmpty)
+        ? appUserId
+        : null;
     final apiKey = Platform.isAndroid
         ? RevenueCatKeys.androidKey
         : RevenueCatKeys.iosKey;
@@ -162,17 +164,20 @@ class RevenueCatController extends AsyncNotifier<RevenueCatState?> {
 
     if (!_configured) {
       final configuration = PurchasesConfiguration(apiKey)
-        ..appUserID = appUserId;
+        ..appUserID = normalizedUserId;
       await Purchases.configure(configuration);
       _configured = true;
+      _currentAppUserId = normalizedUserId;
     } else {
-      if (appUserId != null && appUserId.isNotEmpty) {
-        await Purchases.logIn(appUserId);
-      } else {
+      if (normalizedUserId != null && _currentAppUserId != normalizedUserId) {
+        await Purchases.logIn(normalizedUserId);
+        _currentAppUserId = normalizedUserId;
+      } else if (normalizedUserId == null && _currentAppUserId != null) {
         await Purchases.logOut();
+        _currentAppUserId = null;
       }
     }
-    await _setSubscriberAttributes(appUserId);
+    await _setSubscriberAttributes(normalizedUserId);
     await _cachePremiumState(
       state.value?.customerInfo.entitlements.active.values.isNotEmpty ?? false,
     );

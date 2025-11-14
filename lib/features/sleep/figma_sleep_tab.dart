@@ -114,7 +114,9 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('🌙 Sleep mode activated - Drift into peaceful dreams with ${_selectedSound.name}'),
+          content: Text(
+            '🌙 Sleep mode activated - Drift into peaceful dreams with ${_selectedSound.name}',
+          ),
           backgroundColor: AppTheme.electricViolet,
           behavior: SnackBarBehavior.floating,
         ),
@@ -152,7 +154,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
       ..endedAt = now.add(Duration(minutes: _duration))
       ..deviceId = settings.deviceId
       ..tags = [_selectedSound.name, 'figma-sleep']
-      ..note = '${_selectedSound.emoji} ${_selectedSound.name} - ${_duration}min';
+      ..note =
+          '${_selectedSound.emoji} ${_selectedSound.name} - ${_duration}min';
 
     try {
       await repo.add(session);
@@ -233,7 +236,9 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                       shape: BoxShape.circle,
                       gradient: RadialGradient(
                         colors: [
-                          AppTheme.electricViolet.withValues(alpha: 0.2 + _glowController.value * 0.15),
+                          AppTheme.electricViolet.withValues(
+                            alpha: 0.2 + _glowController.value * 0.15,
+                          ),
                           Colors.transparent,
                         ],
                       ),
@@ -255,7 +260,9 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                       shape: BoxShape.circle,
                       gradient: RadialGradient(
                         colors: [
-                          Colors.pink.withValues(alpha: 0.2 + (1 - _glowController.value) * 0.15),
+                          Colors.pink.withValues(
+                            alpha: 0.2 + (1 - _glowController.value) * 0.15,
+                          ),
                           Colors.transparent,
                         ],
                       ),
@@ -266,8 +273,10 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
             ),
             // Animated stars
             ...List.generate(20, (index) {
-              final top = random.nextDouble() * MediaQuery.of(context).size.height;
-              final left = random.nextDouble() * MediaQuery.of(context).size.width;
+              final top =
+                  random.nextDouble() * MediaQuery.of(context).size.height;
+              final left =
+                  random.nextDouble() * MediaQuery.of(context).size.width;
               return Positioned(
                 top: top,
                 left: left,
@@ -278,7 +287,9 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                       width: 3,
                       height: 3,
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: _starAnimations[index].value * 0.7),
+                        color: Colors.white.withValues(
+                          alpha: _starAnimations[index].value * 0.7,
+                        ),
                         shape: BoxShape.circle,
                       ),
                     );
@@ -302,7 +313,9 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                           child: Icon(
                             Icons.arrow_back_ios_new,
                             size: 20,
-                            color: isDark ? Colors.white : AppTheme.electricViolet,
+                            color: isDark
+                                ? Colors.white
+                                : AppTheme.electricViolet,
                           ),
                         ),
                         const Spacer(),
@@ -311,7 +324,10 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                     const SizedBox(height: 16),
                     // Header badge
                     GlassCard(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
                       margin: const EdgeInsets.only(bottom: 16),
                       borderRadius: 20,
                       child: Row(
@@ -327,7 +343,9 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                             'Cosmic Dreams',
                             style: theme.textTheme.titleSmall?.copyWith(
                               fontWeight: FontWeight.w600,
-                              color: isDark ? Colors.white : AppTheme.electricViolet,
+                              color: isDark
+                                  ? Colors.white
+                                  : AppTheme.electricViolet,
                             ),
                           ),
                           const SizedBox(width: 4),
@@ -342,10 +360,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                     // Title
                     ShaderMask(
                       shaderCallback: (bounds) => LinearGradient(
-                        colors: [
-                          AppTheme.electricViolet,
-                          Colors.pink,
-                        ],
+                        colors: [AppTheme.electricViolet, Colors.pink],
                       ).createShader(bounds),
                       child: Text(
                         'Rest & Recharge',
@@ -400,20 +415,25 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                   children: [
                                     Text(
                                       'Dream Bank',
-                                      style: theme.textTheme.titleLarge?.copyWith(
-                                        fontWeight: FontWeight.w700,
-                                        color: isDark ? Colors.white : theme.colorScheme.onSurface,
-                                      ),
+                                      style: theme.textTheme.titleLarge
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.w700,
+                                            color: isDark
+                                                ? Colors.white
+                                                : theme.colorScheme.onSurface,
+                                          ),
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
                                       '${sleepHours}h ${sleepMins}m / 8h',
-                                      style: theme.textTheme.bodyMedium?.copyWith(
-                                        color: isDark
-                                            ? AppTheme.electricViolet.withValues(alpha: 0.8)
-                                            : AppTheme.electricViolet,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                                      style: theme.textTheme.bodyMedium
+                                          ?.copyWith(
+                                            color: isDark
+                                                ? AppTheme.electricViolet
+                                                      .withValues(alpha: 0.8)
+                                                : AppTheme.electricViolet,
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                     ),
                                   ],
                                 ),
@@ -438,7 +458,9 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                   decoration: BoxDecoration(
                                     color: isDark
                                         ? Colors.white.withValues(alpha: 0.1)
-                                        : AppTheme.electricViolet.withValues(alpha: 0.15),
+                                        : AppTheme.electricViolet.withValues(
+                                            alpha: 0.15,
+                                          ),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                 ),
@@ -476,14 +498,18 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                               Icon(
                                 Icons.nightlight_round,
                                 size: 18,
-                                color: isDark ? Colors.white : AppTheme.electricViolet,
+                                color: isDark
+                                    ? Colors.white
+                                    : AppTheme.electricViolet,
                               ),
                               const SizedBox(width: 8),
                               Text(
                                 'Dream Duration',
                                 style: theme.textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.w700,
-                                  color: isDark ? Colors.white : theme.colorScheme.onSurface,
+                                  color: isDark
+                                      ? Colors.white
+                                      : theme.colorScheme.onSurface,
                                 ),
                               ),
                             ],
@@ -510,20 +536,26 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                           : null,
                                       color: !isSelected
                                           ? isDark
-                                              ? Colors.white.withValues(alpha: 0.1)
-                                              : Colors.white.withValues(alpha: 0.7)
+                                                ? Colors.white.withValues(
+                                                    alpha: 0.1,
+                                                  )
+                                                : Colors.white.withValues(
+                                                    alpha: 0.7,
+                                                  )
                                           : null,
                                       borderRadius: BorderRadius.circular(12),
                                       border: !isSelected
                                           ? Border.all(
-                                              color: AppTheme.electricViolet.withValues(alpha: 0.3),
+                                              color: AppTheme.electricViolet
+                                                  .withValues(alpha: 0.3),
                                               width: 2,
                                             )
                                           : null,
                                       boxShadow: isSelected
                                           ? [
                                               BoxShadow(
-                                                color: AppTheme.electricViolet.withValues(alpha: 0.4),
+                                                color: AppTheme.electricViolet
+                                                    .withValues(alpha: 0.4),
                                                 blurRadius: 12,
                                                 offset: const Offset(0, 4),
                                               ),
@@ -533,19 +565,21 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                     child: Material(
                                       color: Colors.transparent,
                                       child: InkWell(
-                                        onTap: () => setState(() => _duration = mins),
+                                        onTap: () =>
+                                            setState(() => _duration = mins),
                                         borderRadius: BorderRadius.circular(12),
                                         child: Center(
                                           child: Text(
                                             '${mins}m',
-                                            style: theme.textTheme.titleSmall?.copyWith(
-                                              fontWeight: FontWeight.w700,
-                                              color: isSelected
-                                                  ? Colors.white
-                                                  : isDark
+                                            style: theme.textTheme.titleSmall
+                                                ?.copyWith(
+                                                  fontWeight: FontWeight.w700,
+                                                  color: isSelected
+                                                      ? Colors.white
+                                                      : isDark
                                                       ? AppTheme.electricViolet
                                                       : AppTheme.electricViolet,
-                                            ),
+                                                ),
                                           ),
                                         ),
                                       ),
@@ -570,14 +604,18 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                               Icon(
                                 Icons.volume_up,
                                 size: 18,
-                                color: isDark ? Colors.white : AppTheme.electricViolet,
+                                color: isDark
+                                    ? Colors.white
+                                    : AppTheme.electricViolet,
                               ),
                               const SizedBox(width: 8),
                               Text(
                                 'Ambient Sounds',
                                 style: theme.textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.w700,
-                                  color: isDark ? Colors.white : theme.colorScheme.onSurface,
+                                  color: isDark
+                                      ? Colors.white
+                                      : theme.colorScheme.onSurface,
                                 ),
                               ),
                             ],
@@ -587,18 +625,20 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                         GridView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 12,
-                            mainAxisSpacing: 12,
-                            childAspectRatio: 1.3,
-                          ),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 12,
+                                mainAxisSpacing: 12,
+                                childAspectRatio: 1.0,
+                              ),
                           itemCount: soundPresets.length,
                           itemBuilder: (context, index) {
                             final sound = soundPresets[index];
                             final isSelected = _selectedSound.id == sound.id;
                             return GlassCard(
-                              onTap: () => setState(() => _selectedSound = sound),
+                              onTap: () =>
+                                  setState(() => _selectedSound = sound),
                               padding: const EdgeInsets.all(20),
                               borderRadius: 20,
                               gradient: isSelected
@@ -607,16 +647,24 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                       end: Alignment.bottomRight,
                                       colors: isDark
                                           ? [
-                                              AppTheme.electricViolet.withValues(alpha: 0.3),
-                                              Colors.pink.withValues(alpha: 0.2),
+                                              AppTheme.electricViolet
+                                                  .withValues(alpha: 0.3),
+                                              Colors.pink.withValues(
+                                                alpha: 0.2,
+                                              ),
                                             ]
                                           : [
-                                              AppTheme.electricViolet.withValues(alpha: 0.15),
-                                              Colors.pink.withValues(alpha: 0.1),
+                                              AppTheme.electricViolet
+                                                  .withValues(alpha: 0.15),
+                                              Colors.pink.withValues(
+                                                alpha: 0.1,
+                                              ),
                                             ],
                                     )
                                   : null,
-                              shadowColor: isSelected ? AppTheme.electricViolet : null,
+                              shadowColor: isSelected
+                                  ? AppTheme.electricViolet
+                                  : null,
                               shadowOpacity: isSelected ? 0.3 : 0.2,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -629,17 +677,22 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                   const SizedBox(height: 8),
                                   Text(
                                     sound.name,
-                                    style: theme.textTheme.titleMedium?.copyWith(
-                                      fontWeight: FontWeight.w700,
-                                      color: isDark ? Colors.white : theme.colorScheme.onSurface,
-                                    ),
+                                    style: theme.textTheme.titleMedium
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.w700,
+                                          color: isDark
+                                              ? Colors.white
+                                              : theme.colorScheme.onSurface,
+                                        ),
                                   ),
                                   const SizedBox(height: 2),
                                   Text(
                                     sound.description,
                                     style: theme.textTheme.bodySmall?.copyWith(
                                       color: isDark
-                                          ? AppTheme.electricViolet.withValues(alpha: 0.8)
+                                          ? AppTheme.electricViolet.withValues(
+                                              alpha: 0.8,
+                                            )
                                           : AppTheme.electricViolet,
                                       fontSize: 11,
                                     ),
@@ -666,15 +719,20 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                   Icon(
                                     Icons.volume_up,
                                     size: 18,
-                                    color: isDark ? Colors.white : AppTheme.electricViolet,
+                                    color: isDark
+                                        ? Colors.white
+                                        : AppTheme.electricViolet,
                                   ),
                                   const SizedBox(width: 8),
                                   Text(
                                     'Volume',
-                                    style: theme.textTheme.titleMedium?.copyWith(
-                                      fontWeight: FontWeight.w700,
-                                      color: isDark ? Colors.white : theme.colorScheme.onSurface,
-                                    ),
+                                    style: theme.textTheme.titleMedium
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.w700,
+                                          color: isDark
+                                              ? Colors.white
+                                              : theme.colorScheme.onSurface,
+                                        ),
                                   ),
                                 ],
                               ),
@@ -693,14 +751,19 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                               activeTrackColor: AppTheme.electricViolet,
                               inactiveTrackColor: isDark
                                   ? Colors.white.withValues(alpha: 0.1)
-                                  : AppTheme.electricViolet.withValues(alpha: 0.2),
+                                  : AppTheme.electricViolet.withValues(
+                                      alpha: 0.2,
+                                    ),
                               thumbColor: AppTheme.electricViolet,
-                              overlayColor: AppTheme.electricViolet.withValues(alpha: 0.2),
+                              overlayColor: AppTheme.electricViolet.withValues(
+                                alpha: 0.2,
+                              ),
                               trackHeight: 6,
                             ),
                             child: Slider(
                               value: _volume,
-                              onChanged: (value) => setState(() => _volume = value),
+                              onChanged: (value) =>
+                                  setState(() => _volume = value),
                               min: 0,
                               max: 100,
                             ),
@@ -712,7 +775,9 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                 'Whisper',
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: isDark
-                                      ? AppTheme.electricViolet.withValues(alpha: 0.6)
+                                      ? AppTheme.electricViolet.withValues(
+                                          alpha: 0.6,
+                                        )
                                       : AppTheme.electricViolet,
                                   fontSize: 11,
                                 ),
@@ -721,7 +786,9 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                 'Perfect',
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: isDark
-                                      ? AppTheme.electricViolet.withValues(alpha: 0.6)
+                                      ? AppTheme.electricViolet.withValues(
+                                          alpha: 0.6,
+                                        )
                                       : AppTheme.electricViolet,
                                   fontSize: 11,
                                 ),
@@ -744,16 +811,16 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                 ],
                               )
                             : LinearGradient(
-                                colors: [
-                                  AppTheme.electricViolet,
-                                  Colors.pink,
-                                ],
+                                colors: [AppTheme.electricViolet, Colors.pink],
                               ),
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [
                           BoxShadow(
-                            color: (_isPlaying ? Colors.grey : AppTheme.electricViolet)
-                                .withValues(alpha: 0.4),
+                            color:
+                                (_isPlaying
+                                        ? Colors.grey
+                                        : AppTheme.electricViolet)
+                                    .withValues(alpha: 0.4),
                             blurRadius: 16,
                             offset: const Offset(0, 8),
                           ),
@@ -766,7 +833,9 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                           borderRadius: BorderRadius.circular(16),
                           child: Center(
                             child: Text(
-                              _isPlaying ? 'Stop Session' : 'Begin Dream Journey',
+                              _isPlaying
+                                  ? 'Stop Session'
+                                  : 'Begin Dream Journey',
                               style: theme.textTheme.titleMedium?.copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w700,
@@ -805,10 +874,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                '🌟',
-                                style: TextStyle(fontSize: 32),
-                              ),
+                              const Text('🌟', style: TextStyle(fontSize: 32)),
                               const SizedBox(width: 16),
                               Expanded(
                                 child: Column(
@@ -816,20 +882,28 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                   children: [
                                     Text(
                                       'Sleep Science',
-                                      style: theme.textTheme.titleMedium?.copyWith(
-                                        fontWeight: FontWeight.w700,
-                                        color: isDark ? Colors.white : theme.colorScheme.onSurface,
-                                      ),
+                                      style: theme.textTheme.titleMedium
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.w700,
+                                            color: isDark
+                                                ? Colors.white
+                                                : theme.colorScheme.onSurface,
+                                          ),
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
                                       'Quality sleep is when your body repairs muscles, consolidates memories, and balances hormones. The cosmic sounds help your brain enter deeper sleep stages naturally. ✨',
-                                      style: theme.textTheme.bodyMedium?.copyWith(
-                                        color: isDark
-                                            ? Colors.white.withValues(alpha: 0.7)
-                                            : theme.colorScheme.onSurfaceVariant,
-                                        height: 1.5,
-                                      ),
+                                      style: theme.textTheme.bodyMedium
+                                          ?.copyWith(
+                                            color: isDark
+                                                ? Colors.white.withValues(
+                                                    alpha: 0.7,
+                                                  )
+                                                : theme
+                                                      .colorScheme
+                                                      .onSurfaceVariant,
+                                            height: 1.5,
+                                          ),
                                     ),
                                   ],
                                 ),
@@ -837,14 +911,20 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                             ],
                           ),
                           const SizedBox(height: 12),
-                          ...['🌙 Cool, dark room = better sleep', '✨ No screens 1 hour before bed', '🌟 Consistent sleep schedule helps'].map((tip) {
+                          ...[
+                            '🌙 Cool, dark room = better sleep',
+                            '✨ No screens 1 hour before bed',
+                            '🌟 Consistent sleep schedule helps',
+                          ].map((tip) {
                             return Padding(
                               padding: const EdgeInsets.only(bottom: 4),
                               child: Text(
                                 tip,
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: isDark
-                                      ? AppTheme.electricViolet.withValues(alpha: 0.8)
+                                      ? AppTheme.electricViolet.withValues(
+                                          alpha: 0.8,
+                                        )
                                       : AppTheme.electricViolet,
                                   fontSize: 11,
                                 ),

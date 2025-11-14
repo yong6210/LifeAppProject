@@ -166,9 +166,11 @@ class TimerController extends Notifier<TimerState> {
     _currentPlan = plan;
     _clearNavigatorContext();
     await _setWorkoutPreset(preset.id);
-    unawaited(ref
-        .read(settingsMutationControllerProvider.notifier)
-        .saveLastMode('workout'));
+    unawaited(
+      ref
+          .read(settingsMutationControllerProvider.notifier)
+          .saveLastMode('workout'),
+    );
 
     state = TimerState.idle(
       plan: plan,

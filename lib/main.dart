@@ -155,11 +155,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
       }
     });
     final l10n = context.l10n;
-    final tabs = const [
-      HomeDashboardTab(),
-      MorePage(),
-      AccountPage(),
-    ];
+    final tabs = const [HomeDashboardTab(), MorePage(), AccountPage()];
 
     // iOS-style tab bar items with Life Buddy colors
     final tabItems = [

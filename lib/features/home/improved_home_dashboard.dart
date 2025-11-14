@@ -15,14 +15,13 @@ class ImprovedHomeDashboard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     final now = DateTime.now();
     final hour = now.hour;
     final greeting = hour < 12
         ? '좋은 아침!'
         : hour < 18
-            ? '좋은 오후!'
-            : '좋은 저녁!';
+        ? '좋은 오후!'
+        : '좋은 저녁!';
 
     final settingsAsync = ref.watch(settingsFutureProvider);
     final settings = settingsAsync.asData?.value;
@@ -36,16 +35,22 @@ class ImprovedHomeDashboard extends ConsumerWidget {
     final sleepGoalHours = 8;
 
     // 진행률
-    final focusProgress =
-        ((todaySummary.focus / focusGoal) * 100).clamp(0.0, 100.0);
-    final workoutProgress =
-        ((todaySummary.workout / workoutGoal) * 100).clamp(0.0, 100.0);
-    final sleepProgress =
-        ((todaySummary.sleep / (sleepGoalHours * 60)) * 100).clamp(0.0, 100.0);
+    final focusProgress = ((todaySummary.focus / focusGoal) * 100).clamp(
+      0.0,
+      100.0,
+    );
+    final workoutProgress = ((todaySummary.workout / workoutGoal) * 100).clamp(
+      0.0,
+      100.0,
+    );
+    final sleepProgress = ((todaySummary.sleep / (sleepGoalHours * 60)) * 100)
+        .clamp(0.0, 100.0);
 
-    final totalProgress = ((focusProgress + workoutProgress + sleepProgress) / 3)
-        .round()
-        .clamp(0, 100);
+    final totalProgress =
+        ((focusProgress + workoutProgress + sleepProgress) / 3).round().clamp(
+          0,
+          100,
+        );
 
     // Life Buddy 메시지
     String buddyMessage;
@@ -109,7 +114,10 @@ class ImprovedHomeDashboard extends ConsumerWidget {
                     message: buddyMessage,
                     color: buddyColor,
                     progress: totalProgress,
-                    totalMinutes: todaySummary.focus + todaySummary.workout + todaySummary.sleep,
+                    totalMinutes:
+                        todaySummary.focus +
+                        todaySummary.workout +
+                        todaySummary.sleep,
                   ),
                   const SizedBox(height: 18),
 
@@ -257,10 +265,7 @@ class _BigCharacterCard extends StatelessWidget {
       child: Row(
         children: [
           // 큰 이모지
-          Text(
-            emoji,
-            style: const TextStyle(fontSize: 80),
-          ),
+          Text(emoji, style: const TextStyle(fontSize: 80)),
           const SizedBox(width: 20),
           // 메시지와 진행률
           Expanded(
@@ -363,26 +368,17 @@ class _CharacterActivityCard extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Colors.white,
-              color.withValues(alpha: 0.08),
-            ],
+            colors: [Colors.white, color.withValues(alpha: 0.08)],
           ),
           borderRadius: BorderRadius.circular(24),
-          border: Border.all(
-            color: color.withValues(alpha: 0.15),
-            width: 2,
-          ),
+          border: Border.all(color: color.withValues(alpha: 0.15), width: 2),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // 이모지
-            Text(
-              emoji,
-              style: const TextStyle(fontSize: 48),
-            ),
+            Text(emoji, style: const TextStyle(fontSize: 48)),
             // 진행률과 정보
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -453,6 +449,3 @@ class _CharacterActivityCard extends StatelessWidget {
     );
   }
 }
-
-
-

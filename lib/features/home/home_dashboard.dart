@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -122,7 +121,9 @@ class HomeDashboardTab extends ConsumerWidget {
     ];
 
     Widget buildDataSections(Settings settings, TodaySummary todaySummary) {
-      final focusGoalMinutes = (settings.focusMinutes * 4).clamp(0, 600).toInt();
+      final focusGoalMinutes = (settings.focusMinutes * 4)
+          .clamp(0, 600)
+          .toInt();
       final streakDays = streakAsync.maybeWhen(
         data: (value) => value,
         orElse: () => 0,
@@ -195,9 +196,7 @@ class HomeDashboardTab extends ConsumerWidget {
             wearablesSubtitle: l10n.tr(
               'home_dashboard_integrations_wearables_subtitle',
             ),
-            backupTitle: l10n.tr(
-              'home_dashboard_integrations_backup_title',
-            ),
+            backupTitle: l10n.tr('home_dashboard_integrations_backup_title'),
             backupSubtitle: l10n.tr(
               'home_dashboard_integrations_backup_subtitle',
             ),
@@ -282,7 +281,10 @@ class HomeDashboardTab extends ConsumerWidget {
                         greeting: greeting,
                         subtitle: greetingSubtitle,
                       ),
-                      if (banner != null) ...[const SizedBox(height: 20), banner],
+                      if (banner != null) ...[
+                        const SizedBox(height: 20),
+                        banner,
+                      ],
                       const SizedBox(height: 28),
                       _SectionLabel(
                         text: l10n.tr('home_dashboard_quick_start_title'),
@@ -593,10 +595,7 @@ class _QuickActionButtonState extends State<_QuickActionButton> {
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: [
-                      accent,
-                      accent.withValues(alpha: 0.7),
-                    ],
+                    colors: [accent, accent.withValues(alpha: 0.7)],
                   ),
                   boxShadow: [
                     BoxShadow(
@@ -733,10 +732,7 @@ class _HomeDashboardError extends StatelessWidget {
             ),
           ],
           const SizedBox(height: 16),
-          FilledButton(
-            onPressed: onRetry,
-            child: Text(retryLabel),
-          ),
+          FilledButton(onPressed: onRetry, child: Text(retryLabel)),
         ],
       ),
     );
@@ -759,7 +755,7 @@ class _RoutineCarousel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 320,
+      height: 360,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
@@ -832,10 +828,7 @@ class _RoutineCard extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [
-                Colors.white,
-                data.accent.withValues(alpha: 0.05),
-              ],
+              colors: [Colors.white, data.accent.withValues(alpha: 0.05)],
             ),
             boxShadow: [
               BoxShadow(
@@ -892,11 +885,7 @@ class _RoutineCard extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(
-                          Icons.check_circle,
-                          size: 14,
-                          color: data.accent,
-                        ),
+                        Icon(Icons.check_circle, size: 14, color: data.accent),
                         const SizedBox(width: 4),
                         Text(
                           '${data.minutes}분',
@@ -955,10 +944,7 @@ class _RoutineCard extends StatelessWidget {
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: [
-                      data.accent,
-                      data.accent.withValues(alpha: 0.8),
-                    ],
+                    colors: [data.accent, data.accent.withValues(alpha: 0.8)],
                   ),
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
@@ -1066,10 +1052,13 @@ class _DailyProgressCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final total = focusMinutes + workoutMinutes + sleepMinutes;
-    final focusProgress = focusTarget <= 0 ? 0.0 : (focusMinutes / focusTarget).clamp(0.0, 1.0);
+    final focusProgress = focusTarget <= 0
+        ? 0.0
+        : (focusMinutes / focusTarget).clamp(0.0, 1.0);
     final workoutProgress = (workoutMinutes / 60).clamp(0.0, 1.0);
     final sleepProgress = (sleepMinutes / 480).clamp(0.0, 1.0);
-    final overallProgress = ((focusProgress + workoutProgress + sleepProgress) / 3 * 100).round();
+    final overallProgress =
+        ((focusProgress + workoutProgress + sleepProgress) / 3 * 100).round();
 
     return Container(
       decoration: BoxDecoration(
@@ -1077,10 +1066,7 @@ class _DailyProgressCard extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            Colors.white,
-            Colors.white.withValues(alpha: 0.9),
-          ],
+          colors: [Colors.white, Colors.white.withValues(alpha: 0.9)],
         ),
         boxShadow: [
           BoxShadow(
@@ -1147,7 +1133,11 @@ class _DailyProgressCard extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.timer_outlined, color: Colors.white, size: 18),
+                    const Icon(
+                      Icons.timer_outlined,
+                      color: Colors.white,
+                      size: 18,
+                    ),
                     const SizedBox(width: 6),
                     Text(
                       l10n.tr('duration_minutes_only', {'minutes': '$total'}),
@@ -1227,8 +1217,8 @@ class _DailyProgressCard extends StatelessWidget {
                     color: overallProgress >= 70
                         ? AppTheme.accentGreen
                         : overallProgress >= 40
-                            ? Colors.orange
-                            : Colors.grey,
+                        ? Colors.orange
+                        : Colors.grey,
                     size: 20,
                   ),
                 ),
@@ -1314,11 +1304,7 @@ class _CircularProgressMetric extends StatelessWidget {
                   ],
                 ),
               ),
-              child: Icon(
-                icon,
-                color: color,
-                size: 28,
-              ),
+              child: Icon(icon, color: color, size: 28),
             ),
           ],
         ),
@@ -1643,10 +1629,7 @@ class _PremiumUpsellCard extends StatelessWidget {
                       children: [
                         ShaderMask(
                           shaderCallback: (bounds) => const LinearGradient(
-                            colors: [
-                              Color(0xFFFF6B95),
-                              Color(0xFF9B59B6),
-                            ],
+                            colors: [Color(0xFFFF6B95), Color(0xFF9B59B6)],
                           ).createShader(bounds),
                           child: Text(
                             ctaLabel,
@@ -1660,10 +1643,7 @@ class _PremiumUpsellCard extends StatelessWidget {
                         const SizedBox(width: 8),
                         ShaderMask(
                           shaderCallback: (bounds) => const LinearGradient(
-                            colors: [
-                              Color(0xFFFF6B95),
-                              Color(0xFF9B59B6),
-                            ],
+                            colors: [Color(0xFFFF6B95), Color(0xFF9B59B6)],
                           ).createShader(bounds),
                           child: const Icon(
                             Icons.arrow_forward_rounded,

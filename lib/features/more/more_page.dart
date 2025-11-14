@@ -24,10 +24,7 @@ class MorePage extends ConsumerWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: isDark
-                ? [
-                    const Color(0xFF000000),
-                    const Color(0xFF1A1A1A),
-                  ]
+                ? [const Color(0xFF000000), const Color(0xFF1A1A1A)]
                 : [
                     const Color(0xFFD8E5E0), // Darker pastel mint
                     const Color(0xFFD0E4D8), // Darker pastel sage green
@@ -39,185 +36,185 @@ class MorePage extends ConsumerWidget {
         child: SafeArea(
           child: CustomScrollView(
             slivers: [
-            // 헤더
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
-                child: Text(
-                  '더보기',
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w800,
-                    color: isDark ? Colors.white : Colors.black,
-                    height: 1.2,
+              // 헤더
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
+                  child: Text(
+                    '더보기',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w800,
+                      color: isDark ? Colors.white : Colors.black,
+                      height: 1.2,
+                    ),
                   ),
                 ),
               ),
-            ),
 
-            // 집중 & 휴식
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
-                child: Text(
-                  '집중 & 휴식',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: isDark ? Colors.white : Colors.black,
+              // 집중 & 휴식
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+                  child: Text(
+                    '집중 & 휴식',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: isDark ? Colors.white : Colors.black,
+                    ),
                   ),
                 ),
               ),
-            ),
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              sliver: SliverGrid(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                  mainAxisSpacing: 8,
-                  crossAxisSpacing: 8,
-                  childAspectRatio: 0.8,
-                ),
-                delegate: SliverChildListDelegate([
-                  _GridMenuCard(
-                    title: '집중',
-                    icon: Icons.psychology_outlined,
-                    color: AppTheme.teal,
-                    isDark: isDark,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (_) => const FigmaTimerTab(),
-                        ),
-                      );
-                    },
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                sliver: SliverGrid(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4,
+                    mainAxisSpacing: 8,
+                    crossAxisSpacing: 8,
+                    childAspectRatio: 0.8,
                   ),
-                ]),
+                  delegate: SliverChildListDelegate([
+                    _GridMenuCard(
+                      title: '집중',
+                      icon: Icons.psychology_outlined,
+                      color: AppTheme.teal,
+                      isDark: isDark,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute<void>(
+                            builder: (_) => const FigmaTimerTab(),
+                          ),
+                        );
+                      },
+                    ),
+                  ]),
+                ),
               ),
-            ),
 
-            const SliverToBoxAdapter(child: SizedBox(height: 24)),
+              const SliverToBoxAdapter(child: SizedBox(height: 24)),
 
-            // 건강 활동
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
-                child: Text(
-                  '건강 활동',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: isDark ? Colors.white : Colors.black,
+              // 건강 활동
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+                  child: Text(
+                    '건강 활동',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: isDark ? Colors.white : Colors.black,
+                    ),
                   ),
                 ),
               ),
-            ),
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              sliver: SliverGrid(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                  mainAxisSpacing: 8,
-                  crossAxisSpacing: 8,
-                  childAspectRatio: 0.8,
-                ),
-                delegate: SliverChildListDelegate([
-                  _GridMenuCard(
-                    title: '운동',
-                    icon: Icons.fitness_center_outlined,
-                    color: AppTheme.coral,
-                    isDark: isDark,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (_) => const FigmaWorkoutTab(),
-                        ),
-                      );
-                    },
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                sliver: SliverGrid(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4,
+                    mainAxisSpacing: 8,
+                    crossAxisSpacing: 8,
+                    childAspectRatio: 0.8,
                   ),
-                  _GridMenuCard(
-                    title: '수면',
-                    icon: Icons.bedtime_outlined,
-                    color: AppTheme.electricViolet,
-                    isDark: isDark,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (_) => const FigmaSleepTab(),
-                        ),
-                      );
-                    },
-                  ),
-                ]),
-              ),
-            ),
-
-            const SliverToBoxAdapter(child: SizedBox(height: 24)),
-
-            // 기록 & 분석
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
-                child: Text(
-                  '기록 & 분석',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: isDark ? Colors.white : Colors.black,
-                  ),
+                  delegate: SliverChildListDelegate([
+                    _GridMenuCard(
+                      title: '운동',
+                      icon: Icons.fitness_center_outlined,
+                      color: AppTheme.coral,
+                      isDark: isDark,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute<void>(
+                            builder: (_) => const FigmaWorkoutTab(),
+                          ),
+                        );
+                      },
+                    ),
+                    _GridMenuCard(
+                      title: '수면',
+                      icon: Icons.bedtime_outlined,
+                      color: AppTheme.electricViolet,
+                      isDark: isDark,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute<void>(
+                            builder: (_) => const FigmaSleepTab(),
+                          ),
+                        );
+                      },
+                    ),
+                  ]),
                 ),
               ),
-            ),
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              sliver: SliverGrid(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                  mainAxisSpacing: 8,
-                  crossAxisSpacing: 8,
-                  childAspectRatio: 0.8,
-                ),
-                delegate: SliverChildListDelegate([
-                  _GridMenuCard(
-                    title: '저널',
-                    icon: Icons.book_outlined,
-                    color: AppTheme.lime,
-                    isDark: isDark,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (_) => const JournalPage(),
-                        ),
-                      );
-                    },
-                  ),
-                  _GridMenuCard(
-                    title: '통계',
-                    icon: Icons.bar_chart_rounded,
-                    color: AppTheme.eucalyptus,
-                    isDark: isDark,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (_) => const StatsPage(),
-                        ),
-                      );
-                    },
-                  ),
-                ]),
-              ),
-            ),
 
-            const SliverToBoxAdapter(child: SizedBox(height: 32)),
-          ],
+              const SliverToBoxAdapter(child: SizedBox(height: 24)),
+
+              // 기록 & 분석
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+                  child: Text(
+                    '기록 & 분석',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: isDark ? Colors.white : Colors.black,
+                    ),
+                  ),
+                ),
+              ),
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                sliver: SliverGrid(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4,
+                    mainAxisSpacing: 8,
+                    crossAxisSpacing: 8,
+                    childAspectRatio: 0.8,
+                  ),
+                  delegate: SliverChildListDelegate([
+                    _GridMenuCard(
+                      title: '저널',
+                      icon: Icons.book_outlined,
+                      color: AppTheme.lime,
+                      isDark: isDark,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute<void>(
+                            builder: (_) => const JournalPage(),
+                          ),
+                        );
+                      },
+                    ),
+                    _GridMenuCard(
+                      title: '통계',
+                      icon: Icons.bar_chart_rounded,
+                      color: AppTheme.eucalyptus,
+                      isDark: isDark,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute<void>(
+                            builder: (_) => const StatsPage(),
+                          ),
+                        );
+                      },
+                    ),
+                  ]),
+                ),
+              ),
+
+              const SliverToBoxAdapter(child: SizedBox(height: 32)),
+            ],
+          ),
         ),
       ),
-        ),
     );
   }
 }

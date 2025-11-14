@@ -8,8 +8,8 @@ class BackupReminderService {
   BackupReminderService({
     required SharedPreferences preferences,
     DateTime Function()? clock,
-  })  : _prefs = preferences,
-        _clock = clock ?? DateTime.now;
+  }) : _prefs = preferences,
+       _clock = clock ?? DateTime.now;
 
   static const _prefsKeyLastShown = 'backup_reminder_last_shown_at';
   static const _cooldown = Duration(days: 1);

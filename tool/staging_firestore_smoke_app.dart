@@ -51,10 +51,7 @@ class _SmokeAppState extends State<_SmokeApp> {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),
-                Text(
-                  _status,
-                  textAlign: TextAlign.center,
-                ),
+                Text(_status, textAlign: TextAlign.center),
                 if (_error != null) ...[
                   const SizedBox(height: 12),
                   Text(
@@ -122,15 +119,12 @@ class _SmokeAppState extends State<_SmokeApp> {
 
       final dateKey = _dateKey(summary.date);
       final summaryDoc = firestore.doc('users/$uid/daily_summaries/$dateKey');
-      await summaryDoc.set(
-        {
-          'date': dateKey,
-          'buckets': {
-            deviceId: DailySummaryRemoteDto.fromLocal(summary).toJson(),
-          },
+      await summaryDoc.set({
+        'date': dateKey,
+        'buckets': {
+          deviceId: DailySummaryRemoteDto.fromLocal(summary).toJson(),
         },
-        SetOptions(merge: true),
-      );
+      }, SetOptions(merge: true));
 
       await Future<void>.delayed(const Duration(seconds: 3));
       final summarySnapshot = await summaryDoc.get();
@@ -147,7 +141,9 @@ class _SmokeAppState extends State<_SmokeApp> {
         'bucketKeys': buckets.keys.toList(),
       };
 
-      debugPrint('SMOKE_RESULT:${jsonEncode(payload, toEncodable: _encodeSpecial)}');
+      debugPrint(
+        'SMOKE_RESULT:${jsonEncode(payload, toEncodable: _encodeSpecial)}',
+      );
 
       setState(() {
         _status = 'Smoke test completed successfully';
@@ -178,7 +174,9 @@ class _SmokeAppState extends State<_SmokeApp> {
       return value.toDate().toUtc().toIso8601String();
     }
     if (value is Map) {
-      return value.map((key, dynamic val) => MapEntry(key, _encodeSpecial(val)));
+      return value.map(
+        (key, dynamic val) => MapEntry(key, _encodeSpecial(val)),
+      );
     }
     if (value is List) {
       return value.map(_encodeSpecial).toList();

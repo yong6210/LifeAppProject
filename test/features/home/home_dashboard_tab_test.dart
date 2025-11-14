@@ -26,10 +26,7 @@ void main() {
     ) async {
       final pendingSettings = Completer<Settings>();
 
-      await _pumpDashboard(
-        tester,
-        settingsFuture: pendingSettings.future,
-      );
+      await _pumpDashboard(tester, settingsFuture: pendingSettings.future);
 
       expect(find.text("Today's progress"), findsNothing);
       expect(find.byType(ModernSkeleton), findsWidgets);
@@ -70,7 +67,8 @@ Future<void> _pumpDashboard(
     ..restMinutes = 5
     ..workoutMinutes = 20
     ..sleepMinutes = 60;
-  final summaryStream = todaySummaryStream ??
+  final summaryStream =
+      todaySummaryStream ??
       Stream<TodaySummary>.value(
         const TodaySummary(focus: 30, workout: 20, sleep: 420),
       );
@@ -161,8 +159,7 @@ const Map<String, String> _testTranslations = <String, String>{
   'home_dashboard_premium_subtitle': 'Unlock advanced features',
   'home_dashboard_premium_cta': 'Start trial',
   'home_dashboard_state_error_title': "Can't load dashboard",
-  'home_dashboard_state_error_message':
-      'Check your connection and try again.',
+  'home_dashboard_state_error_message': 'Check your connection and try again.',
   'home_dashboard_state_retry': 'Retry',
   'home_dashboard_routine_stat_today': 'Today {value}',
   'home_dashboard_routine_stat_streak': '{days}-day streak',

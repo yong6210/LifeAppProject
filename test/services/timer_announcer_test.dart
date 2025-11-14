@@ -47,11 +47,13 @@ void main() {
   }
 
   setUpAll(() {
-    _testL10n = AppLocalizations.testing(translations: const {
-      'timer_announcer_minutes_seconds': '{minutes}m {seconds}s',
-      'timer_announcer_seconds_only': '{seconds}s',
-      'timer_announcer_segment': '{segment} · {time}',
-    });
+    _testL10n = AppLocalizations.testing(
+      translations: const {
+        'timer_announcer_minutes_seconds': '{minutes}m {seconds}s',
+        'timer_announcer_seconds_only': '{seconds}s',
+        'timer_announcer_segment': '{segment} · {time}',
+      },
+    );
   });
 
   setUp(() {

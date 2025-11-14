@@ -3019,8 +3019,7 @@ class _TimerDesktopLayoutState extends ConsumerState<_TimerDesktopLayout> {
                             unawaited(
                               ref
                                   .read(
-                                    settingsMutationControllerProvider
-                                        .notifier,
+                                    settingsMutationControllerProvider.notifier,
                                   )
                                   .savePreset({'focus': value}),
                             );
@@ -3060,8 +3059,7 @@ class _TimerDesktopLayoutState extends ConsumerState<_TimerDesktopLayout> {
                             unawaited(
                               ref
                                   .read(
-                                    settingsMutationControllerProvider
-                                        .notifier,
+                                    settingsMutationControllerProvider.notifier,
                                   )
                                   .savePreset({'sleep': value}),
                             );
@@ -3308,9 +3306,9 @@ class _TimerDesktopLayoutState extends ConsumerState<_TimerDesktopLayout> {
   Future<void> _startFocus(BuildContext context, int minutes) async {
     final granted = await _ensurePermissions(context);
     if (!granted) return;
-    await ref
-        .read(settingsMutationControllerProvider.notifier)
-        .savePreset({'focus': minutes});
+    await ref.read(settingsMutationControllerProvider.notifier).savePreset({
+      'focus': minutes,
+    });
     await ref.read(timerControllerProvider.notifier).selectMode('focus');
     final current = ref.read(timerControllerProvider);
     if (!current.isRunning) {
@@ -3336,9 +3334,9 @@ class _TimerDesktopLayoutState extends ConsumerState<_TimerDesktopLayout> {
   Future<void> _startSleep(BuildContext context, int minutes) async {
     final granted = await _ensurePermissions(context);
     if (!granted) return;
-    await ref
-        .read(settingsMutationControllerProvider.notifier)
-        .savePreset({'sleep': minutes});
+    await ref.read(settingsMutationControllerProvider.notifier).savePreset({
+      'sleep': minutes,
+    });
     await ref.read(timerControllerProvider.notifier).selectMode('sleep');
     final current = ref.read(timerControllerProvider);
     if (!current.isRunning) {
