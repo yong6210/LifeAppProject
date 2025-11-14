@@ -11,7 +11,12 @@ import 'package:life_app/services/backup/encryption_key_manager.dart';
 import 'package:life_app/services/backup/backup_reminder_service.dart';
 import 'package:life_app/services/backup/backup_banner_service.dart';
 import 'package:life_app/services/db.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:share_plus/share_plus.dart';
+
+final sharedPreferencesProvider = FutureProvider<SharedPreferences>((ref) async {
+  return SharedPreferences.getInstance();
+});
 
 final backupControllerProvider = AsyncNotifierProvider<BackupController, void>(
   BackupController.new,
@@ -91,7 +96,8 @@ class BackupController extends AsyncNotifier<void> {
 final backupReminderServiceProvider = FutureProvider<BackupReminderService>((
   ref,
 ) async {
-  return BackupReminderService.create();
+  final prefs = await ref.watch(sharedPreferencesProvider.future);
+  return BackupReminderService(preferences: prefs);
 });
 
 final backupBannerServiceProvider = FutureProvider<BackupBannerService>((

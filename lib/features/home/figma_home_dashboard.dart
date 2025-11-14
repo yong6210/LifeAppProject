@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:life_app/design/app_theme.dart';
 import 'package:life_app/features/account/account_page.dart';
+import 'package:life_app/features/life_buddy/life_buddy_state_controller.dart';
 import 'package:life_app/features/stats/stats_page.dart';
 import 'package:life_app/features/timer/figma_timer_tab.dart';
 import 'package:life_app/features/workout/figma_workout_tab.dart';
@@ -40,6 +41,11 @@ class FigmaHomeDashboard extends ConsumerWidget {
     final streakDays = ref
         .watch(streakCountProvider)
         .maybeWhen(data: (value) => value, orElse: () => 0);
+    final lifeBuddyStateAsync = ref.watch(lifeBuddyStateProvider);
+    final lifeBuddyLevel = lifeBuddyStateAsync.maybeWhen(
+      data: (state) => state.level,
+      orElse: () => 1,
+    );
     final routines = ref
         .watch(routinesStreamProvider)
         .maybeWhen(data: (value) => value, orElse: () => <Routine>[]);
@@ -143,7 +149,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                       workoutProgress: workoutProgress,
                       sleepProgress: sleepProgress,
                       streakDays: streakDays,
-                      level: 1, // TODO: Get from user stats
+                      level: lifeBuddyLevel,
                     ),
                     const SizedBox(height: 20),
                     // Routines Section
