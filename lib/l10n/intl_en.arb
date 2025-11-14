@@ -1,6 +1,9 @@
 {
   "@@locale": "en",
   "app_title": "Life App",
+  "tab_home": "Home",
+  "tab_more": "More",
+  "tab_profile": "Profile",
   "home_greeting": "Hello again",
   "home_routine_focus_title": "Deep focus",
   "home_routine_focus_body": "Stay in flow with balanced work and break intervals.",
