@@ -985,9 +985,12 @@ class FigmaHomeDashboard extends ConsumerWidget {
 
     return GlassCard(
       onTap: () {
-        // TODO: Start routine
+        // TODO(routine-start): Implement actual routine launch flow.
+        // 현재는 루틴 실행 기능이 연결되지 않아 알림용 스낵바만 노출됩니다.
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
+            // TODO(l10n): Localize the routine start confirmation message.
+            // 다국어 리소스가 준비되지 않아 한국어 문구가 직접 하드코딩돼 있습니다.
             content: Text('${routine.name} 루틴 시작!'),
             backgroundColor: color,
             behavior: SnackBarBehavior.floating,
@@ -1043,6 +1046,8 @@ class FigmaHomeDashboard extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
+                    // TODO(l10n): Replace with localized step count label.
+                    // 현재는 영어 문구 "steps"가 문자열로 고정되어 있습니다.
                     '${routine.steps.length} steps',
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: Colors.white,
@@ -1070,6 +1075,8 @@ class FigmaHomeDashboard extends ConsumerWidget {
                 Icon(Icons.timer_outlined, size: 16, color: color),
                 const SizedBox(width: 4),
                 Text(
+                  // TODO(l10n): Extract the duration suffix into localization files.
+                  // 분 단위 표기를 문자열로 직접 더하고 있어 언어별 처리가 불가합니다.
                   '$totalMinutes분',
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: color,
