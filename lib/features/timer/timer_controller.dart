@@ -10,6 +10,7 @@ import 'package:life_app/features/timer/timer_plan.dart';
 import 'package:life_app/features/timer/timer_state.dart';
 import 'package:life_app/l10n/app_localizations.dart';
 import 'package:life_app/l10n/l10n_loader.dart';
+import 'package:life_app/models/routine.dart';
 import 'package:life_app/models/session.dart';
 import 'package:life_app/models/settings.dart';
 import 'package:life_app/providers/session_providers.dart';
@@ -181,6 +182,33 @@ class TimerController extends Notifier<TimerState> {
     await _foreground.stop();
     await _background.cancelGuard();
     await _persistState();
+  }
+
+  Future<bool> startCustomRoutine({
+    required Routine routine,
+    bool autoStart = false,
+  }) async {
+    final plan = TimerPlanFactory.createRoutinePlan(routine);
+    if (plan == null) {
+      return false;
+    }
+    await _cancelScheduledNotifications();
+    await _stopTicker();
+    await _audioService.setEnabled(false);
+    await _background.cancelGuard();
+    await _cancelSleepSoundCapture();
+    await _foreground.stop();
+
+    _currentPlan = plan;
+    _clearNavigatorContext();
+
+    state = TimerState.idle(plan: plan, soundEnabled: state.isSoundEnabled);
+    await _persistState();
+
+    if (autoStart && !state.isRunning) {
+      await _start();
+    }
+    return true;
   }
 
   Future<void> startNavigatorWorkout({
@@ -385,6 +413,26 @@ class TimerController extends Notifier<TimerState> {
     required Settings settings,
     Map<String, dynamic>? persistedState,
   }) {
+    if (mode == 'custom_routine') {
+      final customPlan = persistedState?['customPlan'];
+      if (customPlan is Map<String, dynamic>) {
+        final rawSegments = customPlan['segments'];
+        if (rawSegments is List) {
+          final segments = rawSegments
+              .map<Map<String, dynamic>>(
+                (item) => Map<String, dynamic>.from(item as Map),
+              )
+              .toList();
+          final plan = TimerPlanFactory.planFromSerializedSegments(
+            segments,
+            mode: 'custom_routine',
+          );
+          if (plan != null) {
+            return (plan: plan, presetId: null);
+          }
+        }
+      }
+    }
     if (mode == 'workout') {
       final hasPersistedKey =
           persistedState?.containsKey('workoutPresetId') ?? false;
@@ -1137,6 +1185,13 @@ class TimerController extends Notifier<TimerState> {
       'navigatorLastCueAt': state.navigatorLastCueAt?.toIso8601String(),
       'workoutPresetId': state.workoutPresetId,
     };
+    if (state.mode == 'custom_routine') {
+      data['customPlan'] = {
+        'segments': state.segments
+            .map(TimerPlanFactory.serializeSegment)
+            .toList(),
+      };
+    }
     await prefs.setString(_prefsKey, jsonEncode(data));
   }
 

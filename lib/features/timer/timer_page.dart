@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:life_app/features/timer/timer_controller.dart';
 import 'package:life_app/features/timer/timer_state.dart';
 import 'package:life_app/features/timer/timer_plan.dart';
+import 'package:life_app/models/routine.dart';
 import 'package:life_app/models/settings.dart';
 import 'package:life_app/providers/session_providers.dart';
 import 'package:life_app/providers/settings_providers.dart';
@@ -329,11 +330,13 @@ class TimerPage extends ConsumerStatefulWidget {
     this.initialMode,
     this.autoStart = false,
     this.useForegroundTask = true,
+    this.initialRoutine,
   });
 
   final String? initialMode;
   final bool autoStart;
   final bool useForegroundTask;
+  final Routine? initialRoutine;
 
   @override
   ConsumerState<TimerPage> createState() => _TimerPageState();
@@ -382,6 +385,26 @@ class _TimerPageState extends ConsumerState<TimerPage> {
 
   void _maybeApplyInitialMode() {
     if (_initialModeApplied) return;
+    if (widget.initialRoutine != null) {
+      _initialModeApplied = true;
+      Future.microtask(() async {
+        final controller = ref.read(timerControllerProvider.notifier);
+        final started = await controller.startCustomRoutine(
+          routine: widget.initialRoutine!,
+          autoStart: widget.autoStart,
+        );
+        if (!mounted) return;
+        if (!started) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(context.l10n.tr('timer_custom_routine_invalid')),
+            ),
+          );
+          Navigator.of(context).maybePop();
+        }
+      });
+      return;
+    }
     final initialMode = widget.initialMode;
     if (initialMode == null) {
       _initialModeApplied = true;

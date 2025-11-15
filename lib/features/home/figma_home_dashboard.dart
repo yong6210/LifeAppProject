@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 import 'package:life_app/design/app_theme.dart';
 import 'package:life_app/features/account/account_page.dart';
 import 'package:life_app/features/life_buddy/life_buddy_state_controller.dart';
 import 'package:life_app/features/stats/stats_page.dart';
 import 'package:life_app/features/timer/figma_timer_tab.dart';
+import 'package:life_app/features/timer/timer_page.dart';
 import 'package:life_app/features/workout/figma_workout_tab.dart';
 import 'package:life_app/features/sleep/figma_sleep_tab.dart';
 import 'package:life_app/l10n/app_localizations.dart';
@@ -54,13 +56,14 @@ class FigmaHomeDashboard extends ConsumerWidget {
 
     // Calculate progress
     final focusGoal = (settings?.focusMinutes ?? 25);
-    // TODO(settings-sync): Load workout goal from persisted settings once available.
-    // 현재는 30분으로 값이 고정되어 사용자의 실제 목표와 동기화되지 않습니다.
-    final workoutGoal = 30;
-    // TODO(settings-sync): Read sleep goal hours from user preferences instead of fixed value.
-    // 수면 목표 역시 8시간으로 하드코딩되어 있어 개인화가 불가합니다.
-    final sleepGoalHours = 8;
-    final sleepGoalMinutes = sleepGoalHours * 60;
+    final workoutGoal = settings?.workoutMinutes ?? 30;
+    const defaultSleepGoalMinutes = 8 * 60;
+    final configuredSleepGoalMinutes =
+        settings?.sleepMinutes ?? defaultSleepGoalMinutes;
+    final sleepGoalMinutes = configuredSleepGoalMinutes > 0
+        ? configuredSleepGoalMinutes
+        : defaultSleepGoalMinutes;
+    final sleepGoalHours = sleepGoalMinutes / 60;
 
     final focusProgress = ((todaySummary.focus / focusGoal) * 100).clamp(
       0.0,
@@ -167,8 +170,6 @@ class FigmaHomeDashboard extends ConsumerWidget {
                     ),
                     const SizedBox(height: 20),
                     // Routines Section
-                    // TODO(routines-ui): Provide empty state widget when routines list is empty.
-                    // 현재는 루틴이 없을 때 아무 UI도 렌더링되지 않아 사용자가 혼란을 겪을 수 있습니다.
                     if (routines.isNotEmpty) ...[
                       // TODO(routines-data): Integrate routine completion metadata from the local session log.
                       // 저장된 수행 이력과 연결되지 않아 사용자가 어느 루틴을 완료했는지 대시보드에서 파악하기 어렵습니다.
@@ -176,6 +177,9 @@ class FigmaHomeDashboard extends ConsumerWidget {
                         context: context,
                         routines: routines,
                       ),
+                      const SizedBox(height: 20),
+                    ] else ...[
+                      _buildRoutinesEmptyState(context: context),
                       const SizedBox(height: 20),
                     ],
                     // Activity Cards Grid
@@ -303,8 +307,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                 ),
                 const SizedBox(width: 6),
                 Text(
-                  // TODO(l10n): Localize "Life Buddy" brand label when translation guidance is available.
-                  'Life Buddy',
+                  context.l10n.tr('home_dashboard_life_buddy_label'),
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.white.withValues(alpha: 0.5),
@@ -350,6 +353,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
     required int streakDays,
     required int level,
   }) {
+    final l10n = context.l10n;
     return GlassCard(
       padding: const EdgeInsets.all(20),
       borderRadius: 24,
@@ -368,8 +372,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      // TODO(l10n): Replace "TODAY" label with localized string resource.
-                      'TODAY',
+                      l10n.tr('home_dashboard_today_label'),
                       style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
@@ -404,8 +407,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      // TODO(l10n): Localize percent suffix instead of direct '%'.
-                      '%',
+                      l10n.tr('common_percent_symbol'),
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w700,
@@ -435,16 +437,14 @@ class FigmaHomeDashboard extends ConsumerWidget {
               _buildMiniStat(
                 icon: Icons.local_fire_department,
                 value: streakDays.toString(),
-                // TODO(l10n): Provide localized "STREAK" label.
-                label: 'STREAK',
+                label: l10n.tr('home_dashboard_streak_label'),
                 color: AppTheme.coral,
               ),
               const SizedBox(height: 12),
               _buildMiniStat(
                 icon: Icons.emoji_events,
                 value: level.toString(),
-                // TODO(l10n): Provide localized "LEVEL" label.
-                label: 'LEVEL',
+                label: l10n.tr('home_dashboard_level_label'),
                 color: AppTheme.lime,
               ),
             ],
@@ -513,6 +513,9 @@ class FigmaHomeDashboard extends ConsumerWidget {
     required VoidCallback onTap,
   }) {
     final isCompleted = progress >= 100;
+    final l10n = context.l10n;
+    final minutesLabel = _formatNumber(context, minutes);
+    final goalLabel = _goalMinutesLabel(context, goal);
 
     return GestureDetector(
       onTap: onTap,
@@ -565,10 +568,9 @@ class FigmaHomeDashboard extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: 12),
-            const Text(
-              // TODO(l10n): Replace hardcoded "Focus" title with localized copy.
-              'Focus',
-              style: TextStyle(
+            Text(
+              l10n.tr('home_dashboard_focus_card_title'),
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
                 color: Colors.white,
@@ -580,7 +582,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
               textBaseline: TextBaseline.alphabetic,
               children: [
                 Text(
-                  minutes.toString(),
+                  minutesLabel,
                   style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
@@ -590,8 +592,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                 ),
                 const SizedBox(width: 4),
                 Text(
-                  // TODO(l10n): Localize goal suffix and number formatting.
-                  '/ $goal',
+                  goalLabel,
                   style: TextStyle(
                     fontSize: 13,
                     color: Colors.white.withValues(alpha: 0.5),
@@ -623,6 +624,9 @@ class FigmaHomeDashboard extends ConsumerWidget {
     required VoidCallback onTap,
   }) {
     final isCompleted = progress >= 100;
+    final l10n = context.l10n;
+    final minutesLabel = _formatNumber(context, minutes);
+    final goalLabel = _goalMinutesLabel(context, goal);
 
     return GestureDetector(
       onTap: onTap,
@@ -675,10 +679,9 @@ class FigmaHomeDashboard extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: 12),
-            const Text(
-              // TODO(l10n): Replace hardcoded "Move" title with localized copy.
-              'Move',
-              style: TextStyle(
+            Text(
+              l10n.tr('home_dashboard_move_card_title'),
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
                 color: Colors.white,
@@ -690,7 +693,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
               textBaseline: TextBaseline.alphabetic,
               children: [
                 Text(
-                  minutes.toString(),
+                  minutesLabel,
                   style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
@@ -700,8 +703,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                 ),
                 const SizedBox(width: 4),
                 Text(
-                  // TODO(l10n): Localize goal suffix and number formatting.
-                  '/ $goal',
+                  goalLabel,
                   style: TextStyle(
                     fontSize: 13,
                     color: Colors.white.withValues(alpha: 0.5),
@@ -728,12 +730,16 @@ class FigmaHomeDashboard extends ConsumerWidget {
   Widget _buildRestCard({
     required BuildContext context,
     required int minutes,
-    required int goalHours,
+    required double goalHours,
     required double progress,
     required VoidCallback onTap,
   }) {
     final isCompleted = progress >= 100;
+    final l10n = context.l10n;
     final hours = (minutes / 60).floor();
+    final hoursLabel = _formatNumber(context, hours);
+    final goalLabel = _sleepGoalLabel(context, goalHours);
+    final percentLabel = _percentValue(context, progress.round());
 
     return GestureDetector(
       onTap: onTap,
@@ -782,10 +788,9 @@ class FigmaHomeDashboard extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    // TODO(l10n): Localize "Rest & Recovery" headline text.
-                    'Rest & Recovery',
-                    style: TextStyle(
+                  Text(
+                    l10n.tr('home_dashboard_rest_card_title'),
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
                       color: Colors.white,
@@ -797,7 +802,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                     textBaseline: TextBaseline.alphabetic,
                     children: [
                       Text(
-                        hours.toString(),
+                        hoursLabel,
                         style: const TextStyle(
                           fontSize: 26,
                           fontWeight: FontWeight.w700,
@@ -807,8 +812,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        // TODO(l10n): Localize sleep goal suffix and pluralization.
-                        '/ $goalHours hours',
+                        goalLabel,
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.white.withValues(alpha: 0.5),
@@ -834,8 +838,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
             Column(
               children: [
                 Text(
-                  // TODO(l10n): Localize percentage formatting for rest progress summary.
-                  '${progress.round()}%',
+                  percentLabel,
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
@@ -859,6 +862,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
     required BuildContext context,
     required VoidCallback onTap,
   }) {
+    final l10n = context.l10n;
     return GestureDetector(
       onTap: onTap,
       child: GlassCard(
@@ -905,18 +909,16 @@ class FigmaHomeDashboard extends ConsumerWidget {
                 children: [
                   // TODO(stats-data): Surface a real snapshot of today's stats summary from the repository.
                   // 현재 CTA는 고정 문구만 보여 주고 있어 통계 DB의 실제 수치를 미리 확인할 수 없습니다.
-                  const Text(
-                    // TODO(l10n): Localize stats CTA title.
-                    'View Statistics',
-                    style: TextStyle(
+                  Text(
+                    l10n.tr('home_dashboard_stats_cta_title'),
+                    style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w700,
                       color: Colors.white,
                     ),
                   ),
                   Text(
-                    // TODO(l10n): Localize stats CTA subtitle.
-                    'Insights & trends',
+                    l10n.tr('home_dashboard_stats_cta_subtitle'),
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.white.withValues(alpha: 0.5),
@@ -941,6 +943,8 @@ class FigmaHomeDashboard extends ConsumerWidget {
     required List<Routine> routines,
   }) {
     final theme = Theme.of(context);
+    final l10n = context.l10n;
+    final countLabel = _routineCountLabel(context, routines.length);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -952,16 +956,14 @@ class FigmaHomeDashboard extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                // TODO(l10n): Extract "오늘의 루틴" to localization resources.
-                '오늘의 루틴',
+                l10n.tr('home_dashboard_routines_today_title'),
                 style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
                 ),
               ),
               Text(
-                // TODO(l10n): Localize routine count summary and pluralization rules.
-                '${routines.length}개',
+                countLabel,
                 style: theme.textTheme.titleSmall?.copyWith(
                   color: AppTheme.eucalyptus,
                   fontWeight: FontWeight.w600,
@@ -992,6 +994,103 @@ class FigmaHomeDashboard extends ConsumerWidget {
     );
   }
 
+  Widget _buildRoutinesEmptyState({required BuildContext context}) {
+    final theme = Theme.of(context);
+    final l10n = context.l10n;
+    final countLabel = _routineCountLabel(context, 0);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                l10n.tr('home_dashboard_routines_today_title'),
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                ),
+              ),
+              Text(
+                countLabel,
+                style: theme.textTheme.titleSmall?.copyWith(
+                  color: AppTheme.eucalyptus,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 12),
+        GlassCard(
+          padding: const EdgeInsets.all(20),
+          borderRadius: 20,
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              AppTheme.eucalyptus.withValues(alpha: 0.2),
+              AppTheme.teal.withValues(alpha: 0.08),
+            ],
+          ),
+          shadowColor: AppTheme.eucalyptus,
+          shadowOpacity: 0.2,
+          child: Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    colors: [AppTheme.eucalyptus, AppTheme.teal],
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppTheme.eucalyptus.withValues(alpha: 0.4),
+                      blurRadius: 14,
+                      offset: const Offset(0, 6),
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  Icons.auto_awesome,
+                  color: Colors.white,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.tr('home_dashboard_routines_empty_title'),
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      l10n.tr('home_dashboard_routines_empty_body'),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: Colors.white.withValues(alpha: 0.7),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildRoutineCard({
     required BuildContext context,
     required Routine routine,
@@ -1003,6 +1102,11 @@ class FigmaHomeDashboard extends ConsumerWidget {
       0,
       (sum, step) => sum + step.durationMinutes,
     );
+    final stepCountLabel = _routineStepCountLabel(
+      context,
+      routine.steps.length,
+    );
+    final durationLabel = _routineDurationLabel(context, totalMinutes);
 
     // Get color based on theme
     final color = _getRoutineColor(routine.colorTheme);
@@ -1015,15 +1119,10 @@ class FigmaHomeDashboard extends ConsumerWidget {
 
     return GlassCard(
       onTap: () {
-        // TODO(routine-start): Implement actual routine launch flow.
-        // 현재는 루틴 실행 기능이 연결되지 않아 알림용 스낵바만 노출됩니다.
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            // TODO(l10n): Localize the routine start confirmation message.
-            // 다국어 리소스가 준비되지 않아 한국어 문구가 직접 하드코딩돼 있습니다.
-            content: Text('${routine.name} 루틴 시작!'),
-            backgroundColor: color,
-            behavior: SnackBarBehavior.floating,
+        Navigator.push(
+          context,
+          MaterialPageRoute<void>(
+            builder: (_) => TimerPage(initialRoutine: routine, autoStart: true),
           ),
         );
       },
@@ -1076,9 +1175,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    // TODO(l10n): Replace with localized step count label.
-                    // 현재는 영어 문구 "steps"가 문자열로 고정되어 있습니다.
-                    '${routine.steps.length} steps',
+                    stepCountLabel,
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.w600,
@@ -1105,9 +1202,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                 Icon(Icons.timer_outlined, size: 16, color: color),
                 const SizedBox(width: 4),
                 Text(
-                  // TODO(l10n): Extract the duration suffix into localization files.
-                  // 분 단위 표기를 문자열로 직접 더하고 있어 언어별 처리가 불가합니다.
-                  '$totalMinutes분',
+                  durationLabel,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: color,
                     fontWeight: FontWeight.w600,
@@ -1143,6 +1238,75 @@ class FigmaHomeDashboard extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  String _goalMinutesLabel(BuildContext context, int goalMinutes) {
+    final formatted = _formatNumber(context, goalMinutes);
+    return context.l10n.tr('home_dashboard_goal_minutes_label', {
+      'minutes': formatted,
+    });
+  }
+
+  String _sleepGoalLabel(BuildContext context, double goalHours) {
+    final hasFraction = goalHours % 1 != 0;
+    final formatted = _formatNumber(
+      context,
+      goalHours,
+      minFractionDigits: hasFraction ? 1 : 0,
+      maxFractionDigits: hasFraction ? 1 : 0,
+    );
+    final key = goalHours == 1
+        ? 'home_dashboard_sleep_goal_label_one'
+        : 'home_dashboard_sleep_goal_label_other';
+    return context.l10n.tr(key, {'hours': formatted});
+  }
+
+  String _percentValue(BuildContext context, num value) {
+    final formatted = _formatNumber(context, value);
+    return context.l10n.tr('common_percent_value', {'value': formatted});
+  }
+
+  String _routineCountLabel(BuildContext context, int count) {
+    if (count == 0) {
+      return context.l10n.tr('home_dashboard_routines_count_zero');
+    }
+    final key = count == 1
+        ? 'home_dashboard_routines_count_one'
+        : 'home_dashboard_routines_count_other';
+    return context.l10n.tr(key, {'count': _formatNumber(context, count)});
+  }
+
+  String _routineStepCountLabel(BuildContext context, int count) {
+    final key = count == 1
+        ? 'home_dashboard_routine_step_count_one'
+        : 'home_dashboard_routine_step_count_other';
+    return context.l10n.tr(key, {'count': _formatNumber(context, count)});
+  }
+
+  String _routineDurationLabel(BuildContext context, int minutes) {
+    return context.l10n.tr('home_dashboard_routine_duration_label', {
+      'minutes': _formatNumber(context, minutes),
+    });
+  }
+
+  String _formatNumber(
+    BuildContext context,
+    num value, {
+    int? minFractionDigits,
+    int? maxFractionDigits,
+  }) {
+    final locale = Localizations.maybeLocaleOf(context);
+    final localeName = locale != null && locale.languageCode.isNotEmpty
+        ? locale.toLanguageTag()
+        : (Intl.getCurrentLocale().isNotEmpty ? Intl.getCurrentLocale() : 'en');
+    final format = NumberFormat.decimalPattern(localeName);
+    if (minFractionDigits != null) {
+      format.minimumFractionDigits = minFractionDigits;
+    }
+    if (maxFractionDigits != null) {
+      format.maximumFractionDigits = maxFractionDigits;
+    }
+    return format.format(value);
   }
 
   Color _getRoutineColor(String theme) {

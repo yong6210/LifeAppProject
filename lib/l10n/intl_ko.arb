@@ -376,6 +376,105 @@
       }
     }
   },
+  "home_dashboard_life_buddy_label": "라이프 버디",
+  "home_dashboard_today_label": "오늘",
+  "common_percent_symbol": "%",
+  "common_percent_value": "{value}%",
+  "@common_percent_value": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "home_dashboard_streak_label": "연속일",
+  "home_dashboard_level_label": "레벨",
+  "home_dashboard_focus_card_title": "집중",
+  "home_dashboard_move_card_title": "움직임",
+  "home_dashboard_goal_minutes_label": "/ {minutes}분",
+  "@home_dashboard_goal_minutes_label": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "home_dashboard_rest_card_title": "휴식 & 회복",
+  "home_dashboard_sleep_goal_label_one": "/ {hours}시간",
+  "@home_dashboard_sleep_goal_label_one": {
+    "placeholders": {
+      "hours": {}
+    }
+  },
+  "home_dashboard_sleep_goal_label_other": "/ {hours}시간",
+  "@home_dashboard_sleep_goal_label_other": {
+    "placeholders": {
+      "hours": {}
+    }
+  },
+  "home_dashboard_stats_cta_title": "통계 보기",
+  "home_dashboard_stats_cta_subtitle": "인사이트와 트렌드",
+  "home_dashboard_routines_today_title": "오늘의 루틴",
+  "home_dashboard_routines_count_zero": "루틴 없음",
+  "home_dashboard_routines_count_one": "루틴 {count}개",
+  "@home_dashboard_routines_count_one": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "home_dashboard_routines_count_other": "루틴 {count}개",
+  "@home_dashboard_routines_count_other": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "home_dashboard_routines_empty_title": "아직 루틴이 없어요",
+  "home_dashboard_routines_empty_body": "집중·휴식·수면 단계를 조합한 루틴을 만들어보세요.",
+  "home_dashboard_routine_step_count_one": "단계 {count}개",
+  "@home_dashboard_routine_step_count_one": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "home_dashboard_routine_step_count_other": "단계 {count}개",
+  "@home_dashboard_routine_step_count_other": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "home_dashboard_routine_duration_label": "{minutes}분",
+  "@home_dashboard_routine_duration_label": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "home_dashboard_routine_start_toast": "{name} 루틴을 시작했어요!",
+  "@home_dashboard_routine_start_toast": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "timer_custom_routine_step_focus": "집중 단계 {number}",
+  "@timer_custom_routine_step_focus": {
+    "placeholders": {
+      "number": {}
+    }
+  },
+  "timer_custom_routine_step_rest": "휴식 단계 {number}",
+  "@timer_custom_routine_step_rest": {
+    "placeholders": {
+      "number": {}
+    }
+  },
+  "timer_custom_routine_step_workout": "운동 인터벌 {number}",
+  "@timer_custom_routine_step_workout": {
+    "placeholders": {
+      "number": {}
+    }
+  },
+  "timer_custom_routine_step_sleep": "수면 단계 {number}",
+  "@timer_custom_routine_step_sleep": {
+    "placeholders": {
+      "number": {}
+    }
+  },
+  "timer_custom_routine_invalid": "루틴을 시작할 수 없습니다. 최소 한 개의 단계를 추가한 뒤 다시 시도해 주세요.",
   "timer_title": "타이머",
   "timer_mode_focus": "집중",
   "timer_mode_rest": "휴식 (자동)",

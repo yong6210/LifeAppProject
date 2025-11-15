@@ -416,6 +416,105 @@
       }
     }
   },
+  "home_dashboard_life_buddy_label": "Life Buddy",
+  "home_dashboard_today_label": "TODAY",
+  "common_percent_symbol": "%",
+  "common_percent_value": "{value}%",
+  "@common_percent_value": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "home_dashboard_streak_label": "STREAK",
+  "home_dashboard_level_label": "LEVEL",
+  "home_dashboard_focus_card_title": "Focus",
+  "home_dashboard_move_card_title": "Move",
+  "home_dashboard_goal_minutes_label": "/ {minutes} min",
+  "@home_dashboard_goal_minutes_label": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "home_dashboard_rest_card_title": "Rest & Recovery",
+  "home_dashboard_sleep_goal_label_one": "/ {hours} hour",
+  "@home_dashboard_sleep_goal_label_one": {
+    "placeholders": {
+      "hours": {}
+    }
+  },
+  "home_dashboard_sleep_goal_label_other": "/ {hours} hours",
+  "@home_dashboard_sleep_goal_label_other": {
+    "placeholders": {
+      "hours": {}
+    }
+  },
+  "home_dashboard_stats_cta_title": "View statistics",
+  "home_dashboard_stats_cta_subtitle": "Insights & trends",
+  "home_dashboard_routines_today_title": "Today's routines",
+  "home_dashboard_routines_count_zero": "No routines",
+  "home_dashboard_routines_count_one": "{count} routine",
+  "@home_dashboard_routines_count_one": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "home_dashboard_routines_count_other": "{count} routines",
+  "@home_dashboard_routines_count_other": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "home_dashboard_routines_empty_title": "No routines yet",
+  "home_dashboard_routines_empty_body": "Create a custom routine to run focus, rest, and sleep together.",
+  "home_dashboard_routine_step_count_one": "{count} step",
+  "@home_dashboard_routine_step_count_one": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "home_dashboard_routine_step_count_other": "{count} steps",
+  "@home_dashboard_routine_step_count_other": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "home_dashboard_routine_duration_label": "{minutes} min",
+  "@home_dashboard_routine_duration_label": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "home_dashboard_routine_start_toast": "{name} routine started!",
+  "@home_dashboard_routine_start_toast": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "timer_custom_routine_step_focus": "Focus block {number}",
+  "@timer_custom_routine_step_focus": {
+    "placeholders": {
+      "number": {}
+    }
+  },
+  "timer_custom_routine_step_rest": "Rest break {number}",
+  "@timer_custom_routine_step_rest": {
+    "placeholders": {
+      "number": {}
+    }
+  },
+  "timer_custom_routine_step_workout": "Workout interval {number}",
+  "@timer_custom_routine_step_workout": {
+    "placeholders": {
+      "number": {}
+    }
+  },
+  "timer_custom_routine_step_sleep": "Sleep segment {number}",
+  "@timer_custom_routine_step_sleep": {
+    "placeholders": {
+      "number": {}
+    }
+  },
+  "timer_custom_routine_invalid": "Unable to start this routine. Add at least one step and try again.",
   "timer_title": "Timer",
   "timer_mode_focus": "Focus",
   "timer_mode_rest": "Break (auto)",
