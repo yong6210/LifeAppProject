@@ -17,11 +17,16 @@ class ImprovedHomeDashboard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final now = DateTime.now();
     final hour = now.hour;
+    // TODO: Localize greeting copy and load dynamic messaging from the content
+    // service instead of branching over hard-coded Korean strings.
+    // The morning/afternoon/evening salutations ignore the multi-language
+    // patch and cannot be personalized or A/B tested until they are sourced
+    // from AppLocalizations or a remote configuration payload.
     final greeting = hour < 12
         ? '좋은 아침!'
         : hour < 18
-        ? '좋은 오후!'
-        : '좋은 저녁!';
+            ? '좋은 오후!'
+            : '좋은 저녁!';
 
     final settingsAsync = ref.watch(settingsFutureProvider);
     final settings = settingsAsync.asData?.value;
@@ -31,6 +36,10 @@ class ImprovedHomeDashboard extends ConsumerWidget {
 
     // 목표 설정
     final focusGoal = (settings?.focusMinutes ?? 25);
+    // TODO: Source workout and sleep goals from persisted settings/analytics
+    // instead of relying on fixed placeholder numbers (30분, 8시간).
+    // Users cannot customize these targets yet and the dashboard ignores data
+    // returned by the server when calculating progress.
     final workoutGoal = 30;
     final sleepGoalHours = 8;
 
@@ -53,6 +62,11 @@ class ImprovedHomeDashboard extends ConsumerWidget {
         );
 
     // Life Buddy 메시지
+    // TODO: Move Life Buddy encouragement text to localization files backed by
+    // remote config so product copy can be updated without app releases.
+    // The current string constants ('오늘 하루를 시작해볼까요?' 등) make the Life
+    // Buddy experience Korean-only and prevent the quest/summary backend from
+    // injecting personalized tips.
     String buddyMessage;
     Color buddyColor;
 
@@ -127,6 +141,11 @@ class ImprovedHomeDashboard extends ConsumerWidget {
                       Expanded(
                         child: _CharacterActivityCard(
                           emoji: '🧠',
+                          // TODO: Localize dashboard activity labels and units
+                          // instead of embedding Korean text ('집중', '운동',
+                          // '수면', '저널', '개'). The grid currently bypasses
+                          // AppLocalizations and does not read goals from user
+                          // settings or the backend metrics API.
                           title: '집중',
                           minutes: todaySummary.focus,
                           goal: focusGoal,

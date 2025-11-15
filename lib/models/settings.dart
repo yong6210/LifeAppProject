@@ -49,6 +49,11 @@ class Settings {
   /// `custom_mix` preserves manual slider values above.
   String sleepMixerPresetId = 'custom_mix';
 
+  // TODO: Replace hard-coded provider identifiers with enum/ID values loaded
+  // from the backup service configuration instead of embedding Korean labels.
+  // The default '자동' string is duplicated in multiple widgets and models, so
+  // localization patches cannot translate it and backend-driven provider
+  // metadata cannot flow through the settings store yet.
   String backupPreferredProvider = '자동';
 
   List<BackupLogEntry> backupHistory = [];
@@ -100,6 +105,10 @@ class BackupLogEntry {
   late DateTime timestamp;
   String action = 'backup';
   String status = 'success';
+  // TODO: Persist provider references as stable IDs rather than localized
+  // strings so that backup history entries stay consistent across locales.
+  // The status timeline will break once the provider list is localized or
+  // renamed remotely because entries currently save the literal '자동' label.
   String provider = '자동';
   int bytes = 0;
   String? errorMessage;

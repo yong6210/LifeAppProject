@@ -879,6 +879,12 @@ class FigmaHomeDashboard extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // TODO: Localize the analytics card copy and wire it to the
+                  // insights service once available instead of leaving English
+                  // placeholder strings. The dashboard still shows static text
+                  // ('View Statistics', 'Insights & trends') even when the
+                  // multi-language patch is enabled and no backend summary is
+                  // fetched.
                   const Text(
                     'View Statistics',
                     style: TextStyle(
@@ -923,6 +929,10 @@ class FigmaHomeDashboard extends ConsumerWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              // TODO: Replace hard-coded Korean routine labels and counters
+              // ('오늘의 루틴', '${routines.length}개', etc.) with localized text
+              // pulled from the routine configuration API so multilingual users
+              // see the correct copy and unit formatting.
               Text(
                 '오늘의 루틴',
                 style: theme.textTheme.titleLarge?.copyWith(
@@ -985,7 +995,11 @@ class FigmaHomeDashboard extends ConsumerWidget {
 
     return GlassCard(
       onTap: () {
-        // TODO: Start routine
+        // TODO: Hook this tap handler to the real routine player service and
+        // localize the confirmation toast instead of leaving a placeholder.
+        // Showing '${routine.name} 루틴 시작!' directly in code blocks the
+        // multi-language rollout and bypasses the routine automation backend
+        // that should orchestrate the start action.
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('${routine.name} 루틴 시작!'),

@@ -1,5 +1,10 @@
 import 'package:life_app/features/life_buddy/life_buddy_models.dart';
 
+// TODO: Load the decor catalog from a repository and localize all user-facing
+// copy instead of relying on this inline sample data.
+// The MVP keeps English names, descriptions, and pricing constants in code, so
+// it ignores localization settings and never reflects updated values from the
+// database or remote config.
 /// Sample decor catalog used for the Life Buddy MVP.
 const List<DecorItem> kDecorCatalog = [
   DecorItem(

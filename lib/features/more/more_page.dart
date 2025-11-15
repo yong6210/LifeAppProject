@@ -17,6 +17,11 @@ class MorePage extends ConsumerWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
+    // TODO: Localize the section headers and menu titles instead of embedding
+    // Korean copy directly in the widgets.
+    // Labels such as '더보기', '집중 & 휴식', and card titles bypass
+    // AppLocalizations, so the multilingual patch cannot translate or update
+    // them dynamically from the content source.
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
