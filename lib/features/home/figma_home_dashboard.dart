@@ -27,6 +27,8 @@ class FigmaHomeDashboard extends ConsumerWidget {
 
     final now = DateTime.now();
     final hour = now.hour;
+    // TODO(profile-data): Load the persisted display name for a personalized greeting.
+    // DB 또는 로컬 설정에 저장된 사용자 이름이 노출되지 않아 일반 인사말만 출력되고 있습니다.
     final greeting = hour < 12
         ? l10n.tr('home_dashboard_greeting_morning')
         : hour < 18
@@ -168,6 +170,8 @@ class FigmaHomeDashboard extends ConsumerWidget {
                     // TODO(routines-ui): Provide empty state widget when routines list is empty.
                     // 현재는 루틴이 없을 때 아무 UI도 렌더링되지 않아 사용자가 혼란을 겪을 수 있습니다.
                     if (routines.isNotEmpty) ...[
+                      // TODO(routines-data): Integrate routine completion metadata from the local session log.
+                      // 저장된 수행 이력과 연결되지 않아 사용자가 어느 루틴을 완료했는지 대시보드에서 파악하기 어렵습니다.
                       _buildRoutinesSection(
                         context: context,
                         routines: routines,
@@ -324,6 +328,8 @@ class FigmaHomeDashboard extends ConsumerWidget {
               ),
             ),
             child: Icon(
+              // TODO(profile-data): Swap with the user's profile avatar once account data is wired up.
+              // 계정 저장소에서 아바타 이미지를 불러오지 못해 기본 설정 아이콘만 반복 노출됩니다.
               Icons.settings_outlined,
               size: 18,
               color: Colors.white.withValues(alpha: 0.7),
@@ -897,6 +903,8 @@ class FigmaHomeDashboard extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // TODO(stats-data): Surface a real snapshot of today's stats summary from the repository.
+                  // 현재 CTA는 고정 문구만 보여 주고 있어 통계 DB의 실제 수치를 미리 확인할 수 없습니다.
                   const Text(
                     // TODO(l10n): Localize stats CTA title.
                     'View Statistics',
