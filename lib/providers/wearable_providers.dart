@@ -14,11 +14,19 @@ final wearableRepositoryProvider = Provider<WearableRepository>((ref) {
 
 WearableRepository _createRepository() {
   if (kIsWeb) {
+    // TODO(wearable-web): Replace the mock repository with a real web
+    // integration that syncs wearable data from the user's account.
+    // 현재는 웹 환경에서 웨어러블 요약을 DB/로컬 스토리지와 연동하지 못해
+    // 데모 데이터를 반환하는 MockWearableRepository만 사용합니다.
     return MockWearableRepository();
   }
   if (Platform.isIOS || Platform.isAndroid) {
     return HealthWearableRepository();
   }
+  // TODO(wearable-desktop): Implement desktop wearable support or disable the
+  // feature gracefully when no device link is available.
+  // 지금은 데스크톱 플랫폼에서도 실제 연동 없이 목업 리포지토리를 반환해
+  // 저장된 사용자 데이터와 동기화되지 않습니다.
   return MockWearableRepository();
 }
 
