@@ -169,6 +169,11 @@ class _BackupProviderOption {
   }
 }
 
+// TODO: Replace hard-coded provider display values with localized resources and
+// persisted identifiers from the backup data source.
+// The current list embeds Korean and English strings (예: '자동', 'Life App Vault')
+// directly in the UI, preventing proper multi-language support and backend
+// synchronization once real provider metadata is available.
 const _backupProviders = <_BackupProviderOption>[
   _BackupProviderOption(
     value: '자동',

@@ -13,6 +13,11 @@ class QuestStatusUiState {
   final bool showRetry;
 }
 
+// TODO: Move quest status strings into the localization bundle and drive them
+// from the quest backend instead of hard-coding Korean copy here.
+// The UI currently shows messages like '오늘 보상은 이미 받았어요.' directly in
+// code, which blocks internationalization and prevents dynamic messaging from
+// the database or remote configuration.
 QuestStatusUiState describeQuestStatus(AsyncValue<bool> questStatus) {
   return questStatus.when<QuestStatusUiState>(
     data: (value) => value
@@ -112,6 +117,11 @@ class QuestClaimButton extends StatelessWidget {
         child: CircularProgressIndicator(strokeWidth: 2.2),
       );
     } else if (isLoadingStatus) {
+      // TODO: Localize the loading caption and button labels shown during quest
+      // claim actions.
+      // These fallbacks ('상태 확인 중...', '일일 퀘스트 보상 받기') are embedded in
+      // the widget tree, so they won't honor the multi-language patch or any
+      // runtime text updates from product copy reviews.
       child = const Row(
         mainAxisSize: MainAxisSize.min,
         children: [
