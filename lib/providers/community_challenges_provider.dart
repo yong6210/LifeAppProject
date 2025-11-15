@@ -76,10 +76,19 @@ class CommunityChallengesNotifier extends Notifier<List<CommunityChallenge>> {
       goalMinutesPerDay: goalMinutes,
       privacy: privacy,
       status: ChallengeStatus.active,
+      // TODO(profile-data): Replace default "owner" identifier with the
+      // authenticated user's persisted id once challenge creation is wired to the
+      // account repository.
+      // 현재는 하드코딩된 식별자라 백엔드/로컬 사용자 데이터와 동기화되지 않습니다.
       ownerId: ownerId,
       members: [
         ChallengeMember(
           id: ownerId,
+          // TODO(profile-data): Populate displayName from the current account
+          // profile (and localize if needed) rather than the inline "You"
+          // placeholder.
+          // 현재는 영어 문구가 고정되어 있어 사용자 프로필 이름이나 번역을 반영하지
+          // 못합니다.
           displayName: 'You',
           focusMinutes: 0,
           joinedAt: start,

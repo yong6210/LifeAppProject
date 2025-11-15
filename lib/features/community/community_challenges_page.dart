@@ -272,6 +272,10 @@ class CommunityChallengesPage extends ConsumerWidget {
                 width: double.infinity,
                 child: FilledButton(
                   onPressed: () {
+                    // TODO(profile-data): Replace placeholder member identity with the
+                    // authenticated user's id and display name from the account store.
+                    // 현재는 임시로 생성된 식별자와 라벨을 사용해 DB/프로필 정보와
+                    // 연동되지 않습니다.
                     final member = ChallengeMember(
                       id: 'friend_${DateTime.now().millisecondsSinceEpoch}',
                       displayName: l10n.tr('community_join_you'),
@@ -680,6 +684,11 @@ class _ChallengeCard extends ConsumerWidget {
                 Expanded(
                   child: OutlinedButton(
                     onPressed: () {
+                      // TODO(profile-data): Replace the 'owner' stub with the current
+                      // account id once community membership is driven by persisted
+                      // user records.
+                      // 현재는 하드코딩된 'owner' 식별자를 사용해 실제 사용자 계정과
+                      // 연결되지 않습니다.
                       ref
                           .read(communityChallengesProvider.notifier)
                           .leave(challenge.id, 'owner');
@@ -691,6 +700,11 @@ class _ChallengeCard extends ConsumerWidget {
                 Expanded(
                   child: FilledButton(
                     onPressed: () {
+                      // TODO(profile-data): Swap hardcoded owner/member identifiers with
+                      // the signed-in user's persisted account id when wiring to real
+                      // community data.
+                      // 현재는 'owner' 문자열로 진행 상황을 업데이트하여 실제 사용자
+                      // 데이터와 동기화되지 않습니다.
                       ref
                           .read(communityChallengesProvider.notifier)
                           .updateProgress(

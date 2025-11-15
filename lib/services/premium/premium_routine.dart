@@ -50,6 +50,10 @@ class PremiumRoutineCatalog {
   }
 }
 
+// TODO(premium-content): Hydrate premium routine catalog from backend or
+// remote config instead of static inline definitions.
+// 현재는 프리미엄 루틴 구성이 코드에 고정되어 있어 DB/원격 설정의 최신 컨텐츠를
+// 불러오지 못합니다.
 const List<PremiumRoutine> _routines = [
   PremiumRoutine(
     id: 'focus_deep_work',
