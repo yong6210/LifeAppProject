@@ -373,6 +373,8 @@ const _defaultOnboardingPages = <Object>[
   _onboardingPersonaStep,
 ];
 
+// TODO(onboarding-data): Load persona presets from remote config/profile instead of static minutes.
+// 퍼소나별 세션 시간 구성이 코드에 박혀 있어 실험 및 사용자 데이터 기반 조정이 불가합니다.
 const _personaTemplates = <_PersonaTemplate>[
   _PersonaTemplate(
     titleKey: 'onboarding_persona_student_title',
