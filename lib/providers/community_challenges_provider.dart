@@ -22,6 +22,10 @@ class ChallengeTemplateInfo {
   final int defaultGoalMinutes;
 }
 
+// TODO(challenges-data): Fetch template catalog from backend/config store.
+// 템플릿 제목과 설명이 코드에 고정되어 있어 서버나 로컬 저장소의 최신 설정을 반영하지 못합니다.
+// TODO(l10n): Localize challenge template copy via l10n bundle.
+// 영문 텍스트가 직접 하드코딩되어 다국어 지원이 되지 않습니다.
 const templateCatalog = <ChallengeTemplate, ChallengeTemplateInfo>{
   ChallengeTemplate.focusSprint: ChallengeTemplateInfo(
     title: 'Focus Sprint',
@@ -165,6 +169,10 @@ class CommunityChallengesNotifier extends Notifier<List<CommunityChallenge>> {
   }
 }
 
+// TODO(challenges-data): Replace seeded challenges with repository-backed feed.
+// 현재는 목업 데이터만 반환하여 DB/로컬 스토리지의 실제 커뮤니티 챌린지를 불러오지 못합니다.
+// TODO(l10n): Externalize seeded challenge strings for translation.
+// 챌린지 제목과 설명이 영어 문구로 고정되어 있어 i18n 리소스를 사용할 수 없습니다.
 List<CommunityChallenge> _seedChallenges() {
   final now = DateTime.now();
   final random = Random(now.millisecondsSinceEpoch);
@@ -191,6 +199,10 @@ List<CommunityChallenge> _seedChallenges() {
       status: ChallengeStatus.active,
       ownerId: 'owner',
       members: [
+        // TODO(challenges-data): Populate participant list from actual member profiles.
+        // 시드 데이터가 고정된 닉네임과 진행도로 채워져 있어 사용자/친구 목록과 일치하지 않습니다.
+        // TODO(l10n): Localize participant display labels such as "You".
+        // 영어 닉네임이 고정되어 다른 언어 사용자에게 자연스럽지 않습니다.
         ChallengeMember(id: 'owner', displayName: 'You', focusMinutes: 60),
         ChallengeMember(
           id: 'friend_1',
