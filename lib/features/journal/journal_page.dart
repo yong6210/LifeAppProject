@@ -22,6 +22,8 @@ class JournalPage extends ConsumerStatefulWidget {
 class _JournalPageState extends ConsumerState<JournalPage> {
   final _formKey = GlobalKey<FormState>();
   final _notesController = TextEditingController();
+  // TODO(journal-prefill): Hydrate the default slider value from the most recent
+  // saved entry or personalized sleep target instead of hardcoding 7 hours.
   double _sleepHours = 7;
   String? _energyLevel;
   DateTime _entryDate = DateTime.now();
@@ -97,6 +99,8 @@ class _JournalPageState extends ConsumerState<JournalPage> {
                       ),
                     ),
                     const SizedBox(width: 12),
+                    // TODO(l10n): Localize the journal title once translations
+                    // are available instead of keeping this English string.
                     Text(
                       'Sleep & Mood Journal',
                       style: TextStyle(
@@ -150,6 +154,9 @@ class _JournalPageState extends ConsumerState<JournalPage> {
                             setState(() => _energyLevel = value),
                       ),
                       const SizedBox(height: 12),
+                      // TODO(journal-prefill): Replace the inline string with a
+                      // localized template that formats the user's preferred
+                      // duration units and pulls contextual defaults.
                       Text('Sleep hours: ${_sleepHours.toStringAsFixed(1)} h'),
                       Slider(
                         min: 0,
@@ -166,6 +173,8 @@ class _JournalPageState extends ConsumerState<JournalPage> {
                         minLines: 3,
                         maxLines: 6,
                         decoration: const InputDecoration(
+                          // TODO(l10n): Localize the optional notes label for
+                          // both the field label and supporting hints.
                           labelText: 'Notes (optional)',
                           border: OutlineInputBorder(),
                         ),
@@ -173,6 +182,8 @@ class _JournalPageState extends ConsumerState<JournalPage> {
                       const SizedBox(height: 20),
                       FilledButton(
                         onPressed: _submit,
+                        // TODO(l10n): Replace the hardcoded CTA label with a
+                        // localized string once the resource is defined.
                         child: const Text('Add entry'),
                       ),
                       const SizedBox(height: 24),
@@ -183,6 +194,7 @@ class _JournalPageState extends ConsumerState<JournalPage> {
                       _BuddyCommentCard(comment: commentAsync),
                       const SizedBox(height: 24),
                       const Divider(),
+                      // TODO(l10n): Localize the timeline section header.
                       Text(
                         'Timeline',
                         style: Theme.of(context).textTheme.titleMedium,
@@ -237,6 +249,8 @@ class _JournalPageState extends ConsumerState<JournalPage> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(content: Text('Entry saved')));
+    // TODO(l10n): Localize the save confirmation snackbar message and wire it
+    // up to the global notification pattern.
   }
 
   void _changeMonth(int offset) {
@@ -304,6 +318,9 @@ class _JournalPageState extends ConsumerState<JournalPage> {
     }
 
     if (mood == '무기력해요' || energy.contains('low')) {
+      // TODO(recommendations): Replace static suggestion copy with dynamic
+      // routines generated from the recommendation engine once data access is
+      // available.
       addSuggestion(
         title: '모닝 스트레칭 10분',
         description: '가벼운 전신 스트레칭으로 하루 에너지를 깨워보세요.',
@@ -312,6 +329,8 @@ class _JournalPageState extends ConsumerState<JournalPage> {
     }
 
     if (mood == '피곤해요' || entry.sleepHours < 6) {
+      // TODO(recommendations): Drive sleep recovery suggestions from saved
+      // program metadata instead of hardcoded routines.
       addSuggestion(
         title: '딥 릴랙스 수면 루틴',
         description: '취침 루틴에 깊은 릴랙스 사운드를 추가해 회복을 돕습니다.',
@@ -320,6 +339,8 @@ class _JournalPageState extends ConsumerState<JournalPage> {
     }
 
     if (mood == '걱정돼요' || notes.contains('걱정')) {
+      // TODO(recommendations): Pull mindfulness routine descriptions from the
+      // localized content feed.
       addSuggestion(
         title: '5분 호흡 명상',
         description: '잠들기 전 숨 고르기 루틴으로 마음을 안정시켜요.',
@@ -328,6 +349,8 @@ class _JournalPageState extends ConsumerState<JournalPage> {
     }
 
     if (notes.contains('야근') || notes.contains('overtime')) {
+      // TODO(recommendations): Use sentiment and schedule analytics instead of
+      // keyword matching to drive overtime recovery routines.
       addSuggestion(
         title: '퇴근 후 회복 루틴',
         description: '허리 스트레칭과 따뜻한 음료로 긴장을 풀어보세요.',
@@ -336,6 +359,8 @@ class _JournalPageState extends ConsumerState<JournalPage> {
     }
 
     if (suggestions.isEmpty) {
+      // TODO(recommendations): Provide a default routine sourced from the
+      // curated library once available from storage.
       addSuggestion(
         title: '오늘 하루 복기',
         description: '짧은 저널 프롬프트로 내일의 루틴을 정리해요.',
@@ -370,6 +395,7 @@ class _DatePickerField extends StatelessWidget {
       controller: controller,
       readOnly: true,
       decoration: const InputDecoration(
+        // TODO(l10n): Localize the entry date label text.
         labelText: 'Entry date',
         border: OutlineInputBorder(),
       ),
@@ -394,6 +420,8 @@ class _MoodChipSelector extends StatelessWidget {
   final String? value;
   final ValueChanged<String?> onChanged;
 
+  // TODO(journal-content): Source the mood options from the localized content
+  // catalog or profile configuration instead of maintaining a static list.
   static const _options = <String>[
     '좋아요',
     '뿌듯해요',
@@ -408,7 +436,9 @@ class _MoodChipSelector extends StatelessWidget {
     final theme = Theme.of(context);
     return FormField<String>(
       initialValue: value,
-      validator: (selection) => selection == null ? '오늘의 감정을 선택해 주세요' : null,
+      validator: (selection) =>
+          selection == null ? '오늘의 감정을 선택해 주세요' : null,
+      // TODO(l10n): Move the validation copy into the localization bundle.
       builder: (state) {
         if (state.value != value) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -421,6 +451,7 @@ class _MoodChipSelector extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // TODO(l10n): Localize the mood selector header.
             Text(
               '오늘의 기분',
               style: theme.textTheme.labelLarge?.copyWith(
@@ -472,10 +503,13 @@ class _EnergySelector extends StatelessWidget {
     return DropdownButtonFormField<String>(
       initialValue: value,
       decoration: const InputDecoration(
+        // TODO(l10n): Localize the energy selector label and helper text.
         labelText: 'Energy level',
         border: OutlineInputBorder(),
       ),
       items: const [
+        // TODO(journal-content): Fetch the energy scale options from stored
+        // configuration or remote content rather than inline English values.
         DropdownMenuItem(value: 'Low', child: Text('Low')),
         DropdownMenuItem(value: 'Balanced', child: Text('Balanced')),
         DropdownMenuItem(value: 'Energetic', child: Text('Energetic')),
@@ -501,6 +535,7 @@ class _TimelineSection extends StatelessWidget {
     return entries.when(
       data: (items) {
         if (items.isEmpty) {
+          // TODO(l10n): Move the empty timeline copy into localization files.
           return const Text('최근 기록이 없어요. 오늘 하루를 짧게 남겨볼까요?');
         }
         return Column(
@@ -517,6 +552,7 @@ class _TimelineSection extends StatelessWidget {
         );
       },
       error: (error, _) => Text(
+        // TODO(l10n): Localize the journal load failure message.
         '저널을 불러오지 못했어요. 잠시 후 다시 시도해 주세요.',
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
           color: Theme.of(context).colorScheme.error,
