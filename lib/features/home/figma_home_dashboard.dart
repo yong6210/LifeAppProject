@@ -52,7 +52,11 @@ class FigmaHomeDashboard extends ConsumerWidget {
 
     // Calculate progress
     final focusGoal = (settings?.focusMinutes ?? 25);
+    // TODO(settings-sync): Load workout goal from persisted settings once available.
+    // 현재는 30분으로 값이 고정되어 사용자의 실제 목표와 동기화되지 않습니다.
     final workoutGoal = 30;
+    // TODO(settings-sync): Read sleep goal hours from user preferences instead of fixed value.
+    // 수면 목표 역시 8시간으로 하드코딩되어 있어 개인화가 불가합니다.
     final sleepGoalHours = 8;
     final sleepGoalMinutes = sleepGoalHours * 60;
 
@@ -161,6 +165,8 @@ class FigmaHomeDashboard extends ConsumerWidget {
                     ),
                     const SizedBox(height: 20),
                     // Routines Section
+                    // TODO(routines-ui): Provide empty state widget when routines list is empty.
+                    // 현재는 루틴이 없을 때 아무 UI도 렌더링되지 않아 사용자가 혼란을 겪을 수 있습니다.
                     if (routines.isNotEmpty) ...[
                       _buildRoutinesSection(
                         context: context,
@@ -293,6 +299,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                 ),
                 const SizedBox(width: 6),
                 Text(
+                  // TODO(l10n): Localize "Life Buddy" brand label when translation guidance is available.
                   'Life Buddy',
                   style: TextStyle(
                     fontSize: 12,
@@ -355,6 +362,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                     ),
                     const SizedBox(width: 6),
                     Text(
+                      // TODO(l10n): Replace "TODAY" label with localized string resource.
                       'TODAY',
                       style: TextStyle(
                         fontSize: 11,
@@ -390,6 +398,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                     ),
                     const SizedBox(width: 4),
                     Text(
+                      // TODO(l10n): Localize percent suffix instead of direct '%'.
                       '%',
                       style: TextStyle(
                         fontSize: 20,
@@ -420,6 +429,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
               _buildMiniStat(
                 icon: Icons.local_fire_department,
                 value: streakDays.toString(),
+                // TODO(l10n): Provide localized "STREAK" label.
                 label: 'STREAK',
                 color: AppTheme.coral,
               ),
@@ -427,6 +437,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
               _buildMiniStat(
                 icon: Icons.emoji_events,
                 value: level.toString(),
+                // TODO(l10n): Provide localized "LEVEL" label.
                 label: 'LEVEL',
                 color: AppTheme.lime,
               ),
@@ -549,6 +560,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
             const Text(
+              // TODO(l10n): Replace hardcoded "Focus" title with localized copy.
               'Focus',
               style: TextStyle(
                 fontSize: 16,
@@ -572,6 +584,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                 ),
                 const SizedBox(width: 4),
                 Text(
+                  // TODO(l10n): Localize goal suffix and number formatting.
                   '/ $goal',
                   style: TextStyle(
                     fontSize: 13,
@@ -657,6 +670,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
             const Text(
+              // TODO(l10n): Replace hardcoded "Move" title with localized copy.
               'Move',
               style: TextStyle(
                 fontSize: 16,
@@ -680,6 +694,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                 ),
                 const SizedBox(width: 4),
                 Text(
+                  // TODO(l10n): Localize goal suffix and number formatting.
                   '/ $goal',
                   style: TextStyle(
                     fontSize: 13,
@@ -762,6 +777,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
+                    // TODO(l10n): Localize "Rest & Recovery" headline text.
                     'Rest & Recovery',
                     style: TextStyle(
                       fontSize: 18,
@@ -785,6 +801,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
+                        // TODO(l10n): Localize sleep goal suffix and pluralization.
                         '/ $goalHours hours',
                         style: TextStyle(
                           fontSize: 14,
@@ -811,6 +828,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
             Column(
               children: [
                 Text(
+                  // TODO(l10n): Localize percentage formatting for rest progress summary.
                   '${progress.round()}%',
                   style: TextStyle(
                     fontSize: 24,
@@ -880,6 +898,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
+                    // TODO(l10n): Localize stats CTA title.
                     'View Statistics',
                     style: TextStyle(
                       fontSize: 15,
@@ -888,6 +907,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                     ),
                   ),
                   Text(
+                    // TODO(l10n): Localize stats CTA subtitle.
                     'Insights & trends',
                     style: TextStyle(
                       fontSize: 12,
@@ -924,6 +944,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
+                // TODO(l10n): Extract "오늘의 루틴" to localization resources.
                 '오늘의 루틴',
                 style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.w700,
@@ -931,6 +952,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                 ),
               ),
               Text(
+                // TODO(l10n): Localize routine count summary and pluralization rules.
                 '${routines.length}개',
                 style: theme.textTheme.titleSmall?.copyWith(
                   color: AppTheme.eucalyptus,
