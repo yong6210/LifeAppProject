@@ -32,6 +32,8 @@ class FigmaTimerTab extends ConsumerStatefulWidget {
 
 class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
     with SingleTickerProviderStateMixin {
+  // TODO(timer-presets): Load focus timer presets from repository or remote config instead of hardcoding.
+  // 현재 프리셋 구성이 코드에 직접 박혀 있어 DB/로컬 설정에서 관리되는 사용자 정의 값을 반영하지 못합니다.
   static const presets = [
     TimerPreset(id: '1', name: 'Focus Boost', duration: 25, emoji: '⚡'),
     TimerPreset(id: '2', name: 'Quick Reset', duration: 5, emoji: '🌊'),
@@ -39,6 +41,8 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
     TimerPreset(id: '4', name: 'Power Hour', duration: 60, emoji: '🚀'),
   ];
 
+  // TODO(timer-presets): Restore the last-used preset from persisted timer preferences.
+  // 사용자가 이전에 선택한 모드는 저장소에서 불러오지 않아 매번 기본값으로 초기화됩니다.
   TimerPreset _selectedPreset = presets[0];
   late AnimationController _glowController;
 
@@ -237,6 +241,8 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                           ),
                           const SizedBox(width: 8),
                           Text(
+                            // TODO(timer-copy): Source badge title from localized copy or configuration.
+                            // 디자인 문구가 고정되어 있어 다국어/콘텐츠 업데이트가 불가합니다.
                             'Neural Focus',
                             style: theme.textTheme.titleSmall?.copyWith(
                               fontWeight: FontWeight.w600,
@@ -269,6 +275,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                     ),
                     const SizedBox(height: 4),
                     Text(
+                      // TODO(l10n): Localize duration label instead of interpolating English copy.
                       '${_selectedPreset.duration} min session',
                       style: theme.textTheme.titleMedium?.copyWith(
                         color: isDark
@@ -334,6 +341,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                             ),
                             const SizedBox(height: 8),
                             Text(
+                              // TODO(l10n): Localize focus status banner text.
                               isRunning
                                   ? '⚡ Focus Mode Active'
                                   : 'Ready to focus',
@@ -409,7 +417,8 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                         // Stats button
                         GlassCard(
                           onTap: () {
-                            // Open stats or insights
+                            // TODO(timer-insights): Connect to the timer insights/history page when analytics is ready.
+                            // 통계 화면이 구현되지 않아 버튼이 아무 동작도 하지 않습니다.
                           },
                           padding: const EdgeInsets.all(14),
                           borderRadius: 16,
@@ -488,6 +497,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                               ),
                               const SizedBox(height: 2),
                               Text(
+                                // TODO(l10n): Localize preset duration label and pluralization.
                                 '${preset.duration} minutes',
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: isDark
@@ -518,6 +528,8 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
+                                  // TODO(timer-content): Fetch the focus tip headline from the wellbeing content repository.
+                                  // 콘텐츠가 코드에 상수로 남아 있어 운영자가 교체할 수 없습니다.
                                   'Neural Boost Active',
                                   style: theme.textTheme.titleMedium?.copyWith(
                                     fontWeight: FontWeight.w700,
@@ -528,6 +540,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
+                                  // TODO(timer-content): Replace hardcoded focus coaching message with localized dynamic content.
                                   'Your brain works best in focused bursts. Eliminate distractions and let your mind enter the flow state. Deep work creates neural pathways that make you smarter!',
                                   style: theme.textTheme.bodyMedium?.copyWith(
                                     color: isDark
