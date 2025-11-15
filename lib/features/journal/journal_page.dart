@@ -248,7 +248,13 @@ class _JournalPageState extends ConsumerState<JournalPage> {
     });
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('Entry saved')));
+    ).showSnackBar(
+      const SnackBar(
+        // TODO(l10n): Translate the entry saved confirmation once the journal
+        // notification strings are added to the localization bundle.
+        content: Text('Entry saved'),
+      ),
+    );
     // TODO(l10n): Localize the save confirmation snackbar message and wire it
     // up to the global notification pattern.
   }
@@ -536,7 +542,11 @@ class _TimelineSection extends StatelessWidget {
       data: (items) {
         if (items.isEmpty) {
           // TODO(l10n): Move the empty timeline copy into localization files.
-          return const Text('최근 기록이 없어요. 오늘 하루를 짧게 남겨볼까요?');
+          return const Text(
+            // TODO(l10n): Provide a localized empty timeline prompt for users
+            // without recent entries.
+            '최근 기록이 없어요. 오늘 하루를 짧게 남겨볼까요?'
+          );
         }
         return Column(
           children: [
@@ -711,7 +721,10 @@ class _JournalCalendar extends StatelessWidget {
                     }
 
                     return Tooltip(
-                      message: entry?.mood ?? '기록 없음',
+                      message: entry?.mood ??
+                          // TODO(l10n): Move the missing record tooltip copy
+                          // into the localization resources.
+                          '기록 없음',
                       triggerMode: entry != null
                           ? TooltipTriggerMode.longPress
                           : TooltipTriggerMode.tap,
@@ -1380,11 +1393,23 @@ class _SleepConsistencyBanner extends StatelessWidget {
         final needsAttention =
             value.averageSleepHours < 7 || value.sleepConsistencyScore < 70;
         final headline = needsAttention
-            ? '수면 패턴을 조금 더 안정시켜봐요'
-            : '수면 루틴이 안정적으로 유지되고 있어요';
+            ?
+            // TODO(l10n): Localize the sleep improvement headline and surface
+            // it from the adaptive coaching copy platform.
+            '수면 패턴을 조금 더 안정시켜봐요'
+            :
+            // TODO(l10n): Localize the balanced sleep headline and personalize
+            // it with the member's name once profile data is accessible.
+            '수면 루틴이 안정적으로 유지되고 있어요';
         final subtitle = needsAttention
-            ? '최근 기록 중 7시간 이상 잔 날이 ${value.restorativeNights}일뿐이에요. 잠들기 전 루틴을 정리해 보세요.'
-            : '최근 기록 중 7시간 이상 잔 날이 ${value.restorativeNights}일이에요. 지금의 리듬을 계속 이어가요!';
+            ?
+            // TODO(l10n): Localize the restorative sleep encouragement copy and
+            // inject dynamic thresholds from personalization settings.
+            '최근 기록 중 7시간 이상 잔 날이 ${value.restorativeNights}일뿐이에요. 잠들기 전 루틴을 정리해 보세요.'
+            :
+            // TODO(l10n): Localize the positive reinforcement copy for sleep
+            // consistency summaries.
+            '최근 기록 중 7시간 이상 잔 날이 ${value.restorativeNights}일이에요. 지금의 리듬을 계속 이어가요!';
         final chipText =
             '일관성 점수 ${value.sleepConsistencyScore.toStringAsFixed(0)}점';
         final backgroundColor = needsAttention
@@ -1475,24 +1500,50 @@ class _MonthlyRecapCard extends StatelessWidget {
         final buffer = StringBuffer();
         final averageSleep = value.averageSleepHours.toStringAsFixed(1);
         final streakLine = value.streakDays > 1
-            ? '${value.streakDays}일 연속으로 저널을 남겼어요!'
-            : '오늘 기록을 남기면 새로운 연속 기록이 시작돼요.';
+            ?
+            // TODO(l10n): Localize the streak encouragement copy and include
+            // personalization tokens.
+            '${value.streakDays}일 연속으로 저널을 남겼어요!'
+            :
+            // TODO(l10n): Localize the call-to-action for starting a new
+            // journaling streak.
+            '오늘 기록을 남기면 새로운 연속 기록이 시작돼요.';
         final moodLine = value.commonMood != null
-            ? '이번 달에는 "${value.commonMood}" 느낌을 가장 자주 남겼네요.'
-            : '감정 키워드를 기록하면 다음 리캡에서 더 많이 도와줄 수 있어요.';
+            ?
+            // TODO(l10n): Move the mood recap copy to localization files and
+            // render using the localized mood names.
+            '이번 달에는 "${value.commonMood}" 느낌을 가장 자주 남겼네요.'
+            :
+            // TODO(l10n): Localize the prompt encouraging mood tagging.
+            '감정 키워드를 기록하면 다음 리캡에서 더 많이 도와줄 수 있어요.';
         final energyLine = value.dominantEnergy != null
-            ? '에너지 레벨은 ${value.dominantEnergy} 상태가 가장 많았어요.'
-            : '에너지 레벨도 선택해 두면 맞춤 제안을 준비할 수 있어요.';
+            ?
+            // TODO(l10n): Localize the energy recap copy and normalize units
+            // according to the member's locale.
+            '에너지 레벨은 ${value.dominantEnergy} 상태가 가장 많았어요.'
+            :
+            // TODO(l10n): Localize the guidance for capturing energy levels.
+            '에너지 레벨도 선택해 두면 맞춤 제안을 준비할 수 있어요.';
         final lastEntryDate = DateFormat.yMMMMd().format(
           value.latestEntry.date,
         );
         final consistencyLine =
+            // TODO(l10n): Localize the sleep consistency summary and align the
+            // scoring scale with analytics definitions.
             '수면 일관성 점수는 ${value.sleepConsistencyScore.toStringAsFixed(0)}점이에요.';
         final restorativeLine =
+            // TODO(l10n): Localize the restorative sleep summary and surface
+            // user-specific thresholds instead of fixed seven-hour targets.
             '7시간 이상 잔 날은 총 ${value.restorativeNights}일이었어요.';
         buffer
-          ..writeln('지난 30일 동안 평균 수면은 $averageSleep시간이었어요.')
           ..writeln(
+            // TODO(l10n): Localize the rolling 30-day sleep average summary and
+            // adjust the window based on plan configuration.
+            '지난 30일 동안 평균 수면은 $averageSleep시간이었어요.',
+          )
+          ..writeln(
+            // TODO(l10n): Localize the weekly entry summary and format dates via
+            // the localization utilities instead of DateFormat directly.
             '이번 주에는 ${value.entriesThisWeek}일 기록했고, 마지막 기록은 $lastEntryDate 기준이에요.',
           )
           ..writeln(streakLine)
@@ -1515,6 +1566,8 @@ class _MonthlyRecapCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
+                  // TODO(l10n): Localize the monthly recap heading and align it
+                  // with the naming used in the insights section.
                   '월간 리캡',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w700,
@@ -1527,6 +1580,9 @@ class _MonthlyRecapCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 Text(
+                  // TODO(l10n): Move the free plan limitation description into
+                  // localized marketing copy and sync with actual plan
+                  // entitlements.
                   '무료 플랜은 최근 30일 데이터를 기준으로 요약해요. 더 상세한 그래프는 곧 만나볼 수 있어요!',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -1632,6 +1688,8 @@ class _EmptyRecapMessage extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Text(
+          // TODO(l10n): Localize the empty recap helper text and align the 30-day
+          // requirement with the actual recap generation logic.
           '월간 리캡은 최근 30일 동안 기록을 남기면 자동으로 만들어져요.',
           style: Theme.of(context).textTheme.bodyMedium,
         ),
