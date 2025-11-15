@@ -119,6 +119,10 @@ class MockCalendarAutomationService implements CalendarAutomationService {
     required DateTime end,
   }) async {
     final now = DateTime.now();
+    // TODO(calendar-mock-data): Replace the inline demo event with data loaded
+    // from the connected calendar service and localized resources.
+    // 현재는 'Team sync'와 같은 영어 문자열을 하드 코딩하여 실제 일정이나
+    // 다국어 캘린더 데이터가 표시되지 않습니다.
     return [
       CalendarEvent(
         id: 'demo-focus-sync',
@@ -136,10 +140,18 @@ class MockCalendarAutomationService implements CalendarAutomationService {
 
 CalendarAutomationService createCalendarAutomationService() {
   if (kIsWeb) {
+    // TODO(calendar-web): Implement a web calendar bridge instead of falling
+    // back to the mock service.
+    // 웹 빌드에서는 아직 권한/캘린더 연동이 없어 더미 데이터를 반환하는
+    // MockCalendarAutomationService만 사용됩니다.
     return MockCalendarAutomationService();
   }
   if (Platform.isIOS || Platform.isAndroid) {
     return MethodChannelCalendarAutomationService();
   }
+  // TODO(calendar-desktop): Provide desktop calendar integration or disable
+  // the feature gracefully when no provider is configured.
+  // 현재 데스크톱 플랫폼에서는 실제 캘린더 앱과의 연결이나 로컬 데이터
+  // 로딩이 구현되지 않아 Mock 서비스만 동작합니다.
   return MockCalendarAutomationService();
 }

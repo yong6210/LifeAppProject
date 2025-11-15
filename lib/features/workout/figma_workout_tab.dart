@@ -101,6 +101,7 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
     final emoji = WorkoutPresetUI.getEmoji(preset);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
+        // TODO(l10n): Localize workout start confirmation message.
         content: Text('$emoji Workout started! 💪'),
         backgroundColor: AppTheme.coral,
         behavior: SnackBarBehavior.floating,
@@ -144,6 +145,8 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
       orElse: () => 0,
     );
 
+    // TODO(settings-sync): Replace 30-minute baseline with the user's configured workout goal.
+    // 운동 목표 시간이 하드코딩되어 있어 DB/설정 값과 일치하지 않습니다.
     final progressPercent = (todayWorkoutMinutes / 30 * 100).clamp(0, 100);
 
     return Scaffold(
@@ -257,6 +260,7 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                           ),
                           const SizedBox(width: 8),
                           Text(
+                            // TODO(workout-copy): Load badge title from localization or CMS.
                             'Energy Flow',
                             style: theme.textTheme.titleSmall?.copyWith(
                               fontWeight: FontWeight.w600,
@@ -287,6 +291,7 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                     ),
                     const SizedBox(height: 4),
                     Text(
+                      // TODO(workout-copy): Replace motivational subtitle with localized dynamic copy.
                       'Feel the energy ⚡',
                       style: theme.textTheme.titleMedium?.copyWith(
                         color: isDark
@@ -329,6 +334,7 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
+                                      // TODO(workout-copy): Localize Energy Bank label.
                                       'Energy Bank',
                                       style: theme.textTheme.titleLarge
                                           ?.copyWith(
@@ -340,6 +346,7 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
+                                      // TODO(settings-sync): Format workout summary against stored target minutes.
                                       '$todayWorkoutMinutes / 30 min',
                                       style: theme.textTheme.bodyMedium
                                           ?.copyWith(
@@ -355,6 +362,7 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                 ),
                               ),
                               Text(
+                                // TODO(l10n): Localize percentage suffix/formatting.
                                 '${progressPercent.round()}%',
                                 style: theme.textTheme.displaySmall?.copyWith(
                                   fontWeight: FontWeight.w700,
@@ -457,6 +465,7 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: Text(
+                                    // TODO(l10n): Localize workout in-progress banner.
                                     '⚡ Workout In Progress',
                                     style: theme.textTheme.titleMedium
                                         ?.copyWith(
@@ -515,6 +524,7 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                         ),
                                         const SizedBox(width: 8),
                                         Text(
+                                          // TODO(l10n): Localize workout pause label.
                                           'Pause',
                                           style: theme.textTheme.titleSmall
                                               ?.copyWith(
@@ -549,6 +559,7 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                         ),
                                         const SizedBox(width: 8),
                                         Text(
+                                          // TODO(l10n): Localize workout stop label.
                                           'Stop',
                                           style: theme.textTheme.titleSmall
                                               ?.copyWith(
@@ -702,6 +713,7 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                                     BorderRadius.circular(12),
                                               ),
                                               child: Text(
+                                                // TODO(l10n): Localize workout duration badge and units.
                                                 '${preset.totalMinutes} min',
                                                 style: theme
                                                     .textTheme
@@ -805,6 +817,7 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                           ),
                                           const SizedBox(width: 8),
                                           Text(
+                                            // TODO(l10n): Localize start workout CTA.
                                             'Start Workout',
                                             style: theme.textTheme.titleMedium
                                                 ?.copyWith(
@@ -837,6 +850,7 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
+                                  // TODO(workout-content): Load energy tip headline from content service.
                                   'Energy Surge!',
                                   style: theme.textTheme.titleMedium?.copyWith(
                                     fontWeight: FontWeight.w700,
@@ -847,6 +861,7 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
+                                  // TODO(workout-content): Replace hardcoded tip body with localized dynamic guidance.
                                   'Movement releases endorphins and boosts your metabolism for hours! Even 10 minutes of exercise can increase your energy levels by 20%. Let\'s move! 🚀',
                                   style: theme.textTheme.bodyMedium?.copyWith(
                                     color: isDark

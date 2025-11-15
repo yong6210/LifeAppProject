@@ -1,6 +1,10 @@
 import 'package:life_app/features/life_buddy/life_buddy_models.dart';
 
 /// Sample decor catalog used for the Life Buddy MVP.
+// TODO(life-buddy-data): Replace static catalog with repository-backed items.
+// 현재는 장식 데이터가 코드에 고정되어 있어 DB/원격 설정의 최신 내용과 동기화되지 않습니다.
+// TODO(l10n): Move decor item copy into localized resources before launch.
+// 아이템 이름과 설명이 영문으로 하드코딩되어 다국어 번역을 적용할 수 없습니다.
 const List<DecorItem> kDecorCatalog = [
   DecorItem(
     id: 'bed_basic',

@@ -33,6 +33,8 @@ class FigmaSleepTab extends ConsumerStatefulWidget {
 
 class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
     with TickerProviderStateMixin {
+  // TODO(sleep-presets): Fetch sound presets from the meditation content store instead of hardcoding.
+  // 수면 사운드 구성이 코드에 상수로 남아 있어 DB/로컬 데이터 변경 사항을 반영하지 못합니다.
   static const soundPresets = [
     SoundPreset(
       id: 'rain',
@@ -60,9 +62,15 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
     ),
   ];
 
+  // TODO(sleep-presets): Restore last-used sleep sound from persisted settings.
+  // 사용자가 선택한 사운드가 저장되지 않아 항상 기본값으로 초기화됩니다.
   SoundPreset _selectedSound = soundPresets[0];
+  // TODO(sleep-settings): Load saved volume preference from local storage.
+  // 수면 볼륨이 60으로 고정되어 사용자 환경 설정을 반영하지 못합니다.
   double _volume = 60;
   bool _isPlaying = false;
+  // TODO(sleep-settings): Populate duration from the user's saved sleep timer preference.
+  // 타이머 길이가 30분으로 고정되어 개인화된 목표와 동기화되지 않습니다.
   int _duration = 30; // minutes
 
   late List<AnimationController> _starControllers;
@@ -114,6 +122,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
+          // TODO(l10n): Localize sleep mode activation message.
           content: Text(
             '🌙 Sleep mode activated - Drift into peaceful dreams with ${_selectedSound.name}',
           ),
@@ -138,6 +147,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
+          // TODO(l10n): Localize database unavailable warning.
           content: Text('Database not ready. Please try again.'),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
@@ -167,6 +177,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
+          // TODO(l10n): Localize sleep log success toast.
           content: Text('💤 Rest logged! Sweet dreams! Recovery is progress.'),
           backgroundColor: AppTheme.electricViolet,
           behavior: SnackBarBehavior.floating,
@@ -176,6 +187,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
+          // TODO(l10n): Localize and polish error toast messaging.
           content: Text('Error saving sleep: $e'),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
@@ -198,6 +210,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
 
     final sleepHours = todaySleepMinutes ~/ 60;
     final sleepMins = todaySleepMinutes % 60;
+    // TODO(settings-sync): Use the user's configured sleep goal instead of assuming 8 hours (480 minutes).
+    // 수면 목표가 고정값 8시간으로 계산되어 개인별 목표와 동기화되지 않습니다.
     final sleepPercent = (todaySleepMinutes / 480 * 100).clamp(0, 100);
     final random = math.Random(42); // Seeded for consistent star positions
 
@@ -340,6 +354,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                           ),
                           const SizedBox(width: 8),
                           Text(
+                            // TODO(sleep-copy): Localize or fetch badge title from content configuration.
                             'Cosmic Dreams',
                             style: theme.textTheme.titleSmall?.copyWith(
                               fontWeight: FontWeight.w600,
@@ -363,6 +378,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                         colors: [AppTheme.electricViolet, Colors.pink],
                       ).createShader(bounds),
                       child: Text(
+                        // TODO(sleep-copy): Localize sleep headline text.
                         'Rest & Recharge',
                         style: theme.textTheme.headlineLarge?.copyWith(
                           fontWeight: FontWeight.w700,
@@ -372,6 +388,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                     ),
                     const SizedBox(height: 4),
                     Text(
+                      // TODO(sleep-copy): Replace hero subtitle with localized dynamic copy.
                       'Journey to the stars ✨',
                       style: theme.textTheme.titleMedium?.copyWith(
                         color: isDark
@@ -414,6 +431,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
+                                      // TODO(sleep-copy): Localize Dream Bank title.
                                       'Dream Bank',
                                       style: theme.textTheme.titleLarge
                                           ?.copyWith(
@@ -425,6 +443,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
+                                      // TODO(settings-sync): Display sleep progress against user goal hours instead of fixed 8h.
                                       '${sleepHours}h ${sleepMins}m / 8h',
                                       style: theme.textTheme.bodyMedium
                                           ?.copyWith(
@@ -439,6 +458,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                 ),
                               ),
                               Text(
+                                // TODO(l10n): Localize percentage suffix/formatting.
                                 '${sleepPercent.round()}%',
                                 style: theme.textTheme.displaySmall?.copyWith(
                                   fontWeight: FontWeight.w700,
@@ -504,6 +524,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                               ),
                               const SizedBox(width: 8),
                               Text(
+                                // TODO(sleep-copy): Localize duration selector label.
                                 'Dream Duration',
                                 style: theme.textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.w700,
@@ -516,6 +537,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                           ),
                           const SizedBox(height: 16),
                           Row(
+                            // TODO(sleep-settings): Replace hardcoded duration options with values from settings or remote config.
+                            // 시간 선택지가 코드에 고정돼 있어 백엔드에서 조정할 수 없습니다.
                             children: [10, 20, 30, 60].map((mins) {
                               final isSelected = _duration == mins;
                               return Expanded(
@@ -569,7 +592,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                             setState(() => _duration = mins),
                                         borderRadius: BorderRadius.circular(12),
                                         child: Center(
-                                          child: Text(
+                                      child: Text(
+                                            // TODO(l10n): Localize duration chip label and units.
                                             '${mins}m',
                                             style: theme.textTheme.titleSmall
                                                 ?.copyWith(
@@ -610,6 +634,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                               ),
                               const SizedBox(width: 8),
                               Text(
+                                // TODO(sleep-copy): Localize ambient sounds section title.
                                 'Ambient Sounds',
                                 style: theme.textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.w700,
@@ -724,8 +749,9 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                         : AppTheme.electricViolet,
                                   ),
                                   const SizedBox(width: 8),
-                                  Text(
-                                    'Volume',
+                              Text(
+                                // TODO(sleep-copy): Localize volume label.
+                                'Volume',
                                     style: theme.textTheme.titleMedium
                                         ?.copyWith(
                                           fontWeight: FontWeight.w700,
@@ -737,6 +763,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                 ],
                               ),
                               Text(
+                                // TODO(l10n): Localize volume percentage formatting.
                                 '${_volume.round()}%',
                                 style: theme.textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.w700,
@@ -772,6 +799,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
+                                // TODO(l10n): Localize quiet volume label.
                                 'Whisper',
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: isDark
@@ -783,6 +811,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                 ),
                               ),
                               Text(
+                                // TODO(l10n): Localize ideal volume label.
                                 'Perfect',
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: isDark
@@ -833,6 +862,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                           borderRadius: BorderRadius.circular(16),
                           child: Center(
                             child: Text(
+                              // TODO(l10n): Localize sleep primary CTA labels.
                               _isPlaying
                                   ? 'Stop Session'
                                   : 'Begin Dream Journey',
@@ -854,6 +884,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                         borderRadius: 12,
                         child: Center(
                           child: Text(
+                            // TODO(l10n): Localize quick log CTA label.
                             'Log Sleep Now',
                             style: theme.textTheme.titleMedium?.copyWith(
                               color: AppTheme.electricViolet,
@@ -881,6 +912,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
+                                      // TODO(sleep-content): Fetch sleep wisdom title from content repository.
                                       'Sleep Science',
                                       style: theme.textTheme.titleMedium
                                           ?.copyWith(
@@ -892,6 +924,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
+                                      // TODO(sleep-content): Replace hardcoded sleep education copy with localized managed content.
                                       'Quality sleep is when your body repairs muscles, consolidates memories, and balances hormones. The cosmic sounds help your brain enter deeper sleep stages naturally. ✨',
                                       style: theme.textTheme.bodyMedium
                                           ?.copyWith(
@@ -912,6 +945,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                           ),
                           const SizedBox(height: 12),
                           ...[
+                            // TODO(sleep-content): Pull actionable tips from the wellness content API.
                             '🌙 Cool, dark room = better sleep',
                             '✨ No screens 1 hour before bed',
                             '🌟 Consistent sleep schedule helps',

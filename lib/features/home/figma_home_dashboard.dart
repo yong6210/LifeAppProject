@@ -27,6 +27,8 @@ class FigmaHomeDashboard extends ConsumerWidget {
 
     final now = DateTime.now();
     final hour = now.hour;
+    // TODO(profile-data): Load the persisted display name for a personalized greeting.
+    // DB 또는 로컬 설정에 저장된 사용자 이름이 노출되지 않아 일반 인사말만 출력되고 있습니다.
     final greeting = hour < 12
         ? l10n.tr('home_dashboard_greeting_morning')
         : hour < 18
@@ -52,7 +54,11 @@ class FigmaHomeDashboard extends ConsumerWidget {
 
     // Calculate progress
     final focusGoal = (settings?.focusMinutes ?? 25);
+    // TODO(settings-sync): Load workout goal from persisted settings once available.
+    // 현재는 30분으로 값이 고정되어 사용자의 실제 목표와 동기화되지 않습니다.
     final workoutGoal = 30;
+    // TODO(settings-sync): Read sleep goal hours from user preferences instead of fixed value.
+    // 수면 목표 역시 8시간으로 하드코딩되어 있어 개인화가 불가합니다.
     final sleepGoalHours = 8;
     final sleepGoalMinutes = sleepGoalHours * 60;
 
@@ -161,7 +167,11 @@ class FigmaHomeDashboard extends ConsumerWidget {
                     ),
                     const SizedBox(height: 20),
                     // Routines Section
+                    // TODO(routines-ui): Provide empty state widget when routines list is empty.
+                    // 현재는 루틴이 없을 때 아무 UI도 렌더링되지 않아 사용자가 혼란을 겪을 수 있습니다.
                     if (routines.isNotEmpty) ...[
+                      // TODO(routines-data): Integrate routine completion metadata from the local session log.
+                      // 저장된 수행 이력과 연결되지 않아 사용자가 어느 루틴을 완료했는지 대시보드에서 파악하기 어렵습니다.
                       _buildRoutinesSection(
                         context: context,
                         routines: routines,
@@ -293,6 +303,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                 ),
                 const SizedBox(width: 6),
                 Text(
+                  // TODO(l10n): Localize "Life Buddy" brand label when translation guidance is available.
                   'Life Buddy',
                   style: TextStyle(
                     fontSize: 12,
@@ -317,6 +328,8 @@ class FigmaHomeDashboard extends ConsumerWidget {
               ),
             ),
             child: Icon(
+              // TODO(profile-data): Swap with the user's profile avatar once account data is wired up.
+              // 계정 저장소에서 아바타 이미지를 불러오지 못해 기본 설정 아이콘만 반복 노출됩니다.
               Icons.settings_outlined,
               size: 18,
               color: Colors.white.withValues(alpha: 0.7),
@@ -355,6 +368,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                     ),
                     const SizedBox(width: 6),
                     Text(
+                      // TODO(l10n): Replace "TODAY" label with localized string resource.
                       'TODAY',
                       style: TextStyle(
                         fontSize: 11,
@@ -390,6 +404,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                     ),
                     const SizedBox(width: 4),
                     Text(
+                      // TODO(l10n): Localize percent suffix instead of direct '%'.
                       '%',
                       style: TextStyle(
                         fontSize: 20,
@@ -420,6 +435,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
               _buildMiniStat(
                 icon: Icons.local_fire_department,
                 value: streakDays.toString(),
+                // TODO(l10n): Provide localized "STREAK" label.
                 label: 'STREAK',
                 color: AppTheme.coral,
               ),
@@ -427,6 +443,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
               _buildMiniStat(
                 icon: Icons.emoji_events,
                 value: level.toString(),
+                // TODO(l10n): Provide localized "LEVEL" label.
                 label: 'LEVEL',
                 color: AppTheme.lime,
               ),
@@ -549,6 +566,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
             const Text(
+              // TODO(l10n): Replace hardcoded "Focus" title with localized copy.
               'Focus',
               style: TextStyle(
                 fontSize: 16,
@@ -572,6 +590,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                 ),
                 const SizedBox(width: 4),
                 Text(
+                  // TODO(l10n): Localize goal suffix and number formatting.
                   '/ $goal',
                   style: TextStyle(
                     fontSize: 13,
@@ -657,6 +676,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
             const Text(
+              // TODO(l10n): Replace hardcoded "Move" title with localized copy.
               'Move',
               style: TextStyle(
                 fontSize: 16,
@@ -680,6 +700,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                 ),
                 const SizedBox(width: 4),
                 Text(
+                  // TODO(l10n): Localize goal suffix and number formatting.
                   '/ $goal',
                   style: TextStyle(
                     fontSize: 13,
@@ -762,6 +783,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
+                    // TODO(l10n): Localize "Rest & Recovery" headline text.
                     'Rest & Recovery',
                     style: TextStyle(
                       fontSize: 18,
@@ -785,6 +807,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
+                        // TODO(l10n): Localize sleep goal suffix and pluralization.
                         '/ $goalHours hours',
                         style: TextStyle(
                           fontSize: 14,
@@ -811,6 +834,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
             Column(
               children: [
                 Text(
+                  // TODO(l10n): Localize percentage formatting for rest progress summary.
                   '${progress.round()}%',
                   style: TextStyle(
                     fontSize: 24,
@@ -879,7 +903,10 @@ class FigmaHomeDashboard extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // TODO(stats-data): Surface a real snapshot of today's stats summary from the repository.
+                  // 현재 CTA는 고정 문구만 보여 주고 있어 통계 DB의 실제 수치를 미리 확인할 수 없습니다.
                   const Text(
+                    // TODO(l10n): Localize stats CTA title.
                     'View Statistics',
                     style: TextStyle(
                       fontSize: 15,
@@ -888,6 +915,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                     ),
                   ),
                   Text(
+                    // TODO(l10n): Localize stats CTA subtitle.
                     'Insights & trends',
                     style: TextStyle(
                       fontSize: 12,
@@ -924,6 +952,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
+                // TODO(l10n): Extract "오늘의 루틴" to localization resources.
                 '오늘의 루틴',
                 style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.w700,
@@ -931,6 +960,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                 ),
               ),
               Text(
+                // TODO(l10n): Localize routine count summary and pluralization rules.
                 '${routines.length}개',
                 style: theme.textTheme.titleSmall?.copyWith(
                   color: AppTheme.eucalyptus,
@@ -985,9 +1015,12 @@ class FigmaHomeDashboard extends ConsumerWidget {
 
     return GlassCard(
       onTap: () {
-        // TODO: Start routine
+        // TODO(routine-start): Implement actual routine launch flow.
+        // 현재는 루틴 실행 기능이 연결되지 않아 알림용 스낵바만 노출됩니다.
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
+            // TODO(l10n): Localize the routine start confirmation message.
+            // 다국어 리소스가 준비되지 않아 한국어 문구가 직접 하드코딩돼 있습니다.
             content: Text('${routine.name} 루틴 시작!'),
             backgroundColor: color,
             behavior: SnackBarBehavior.floating,
@@ -1043,6 +1076,8 @@ class FigmaHomeDashboard extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
+                    // TODO(l10n): Replace with localized step count label.
+                    // 현재는 영어 문구 "steps"가 문자열로 고정되어 있습니다.
                     '${routine.steps.length} steps',
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: Colors.white,
@@ -1070,6 +1105,8 @@ class FigmaHomeDashboard extends ConsumerWidget {
                 Icon(Icons.timer_outlined, size: 16, color: color),
                 const SizedBox(width: 4),
                 Text(
+                  // TODO(l10n): Extract the duration suffix into localization files.
+                  // 분 단위 표기를 문자열로 직접 더하고 있어 언어별 처리가 불가합니다.
                   '$totalMinutes분',
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: color,

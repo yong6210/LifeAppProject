@@ -258,6 +258,8 @@ class _TotalsCard extends StatelessWidget {
                                   : theme.colorScheme.onSurface,
                             ),
                           ),
+                          // TODO(l10n): Move total label into localization resources.
+                          // 활동 합계 라벨이 영어로만 노출되어 다국어 지원이 되지 않습니다.
                           Text(
                             'Total',
                             style: TextStyle(

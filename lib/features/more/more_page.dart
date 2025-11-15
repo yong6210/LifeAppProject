@@ -40,6 +40,8 @@ class MorePage extends ConsumerWidget {
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
+                  // TODO(l10n): Localize the main "More" page title via the
+                  // internationalization bundle instead of hardcoding Korean.
                   child: Text(
                     '더보기',
                     style: TextStyle(
@@ -56,6 +58,7 @@ class MorePage extends ConsumerWidget {
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+                  // TODO(l10n): Localize the section title text.
                   child: Text(
                     '집중 & 휴식',
                     style: TextStyle(
@@ -75,13 +78,18 @@ class MorePage extends ConsumerWidget {
                     crossAxisSpacing: 8,
                     childAspectRatio: 0.8,
                   ),
+                  // TODO(menu-config): Load the focus & rest shortcuts from the
+                  // stored navigation configuration rather than inlining them.
                   delegate: SliverChildListDelegate([
                     _GridMenuCard(
+                      // TODO(l10n): Localize the shortcut label.
                       title: '집중',
                       icon: Icons.psychology_outlined,
                       color: AppTheme.teal,
                       isDark: isDark,
                       onTap: () {
+                        // TODO(navigation): Replace prototype navigation with
+                        // the production focus timer route once implemented.
                         Navigator.push(
                           context,
                           MaterialPageRoute<void>(
@@ -100,6 +108,7 @@ class MorePage extends ConsumerWidget {
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+                  // TODO(l10n): Localize the section title text.
                   child: Text(
                     '건강 활동',
                     style: TextStyle(
@@ -119,13 +128,18 @@ class MorePage extends ConsumerWidget {
                     crossAxisSpacing: 8,
                     childAspectRatio: 0.8,
                   ),
+                  // TODO(menu-config): Populate the health activity grid from
+                  // persisted feature metadata instead of static widgets.
                   delegate: SliverChildListDelegate([
                     _GridMenuCard(
+                      // TODO(l10n): Localize the shortcut label.
                       title: '운동',
                       icon: Icons.fitness_center_outlined,
                       color: AppTheme.coral,
                       isDark: isDark,
                       onTap: () {
+                        // TODO(navigation): Replace prototype navigation with
+                        // the production workout experience once wired up.
                         Navigator.push(
                           context,
                           MaterialPageRoute<void>(
@@ -135,11 +149,14 @@ class MorePage extends ConsumerWidget {
                       },
                     ),
                     _GridMenuCard(
+                      // TODO(l10n): Localize the shortcut label.
                       title: '수면',
                       icon: Icons.bedtime_outlined,
                       color: AppTheme.electricViolet,
                       isDark: isDark,
                       onTap: () {
+                        // TODO(navigation): Swap to the actual sleep module
+                        // route when the feature is implemented.
                         Navigator.push(
                           context,
                           MaterialPageRoute<void>(
@@ -158,6 +175,7 @@ class MorePage extends ConsumerWidget {
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+                  // TODO(l10n): Localize the section title text.
                   child: Text(
                     '기록 & 분석',
                     style: TextStyle(
@@ -177,13 +195,18 @@ class MorePage extends ConsumerWidget {
                     crossAxisSpacing: 8,
                     childAspectRatio: 0.8,
                   ),
+                  // TODO(menu-config): Replace the inline record & analytics
+                  // grid with entries loaded from the navigation repository.
                   delegate: SliverChildListDelegate([
                     _GridMenuCard(
+                      // TODO(l10n): Localize the shortcut label.
                       title: '저널',
                       icon: Icons.book_outlined,
                       color: AppTheme.lime,
                       isDark: isDark,
                       onTap: () {
+                        // TODO(navigation): Route to the real journal entry
+                        // flow rather than the placeholder prototype screen.
                         Navigator.push(
                           context,
                           MaterialPageRoute<void>(
@@ -193,11 +216,14 @@ class MorePage extends ConsumerWidget {
                       },
                     ),
                     _GridMenuCard(
+                      // TODO(l10n): Localize the shortcut label.
                       title: '통계',
                       icon: Icons.bar_chart_rounded,
                       color: AppTheme.eucalyptus,
                       isDark: isDark,
                       onTap: () {
+                        // TODO(navigation): Route to the live stats module
+                        // after integrating with the production navigation map.
                         Navigator.push(
                           context,
                           MaterialPageRoute<void>(
