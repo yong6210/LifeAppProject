@@ -305,8 +305,8 @@ class _SchedulePageState extends ConsumerState<SchedulePage> {
                             final title = titleController.text.trim();
                             if (title.isEmpty) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(l10n.tr('schedule_error_title_required') ?? 'Title is required'),
+                                const SnackBar(
+                                  content: Text('Title is required'),
                                   backgroundColor: Colors.red,
                                 ),
                               );
