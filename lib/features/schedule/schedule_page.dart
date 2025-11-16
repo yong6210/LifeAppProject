@@ -176,7 +176,13 @@ class _SchedulePageState extends ConsumerState<SchedulePage> {
                       controller: titleController,
                       decoration: InputDecoration(
                         labelText: l10n.tr('schedule_field_title'),
+                        hintText: 'e.g. Morning Focus Session',
+                        errorText: titleController.text.trim().isEmpty && titleController.text.isNotEmpty
+                            ? 'Title cannot be empty'
+                            : null,
                       ),
+                      maxLength: 100,
+                      textCapitalization: TextCapitalization.sentences,
                     ),
                     const SizedBox(height: 12),
                     Row(
@@ -277,9 +283,13 @@ class _SchedulePageState extends ConsumerState<SchedulePage> {
                     TextField(
                       controller: notesController,
                       maxLines: 3,
+                      maxLength: 500,
                       decoration: InputDecoration(
                         labelText: l10n.tr('schedule_field_notes'),
+                        hintText: 'Optional notes about this schedule block',
+                        helperText: 'Add any relevant details or reminders',
                       ),
+                      textCapitalization: TextCapitalization.sentences,
                     ),
                     const SizedBox(height: 24),
                     Row(
@@ -293,7 +303,15 @@ class _SchedulePageState extends ConsumerState<SchedulePage> {
                         FilledButton(
                           onPressed: () async {
                             final title = titleController.text.trim();
-                            if (title.isEmpty) return;
+                            if (title.isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(l10n.tr('schedule_error_title_required') ?? 'Title is required'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                              return;
+                            }
                             await notifier.addOrUpdateEntry(
                               ScheduleEntry(
                                 id: existing?.id ?? _uuid.v4(),

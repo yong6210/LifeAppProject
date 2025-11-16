@@ -99,7 +99,8 @@ class CommunityChallenge extends Equatable {
     );
   }
 
-  bool get isOwner => false;
+  /// Checks if the given userId is the owner of this challenge
+  bool isOwnedBy(String userId) => ownerId == userId;
 
   bool get isActive => status == ChallengeStatus.active;
 
