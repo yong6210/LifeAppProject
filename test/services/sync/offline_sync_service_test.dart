@@ -73,10 +73,12 @@ void main() {
     test('flushPendingActions keeps items when handler throws', () async {
       final queue = await OfflineSyncQueue.create();
       final service = OfflineSyncService(queue);
+
+      // Register a handler that throws an exception
       service.registerHandler(OfflineSyncActionKind.characterState, (
         action,
       ) async {
-        throw Exception('fail');
+        throw Exception('Simulated failure');
       });
 
       await service.enqueue(
@@ -84,10 +86,13 @@ void main() {
         payload: {'delta': 1},
       );
 
+      // The flush should catch the exception and keep the item in queue
       await service.flushPendingActions();
 
+      // Verify the item remains in the queue after failed processing
       final remaining = await queue.loadActions();
       expect(remaining.length, 1);
+      expect(remaining.first.kind, OfflineSyncActionKind.characterState);
     });
   });
 }
