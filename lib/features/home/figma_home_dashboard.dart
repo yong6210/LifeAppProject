@@ -5,6 +5,8 @@ import 'package:life_app/design/app_theme.dart';
 import 'package:life_app/features/account/account_page.dart';
 import 'package:life_app/features/stats/stats_page.dart';
 import 'package:life_app/features/timer/figma_timer_tab.dart';
+import 'package:life_app/features/timer/timer_controller.dart';
+import 'package:life_app/features/timer/timer_page.dart';
 import 'package:life_app/features/workout/figma_workout_tab.dart';
 import 'package:life_app/features/sleep/figma_sleep_tab.dart';
 import 'package:life_app/l10n/app_localizations.dart';
@@ -43,6 +45,9 @@ class FigmaHomeDashboard extends ConsumerWidget {
     final routines = ref
         .watch(routinesStreamProvider)
         .maybeWhen(data: (value) => value, orElse: () => <Routine>[]);
+    final userLevel = ref
+        .watch(userLevelProvider)
+        .maybeWhen(data: (value) => value, orElse: () => 1);
 
     // Calculate progress
     final focusGoal = (settings?.focusMinutes ?? 25);
@@ -143,13 +148,14 @@ class FigmaHomeDashboard extends ConsumerWidget {
                       workoutProgress: workoutProgress,
                       sleepProgress: sleepProgress,
                       streakDays: streakDays,
-                      level: 1, // TODO: Get from user stats
+                      level: userLevel,
                     ),
                     const SizedBox(height: 20),
                     // Routines Section
                     if (routines.isNotEmpty) ...[
                       _buildRoutinesSection(
                         context: context,
+                        ref: ref,
                         routines: routines,
                       ),
                       const SizedBox(height: 20),
@@ -895,6 +901,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
 
   Widget _buildRoutinesSection({
     required BuildContext context,
+    required WidgetRef ref,
     required List<Routine> routines,
   }) {
     final theme = Theme.of(context);
@@ -940,6 +947,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                 ),
                 child: _buildRoutineCard(
                   context: context,
+                  ref: ref,
                   routine: routine,
                 ),
               );
@@ -952,6 +960,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
 
   Widget _buildRoutineCard({
     required BuildContext context,
+    required WidgetRef ref,
     required Routine routine,
   }) {
     final theme = Theme.of(context);
@@ -972,15 +981,35 @@ class FigmaHomeDashboard extends ConsumerWidget {
     final restSteps = routine.steps.where((s) => s.mode == 'rest').length;
 
     return GlassCard(
-      onTap: () {
-        // TODO: Start routine
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('${routine.name} 루틴 시작!'),
-            backgroundColor: color,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+      onTap: () async {
+        if (routine.steps.isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('${routine.name} 루틴에 스텝이 없습니다.'),
+              backgroundColor: Colors.orange,
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+          return;
+        }
+
+        // Get the first step of the routine
+        final firstStep = routine.steps.first;
+
+        // Switch to timer controller and select the mode
+        final timerController = ref.read(timerControllerProvider.notifier);
+        await timerController.selectMode(firstStep.mode);
+
+        // Set the duration based on the first step
+        await timerController.setPreset(firstStep.mode, firstStep.durationMinutes);
+
+        // Navigate to timer page
+        if (context.mounted) {
+          await Navigator.push(
+            context,
+            MaterialPageRoute<void>(builder: (_) => const TimerPage()),
+          );
+        }
       },
       padding: const EdgeInsets.all(16),
       borderRadius: 20,

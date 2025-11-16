@@ -189,3 +189,34 @@ final weeklyHighlightProvider = FutureProvider<WeeklyHighlight?>((ref) async {
   }
   return WeeklyHighlight(date: best.date, focusMinutes: best.focusMinutes);
 });
+
+/// Calculates user level based on total lifetime activity minutes.
+/// Level progression: Every 600 minutes (10 hours) = 1 level
+int calculateUserLevel(int totalMinutes) {
+  if (totalMinutes <= 0) return 1;
+  return (totalMinutes ~/ 600) + 1;
+}
+
+/// Provider for all-time activity totals across all summaries
+final lifetimeTotalsProvider = FutureProvider<SummaryTotals>((ref) async {
+  final repo = await _summaryRepo(ref);
+  final settings = await ref.watch(settingsFutureProvider.future);
+
+  // Fetch a very wide range (past 10 years to future 1 year)
+  final start = DateTime.now().subtract(const Duration(days: 3650));
+  final end = DateTime.now().add(const Duration(days: 365));
+  final allSummaries = await repo.fetchBetween(start, end);
+
+  // Filter for this device only
+  final deviceSummaries = allSummaries.where(
+    (summary) => summary.deviceId == settings.deviceId,
+  );
+
+  return _totalsFromSummaries(deviceSummaries);
+});
+
+/// Provider for user level based on lifetime activity
+final userLevelProvider = FutureProvider<int>((ref) async {
+  final lifetimeTotals = await ref.watch(lifetimeTotalsProvider.future);
+  return calculateUserLevel(lifetimeTotals.totalMinutes);
+});
