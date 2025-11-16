@@ -295,23 +295,27 @@ class FigmaHomeDashboard extends ConsumerWidget {
             ),
           ],
         ),
-        GestureDetector(
-          onTap: onSettingsTap,
-          child: Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.08),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: Colors.white.withValues(alpha: 0.1),
-                width: 1,
+        Semantics(
+          label: 'Settings',
+          button: true,
+          child: GestureDetector(
+            onTap: onSettingsTap,
+            child: Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.08),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: Colors.white.withValues(alpha: 0.1),
+                  width: 1,
+                ),
               ),
-            ),
-            child: Icon(
-              Icons.settings_outlined,
-              size: 18,
-              color: Colors.white.withValues(alpha: 0.7),
+              child: Icon(
+                Icons.settings_outlined,
+                size: 18,
+                color: Colors.white.withValues(alpha: 0.7),
+              ),
             ),
           ),
         ),
@@ -362,19 +366,21 @@ class FigmaHomeDashboard extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.baseline,
                   textBaseline: TextBaseline.alphabetic,
                   children: [
-                    ShaderMask(
-                      shaderCallback: (bounds) => LinearGradient(
-                        colors: [Colors.white, Colors.white.withValues(alpha: 0.88)],
-                      ).createShader(bounds),
-                      child: Text(
-                        totalProgress.toString(),
-                        style: const TextStyle(
-                          fontSize: 48,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
-                          height: 1,
+                    RepaintBoundary(
+                      child: ShaderMask(
+                        shaderCallback: (bounds) => const LinearGradient(
+                          colors: [Colors.white, Color(0xE0FFFFFF)],
+                        ).createShader(bounds),
+                        child: Text(
+                          totalProgress.toString(),
+                          style: const TextStyle(
+                            fontSize: 48,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                            height: 1,
                           letterSpacing: -2,
                         ),
+                      ),
                       ),
                     ),
                     const SizedBox(width: 4),
@@ -488,10 +494,15 @@ class FigmaHomeDashboard extends ConsumerWidget {
     required VoidCallback onTap,
   }) {
     final isCompleted = progress >= 100;
+    final progressPercent = progress.round();
 
-    return GestureDetector(
+    return Semantics(
+      label: 'Focus activity card. $minutes of $goal minutes completed. $progressPercent percent progress.${isCompleted ? ' Goal completed!' : ''}',
+      button: true,
       onTap: onTap,
-      child: GlassCard(
+      child: GestureDetector(
+        onTap: onTap,
+        child: GlassCard(
         padding: const EdgeInsets.all(16),
         borderRadius: 20,
         gradient: LinearGradient(
@@ -585,6 +596,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
           ],
         ),
       ),
+      ),
     );
   }
 
@@ -596,10 +608,15 @@ class FigmaHomeDashboard extends ConsumerWidget {
     required VoidCallback onTap,
   }) {
     final isCompleted = progress >= 100;
+    final progressPercent = progress.round();
 
-    return GestureDetector(
+    return Semantics(
+      label: 'Move activity card. $minutes of $goal minutes completed. $progressPercent percent progress.${isCompleted ? ' Goal completed!' : ''}',
+      button: true,
       onTap: onTap,
-      child: GlassCard(
+      child: GestureDetector(
+        onTap: onTap,
+        child: GlassCard(
         padding: const EdgeInsets.all(16),
         borderRadius: 20,
         gradient: LinearGradient(
@@ -693,6 +710,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
           ],
         ),
       ),
+      ),
     );
   }
 
@@ -705,10 +723,15 @@ class FigmaHomeDashboard extends ConsumerWidget {
   }) {
     final isCompleted = progress >= 100;
     final hours = (minutes / 60).floor();
+    final progressPercent = progress.round();
 
-    return GestureDetector(
+    return Semantics(
+      label: 'Sleep activity card. $hours of $goalHours hours completed. $progressPercent percent progress.${isCompleted ? ' Goal completed!' : ''}',
+      button: true,
       onTap: onTap,
-      child: GlassCard(
+      child: GestureDetector(
+        onTap: onTap,
+        child: GlassCard(
         padding: const EdgeInsets.all(16),
         borderRadius: 20,
         gradient: LinearGradient(
@@ -818,6 +841,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
             ),
           ],
         ),
+      ),
       ),
     );
   }

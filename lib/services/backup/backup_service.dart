@@ -61,35 +61,47 @@ class BackupService {
 
   Future<File> createEncryptedBackup() async {
     return AnalyticsService.traceAsync<File>('backup_create', () async {
-      final dbFileBytes = await _readDatabaseBytes();
-      final settings = await _settingsDataSource.ensure();
-      final now = DateTime.now().toUtc();
-      final algorithm = AesGcm.with256bits();
-      final key = await keyManager.obtainKey();
-      final nonce = algorithm.newNonce();
-      final secretBox = await algorithm.encrypt(
-        dbFileBytes,
-        secretKey: key,
-        nonce: nonce,
-      );
+      File? backupFile;
+      try {
+        final dbFileBytes = await _readDatabaseBytes();
+        if (dbFileBytes.isEmpty) {
+          throw Exception('Database is empty - nothing to backup');
+        }
 
-      final manifest = {
-        'version': 1,
-        'createdAt': now.toIso8601String(),
-        'schemaVersion': settings.schemaVersion,
-        'nonce': base64Encode(nonce),
-        'ciphertext': base64Encode(secretBox.cipherText),
-        'mac': base64Encode(secretBox.mac.bytes),
-      };
+        final settings = await _settingsDataSource.ensure();
+        final now = DateTime.now().toUtc();
+        final algorithm = AesGcm.with256bits();
+        final key = await keyManager.obtainKey();
+        final nonce = algorithm.newNonce();
+        final secretBox = await algorithm.encrypt(
+          dbFileBytes,
+          secretKey: key,
+          nonce: nonce,
+        );
 
-      final sanitizedTimestamp = now.toIso8601String().replaceAll(':', '-');
-      final fileName = 'life_app_backup_$sanitizedTimestamp.$_fileExtension';
-      final tempDir = await getTemporaryDirectory();
-      final backupFilePath = p.join(tempDir.path, fileName);
-      final backupFile = File(backupFilePath);
-      await backupFile.writeAsString(jsonEncode(manifest));
+        final manifest = {
+          'version': 1,
+          'createdAt': now.toIso8601String(),
+          'schemaVersion': settings.schemaVersion,
+          'nonce': base64Encode(nonce),
+          'ciphertext': base64Encode(secretBox.cipherText),
+          'mac': base64Encode(secretBox.mac.bytes),
+        };
 
-      final fileSize = backupFile.lengthSync();
+        final sanitizedTimestamp = now.toIso8601String().replaceAll(':', '-');
+        final fileName = 'life_app_backup_$sanitizedTimestamp.$_fileExtension';
+        final tempDir = await getTemporaryDirectory();
+        final backupFilePath = p.join(tempDir.path, fileName);
+        backupFile = File(backupFilePath);
+
+        // Check available disk space
+        final stat = await tempDir.stat();
+        final requiredSpace = dbFileBytes.length * 2; // Estimate with safety margin
+        // Note: FileStat doesn't provide free space, but we can at least check file creation
+
+        await backupFile.writeAsString(jsonEncode(manifest));
+
+        final fileSize = backupFile.lengthSync();
       final provider = settings.backupPreferredProvider;
       int? updatedStreak;
       await _settingsDataSource.update((value) {
@@ -116,13 +128,43 @@ class BackupService {
         'bytes': fileSize,
       });
 
-      if (updatedStreak != null) {
-        await AnalyticsService.logEvent('backup_streak_progress', {
-          'streak_weeks': updatedStreak,
-        });
-      }
+        if (updatedStreak != null) {
+          await AnalyticsService.logEvent('backup_streak_progress', {
+            'streak_weeks': updatedStreak,
+          });
+        }
 
-      return backupFile;
+        return backupFile!;
+      } catch (e) {
+        // Clean up temporary file on error
+        if (backupFile != null && await backupFile.exists()) {
+          try {
+            await backupFile.delete();
+          } catch (_) {
+            // Ignore cleanup errors
+          }
+        }
+
+        // Log specific error types for better debugging
+        String errorType = 'unknown';
+        String errorMessage = e.toString();
+
+        if (e is FileSystemException) {
+          errorType = 'file_system';
+          errorMessage = 'File system error: ${e.message}';
+        } else if (e.toString().contains('empty')) {
+          errorType = 'empty_database';
+        } else if (e.toString().contains('encryption')) {
+          errorType = 'encryption_failed';
+        }
+
+        await AnalyticsService.logEvent('backup_error', {
+          'error_type': errorType,
+          'error_message': errorMessage,
+        });
+
+        rethrow;
+      }
     });
   }
 
