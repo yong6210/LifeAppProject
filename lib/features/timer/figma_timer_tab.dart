@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:life_app/design/app_theme.dart';
+import 'package:life_app/features/stats/stats_page.dart';
 import 'package:life_app/features/timer/timer_controller.dart';
 import 'package:life_app/services/analytics/analytics_service.dart';
 import 'package:life_app/widgets/circular_progress_ring.dart';
@@ -394,7 +395,12 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                         // Stats button
                         GlassCard(
                           onTap: () {
-                            // Open stats or insights
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute<void>(
+                                builder: (_) => const StatsPage(),
+                              ),
+                            );
                           },
                           padding: const EdgeInsets.all(14),
                           borderRadius: 16,
