@@ -1081,9 +1081,11 @@ class _FocusQuickCard extends ConsumerWidget {
                   child: Text(l10n.tr('timer_focus_card_open')),
                 ),
                 const SizedBox(width: 12),
-                FilledButton(
-                  onPressed: isRunning ? openFocus : startOrResume,
-                  child: Text(primaryLabel),
+                Flexible(
+                  child: FilledButton(
+                    onPressed: isRunning ? openFocus : startOrResume,
+                    child: Text(primaryLabel),
+                  ),
                 ),
               ],
             ),

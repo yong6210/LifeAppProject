@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,8 +8,9 @@ import 'package:life_app/features/account/account_page.dart';
 import 'package:life_app/features/backup/backup_page.dart';
 import 'package:life_app/features/stats/stats_page.dart';
 import 'package:life_app/features/subscription/paywall_page.dart';
-import 'package:life_app/features/timer/timer_page.dart';
-import 'package:life_app/features/workout/workout_navigator_page.dart';
+import 'package:life_app/features/timer/figma_timer_tab.dart';
+import 'package:life_app/features/workout/figma_workout_tab.dart';
+import 'package:life_app/features/sleep/figma_sleep_tab.dart';
 import 'package:life_app/l10n/app_localizations.dart';
 import 'package:life_app/providers/auth_providers.dart';
 import 'package:life_app/providers/session_providers.dart';
@@ -59,11 +59,29 @@ class HomeDashboardTab extends ConsumerWidget {
       l10n: l10n,
     );
 
-    void openTimer(String mode, {bool autoStart = false}) {
+    void openFocus() {
       Navigator.push(
         context,
         MaterialPageRoute<void>(
-          builder: (_) => TimerPage(initialMode: mode, autoStart: autoStart),
+          builder: (_) => const FigmaTimerTab(initialMode: 'focus'),
+        ),
+      );
+    }
+
+    void openWorkout() {
+      Navigator.push(
+        context,
+        MaterialPageRoute<void>(
+          builder: (_) => const FigmaWorkoutTab(),
+        ),
+      );
+    }
+
+    void openSleep() {
+      Navigator.push(
+        context,
+        MaterialPageRoute<void>(
+          builder: (_) => const FigmaSleepTab(),
         ),
       );
     }
@@ -73,10 +91,6 @@ class HomeDashboardTab extends ConsumerWidget {
         context,
         MaterialPageRoute<void>(builder: (_) => const StatsPage()),
       );
-    }
-
-    void openWorkout() {
-      Navigator.push<void>(context, WorkoutNavigatorPage.route());
     }
 
     void openAccount() {
@@ -105,7 +119,7 @@ class HomeDashboardTab extends ConsumerWidget {
         emoji: '⏱️',
         label: l10n.tr('timer_mode_focus'),
         accent: AppTheme.accentBlue,
-        onTap: () => openTimer('focus', autoStart: true),
+        onTap: openFocus,
       ),
       _QuickActionConfig(
         emoji: '💪',
@@ -117,7 +131,7 @@ class HomeDashboardTab extends ConsumerWidget {
         emoji: '🌙',
         label: l10n.tr('timer_mode_sleep'),
         accent: AppTheme.accentPurple,
-        onTap: () => openTimer('sleep', autoStart: true),
+        onTap: openSleep,
       ),
     ];
 
@@ -130,8 +144,8 @@ class HomeDashboardTab extends ConsumerWidget {
         icon: Icons.timer_outlined,
         primaryLabel: l10n.tr('home_dashboard_action_start'),
         secondaryLabel: l10n.tr('home_dashboard_action_customize'),
-        onPrimary: () => openTimer('focus', autoStart: true),
-        onSecondary: () => openTimer('focus'),
+        onPrimary: openFocus,
+        onSecondary: openFocus,
       ),
       _RoutineCardData(
         title: l10n.tr('timer_mode_workout'),
@@ -139,7 +153,7 @@ class HomeDashboardTab extends ConsumerWidget {
         minutes: todaySummary.workout,
         accent: AppTheme.accentGreen,
         icon: Icons.fitness_center_outlined,
-        primaryLabel: l10n.tr('home_dashboard_action_explore'),
+        primaryLabel: l10n.tr('home_dashboard_action_start'),
         secondaryLabel: l10n.tr('home_dashboard_action_customize'),
         onPrimary: openWorkout,
         onSecondary: openWorkout,
@@ -152,8 +166,8 @@ class HomeDashboardTab extends ConsumerWidget {
         icon: Icons.nights_stay_outlined,
         primaryLabel: l10n.tr('home_dashboard_action_start'),
         secondaryLabel: l10n.tr('home_dashboard_action_customize'),
-        onPrimary: () => openTimer('sleep', autoStart: true),
-        onSecondary: () => openTimer('sleep'),
+        onPrimary: openSleep,
+        onSecondary: openSleep,
       ),
     ];
 
@@ -184,80 +198,72 @@ class HomeDashboardTab extends ConsumerWidget {
               physics: const BouncingScrollPhysics(
                 parent: AlwaysScrollableScrollPhysics(),
               ),
-              padding: EdgeInsets.zero,
-              children: [
-            Padding(
               padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _DashboardAppBar(
-                    appName: l10n.tr('app_title'),
-                    dateLabel: dateLabel,
-                    onOpenStats: openStats,
-                    onOpenSettings: openAccount,
+              children: [
+                _DashboardAppBar(
+                  appName: l10n.tr('app_title'),
+                  dateLabel: dateLabel,
+                  onOpenStats: openStats,
+                  onOpenSettings: openAccount,
+                ),
+                const SizedBox(height: 20),
+                _GreetingSection(
+                  greeting: greeting,
+                  subtitle: greetingSubtitle,
+                ),
+                if (banner != null) ...[const SizedBox(height: 20), banner],
+                const SizedBox(height: 28),
+                _SectionLabel(text: l10n.tr('home_dashboard_progress_title')),
+                const SizedBox(height: 16),
+                _DailyProgressCard(
+                  l10n: l10n,
+                  locale: locale,
+                  focusMinutes: todaySummary.focus,
+                  workoutMinutes: todaySummary.workout,
+                  sleepMinutes: todaySummary.sleep,
+                  focusTarget: focusGoalMinutes,
+                ),
+                const SizedBox(height: 28),
+                _SectionLabel(text: l10n.tr('home_dashboard_routines_title')),
+                const SizedBox(height: 16),
+                _RoutineCarousel(
+                  cards: routineCards,
+                  locale: locale,
+                  l10n: l10n,
+                  streakDays: streakDays,
+                ),
+                const SizedBox(height: 28),
+                _SectionLabel(
+                  text: l10n.tr('home_dashboard_integrations_title'),
+                ),
+                const SizedBox(height: 16),
+                _IntegrationsRow(
+                  wearablesTitle: l10n.tr(
+                    'home_dashboard_integrations_wearables_title',
                   ),
-                  const SizedBox(height: 20),
-                  _GreetingSection(
-                    greeting: greeting,
-                    subtitle: greetingSubtitle,
+                  wearablesSubtitle: l10n.tr(
+                    'home_dashboard_integrations_wearables_subtitle',
                   ),
-                  if (banner != null) ...[const SizedBox(height: 20), banner],
-                  const SizedBox(height: 28),
-                  _SectionLabel(text: l10n.tr('home_dashboard_progress_title')),
-                  const SizedBox(height: 16),
-                  _DailyProgressCard(
-                    l10n: l10n,
-                    locale: locale,
-                    focusMinutes: todaySummary.focus,
-                    workoutMinutes: todaySummary.workout,
-                    sleepMinutes: todaySummary.sleep,
-                    focusTarget: focusGoalMinutes,
+                  backupTitle: l10n.tr(
+                    'home_dashboard_integrations_backup_title',
                   ),
-                  const SizedBox(height: 28),
-                  _SectionLabel(text: l10n.tr('home_dashboard_routines_title')),
-                  const SizedBox(height: 16),
-                  _RoutineCarousel(
-                    cards: routineCards,
-                    locale: locale,
-                    l10n: l10n,
-                    streakDays: streakDays,
+                  backupSubtitle: l10n.tr(
+                    'home_dashboard_integrations_backup_subtitle',
                   ),
-                  const SizedBox(height: 28),
-                  _SectionLabel(
-                    text: l10n.tr('home_dashboard_integrations_title'),
-                  ),
-                  const SizedBox(height: 16),
-                  _IntegrationsRow(
-                    wearablesTitle: l10n.tr(
-                      'home_dashboard_integrations_wearables_title',
-                    ),
-                    wearablesSubtitle: l10n.tr(
-                      'home_dashboard_integrations_wearables_subtitle',
-                    ),
-                    backupTitle: l10n.tr(
-                      'home_dashboard_integrations_backup_title',
-                    ),
-                    backupSubtitle: l10n.tr(
-                      'home_dashboard_integrations_backup_subtitle',
-                    ),
-                    onOpenWearables: openAccount,
-                    onOpenBackup: openBackup,
-                  ),
-                  const SizedBox(height: 36),
-                  _PremiumUpsellCard(
-                    title: l10n.tr('home_dashboard_premium_title'),
-                    subtitle: l10n.tr('home_dashboard_premium_subtitle'),
-                    ctaLabel: l10n.tr('home_dashboard_premium_cta'),
-                    onTap: openPremium,
-                  ),
-                  const SizedBox(height: 20),
-                ],
-              ),
+                  onOpenWearables: openAccount,
+                  onOpenBackup: openBackup,
+                ),
+                const SizedBox(height: 36),
+                _PremiumUpsellCard(
+                  title: l10n.tr('home_dashboard_premium_title'),
+                  subtitle: l10n.tr('home_dashboard_premium_subtitle'),
+                  ctaLabel: l10n.tr('home_dashboard_premium_cta'),
+                  onTap: openPremium,
+                ),
+                const SizedBox(height: 20),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
         ),
       ),
     );
@@ -607,7 +613,7 @@ class _RoutineCarousel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 320,
+      height: 330,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),

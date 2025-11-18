@@ -3,10 +3,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:life_app/design/app_theme.dart';
 import 'package:life_app/l10n/app_localizations.dart';
 import 'package:life_app/models/settings.dart';
 import 'package:life_app/providers/backup_providers.dart';
 import 'package:life_app/providers/settings_providers.dart';
+import 'package:life_app/widgets/glass_card.dart';
 
 class BackupPage extends ConsumerWidget {
   const BackupPage({super.key});
@@ -42,10 +44,30 @@ class BackupPage extends ConsumerWidget {
     );
 
     final settingsAsync = ref.watch(settingsFutureProvider);
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.tr('backup_title'))),
-      body: settingsAsync.when(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: isDark
+                ? [
+                    const Color(0xFF1a2332),
+                    const Color(0xFF0f1419),
+                    const Color(0xFF0a0d10),
+                  ]
+                : [
+                    const Color(0xFFF0F4FF),
+                    const Color(0xFFE8EFFF),
+                    const Color(0xFFFFFFFF),
+                  ],
+          ),
+        ),
+        child: SafeArea(
+          child: settingsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => Center(
           child: Text(
@@ -62,88 +84,211 @@ class BackupPage extends ConsumerWidget {
                 });
           return Stack(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(16),
+              SingleChildScrollView(
+                padding: const EdgeInsets.all(20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      lastBackupText,
-                      style: Theme.of(context).textTheme.bodyMedium,
+                    // Back button
+                    Row(
+                      children: [
+                        GlassCard(
+                          onTap: () => Navigator.of(context).pop(),
+                          padding: const EdgeInsets.all(12),
+                          borderRadius: 12,
+                          child: Icon(
+                            Icons.arrow_back_ios_new,
+                            size: 20,
+                            color: isDark ? Colors.white : AppTheme.electricViolet,
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: ShaderMask(
+                            shaderCallback: (bounds) => LinearGradient(
+                              colors: [
+                                AppTheme.electricViolet,
+                                AppTheme.teal,
+                              ],
+                            ).createShader(bounds),
+                            child: Text(
+                              l10n.tr('backup_title'),
+                              style: theme.textTheme.headlineMedium?.copyWith(
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 24),
+                    // Last backup info
+                    GlassCard(
+                      padding: const EdgeInsets.all(20),
+                      borderRadius: 20,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.schedule,
+                            color: isDark ? AppTheme.teal : AppTheme.electricViolet,
+                            size: 24,
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              lastBackupText,
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: isDark ? Colors.white : theme.colorScheme.onSurface,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
                     if (errorMessage != null)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: Text(
-                          errorMessage,
-                          style: const TextStyle(color: Colors.redAccent),
+                      GlassCard(
+                        padding: const EdgeInsets.all(16),
+                        borderRadius: 16,
+                        gradient: LinearGradient(
+                          colors: [
+                            Colors.red.withOpacity(0.2),
+                            Colors.red.withOpacity(0.1),
+                          ],
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.error_outline, color: Colors.red),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                errorMessage,
+                                style: const TextStyle(color: Colors.red),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    _BackupActions(isLoading: isLoading),
+                    if (errorMessage != null) const SizedBox(height: 16),
+                    _BackupActions(isLoading: isLoading, isDark: isDark),
                     const SizedBox(height: 24),
-                    _PreferredProviderSection(settings: settings),
+                    _PreferredProviderSection(settings: settings, isDark: isDark),
                     const SizedBox(height: 16),
-                    const _BackupHelpCard(),
+                    _BackupHelpCard(isDark: isDark),
                     const SizedBox(height: 16),
-                    Expanded(
-                      child: _BackupHistoryList(
-                        entries: settings.backupHistory,
-                      ),
+                    _BackupHistoryList(
+                      entries: settings.backupHistory,
+                      isDark: isDark,
                     ),
+                    const SizedBox(height: 20),
                   ],
                 ),
               ),
               if (isLoading)
-                const Align(
-                  alignment: Alignment.topCenter,
-                  child: LinearProgressIndicator(),
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: LinearProgressIndicator(
+                    backgroundColor: Colors.transparent,
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      isDark ? AppTheme.teal : AppTheme.electricViolet,
+                    ),
+                  ),
                 ),
             ],
           );
         },
+          ),
+        ),
       ),
     );
   }
 }
 
 class _BackupActions extends ConsumerWidget {
-  const _BackupActions({required this.isLoading});
+  const _BackupActions({required this.isLoading, required this.isDark});
 
   final bool isLoading;
+  final bool isDark;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
       children: [
-        ElevatedButton.icon(
-          onPressed: isLoading
-              ? null
-              : () async {
-                  await ref
-                      .read(backupControllerProvider.notifier)
-                      .performBackup();
-                },
-          icon: const Icon(Icons.cloud_upload_outlined),
-          label: Text(l10n.tr('backup_action_backup')),
-        ),
-        const SizedBox(height: 8),
-        ElevatedButton.icon(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-            foregroundColor: Theme.of(context).colorScheme.onSecondaryContainer,
+        Expanded(
+          child: GlassCard(
+            onTap: isLoading
+                ? null
+                : () async {
+                    await ref
+                        .read(backupControllerProvider.notifier)
+                        .performBackup();
+                  },
+            padding: const EdgeInsets.all(20),
+            borderRadius: 20,
+            gradient: LinearGradient(
+              colors: [
+                AppTheme.electricViolet.withOpacity(0.8),
+                AppTheme.teal.withOpacity(0.8),
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.cloud_upload_outlined,
+                  color: Colors.white,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  l10n.tr('backup_action_backup'),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
           ),
-          onPressed: isLoading
-              ? null
-              : () async {
-                  await ref
-                      .read(backupControllerProvider.notifier)
-                      .performRestore();
-                },
-          icon: const Icon(Icons.cloud_download_outlined),
-          label: Text(l10n.tr('backup_action_restore')),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: GlassCard(
+            onTap: isLoading
+                ? null
+                : () async {
+                    await ref
+                        .read(backupControllerProvider.notifier)
+                        .performRestore();
+                  },
+            padding: const EdgeInsets.all(20),
+            borderRadius: 20,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.cloud_download_outlined,
+                  color: isDark ? AppTheme.teal : AppTheme.electricViolet,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  l10n.tr('backup_action_restore'),
+                  style: TextStyle(
+                    color: isDark ? AppTheme.teal : AppTheme.electricViolet,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ],
     );
@@ -223,29 +368,36 @@ String _normalizeProviderValue(String value) {
 }
 
 class _PreferredProviderSection extends ConsumerWidget {
-  const _PreferredProviderSection({required this.settings});
+  const _PreferredProviderSection({required this.settings, required this.isDark});
 
   final Settings settings;
+  final bool isDark;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              l10n.tr('backup_preferred_storage_title'),
-              style: Theme.of(context).textTheme.titleMedium,
+    final theme = Theme.of(context);
+    return GlassCard(
+      padding: const EdgeInsets.all(20),
+      borderRadius: 20,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l10n.tr('backup_preferred_storage_title'),
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w700,
+              color: isDark ? Colors.white : theme.colorScheme.onSurface,
             ),
-            const SizedBox(height: 8),
-            Text(
-              l10n.tr('backup_preferred_storage_help'),
-              style: Theme.of(context).textTheme.bodySmall,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            l10n.tr('backup_preferred_storage_help'),
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: isDark ? Colors.white70 : theme.colorScheme.onSurface.withOpacity(0.7),
             ),
-            const SizedBox(height: 12),
+          ),
+          const SizedBox(height: 16),
             RadioGroup<String>(
               groupValue: _normalizeProviderValue(
                 settings.backupPreferredProvider,
@@ -295,69 +447,135 @@ class _PreferredProviderSection extends ConsumerWidget {
             ),
           ],
         ),
-      ),
     );
   }
 }
 
 class _BackupHelpCard extends StatelessWidget {
-  const _BackupHelpCard();
+  const _BackupHelpCard({required this.isDark});
+
+  final bool isDark;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              l10n.tr('backup_help_title'),
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 8),
-            Text(l10n.tr('backup_help_encrypted')),
-            Text(l10n.tr('backup_help_choose_storage')),
-            Text(l10n.tr('backup_help_restore_notice')),
-          ],
-        ),
+    final theme = Theme.of(context);
+    return GlassCard(
+      padding: const EdgeInsets.all(20),
+      borderRadius: 20,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.info_outline,
+                color: isDark ? AppTheme.teal : AppTheme.electricViolet,
+                size: 24,
+              ),
+              const SizedBox(width: 12),
+              Text(
+                l10n.tr('backup_help_title'),
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: isDark ? Colors.white : theme.colorScheme.onSurface,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          _buildHelpItem(context, '🔒', l10n.tr('backup_help_encrypted')),
+          const SizedBox(height: 8),
+          _buildHelpItem(context, '☁️', l10n.tr('backup_help_choose_storage')),
+          const SizedBox(height: 8),
+          _buildHelpItem(context, '⚠️', l10n.tr('backup_help_restore_notice')),
+        ],
       ),
+    );
+  }
+
+  Widget _buildHelpItem(BuildContext context, String emoji, String text) {
+    final theme = Theme.of(context);
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(emoji, style: const TextStyle(fontSize: 16)),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            text,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: isDark ? Colors.white70 : theme.colorScheme.onSurface.withOpacity(0.8),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
 
 class _BackupHistoryList extends StatelessWidget {
-  const _BackupHistoryList({required this.entries});
+  const _BackupHistoryList({required this.entries, required this.isDark});
 
   final List<BackupLogEntry> entries;
+  final bool isDark;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final theme = Theme.of(context);
+
     if (entries.isEmpty) {
-      return Center(child: Text(l10n.tr('backup_history_empty')));
+      return GlassCard(
+        padding: const EdgeInsets.all(40),
+        borderRadius: 20,
+        child: Center(
+          child: Text(
+            l10n.tr('backup_history_empty'),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: isDark ? Colors.white70 : theme.colorScheme.onSurface.withOpacity(0.7),
+            ),
+          ),
+        ),
+      );
     }
 
-    return ListView.separated(
-      itemCount: entries.length,
-      separatorBuilder: (context, index) => const Divider(height: 1),
-      itemBuilder: (context, index) {
-        final entry = entries[index];
-        return _BackupHistoryTile(entry: entry, l10n: l10n);
-      },
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Backup History',
+          style: theme.textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.w700,
+            color: isDark ? Colors.white : theme.colorScheme.onSurface,
+          ),
+        ),
+        const SizedBox(height: 12),
+        ...entries.map((entry) {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: _BackupHistoryTile(entry: entry, l10n: l10n, isDark: isDark),
+          );
+        }),
+      ],
     );
   }
 }
 
 class _BackupHistoryTile extends StatelessWidget {
-  const _BackupHistoryTile({required this.entry, required this.l10n});
+  const _BackupHistoryTile({
+    required this.entry,
+    required this.l10n,
+    required this.isDark,
+  });
 
   final BackupLogEntry entry;
   final AppLocalizations l10n;
+  final bool isDark;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final success = entry.status == 'success';
     final icon = entry.action == 'backup'
         ? Icons.cloud_upload_outlined
@@ -385,15 +603,47 @@ class _BackupHistoryTile extends StatelessWidget {
         l10n.tr('backup_history_entry_error', {'error': entry.errorMessage!}),
     ].whereType<String>().join('\n');
 
-    return ListTile(
-      leading: Icon(icon, color: color),
-      title: Text(
-        success
-            ? l10n.tr('backup_history_status_success')
-            : l10n.tr('backup_history_status_failure'),
-        style: TextStyle(color: color),
+    return GlassCard(
+      padding: const EdgeInsets.all(16),
+      borderRadius: 16,
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(icon, color: color, size: 20),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  success
+                      ? l10n.tr('backup_history_status_success')
+                      : l10n.tr('backup_history_status_failure'),
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    color: color,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  subtitle,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: isDark
+                        ? Colors.white70
+                        : theme.colorScheme.onSurface.withOpacity(0.7),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
-      subtitle: Text(subtitle),
     );
   }
 }

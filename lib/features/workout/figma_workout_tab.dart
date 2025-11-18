@@ -69,6 +69,7 @@ class FigmaWorkoutTab extends ConsumerStatefulWidget {
 class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
     with SingleTickerProviderStateMixin {
   late AnimationController _energyController;
+  WorkoutIntensity? _selectedIntensity; // null = All
 
   @override
   void initState() {
@@ -117,6 +118,37 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
   Future<void> _handleReset() async {
     final controller = ref.read(timerControllerProvider.notifier);
     await controller.reset();
+  }
+
+  Widget _buildFilterChip({
+    required String label,
+    required bool isSelected,
+    required VoidCallback onTap,
+    required bool isDark,
+  }) {
+    return GlassCard(
+      onTap: onTap,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      borderRadius: 20,
+      gradient: isSelected
+          ? LinearGradient(
+              colors: [
+                AppTheme.coral,
+                const Color(0xFFFFA726),
+              ],
+            )
+          : null,
+      child: Text(
+        label,
+        style: TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: 14,
+          color: isSelected
+              ? Colors.white
+              : (isDark ? AppTheme.coral.withOpacity(0.9) : AppTheme.coral),
+        ),
+      ),
+    );
   }
 
   @override
@@ -525,8 +557,54 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                       ),
                       const SizedBox(height: 24),
                     ],
+                    // Intensity filter
+                    Row(
+                      children: [
+                        Expanded(
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: [
+                                _buildFilterChip(
+                                  label: '전체',
+                                  isSelected: _selectedIntensity == null,
+                                  onTap: () => setState(() => _selectedIntensity = null),
+                                  isDark: isDark,
+                                ),
+                                const SizedBox(width: 8),
+                                _buildFilterChip(
+                                  label: '저강도',
+                                  isSelected: _selectedIntensity == WorkoutIntensity.light,
+                                  onTap: () => setState(() => _selectedIntensity = WorkoutIntensity.light),
+                                  isDark: isDark,
+                                ),
+                                const SizedBox(width: 8),
+                                _buildFilterChip(
+                                  label: '중강도',
+                                  isSelected: _selectedIntensity == WorkoutIntensity.moderate,
+                                  onTap: () => setState(() => _selectedIntensity = WorkoutIntensity.moderate),
+                                  isDark: isDark,
+                                ),
+                                const SizedBox(width: 8),
+                                _buildFilterChip(
+                                  label: '고강도',
+                                  isSelected: _selectedIntensity == WorkoutIntensity.vigorous,
+                                  onTap: () => setState(() => _selectedIntensity = WorkoutIntensity.vigorous),
+                                  isDark: isDark,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
                     // Workout cards
-                    ...workoutLightPresets.map((preset) {
+                    ...workoutLightPresets.where((preset) {
+                      // Filter by intensity if selected
+                      if (_selectedIntensity == null) return true;
+                      return preset.intensity == _selectedIntensity;
+                    }).map((preset) {
                       final l10n = context.l10n;
                       final emoji = WorkoutPresetUI.getEmoji(preset);
                       final calories = WorkoutPresetUI.getEstimatedCalories(preset);

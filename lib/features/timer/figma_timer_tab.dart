@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:life_app/design/app_theme.dart';
@@ -25,7 +26,14 @@ class TimerPreset {
 
 /// Figma-styled timer tab with glassmorphism and beautiful animations
 class FigmaTimerTab extends ConsumerStatefulWidget {
-  const FigmaTimerTab({super.key});
+  const FigmaTimerTab({
+    super.key,
+    this.initialMode = 'focus',
+    this.autoStart = false,
+  });
+
+  final String initialMode;
+  final bool autoStart;
 
   @override
   ConsumerState<FigmaTimerTab> createState() => _FigmaTimerTabState();
@@ -33,34 +41,75 @@ class FigmaTimerTab extends ConsumerStatefulWidget {
 
 class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
     with SingleTickerProviderStateMixin {
-  static const presets = [
+  static const focusPresets = [
     TimerPreset(id: '1', name: 'Focus Boost', duration: 25, emoji: '⚡'),
     TimerPreset(id: '2', name: 'Quick Reset', duration: 5, emoji: '🌊'),
     TimerPreset(id: '3', name: 'Deep Dive', duration: 52, emoji: '🧠'),
     TimerPreset(id: '4', name: 'Power Hour', duration: 60, emoji: '🚀'),
   ];
 
-  TimerPreset _selectedPreset = presets[0];
+  static const workoutPresets = [
+    TimerPreset(id: '1', name: 'Quick Workout', duration: 15, emoji: '💪'),
+    TimerPreset(id: '2', name: 'Full Session', duration: 30, emoji: '🔥'),
+    TimerPreset(id: '3', name: 'Power Hour', duration: 60, emoji: '⚡'),
+    TimerPreset(id: '4', name: 'Endurance', duration: 90, emoji: '🏃'),
+  ];
+
+  static const sleepPresets = [
+    TimerPreset(id: '1', name: 'Power Nap', duration: 20, emoji: '😴'),
+    TimerPreset(id: '2', name: 'Short Rest', duration: 30, emoji: '🌙'),
+    TimerPreset(id: '3', name: 'Deep Sleep', duration: 60, emoji: '💤'),
+    TimerPreset(id: '4', name: 'Full Night', duration: 480, emoji: '🛌'),
+  ];
+
+  late List<TimerPreset> _currentPresets;
+  late TimerPreset _selectedPreset;
   late AnimationController _glowController;
+
+  // Custom time selection
+  int _customHours = 0;
+  int _customMinutes = 25;
+  late FixedExtentScrollController _hourController;
+  late FixedExtentScrollController _minuteController;
 
   @override
   void initState() {
     super.initState();
+
+    // Select presets based on mode
+    _currentPresets = switch (widget.initialMode) {
+      'workout' => workoutPresets,
+      'sleep' => sleepPresets,
+      _ => focusPresets,
+    };
+    _selectedPreset = _currentPresets[0];
+
+    // Initialize time picker controllers
+    _hourController = FixedExtentScrollController(initialItem: _customHours);
+    _minuteController = FixedExtentScrollController(initialItem: _customMinutes ~/ 5);
+
     _glowController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
     )..repeat(reverse: true);
 
-    // Initialize timer with first preset
+    // Initialize timer with initial mode and preset
     Future.microtask(() async {
       final controller = ref.read(timerControllerProvider.notifier);
-      await controller.selectMode('focus');
-      await controller.setPreset('focus', _selectedPreset.duration);
+      await controller.selectMode(widget.initialMode);
+      await controller.setPreset(widget.initialMode, _selectedPreset.duration);
+
+      // Auto start if requested
+      if (widget.autoStart) {
+        await controller.toggleStartStop();
+      }
     });
   }
 
   @override
   void dispose() {
+    _hourController.dispose();
+    _minuteController.dispose();
     _glowController.dispose();
     super.dispose();
   }
@@ -74,12 +123,80 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
     });
 
     final controller = ref.read(timerControllerProvider.notifier);
-    await controller.setPreset('focus', preset.duration);
+    await controller.setPreset(widget.initialMode, preset.duration);
 
     AnalyticsService.logEvent('figma_timer_preset_select', {
+      'mode': widget.initialMode,
       'preset': preset.name,
       'duration': preset.duration,
     });
+  }
+
+  Future<void> _handleCustomTimeSet() async {
+    final timerState = ref.read(timerControllerProvider);
+    if (timerState.isRunning) return;
+
+    final totalMinutes = (_customHours * 60) + _customMinutes;
+    if (totalMinutes == 0) return;
+
+    final controller = ref.read(timerControllerProvider.notifier);
+    await controller.setPreset(widget.initialMode, totalMinutes);
+
+    AnalyticsService.logEvent('figma_timer_custom_time_set', {
+      'mode': widget.initialMode,
+      'hours': _customHours,
+      'minutes': _customMinutes,
+      'total_minutes': totalMinutes,
+    });
+  }
+
+  Future<void> _showDirectInputDialog({
+    required BuildContext context,
+    required String title,
+    required String hintText,
+    required int maxValue,
+    required int currentValue,
+    required Function(int) onSubmit,
+  }) async {
+    final controller = TextEditingController(text: currentValue.toString());
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(title),
+        content: TextField(
+          controller: controller,
+          keyboardType: TextInputType.number,
+          decoration: InputDecoration(
+            hintText: hintText,
+            border: const OutlineInputBorder(),
+          ),
+          autofocus: true,
+          onSubmitted: (value) {
+            final num = int.tryParse(value);
+            if (num != null && num >= 0 && num <= maxValue) {
+              onSubmit(num);
+              Navigator.pop(context);
+            }
+          },
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () {
+              final num = int.tryParse(controller.text);
+              if (num != null && num >= 0 && num <= maxValue) {
+                onSubmit(num);
+                Navigator.pop(context);
+              }
+            },
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> _handlePlayPause() async {
@@ -133,14 +250,14 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
             end: Alignment.bottomCenter,
             colors: isDark
                 ? [
-                    const Color(0xFF1a1f3a),
-                    const Color(0xFF0f1419),
-                    const Color(0xFF0a0e14),
+                    const Color(0xFF2a1f1a),
+                    const Color(0xFF1a1214),
+                    const Color(0xFF140a0e),
                   ]
                 : [
-                    const Color(0xFFF0F4FF),
-                    const Color(0xFFE8EEFF),
-                    const Color(0xFFFFFFFF),
+                    const Color(0xFFFFF4E8),
+                    const Color(0xFFFFEED9),
+                    const Color(0xFFFFFBF5),
                   ],
           ),
         ),
@@ -160,7 +277,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                       shape: BoxShape.circle,
                       gradient: RadialGradient(
                         colors: [
-                          AppTheme.electricViolet.withOpacity(0.3 + _glowController.value * 0.2),
+                          const Color(0xFFFF9A56).withOpacity(0.3 + _glowController.value * 0.2),
                           Colors.transparent,
                         ],
                       ),
@@ -182,7 +299,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                       shape: BoxShape.circle,
                       gradient: RadialGradient(
                         colors: [
-                          AppTheme.teal.withOpacity(0.3 + (1 - _glowController.value) * 0.2),
+                          const Color(0xFFFFD93D).withOpacity(0.3 + (1 - _glowController.value) * 0.2),
                           Colors.transparent,
                         ],
                       ),
@@ -207,7 +324,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                           child: Icon(
                             Icons.arrow_back_ios_new,
                             size: 20,
-                            color: isDark ? Colors.white : AppTheme.electricViolet,
+                            color: isDark ? Colors.white : const Color(0xFFFF9A56),
                           ),
                         ),
                         const Spacer(),
@@ -225,14 +342,14 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                           Icon(
                             Icons.psychology,
                             size: 18,
-                            color: AppTheme.electricViolet,
+                            color: const Color(0xFFFF9A56),
                           ),
                           const SizedBox(width: 8),
                           Text(
                             'Neural Focus',
                             style: theme.textTheme.titleSmall?.copyWith(
                               fontWeight: FontWeight.w600,
-                              color: isDark ? Colors.white : AppTheme.electricViolet,
+                              color: isDark ? Colors.white : const Color(0xFFFF9A56),
                             ),
                           ),
                           const SizedBox(width: 4),
@@ -248,8 +365,8 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                     ShaderMask(
                       shaderCallback: (bounds) => LinearGradient(
                         colors: [
-                          AppTheme.electricViolet,
-                          AppTheme.teal,
+                          const Color(0xFFFF9A56),
+                          const Color(0xFFFFD93D),
                         ],
                       ).createShader(bounds),
                       child: Text(
@@ -265,8 +382,8 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                       '${_selectedPreset.duration} min session',
                       style: theme.textTheme.titleMedium?.copyWith(
                         color: isDark
-                            ? AppTheme.electricViolet.withOpacity(0.8)
-                            : AppTheme.electricViolet,
+                            ? const Color(0xFFFF9A56).withOpacity(0.8)
+                            : const Color(0xFFFF9A56),
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -286,7 +403,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                                 shape: BoxShape.circle,
                                 boxShadow: [
                                   BoxShadow(
-                                    color: AppTheme.electricViolet.withOpacity(
+                                    color: const Color(0xFFFF9A56).withOpacity(
                                       0.3 + _glowController.value * 0.3,
                                     ),
                                     blurRadius: 60,
@@ -302,7 +419,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                           progress: progress,
                           size: 260,
                           strokeWidth: 14,
-                          color: AppTheme.electricViolet,
+                          color: const Color(0xFFFF9A56),
                           centerText: '',
                         ),
                         // Timer content
@@ -328,8 +445,8 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                               isRunning ? '⚡ Focus Mode Active' : 'Ready to focus',
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 color: isDark
-                                    ? AppTheme.electricViolet.withOpacity(0.8)
-                                    : AppTheme.electricViolet,
+                                    ? const Color(0xFFFF9A56).withOpacity(0.8)
+                                    : const Color(0xFFFF9A56),
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -350,7 +467,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                           child: Icon(
                             Icons.refresh,
                             size: 24,
-                            color: isDark ? Colors.white : AppTheme.electricViolet,
+                            color: isDark ? Colors.white : const Color(0xFFFF9A56),
                           ),
                         ),
                         const SizedBox(width: 24),
@@ -364,13 +481,13 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                               colors: [
-                                AppTheme.electricViolet,
-                                AppTheme.teal,
+                                const Color(0xFFFF9A56),
+                                const Color(0xFFFFD93D),
                               ],
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: AppTheme.electricViolet.withOpacity(0.5),
+                                color: const Color(0xFFFF9A56).withOpacity(0.5),
                                 blurRadius: 24,
                                 offset: const Offset(0, 8),
                               ),
@@ -407,12 +524,229 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                           child: Icon(
                             Icons.bolt,
                             size: 24,
-                            color: isDark ? Colors.white : AppTheme.electricViolet,
+                            color: isDark ? Colors.white : const Color(0xFFFF9A56),
                           ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 40),
+                    // Custom time picker
+                    GlassCard(
+                      padding: const EdgeInsets.all(20),
+                      borderRadius: 20,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.schedule,
+                                size: 18,
+                                color: isDark ? Colors.white : const Color(0xFFFF9A56),
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                'Custom Timer',
+                                style: theme.textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                  color: isDark ? Colors.white : theme.colorScheme.onSurface,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          // iOS-style time picker
+                          Container(
+                            height: 180,
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                // Hour picker
+                                Expanded(
+                                  child: Column(
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () => _showDirectInputDialog(
+                                          context: context,
+                                          title: 'Enter Hours',
+                                          hintText: '0-24',
+                                          maxValue: 24,
+                                          currentValue: _customHours,
+                                          onSubmit: (value) {
+                                            setState(() {
+                                              _customHours = value;
+                                              _hourController.jumpToItem(value);
+                                            });
+                                          },
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              '시간',
+                                              style: theme.textTheme.bodySmall?.copyWith(
+                                                color: isDark
+                                                    ? Colors.white.withOpacity(0.5)
+                                                    : const Color(0xFFFF9A56).withOpacity(0.5),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 4),
+                                            Icon(
+                                              Icons.edit,
+                                              size: 12,
+                                              color: isDark
+                                                  ? Colors.white.withOpacity(0.3)
+                                                  : const Color(0xFFFF9A56).withOpacity(0.3),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Expanded(
+                                        child: CupertinoPicker(
+                                          scrollController: _hourController,
+                                          itemExtent: 50,
+                                          onSelectedItemChanged: (index) {
+                                            setState(() {
+                                              _customHours = index;
+                                            });
+                                          },
+                                          selectionOverlay: Container(
+                                            decoration: BoxDecoration(
+                                              border: Border.symmetric(
+                                                horizontal: BorderSide(
+                                                  color: const Color(0xFFFF9A56).withOpacity(0.3),
+                                                  width: 2,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          children: List.generate(25, (index) {
+                                            return Center(
+                                              child: Text(
+                                                '$index',
+                                                style: theme.textTheme.headlineSmall?.copyWith(
+                                                  color: isDark ? Colors.white : const Color(0xFFFF9A56),
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                              ),
+                                            );
+                                          }),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(width: 20),
+                                // Minute picker
+                                Expanded(
+                                  child: Column(
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () => _showDirectInputDialog(
+                                          context: context,
+                                          title: 'Enter Minutes',
+                                          hintText: '0-55 (5 min intervals)',
+                                          maxValue: 55,
+                                          currentValue: _customMinutes,
+                                          onSubmit: (value) {
+                                            // Round to nearest 5
+                                            final roundedValue = (value / 5).round() * 5;
+                                            setState(() {
+                                              _customMinutes = roundedValue;
+                                              _minuteController.jumpToItem(roundedValue ~/ 5);
+                                            });
+                                          },
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              '분',
+                                              style: theme.textTheme.bodySmall?.copyWith(
+                                                color: isDark
+                                                    ? Colors.white.withOpacity(0.5)
+                                                    : const Color(0xFFFF9A56).withOpacity(0.5),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 4),
+                                            Icon(
+                                              Icons.edit,
+                                              size: 12,
+                                              color: isDark
+                                                  ? Colors.white.withOpacity(0.3)
+                                                  : const Color(0xFFFF9A56).withOpacity(0.3),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Expanded(
+                                        child: CupertinoPicker(
+                                          scrollController: _minuteController,
+                                          itemExtent: 50,
+                                          onSelectedItemChanged: (index) {
+                                            setState(() {
+                                              _customMinutes = index * 5;
+                                            });
+                                          },
+                                          selectionOverlay: Container(
+                                            decoration: BoxDecoration(
+                                              border: Border.symmetric(
+                                                horizontal: BorderSide(
+                                                  color: const Color(0xFFFF9A56).withOpacity(0.3),
+                                                  width: 2,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          children: List.generate(12, (index) {
+                                            final minute = index * 5;
+                                            return Center(
+                                              child: Text(
+                                                '$minute',
+                                                style: theme.textTheme.headlineSmall?.copyWith(
+                                                  color: isDark ? Colors.white : const Color(0xFFFF9A56),
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                              ),
+                                            );
+                                          }),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          // Set button
+                          SizedBox(
+                            width: double.infinity,
+                            child: FilledButton(
+                              onPressed: isRunning ? null : _handleCustomTimeSet,
+                              style: FilledButton.styleFrom(
+                                backgroundColor: const Color(0xFFFF9A56),
+                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              child: Text(
+                                'Set ${_customHours > 0 ? "${_customHours}h " : ""}${_customMinutes}min',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 24),
                     // Preset grid
                     GridView.builder(
                       shrinkWrap: true,
@@ -423,9 +757,9 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                         mainAxisSpacing: 12,
                         childAspectRatio: 1.4,
                       ),
-                      itemCount: presets.length,
+                      itemCount: _currentPresets.length,
                       itemBuilder: (context, index) {
-                        final preset = presets[index];
+                        final preset = _currentPresets[index];
                         final isSelected = preset.id == _selectedPreset.id;
                         return GlassCard(
                           onTap: isRunning ? null : () => _handlePresetSelect(preset),
@@ -437,16 +771,16 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                                   end: Alignment.bottomRight,
                                   colors: isDark
                                       ? [
-                                          AppTheme.electricViolet.withOpacity(0.3),
-                                          AppTheme.teal.withOpacity(0.2),
+                                          const Color(0xFFFF9A56).withOpacity(0.3),
+                                          const Color(0xFFFFD93D).withOpacity(0.2),
                                         ]
                                       : [
-                                          AppTheme.electricViolet.withOpacity(0.15),
-                                          AppTheme.teal.withOpacity(0.1),
+                                          const Color(0xFFFF9A56).withOpacity(0.15),
+                                          const Color(0xFFFFD93D).withOpacity(0.1),
                                         ],
                                 )
                               : null,
-                          shadowColor: isSelected ? AppTheme.electricViolet : null,
+                          shadowColor: isSelected ? const Color(0xFFFF9A56) : null,
                           shadowOpacity: isSelected ? 0.3 : 0.2,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -469,8 +803,8 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                                 '${preset.duration} minutes',
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: isDark
-                                      ? AppTheme.electricViolet.withOpacity(0.8)
-                                      : AppTheme.electricViolet,
+                                      ? const Color(0xFFFF9A56).withOpacity(0.8)
+                                      : const Color(0xFFFF9A56),
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),

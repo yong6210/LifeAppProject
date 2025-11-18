@@ -8,6 +8,10 @@ devices, and ready for future subscription and wearable integrations.
 ## Highlights
 - **Multi-mode timer engine** with Pomodoro, micro-break, HIIT, and smart sleep
   plans, background resilience, and notification support (`lib/features/timer/`).
+- **iOS-style time picker** for Sleep and Focus modes with 12-hour format,
+  AM/PM toggling, looping dials, and automatic hour adjustments when scrolling
+  through minute boundaries (`lib/features/sleep/figma_sleep_tab.dart`,
+  `lib/features/timer/figma_timer_tab.dart`).
 - **Encrypted backup & restore** flows that package the Isar database for drive
   or iCloud hand-off, complete with streak tracking and reminders
   (`lib/services/backup/`, `lib/features/backup/backup_page.dart`).
