@@ -182,4 +182,4 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
   }
 }
 
-// Legacy home widgets removed during dashboard refactor.
+// Legacy home widgets removed during dashboard refactor
