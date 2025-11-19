@@ -45,6 +45,10 @@ final shortcutInvocationStreamProvider = StreamProvider<ShortcutInvocation>((
   return service.watchInvocations();
 });
 
+// TODO(automation-shortcuts): Load shortcut definitions from stored settings
+// or remote config and provide localized labels.
+// 현재는 영어 문구와 하드 코딩된 두 개의 단축키만 제공되어 다국어 지원과
+// 사용자 맞춤 구성이 전혀 이루어지지 않습니다.
 const defaultTimerShortcuts = <ShortcutDefinition>[
   ShortcutDefinition(
     id: 'start_focus_timer',

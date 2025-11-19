@@ -42,10 +42,7 @@ class _CircularProgressRingState extends State<CircularProgressRing>
     _animation = Tween<double>(
       begin: 0,
       end: widget.progress,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
     _controller.forward();
   }
 
@@ -56,10 +53,7 @@ class _CircularProgressRingState extends State<CircularProgressRing>
       _animation = Tween<double>(
         begin: oldWidget.progress,
         end: widget.progress,
-      ).animate(CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeOut,
-      ));
+      ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
       _controller
         ..reset()
         ..forward();

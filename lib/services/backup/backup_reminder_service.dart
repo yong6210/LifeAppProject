@@ -1,27 +1,45 @@
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:life_app/models/settings.dart';
 import 'package:life_app/services/backup/backup_metrics.dart';
 
 class BackupReminderService {
-  BackupReminderService._(this._prefs);
+  BackupReminderService({
+    required SharedPreferences preferences,
+    DateTime Function()? clock,
+  }) : _prefs = preferences,
+       _clock = clock ?? DateTime.now;
 
   static const _prefsKeyLastShown = 'backup_reminder_last_shown_at';
   static const _cooldown = Duration(days: 1);
 
   final SharedPreferences _prefs;
+  final DateTime Function() _clock;
 
-  static Future<BackupReminderService> create() async {
+  static Future<BackupReminderService> create({
+    DateTime Function()? clock,
+  }) async {
     final prefs = await SharedPreferences.getInstance();
-    return BackupReminderService._(prefs);
+    return BackupReminderService(preferences: prefs, clock: clock);
   }
+
+  @visibleForTesting
+  factory BackupReminderService.testing(
+    SharedPreferences preferences, {
+    DateTime Function()? clock,
+  }) {
+    return BackupReminderService(preferences: preferences, clock: clock);
+  }
+
+  DateTime _nowUtc() => _clock().toUtc();
 
   Future<bool> shouldNotify(Settings settings) async {
     if (!shouldEncourageBackup(settings)) {
       return false;
     }
 
-    final now = DateTime.now().toUtc();
+    final now = _nowUtc();
 
     final lastShownMillis = _prefs.getInt(_prefsKeyLastShown);
     if (lastShownMillis != null) {
@@ -38,7 +56,7 @@ class BackupReminderService {
   }
 
   Future<void> markNotified() async {
-    final now = DateTime.now().toUtc();
+    final now = _nowUtc();
     await _prefs.setInt(_prefsKeyLastShown, now.millisecondsSinceEpoch);
   }
 }

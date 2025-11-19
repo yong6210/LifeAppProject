@@ -39,7 +39,8 @@ class GlassCard extends StatelessWidget {
     Widget content = Container(
       padding: padding ?? const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: gradient ??
+        gradient:
+            gradient ??
             LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -62,8 +63,9 @@ class GlassCard extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: (shadowColor ?? Colors.black)
-                .withValues(alpha: isDark ? shadowOpacity : 0.05),
+            color: (shadowColor ?? Colors.black).withValues(
+              alpha: isDark ? shadowOpacity : 0.05,
+            ),
             blurRadius: isDark ? 40 : 16,
             offset: Offset(0, isDark ? 16 : 8),
           ),
@@ -94,10 +96,7 @@ class GlassCard extends StatelessWidget {
       );
     }
 
-    return Padding(
-      padding: margin ?? EdgeInsets.zero,
-      child: content,
-    );
+    return Padding(padding: margin ?? EdgeInsets.zero, child: content);
   }
 }
 
@@ -138,14 +137,8 @@ class GlassActivityCard extends StatelessWidget {
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: isDark
-            ? [
-                color.withValues(alpha: 0.18),
-                color.withValues(alpha: 0.06),
-              ]
-            : [
-                color.withValues(alpha: 0.08),
-                color.withValues(alpha: 0.02),
-              ],
+            ? [color.withValues(alpha: 0.18), color.withValues(alpha: 0.06)]
+            : [color.withValues(alpha: 0.08), color.withValues(alpha: 0.02)],
       ),
       shadowColor: isCompleted ? color : null,
       shadowOpacity: isCompleted ? 0.25 : 0.2,

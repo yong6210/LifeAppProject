@@ -84,7 +84,7 @@ class MyHomePage extends ConsumerStatefulWidget {
 }
 
 class _MyHomePageState extends ConsumerState<MyHomePage> {
-  bool _onboardingShown = false;
+  bool _isPresentingOnboarding = false;
   ProviderSubscription<AsyncValue<Settings>>? _settingsSubscription;
   int _currentIndex = 0;
 
@@ -132,38 +132,46 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
     ref.watch(revenueCatControllerProvider);
     final settingsAsync = ref.watch(settingsFutureProvider);
     settingsAsync.whenData((settings) {
-      if (!_onboardingShown && !settings.hasCompletedOnboarding) {
-        _onboardingShown = true;
+      final needsOnboarding = !settings.hasCompletedOnboarding;
+      if (!needsOnboarding) {
+        _isPresentingOnboarding = false;
+        return;
+      }
+      if (!_isPresentingOnboarding) {
+        _isPresentingOnboarding = true;
         WidgetsBinding.instance.addPostFrameCallback((_) async {
           if (!mounted) return;
-          await Navigator.push(
+          final completed = await Navigator.push<bool>(
             context,
-            MaterialPageRoute<void>(builder: (_) => const OnboardingPage()),
+            MaterialPageRoute<bool>(builder: (_) => const OnboardingPage()),
           );
+          if (!mounted) return;
+          if (completed != true) {
+            setState(() {
+              _isPresentingOnboarding = false;
+            });
+          }
         });
       }
     });
-    final tabs = const [
-      HomeDashboardTab(),
-      MorePage(),
-      AccountPage(),
-    ];
+    final l10n = context.l10n;
+    final tabs = const [HomeDashboardTab(), MorePage(), AccountPage()];
 
     // iOS-style tab bar items with Life Buddy colors
     final tabItems = [
-      const IOSTabItem(
+      IOSTabItem(
         icon: Icons.home_outlined,
-        label: '홈',
+        label: l10n.tr('tab_home'),
         color: AppTheme.teal,
       ),
-      const IOSTabItem(
+      IOSTabItem(
         icon: Icons.grid_view_rounded,
-        label: '더보기',
+        label: l10n.tr('tab_more'),
         color: AppTheme.eucalyptus,
       ),
-      const IOSTabItem(
+      IOSTabItem(
         icon: Icons.person_outline,
-        label: '프로필',
+        label: l10n.tr('tab_profile'),
         color: AppTheme.coral,
       ),
     ];

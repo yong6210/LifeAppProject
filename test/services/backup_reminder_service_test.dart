@@ -17,7 +17,8 @@ void main() {
     });
 
     test('shouldNotify returns false when recent backup exists', () async {
-      final service = await BackupReminderService.create();
+      final prefs = await SharedPreferences.getInstance();
+      final service = BackupReminderService.testing(prefs);
       final recent = DateTime.now().toUtc().subtract(const Duration(days: 3));
       final result = await service.shouldNotify(
         _settings(lastBackupAt: recent),
@@ -26,14 +27,16 @@ void main() {
     });
 
     test('shouldNotify returns true when backup stale', () async {
-      final service = await BackupReminderService.create();
+      final prefs = await SharedPreferences.getInstance();
+      final service = BackupReminderService.testing(prefs);
       final stale = DateTime.now().toUtc().subtract(const Duration(days: 10));
       final result = await service.shouldNotify(_settings(lastBackupAt: stale));
       expect(result, isTrue);
     });
 
     test('shouldNotify respects cooldown after markNotified', () async {
-      final service = await BackupReminderService.create();
+      final prefs = await SharedPreferences.getInstance();
+      final service = BackupReminderService.testing(prefs);
       final stale = DateTime.now().toUtc().subtract(const Duration(days: 10));
       expect(
         await service.shouldNotify(_settings(lastBackupAt: stale)),
@@ -43,6 +46,31 @@ void main() {
       expect(
         await service.shouldNotify(_settings(lastBackupAt: stale)),
         isFalse,
+      );
+    });
+
+    test('allows injecting clock for deterministic cooldown checks', () async {
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      var current = DateTime.utc(2024, 1, 1);
+      final service = BackupReminderService.testing(
+        prefs,
+        clock: () => current,
+      );
+      final stale = current.subtract(const Duration(days: 30));
+      expect(
+        await service.shouldNotify(_settings(lastBackupAt: stale)),
+        isTrue,
+      );
+      await service.markNotified();
+      expect(
+        await service.shouldNotify(_settings(lastBackupAt: stale)),
+        isFalse,
+      );
+      current = current.add(const Duration(days: 2));
+      expect(
+        await service.shouldNotify(_settings(lastBackupAt: stale)),
+        isTrue,
       );
     });
   });

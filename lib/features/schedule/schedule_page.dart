@@ -36,6 +36,7 @@ class _SchedulePageState extends ConsumerState<SchedulePage> {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: null,
         icon: const Icon(Icons.add),
         label: Text(l10n.tr('schedule_add_block')),
         onPressed: () async {
@@ -98,6 +99,8 @@ class _SchedulePageState extends ConsumerState<SchedulePage> {
     var endTime = initialEnd;
     var repeatRule = existing?.repeatRule ?? ScheduleRepeatRule.none;
     var routineType = existing?.routineType ?? ScheduleRoutineType.builtIn;
+    // TODO(schedule-data): Replace fallback routine metadata with repository-backed defaults.
+    // 현재 기본 루틴 ID와 라벨이 코드 상수로 고정되어 사용자 설정/DB 값과 동기화되지 않습니다.
     var routineId =
         existing?.routineId ?? routines.firstOrNull?.id ?? 'focus_default';
     var routineLabel = existing?.title ?? l10n.tr('schedule_default_focus');

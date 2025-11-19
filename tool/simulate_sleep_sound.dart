@@ -34,8 +34,10 @@ Future<void> main(List<String> args) async {
 
   stdout.writeln('Generated synthetic sleep sound summary:');
   stdout.writeln('- Output: $outputPath');
-  stdout.writeln('- Duration: ${summary.duration.inMinutes}분 '
-      '${summary.duration.inSeconds.remainder(60)}초');
+  stdout.writeln(
+    '- Duration: ${summary.duration.inMinutes}분 '
+    '${summary.duration.inSeconds.remainder(60)}초',
+  );
   stdout.writeln('- Samples: ${summary.sampleCount}');
   stdout.writeln('- Loud events: ${summary.loudEventCount}');
   stdout.writeln(
@@ -52,10 +54,7 @@ Future<void> main(List<String> args) async {
 }
 
 class _SimulatedSession {
-  _SimulatedSession({
-    required this.segments,
-    required this.sampleInterval,
-  });
+  _SimulatedSession({required this.segments, required this.sampleInterval});
 
   final List<_SimulatedSegment> segments;
   final Duration sampleInterval;
@@ -69,7 +68,8 @@ class _SimulatedSession {
     final random = Random(42);
 
     for (final segment in segments) {
-      final sampleCount = segment.duration.inMilliseconds ~/ sampleInterval.inMilliseconds;
+      final sampleCount =
+          segment.duration.inMilliseconds ~/ sampleInterval.inMilliseconds;
       for (var i = 0; i < sampleCount; i += 1) {
         final amp = segment.sample(random);
         amplitudes.add(amp);
@@ -93,7 +93,9 @@ class _SimulatedSession {
         return;
       }
       final start = currentEventStart!;
-      final offset = startTime == null ? Duration.zero : start.difference(startTime);
+      final offset = startTime == null
+          ? Duration.zero
+          : start.difference(startTime);
       final duration = now.difference(start) < const Duration(milliseconds: 400)
           ? const Duration(milliseconds: 400)
           : now.difference(start);
@@ -114,9 +116,7 @@ class _SimulatedSession {
     startTime = now;
     for (var index = 0; index < amplitudes.length; index += 1) {
       final amplitude = amplitudes[index].clamp(0.0, 1.0);
-      final sampleTime = startTime.add(
-        _scaledDuration(sampleInterval, index),
-      );
+      final sampleTime = startTime.add(_scaledDuration(sampleInterval, index));
 
       if (amplitude <= _restfulThreshold) {
         restfulCount += 1;
@@ -139,18 +139,19 @@ class _SimulatedSession {
 
     finishEvent(
       force: true,
-      now: startTime.add(
-        _scaledDuration(sampleInterval, amplitudes.length),
-      ),
+      now: startTime.add(_scaledDuration(sampleInterval, amplitudes.length)),
     );
 
     final duration = _scaledDuration(sampleInterval, amplitudes.length);
-    final averageAmplitude =
-        amplitudes.isEmpty ? 0.0 : amplitudes.reduce((a, b) => a + b) / amplitudes.length;
-    final maxAmplitude =
-        amplitudes.isEmpty ? 0.0 : amplitudes.reduce((a, b) => max(a, b));
-    final restfulRatio =
-        amplitudes.isEmpty ? 0.0 : (restfulCount / amplitudes.length).clamp(0.0, 1.0);
+    final averageAmplitude = amplitudes.isEmpty
+        ? 0.0
+        : amplitudes.reduce((a, b) => a + b) / amplitudes.length;
+    final maxAmplitude = amplitudes.isEmpty
+        ? 0.0
+        : amplitudes.reduce((a, b) => max(a, b));
+    final restfulRatio = amplitudes.isEmpty
+        ? 0.0
+        : (restfulCount / amplitudes.length).clamp(0.0, 1.0);
 
     return SleepSoundSummary(
       recordingPath: 'simulated',
@@ -176,9 +177,11 @@ abstract class _SimulatedSegment {
   final double baseAmplitude;
   final double variance;
 
-  factory _SimulatedSegment.restful(Duration duration) => _RestfulSegment(duration);
+  factory _SimulatedSegment.restful(Duration duration) =>
+      _RestfulSegment(duration);
   factory _SimulatedSegment.snore(Duration duration) => _SnoreSegment(duration);
-  factory _SimulatedSegment.noiseBurst(Duration duration) => _NoiseBurstSegment(duration);
+  factory _SimulatedSegment.noiseBurst(Duration duration) =>
+      _NoiseBurstSegment(duration);
 
   double sample(Random random) {
     final jitter = (random.nextDouble() - 0.5) * variance * 2;

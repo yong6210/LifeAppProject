@@ -82,49 +82,56 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
           Padding(
             padding: const EdgeInsets.all(24),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  l10n.tr('onboarding_progress', {
-                    'current': '${displayIndex + 1}',
-                    'total': '$totalPages',
-                  }),
-                ),
-                FilledButton(
-                  onPressed: () async {
-                    final navigator = Navigator.of(context);
-                    final currentPage = totalPages > 0
-                        ? pages[displayIndex]
-                        : null;
-                    if (currentPage != null) {
-                      await _logStepComplete(
-                        currentPage,
-                        variant,
-                        isManualPersonaSelection:
-                            currentPage is _OnboardingPersonaPage,
-                      );
-                    }
-                    if (displayIndex < totalPages - 1) {
-                      await _controller.nextPage(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeInOut,
-                      );
-                    } else {
-                      await ref.read(completeOnboardingProvider.future);
-                      await AnalyticsService.logEvent('onboarding_complete', {
-                        'variant': variant,
-                        'duration_sec': DateTime.now()
-                            .difference(_startedAt)
-                            .inSeconds,
-                      });
-                      if (!mounted) return;
-                      navigator.pop(true);
-                    }
-                  },
+                Expanded(
                   child: Text(
-                    displayIndex == totalPages - 1
-                        ? l10n.tr('onboarding_start_button')
-                        : l10n.tr('onboarding_next_button'),
+                    l10n.tr('onboarding_progress', {
+                      'current': '${displayIndex + 1}',
+                      'total': '$totalPages',
+                    }),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                SizedBox(
+                  width: 160,
+                  child: FilledButton(
+                    onPressed: () async {
+                      final navigator = Navigator.of(context);
+                      final currentPage = totalPages > 0
+                          ? pages[displayIndex]
+                          : null;
+                      if (currentPage != null) {
+                        await _logStepComplete(
+                          currentPage,
+                          variant,
+                          isManualPersonaSelection:
+                              currentPage is _OnboardingPersonaPage,
+                        );
+                      }
+                      if (displayIndex < totalPages - 1) {
+                        await _controller.nextPage(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                        );
+                      } else {
+                        await ref
+                            .read(settingsMutationControllerProvider.notifier)
+                            .completeOnboarding();
+                        await AnalyticsService.logEvent('onboarding_complete', {
+                          'variant': variant,
+                          'duration_sec': DateTime.now()
+                              .difference(_startedAt)
+                              .inSeconds,
+                        });
+                        if (!mounted) return;
+                        navigator.pop(true);
+                      }
+                    },
+                    child: Text(
+                      displayIndex == totalPages - 1
+                          ? l10n.tr('onboarding_start_button')
+                          : l10n.tr('onboarding_next_button'),
+                    ),
                   ),
                 ),
               ],
@@ -200,32 +207,43 @@ class _InfoPageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return Padding(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 32),
-          Icon(
-            page.icon,
-            size: 64,
-            color: Theme.of(context).colorScheme.primary,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final targetHeight = constraints.maxHeight.isFinite
+            ? constraints.maxHeight
+            : MediaQuery.of(context).size.height;
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: targetHeight),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 32),
+                Icon(
+                  page.icon,
+                  size: 64,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                const SizedBox(height: 32),
+                Text(
+                  l10n.tr(page.titleKey),
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  l10n.tr(page.bodyKey),
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                const SizedBox(height: 32),
+              ],
+            ),
           ),
-          const SizedBox(height: 32),
-          Text(
-            l10n.tr(page.titleKey),
-            style: Theme.of(
-              context,
-            ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            l10n.tr(page.bodyKey),
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-          const Spacer(),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -244,71 +262,91 @@ class _PersonaSelectionView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    return Padding(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 32),
-          Text(
-            l10n.tr('onboarding_persona_heading'),
-            style: Theme.of(
-              context,
-            ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            l10n.tr('onboarding_persona_subtitle'),
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-          const SizedBox(height: 24),
-          ..._personaTemplates.map(
-            (template) => Card(
-              child: ListTile(
-                leading: Icon(
-                  template.icon,
-                  color: Theme.of(context).colorScheme.primary,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final targetHeight = constraints.maxHeight.isFinite
+            ? constraints.maxHeight
+            : MediaQuery.of(context).size.height;
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: targetHeight),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 32),
+                Text(
+                  l10n.tr('onboarding_persona_heading'),
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                title: Text(l10n.tr(template.titleKey)),
-                subtitle: Text(l10n.tr(template.bodyKey)),
-                trailing: const Icon(Icons.chevron_right),
-                onTap: () async {
-                  try {
-                    AnalyticsService.logEvent('onboarding_step_complete', {
-                      'step_id': 'persona_selection',
-                      'variant': variant,
-                      'choice': template.titleKey,
-                    });
-                    await ref.read(savePresetProvider(template.minutes).future);
-                    await ref.read(completeOnboardingProvider.future);
-                    await AnalyticsService.logEvent('onboarding_complete', {
-                      'variant': variant,
-                      'duration_sec': DateTime.now()
-                          .difference(startedAt)
-                          .inSeconds,
-                      'choice': template.titleKey,
-                    });
-                    if (context.mounted) Navigator.pop(context, true);
-                  } catch (error) {
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            l10n.tr('onboarding_preset_error', {
-                              'error': '$error',
-                            }),
-                          ),
-                        ),
-                      );
-                    }
-                  }
-                },
-              ),
+                const SizedBox(height: 16),
+                Text(
+                  l10n.tr('onboarding_persona_subtitle'),
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                const SizedBox(height: 24),
+                ..._personaTemplates.map(
+                  (template) => Card(
+                    child: ListTile(
+                      leading: Icon(
+                        template.icon,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      title: Text(l10n.tr(template.titleKey)),
+                      subtitle: Text(l10n.tr(template.bodyKey)),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () async {
+                        try {
+                          AnalyticsService.logEvent(
+                            'onboarding_step_complete',
+                            {
+                              'step_id': 'persona_selection',
+                              'variant': variant,
+                              'choice': template.titleKey,
+                            },
+                          );
+                          final mutations = ref.read(
+                            settingsMutationControllerProvider.notifier,
+                          );
+                          await mutations.savePreset(template.minutes);
+                          await mutations.completeOnboarding();
+                          await AnalyticsService.logEvent(
+                            'onboarding_complete',
+                            {
+                              'variant': variant,
+                              'duration_sec': DateTime.now()
+                                  .difference(startedAt)
+                                  .inSeconds,
+                              'choice': template.titleKey,
+                            },
+                          );
+                          if (context.mounted) Navigator.pop(context, true);
+                        } catch (error) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  l10n.tr('onboarding_preset_error', {
+                                    'error': '$error',
+                                  }),
+                                ),
+                              ),
+                            );
+                          }
+                        }
+                      },
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 32),
+              ],
             ),
           ),
-          const Spacer(),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -343,6 +381,8 @@ const _defaultOnboardingPages = <Object>[
   _onboardingPersonaStep,
 ];
 
+// TODO(onboarding-data): Load persona presets from remote config/profile instead of static minutes.
+// 퍼소나별 세션 시간 구성이 코드에 박혀 있어 실험 및 사용자 데이터 기반 조정이 불가합니다.
 const _personaTemplates = <_PersonaTemplate>[
   _PersonaTemplate(
     titleKey: 'onboarding_persona_student_title',

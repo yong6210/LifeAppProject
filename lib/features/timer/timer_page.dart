@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:life_app/features/timer/timer_controller.dart';
 import 'package:life_app/features/timer/timer_state.dart';
 import 'package:life_app/features/timer/timer_plan.dart';
+import 'package:life_app/models/routine.dart';
 import 'package:life_app/models/settings.dart';
 import 'package:life_app/providers/session_providers.dart';
 import 'package:life_app/providers/settings_providers.dart';
@@ -329,11 +330,13 @@ class TimerPage extends ConsumerStatefulWidget {
     this.initialMode,
     this.autoStart = false,
     this.useForegroundTask = true,
+    this.initialRoutine,
   });
 
   final String? initialMode;
   final bool autoStart;
   final bool useForegroundTask;
+  final Routine? initialRoutine;
 
   @override
   ConsumerState<TimerPage> createState() => _TimerPageState();
@@ -382,6 +385,26 @@ class _TimerPageState extends ConsumerState<TimerPage> {
 
   void _maybeApplyInitialMode() {
     if (_initialModeApplied) return;
+    if (widget.initialRoutine != null) {
+      _initialModeApplied = true;
+      Future.microtask(() async {
+        final controller = ref.read(timerControllerProvider.notifier);
+        final started = await controller.startCustomRoutine(
+          routine: widget.initialRoutine!,
+          autoStart: widget.autoStart,
+        );
+        if (!mounted) return;
+        if (!started) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(context.l10n.tr('timer_custom_routine_invalid')),
+            ),
+          );
+          Navigator.of(context).maybePop();
+        }
+      });
+      return;
+    }
     final initialMode = widget.initialMode;
     if (initialMode == null) {
       _initialModeApplied = true;
@@ -2629,9 +2652,12 @@ class _SleepSmartAlarmCard extends ConsumerWidget {
                                 presetId: presetId,
                               );
                               try {
-                                await ref.read(
-                                  updateSleepSmartAlarmProvider(input).future,
-                                );
+                                await ref
+                                    .read(
+                                      settingsMutationControllerProvider
+                                          .notifier,
+                                    )
+                                    .updateSleepSmartAlarm(input);
                                 if (context.mounted) {
                                   Navigator.pop(context, true);
                                 }
@@ -2777,7 +2803,9 @@ class _QuickPresetEditor extends ConsumerWidget {
                       s.focusMinutes,
                     );
                     if (n == null || n <= 0) return;
-                    await ref.read(savePresetProvider({'focus': n}).future);
+                    await ref
+                        .read(settingsMutationControllerProvider.notifier)
+                        .savePreset({'focus': n});
                     await controller.setPreset('focus', n);
                   },
                 ),
@@ -2792,7 +2820,9 @@ class _QuickPresetEditor extends ConsumerWidget {
                       s.restMinutes,
                     );
                     if (n == null || n <= 0) return;
-                    await ref.read(savePresetProvider({'rest': n}).future);
+                    await ref
+                        .read(settingsMutationControllerProvider.notifier)
+                        .savePreset({'rest': n});
                     await controller.setPreset('rest', n);
                   },
                 ),
@@ -2814,7 +2844,9 @@ class _QuickPresetEditor extends ConsumerWidget {
                       s.workoutMinutes,
                     );
                     if (n == null || n <= 0) return;
-                    await ref.read(savePresetProvider({'workout': n}).future);
+                    await ref
+                        .read(settingsMutationControllerProvider.notifier)
+                        .savePreset({'workout': n});
                     await controller.setPreset('workout', n);
                   },
                 ),
@@ -2836,7 +2868,9 @@ class _QuickPresetEditor extends ConsumerWidget {
                       s.sleepMinutes,
                     );
                     if (n == null || n <= 0) return;
-                    await ref.read(savePresetProvider({'sleep': n}).future);
+                    await ref
+                        .read(settingsMutationControllerProvider.notifier)
+                        .savePreset({'sleep': n});
                     await controller.setPreset('sleep', n);
                   },
                 ),
@@ -3008,9 +3042,11 @@ class _TimerDesktopLayoutState extends ConsumerState<_TimerDesktopLayout> {
                           onMinutesChanged: (value) {
                             setState(() => _focusMinutes = value);
                             unawaited(
-                              ref.read(
-                                savePresetProvider({'focus': value}).future,
-                              ),
+                              ref
+                                  .read(
+                                    settingsMutationControllerProvider.notifier,
+                                  )
+                                  .savePreset({'focus': value}),
                             );
                           },
                           onStart: () => _startFocus(context, focusMinutes),
@@ -3046,9 +3082,11 @@ class _TimerDesktopLayoutState extends ConsumerState<_TimerDesktopLayout> {
                           onMinutesChanged: (value) {
                             setState(() => _sleepMinutes = value);
                             unawaited(
-                              ref.read(
-                                savePresetProvider({'sleep': value}).future,
-                              ),
+                              ref
+                                  .read(
+                                    settingsMutationControllerProvider.notifier,
+                                  )
+                                  .savePreset({'sleep': value}),
                             );
                           },
                           onSmartWindowChanged: (value) async {
@@ -3110,21 +3148,21 @@ class _TimerDesktopLayoutState extends ConsumerState<_TimerDesktopLayout> {
     final windowMinutes = enabled
         ? current.sleepSmartAlarmWindowMinutes.clamp(15, 120)
         : 0;
-    await ref.read(
-      updateSleepSmartAlarmProvider(
-        SleepSmartAlarmInput(
-          windowMinutes: windowMinutes,
-          intervalMinutes: current.sleepSmartAlarmIntervalMinutes,
-          fallbackExact: current.sleepSmartAlarmExactFallback,
-          whiteLevel: current.sleepMixerWhiteLevel,
-          pinkLevel: current.sleepMixerPinkLevel,
-          brownLevel: current.sleepMixerBrownLevel,
-          presetId: current.sleepMixerPresetId.isEmpty
-              ? SleepSoundCatalog.defaultPresetId
-              : current.sleepMixerPresetId,
-        ),
-      ).future,
-    );
+    await ref
+        .read(settingsMutationControllerProvider.notifier)
+        .updateSleepSmartAlarm(
+          SleepSmartAlarmInput(
+            windowMinutes: windowMinutes,
+            intervalMinutes: current.sleepSmartAlarmIntervalMinutes,
+            fallbackExact: current.sleepSmartAlarmExactFallback,
+            whiteLevel: current.sleepMixerWhiteLevel,
+            pinkLevel: current.sleepMixerPinkLevel,
+            brownLevel: current.sleepMixerBrownLevel,
+            presetId: current.sleepMixerPresetId.isEmpty
+                ? SleepSoundCatalog.defaultPresetId
+                : current.sleepMixerPresetId,
+          ),
+        );
   }
 
   Widget _buildFocusControls(
@@ -3293,7 +3331,9 @@ class _TimerDesktopLayoutState extends ConsumerState<_TimerDesktopLayout> {
   Future<void> _startFocus(BuildContext context, int minutes) async {
     final granted = await _ensurePermissions(context);
     if (!granted) return;
-    await ref.read(savePresetProvider({'focus': minutes}).future);
+    await ref.read(settingsMutationControllerProvider.notifier).savePreset({
+      'focus': minutes,
+    });
     await ref.read(timerControllerProvider.notifier).selectMode('focus');
     final current = ref.read(timerControllerProvider);
     if (!current.isRunning) {
@@ -3319,7 +3359,9 @@ class _TimerDesktopLayoutState extends ConsumerState<_TimerDesktopLayout> {
   Future<void> _startSleep(BuildContext context, int minutes) async {
     final granted = await _ensurePermissions(context);
     if (!granted) return;
-    await ref.read(savePresetProvider({'sleep': minutes}).future);
+    await ref.read(settingsMutationControllerProvider.notifier).savePreset({
+      'sleep': minutes,
+    });
     await ref.read(timerControllerProvider.notifier).selectMode('sleep');
     final current = ref.read(timerControllerProvider);
     if (!current.isRunning) {

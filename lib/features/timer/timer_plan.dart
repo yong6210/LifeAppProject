@@ -1,5 +1,6 @@
 import 'package:life_app/features/workout/workout_light_presets.dart';
 import 'package:life_app/l10n/app_localizations.dart';
+import 'package:life_app/models/routine.dart';
 import 'package:life_app/models/settings.dart';
 
 class TimerSegment {
@@ -64,6 +65,13 @@ class TimerPlan {
 }
 
 class TimerPlanFactory {
+  static const _routineModeLocalizationKeys = {
+    'focus': 'timer_custom_routine_step_focus',
+    'rest': 'timer_custom_routine_step_rest',
+    'workout': 'timer_custom_routine_step_workout',
+    'sleep': 'timer_custom_routine_step_sleep',
+  };
+
   static TimerPlan createPlan(String mode, Settings settings) {
     switch (mode) {
       case 'rest':
@@ -72,10 +80,93 @@ class TimerPlanFactory {
         return _buildWorkoutPlan(settings);
       case 'sleep':
         return _buildSleepPlan(settings);
+      case 'custom_routine':
+        // Custom routines must be reconstructed from persisted state.
+        return _buildFocusPlan(settings);
       case 'focus':
       default:
         return _buildFocusPlan(settings);
     }
+  }
+
+  static TimerPlan? createRoutinePlan(Routine routine) {
+    if (routine.steps.isEmpty) return null;
+    final segments = <TimerSegment>[];
+    for (var i = 0; i < routine.steps.length; i++) {
+      final step = routine.steps[i];
+      if (step.durationMinutes <= 0) continue;
+      final normalizedMode = _normalizeRoutineMode(step.mode);
+      segments.add(
+        TimerSegment(
+          id: 'routine_${routine.id}_step_${i + 1}',
+          type: normalizedMode,
+          duration: Duration(minutes: step.durationMinutes),
+          localizationKey: _routineModeLocalizationKeys[normalizedMode],
+          localizationArgs: {'number': '${i + 1}'},
+          recordSession: normalizedMode != 'rest',
+          playSoundProfile: step.playSound
+              ? _soundProfileForStep(step, normalizedMode)
+              : null,
+        ),
+      );
+    }
+    if (segments.isEmpty) return null;
+    return TimerPlan(mode: 'custom_routine', segments: segments);
+  }
+
+  static Map<String, dynamic> serializeSegment(TimerSegment segment) {
+    return {
+      'id': segment.id,
+      'type': segment.type,
+      'durationSeconds': segment.duration.inSeconds,
+      'label': segment.label,
+      'localizationKey': segment.localizationKey,
+      'localizationArgs': segment.localizationArgs,
+      'recordSession': segment.recordSession,
+      'playSoundProfile': segment.playSoundProfile,
+      'autoStartNext': segment.autoStartNext,
+      if (segment.smartAlarm != null)
+        'smartAlarm': {
+          'windowMinutes': segment.smartAlarm!.windowMinutes,
+          'intervalMinutes': segment.smartAlarm!.intervalMinutes,
+          'fallbackExactAlarm': segment.smartAlarm!.fallbackExactAlarm,
+        },
+    };
+  }
+
+  static TimerPlan? planFromSerializedSegments(
+    List<Map<String, dynamic>> serializedSegments, {
+    String mode = 'custom_routine',
+  }) {
+    if (serializedSegments.isEmpty) return null;
+    final segments = <TimerSegment>[];
+    for (final raw in serializedSegments) {
+      final durationSeconds =
+          (raw['durationSeconds'] as num?)?.toInt() ??
+          (raw['duration'] as num?)?.toInt() ??
+          0;
+      if (durationSeconds <= 0) continue;
+      segments.add(
+        TimerSegment(
+          id: raw['id'] as String? ?? 'segment_${segments.length}',
+          type: raw['type'] as String? ?? 'focus',
+          duration: Duration(seconds: durationSeconds),
+          label: raw['label'] as String?,
+          localizationKey: raw['localizationKey'] as String?,
+          localizationArgs: raw['localizationArgs'] != null
+              ? Map<String, String>.from(
+                  Map<String, dynamic>.from(raw['localizationArgs'] as Map),
+                )
+              : null,
+          recordSession: raw['recordSession'] as bool? ?? true,
+          playSoundProfile: raw['playSoundProfile'] as String?,
+          autoStartNext: raw['autoStartNext'] as bool? ?? true,
+          smartAlarm: _deserializeSmartAlarm(raw['smartAlarm']),
+        ),
+      );
+    }
+    if (segments.isEmpty) return null;
+    return TimerPlan(mode: mode, segments: segments);
   }
 
   static TimerPlan _buildFocusPlan(Settings settings) {
@@ -546,5 +637,50 @@ class TimerPlanFactory {
       ),
     );
     return segments;
+  }
+
+  static SmartAlarmConfig? _deserializeSmartAlarm(dynamic raw) {
+    if (raw == null) return null;
+    if (raw is! Map) return null;
+    final map = Map<String, dynamic>.from(raw as Map);
+    final window = (map['windowMinutes'] as num?)?.toInt();
+    final interval = (map['intervalMinutes'] as num?)?.toInt();
+    if (window == null || interval == null) return null;
+    return SmartAlarmConfig(
+      windowMinutes: window,
+      intervalMinutes: interval,
+      fallbackExactAlarm: map['fallbackExactAlarm'] as bool? ?? true,
+    );
+  }
+
+  static String _normalizeRoutineMode(String mode) {
+    switch (mode.toLowerCase()) {
+      case 'rest':
+        return 'rest';
+      case 'workout':
+        return 'workout';
+      case 'sleep':
+        return 'sleep';
+      case 'focus':
+      default:
+        return 'focus';
+    }
+  }
+
+  static String? _soundProfileForStep(RoutineStep step, String normalizedMode) {
+    if (step.soundId != null && step.soundId!.isNotEmpty) {
+      return step.soundId;
+    }
+    switch (normalizedMode) {
+      case 'rest':
+        return 'rest';
+      case 'workout':
+        return 'workout';
+      case 'sleep':
+        return 'sleep';
+      case 'focus':
+      default:
+        return 'focus';
+    }
   }
 }

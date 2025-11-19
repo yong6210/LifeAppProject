@@ -47,11 +47,13 @@ void main() {
   }
 
   setUpAll(() {
-    _testL10n = AppLocalizations.testing(translations: const {
-      'timer_announcer_minutes_seconds': '{minutes}m {seconds}s',
-      'timer_announcer_seconds_only': '{seconds}s',
-      'timer_announcer_segment': '{segment} · {time}',
-    });
+    _testL10n = AppLocalizations.testing(
+      translations: const {
+        'timer_announcer_minutes_seconds': '{minutes}m {seconds}s',
+        'timer_announcer_seconds_only': '{seconds}s',
+        'timer_announcer_segment': '{segment} · {time}',
+      },
+    );
   });
 
   setUp(() {
@@ -67,9 +69,9 @@ void main() {
     final events = <String>[];
     final announcer = TimerAnnouncer(
       minInterval: const Duration(seconds: 30),
-      announce: (message, direction) {
+      sendAnnouncement: (message, direction) {
         events.add(message);
-        return Future.value();
+        return Future<void>.value();
       },
     );
 
@@ -122,9 +124,9 @@ void main() {
     final context = await pumpHost(tester);
     final events = <String>[];
     final announcer = TimerAnnouncer(
-      announce: (message, direction) {
+      sendAnnouncement: (message, direction) {
         events.add(message);
-        return Future.value();
+        return Future<void>.value();
       },
     );
     final segments = [

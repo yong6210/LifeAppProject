@@ -314,6 +314,8 @@ class _BackupProviderOption {
   }
 }
 
+// TODO(backup-config): Populate provider list from localized config instead of inline values.
+// 백업 제공자 라벨과 value가 코드에 하드코딩되어 있어 다국어/원격 설정 반영이 불가능합니다.
 const _backupProviders = <_BackupProviderOption>[
   _BackupProviderOption(
     value: '자동',
@@ -405,9 +407,9 @@ class _PreferredProviderSection extends ConsumerWidget {
               onChanged: (value) async {
                 if (value == null) return;
                 try {
-                  await ref.read(
-                    updateBackupPreferredProviderProvider(value).future,
-                  );
+                  await ref
+                      .read(settingsMutationControllerProvider.notifier)
+                      .updateBackupPreferredProvider(value);
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(

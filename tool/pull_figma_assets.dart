@@ -55,8 +55,8 @@ Future<void> main(List<String> args) async {
     _exitWithError('`fileKey` missing in $manifestPath');
   }
 
-  final assets =
-      (manifestJson['assets'] as List<dynamic>? ?? const []).cast<Map<dynamic, dynamic>>();
+  final assets = (manifestJson['assets'] as List<dynamic>? ?? const [])
+      .cast<Map<dynamic, dynamic>>();
   if (assets.isEmpty) {
     stdout.writeln('No assets defined in $manifestPath. Nothing to download.');
     return;
@@ -111,8 +111,7 @@ Future<void> _downloadAsset(
     destinationDir.createSync(recursive: true);
   }
 
-  final filePath =
-      p.join(destinationDir.path, '${asset.name}.${asset.format}');
+  final filePath = p.join(destinationDir.path, '${asset.name}.${asset.format}');
   await File(filePath).writeAsBytes(response.bodyBytes);
 }
 
@@ -135,10 +134,7 @@ Future<String> _requestImageUrl(
     queryParameters,
   );
 
-  final response = await http.get(
-    uri,
-    headers: {'X-Figma-Token': token},
-  );
+  final response = await http.get(uri, headers: {'X-Figma-Token': token});
 
   if (response.statusCode != 200) {
     throw 'Figma API failed (${response.statusCode}): ${response.body}';
@@ -184,9 +180,11 @@ class _FigmaAsset {
     final format = (json['format'] as String? ?? 'png').toLowerCase();
     final scale = json['scale'];
     return _FigmaAsset(
-      nodeId: json['nodeId'] as String? ??
+      nodeId:
+          json['nodeId'] as String? ??
           (throw ArgumentError('`nodeId` missing in asset config')),
-      name: json['name'] as String? ??
+      name:
+          json['name'] as String? ??
           (throw ArgumentError('`name` missing in asset config')),
       format: format,
       scale: scale is num ? scale.toDouble() : null,

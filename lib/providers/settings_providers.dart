@@ -27,84 +27,93 @@ final sleepSoundCatalogProvider = FutureProvider<SleepSoundCatalog>((
   return SleepSoundCatalog.load();
 });
 
-/// 프리셋 저장
-final savePresetProvider = FutureProvider.family<void, Map<String, dynamic>>((
-  ref,
-  data,
-) async {
-  final repo = await ref.watch(settingsRepoProvider.future);
-  await repo.update((s) {
-    if (data.containsKey('focus')) s.focusMinutes = data['focus'] as int;
-    if (data.containsKey('rest')) s.restMinutes = data['rest'] as int;
-    if (data.containsKey('workout')) s.workoutMinutes = data['workout'] as int;
-    if (data.containsKey('sleep')) s.sleepMinutes = data['sleep'] as int;
-  });
-  ref.invalidate(settingsFutureProvider);
-});
+final settingsMutationControllerProvider =
+    AsyncNotifierProvider.autoDispose<SettingsMutationController, void>(
+      SettingsMutationController.new,
+    );
 
-/// 마지막 모드 저장
-final saveLastModeProvider = FutureProvider.family<void, String>((
-  ref,
-  mode,
-) async {
-  final repo = await ref.watch(settingsRepoProvider.future);
-  await repo.update((s) => s.lastMode = mode);
-  ref.invalidate(settingsFutureProvider);
-});
+class SettingsMutationController extends AsyncNotifier<void> {
+  @override
+  FutureOr<void> build() {}
 
-final updateBackupPreferredProviderProvider =
-    FutureProvider.family<void, String>((ref, provider) async {
-      final repo = await ref.watch(settingsRepoProvider.future);
-      await repo.update((s) => s.backupPreferredProvider = provider);
-      ref.invalidate(settingsFutureProvider);
-    });
-
-final setRoutinePersonalizationEnabledProvider =
-    FutureProvider.family<void, bool>((ref, enabled) async {
-      final repo = await ref.watch(settingsRepoProvider.future);
-      await repo.update((s) {
-        s.routinePersonalizationEnabled = enabled;
-        if (!enabled) {
-          s.routinePersonalizationSyncEnabled = false;
-        }
-        if (s.lifeBuddyTone.isEmpty) {
-          s.lifeBuddyTone = 'friend';
-        }
-      });
-      ref.invalidate(settingsFutureProvider);
-    });
-
-final setRoutinePersonalizationSyncProvider = FutureProvider.family<void, bool>(
-  (ref, enabled) async {
-    final repo = await ref.watch(settingsRepoProvider.future);
+  Future<void> savePreset(Map<String, int> data) => _mutate((repo) async {
     await repo.update((s) {
-      if (!s.routinePersonalizationEnabled && enabled) {
-        return;
-      }
-      s.routinePersonalizationSyncEnabled =
-          enabled && s.routinePersonalizationEnabled;
+      if (data.containsKey('focus')) s.focusMinutes = data['focus']!;
+      if (data.containsKey('rest')) s.restMinutes = data['rest']!;
+      if (data.containsKey('workout')) s.workoutMinutes = data['workout']!;
+      if (data.containsKey('sleep')) s.sleepMinutes = data['sleep']!;
     });
-    ref.invalidate(settingsFutureProvider);
-  },
-);
+  });
 
-final setLifeBuddyToneProvider = FutureProvider.family<void, String>((
-  ref,
-  tone,
-) async {
-  if (tone != 'friend' && tone != 'coach') {
-    throw ArgumentError.value(tone, 'tone', 'Unsupported tone option');
+  Future<void> saveLastMode(String mode) =>
+      _mutate((repo) async => repo.update((s) => s.lastMode = mode));
+
+  Future<void> updateBackupPreferredProvider(String provider) =>
+      _mutate((repo) async {
+        await repo.update((s) => s.backupPreferredProvider = provider);
+      });
+
+  Future<void> setRoutinePersonalizationEnabled(bool enabled) =>
+      _mutate((repo) async {
+        await repo.update((s) {
+          s.routinePersonalizationEnabled = enabled;
+          if (!enabled) {
+            s.routinePersonalizationSyncEnabled = false;
+          }
+          if (s.lifeBuddyTone.isEmpty) {
+            s.lifeBuddyTone = 'friend';
+          }
+        });
+      });
+
+  Future<void> setRoutinePersonalizationSync(bool enabled) =>
+      _mutate((repo) async {
+        await repo.update((s) {
+          if (!s.routinePersonalizationEnabled && enabled) {
+            return;
+          }
+          s.routinePersonalizationSyncEnabled =
+              enabled && s.routinePersonalizationEnabled;
+        });
+      });
+
+  Future<void> setLifeBuddyTone(String tone) {
+    if (tone != 'friend' && tone != 'coach') {
+      throw ArgumentError.value(tone, 'tone', 'Unsupported tone option');
+    }
+    return _mutate((repo) async {
+      await repo.update((s) => s.lifeBuddyTone = tone);
+    });
   }
-  final repo = await ref.watch(settingsRepoProvider.future);
-  await repo.update((s) => s.lifeBuddyTone = tone);
-  ref.invalidate(settingsFutureProvider);
-});
 
-final completeOnboardingProvider = FutureProvider<void>((ref) async {
-  final repo = await ref.watch(settingsRepoProvider.future);
-  await repo.update((s) => s.hasCompletedOnboarding = true);
-  ref.invalidate(settingsFutureProvider);
-});
+  Future<void> completeOnboarding() => _mutate(
+    (repo) async => repo.update((s) => s.hasCompletedOnboarding = true),
+  );
+
+  Future<void> updateSleepSmartAlarm(SleepSmartAlarmInput input) =>
+      _mutate((repo) async {
+        await repo.update((s) {
+          s.sleepSmartAlarmWindowMinutes = input.windowMinutes;
+          s.sleepSmartAlarmIntervalMinutes = input.intervalMinutes;
+          s.sleepSmartAlarmExactFallback = input.fallbackExact;
+          s.sleepMixerWhiteLevel = input.whiteLevel;
+          s.sleepMixerPinkLevel = input.pinkLevel;
+          s.sleepMixerBrownLevel = input.brownLevel;
+          s.sleepMixerPresetId = input.presetId;
+        });
+      });
+
+  Future<void> _mutate(
+    Future<void> Function(SettingsRepository repo) action,
+  ) async {
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      final repo = await ref.read(settingsRepoProvider.future);
+      await action(repo);
+      ref.invalidate(settingsFutureProvider);
+    });
+  }
+}
 
 enum PaywallVariant { focusValue, backupSecurity }
 
@@ -150,21 +159,6 @@ class SleepSmartAlarmInput {
   final double brownLevel;
   final String presetId;
 }
-
-final updateSleepSmartAlarmProvider =
-    FutureProvider.family<void, SleepSmartAlarmInput>((ref, input) async {
-      final repo = await ref.watch(settingsRepoProvider.future);
-      await repo.update((s) {
-        s.sleepSmartAlarmWindowMinutes = input.windowMinutes;
-        s.sleepSmartAlarmIntervalMinutes = input.intervalMinutes;
-        s.sleepSmartAlarmExactFallback = input.fallbackExact;
-        s.sleepMixerWhiteLevel = input.whiteLevel;
-        s.sleepMixerPinkLevel = input.pinkLevel;
-        s.sleepMixerBrownLevel = input.brownLevel;
-        s.sleepMixerPresetId = input.presetId;
-      });
-      ref.invalidate(settingsFutureProvider);
-    });
 
 final appLocaleControllerProvider =
     NotifierProvider<AppLocaleController, Locale?>(AppLocaleController.new);

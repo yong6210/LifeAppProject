@@ -5,8 +5,6 @@ import 'package:life_app/design/app_theme.dart';
 import 'package:life_app/features/account/account_page.dart';
 import 'package:life_app/features/stats/stats_page.dart';
 import 'package:life_app/features/timer/figma_timer_tab.dart';
-import 'package:life_app/features/timer/timer_controller.dart';
-import 'package:life_app/features/timer/timer_page.dart';
 import 'package:life_app/features/workout/figma_workout_tab.dart';
 import 'package:life_app/features/sleep/figma_sleep_tab.dart';
 import 'package:life_app/l10n/app_localizations.dart';
@@ -45,9 +43,6 @@ class FigmaHomeDashboard extends ConsumerWidget {
     final routines = ref
         .watch(routinesStreamProvider)
         .maybeWhen(data: (value) => value, orElse: () => <Routine>[]);
-    final userLevel = ref
-        .watch(userLevelProvider)
-        .maybeWhen(data: (value) => value, orElse: () => 1);
 
     // Calculate progress
     final focusGoal = (settings?.focusMinutes ?? 25);
@@ -148,14 +143,13 @@ class FigmaHomeDashboard extends ConsumerWidget {
                       workoutProgress: workoutProgress,
                       sleepProgress: sleepProgress,
                       streakDays: streakDays,
-                      level: userLevel,
+                      level: 1, // TODO: Get from user stats
                     ),
                     const SizedBox(height: 20),
                     // Routines Section
                     if (routines.isNotEmpty) ...[
                       _buildRoutinesSection(
                         context: context,
-                        ref: ref,
                         routines: routines,
                       ),
                       const SizedBox(height: 20),
@@ -295,27 +289,23 @@ class FigmaHomeDashboard extends ConsumerWidget {
             ),
           ],
         ),
-        Semantics(
-          label: 'Settings',
-          button: true,
-          child: GestureDetector(
-            onTap: onSettingsTap,
-            child: Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.1),
-                  width: 1,
-                ),
+        GestureDetector(
+          onTap: onSettingsTap,
+          child: Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: Colors.white.withValues(alpha: 0.1),
+                width: 1,
               ),
-              child: Icon(
-                Icons.settings_outlined,
-                size: 18,
-                color: Colors.white.withValues(alpha: 0.7),
-              ),
+            ),
+            child: Icon(
+              Icons.settings_outlined,
+              size: 18,
+              color: Colors.white.withValues(alpha: 0.7),
             ),
           ),
         ),
@@ -366,21 +356,19 @@ class FigmaHomeDashboard extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.baseline,
                   textBaseline: TextBaseline.alphabetic,
                   children: [
-                    RepaintBoundary(
-                      child: ShaderMask(
-                        shaderCallback: (bounds) => const LinearGradient(
-                          colors: [Colors.white, Color(0xE0FFFFFF)],
-                        ).createShader(bounds),
-                        child: Text(
-                          totalProgress.toString(),
-                          style: const TextStyle(
-                            fontSize: 48,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
-                            height: 1,
+                    ShaderMask(
+                      shaderCallback: (bounds) => LinearGradient(
+                        colors: [Colors.white, Colors.white.withValues(alpha: 0.88)],
+                      ).createShader(bounds),
+                      child: Text(
+                        totalProgress.toString(),
+                        style: const TextStyle(
+                          fontSize: 48,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                          height: 1,
                           letterSpacing: -2,
                         ),
-                      ),
                       ),
                     ),
                     const SizedBox(width: 4),
@@ -494,15 +482,10 @@ class FigmaHomeDashboard extends ConsumerWidget {
     required VoidCallback onTap,
   }) {
     final isCompleted = progress >= 100;
-    final progressPercent = progress.round();
 
-    return Semantics(
-      label: 'Focus activity card. $minutes of $goal minutes completed. $progressPercent percent progress.${isCompleted ? ' Goal completed!' : ''}',
-      button: true,
+    return GestureDetector(
       onTap: onTap,
-      child: GestureDetector(
-        onTap: onTap,
-        child: GlassCard(
+      child: GlassCard(
         padding: const EdgeInsets.all(16),
         borderRadius: 20,
         gradient: LinearGradient(
@@ -596,7 +579,6 @@ class FigmaHomeDashboard extends ConsumerWidget {
           ],
         ),
       ),
-      ),
     );
   }
 
@@ -608,15 +590,10 @@ class FigmaHomeDashboard extends ConsumerWidget {
     required VoidCallback onTap,
   }) {
     final isCompleted = progress >= 100;
-    final progressPercent = progress.round();
 
-    return Semantics(
-      label: 'Move activity card. $minutes of $goal minutes completed. $progressPercent percent progress.${isCompleted ? ' Goal completed!' : ''}',
-      button: true,
+    return GestureDetector(
       onTap: onTap,
-      child: GestureDetector(
-        onTap: onTap,
-        child: GlassCard(
+      child: GlassCard(
         padding: const EdgeInsets.all(16),
         borderRadius: 20,
         gradient: LinearGradient(
@@ -710,7 +687,6 @@ class FigmaHomeDashboard extends ConsumerWidget {
           ],
         ),
       ),
-      ),
     );
   }
 
@@ -723,15 +699,10 @@ class FigmaHomeDashboard extends ConsumerWidget {
   }) {
     final isCompleted = progress >= 100;
     final hours = (minutes / 60).floor();
-    final progressPercent = progress.round();
 
-    return Semantics(
-      label: 'Sleep activity card. $hours of $goalHours hours completed. $progressPercent percent progress.${isCompleted ? ' Goal completed!' : ''}',
-      button: true,
+    return GestureDetector(
       onTap: onTap,
-      child: GestureDetector(
-        onTap: onTap,
-        child: GlassCard(
+      child: GlassCard(
         padding: const EdgeInsets.all(16),
         borderRadius: 20,
         gradient: LinearGradient(
@@ -842,7 +813,6 @@ class FigmaHomeDashboard extends ConsumerWidget {
           ],
         ),
       ),
-      ),
     );
   }
 
@@ -925,7 +895,6 @@ class FigmaHomeDashboard extends ConsumerWidget {
 
   Widget _buildRoutinesSection({
     required BuildContext context,
-    required WidgetRef ref,
     required List<Routine> routines,
   }) {
     final theme = Theme.of(context);
@@ -971,7 +940,6 @@ class FigmaHomeDashboard extends ConsumerWidget {
                 ),
                 child: _buildRoutineCard(
                   context: context,
-                  ref: ref,
                   routine: routine,
                 ),
               );
@@ -984,7 +952,6 @@ class FigmaHomeDashboard extends ConsumerWidget {
 
   Widget _buildRoutineCard({
     required BuildContext context,
-    required WidgetRef ref,
     required Routine routine,
   }) {
     final theme = Theme.of(context);
@@ -1005,35 +972,15 @@ class FigmaHomeDashboard extends ConsumerWidget {
     final restSteps = routine.steps.where((s) => s.mode == 'rest').length;
 
     return GlassCard(
-      onTap: () async {
-        if (routine.steps.isEmpty) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('${routine.name} 루틴에 스텝이 없습니다.'),
-              backgroundColor: Colors.orange,
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
-          return;
-        }
-
-        // Get the first step of the routine
-        final firstStep = routine.steps.first;
-
-        // Switch to timer controller and select the mode
-        final timerController = ref.read(timerControllerProvider.notifier);
-        await timerController.selectMode(firstStep.mode);
-
-        // Set the duration based on the first step
-        await timerController.setPreset(firstStep.mode, firstStep.durationMinutes);
-
-        // Navigate to timer page
-        if (context.mounted) {
-          await Navigator.push(
-            context,
-            MaterialPageRoute<void>(builder: (_) => const TimerPage()),
-          );
-        }
+      onTap: () {
+        // TODO: Start routine
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${routine.name} 루틴 시작!'),
+            backgroundColor: color,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
       },
       padding: const EdgeInsets.all(16),
       borderRadius: 20,

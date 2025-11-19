@@ -134,14 +134,12 @@ class _IOSTabButtonState extends State<_IOSTabButton>
     final iconColor = widget.isActive
         ? widget.color
         : (isDark
-            ? const Color(0xFF8E8E93)
-            : const Color(0xFF8E8E93)); // iOS gray
+              ? const Color(0xFF8E8E93)
+              : const Color(0xFF8E8E93)); // iOS gray
 
     final labelColor = widget.isActive
         ? widget.color
-        : (isDark
-            ? const Color(0xFF8E8E93)
-            : const Color(0xFF8E8E93));
+        : (isDark ? const Color(0xFF8E8E93) : const Color(0xFF8E8E93));
 
     return ScaleTransition(
       scale: _scaleAnimation,
@@ -154,11 +152,7 @@ class _IOSTabButtonState extends State<_IOSTabButton>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                widget.icon,
-                size: 24,
-                color: iconColor,
-              ),
+              Icon(widget.icon, size: 24, color: iconColor),
               const SizedBox(height: 2),
               Text(
                 widget.label,

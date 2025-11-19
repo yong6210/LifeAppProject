@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -96,6 +98,8 @@ class JournalSummary {
     required this.entriesThisWeek,
     required this.streakDays,
     required this.latestEntry,
+    required this.restorativeNights,
+    required this.sleepConsistencyScore,
     this.commonMood,
     this.dominantEnergy,
   });
@@ -104,6 +108,8 @@ class JournalSummary {
   final int entriesThisWeek;
   final int streakDays;
   final JournalEntry latestEntry;
+  final int restorativeNights;
+  final double sleepConsistencyScore;
   final String? commonMood;
   final String? dominantEnergy;
 
@@ -118,6 +124,27 @@ class JournalSummary {
     final averageSleep =
         sample.fold<double>(0, (sum, entry) => sum + entry.sleepHours) /
         sample.length;
+
+    final restorativeNights =
+        sample.where((entry) => entry.sleepHours >= 7).length;
+
+    final sleepValues = sample.map((entry) => entry.sleepHours).toList();
+    var sleepConsistencyScore = 0.0;
+    if (sleepValues.isNotEmpty && averageSleep > 0) {
+      if (sleepValues.length == 1) {
+        sleepConsistencyScore = 100;
+      } else {
+        final mean = averageSleep;
+        final variance = sleepValues.fold<double>(0, (sum, value) {
+          final delta = value - mean;
+          return sum + delta * delta;
+        }) /
+            sleepValues.length;
+        final stdDeviation = math.sqrt(variance);
+        final normalized = (1 - (stdDeviation / mean)).clamp(0.0, 1.0);
+        sleepConsistencyScore = (normalized * 100).roundToDouble();
+      }
+    }
 
     final weeklyDayCount = weeklyEntries
         .map((entry) => DateUtils.dateOnly(entry.date))
@@ -164,6 +191,8 @@ class JournalSummary {
           : sampleDayCount,
       streakDays: streak,
       latestEntry: entries.first,
+      restorativeNights: restorativeNights,
+      sleepConsistencyScore: sleepConsistencyScore,
       commonMood: topMood,
       dominantEnergy: dominantEnergy,
     );
