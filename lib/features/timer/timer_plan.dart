@@ -642,7 +642,7 @@ class TimerPlanFactory {
   static SmartAlarmConfig? _deserializeSmartAlarm(dynamic raw) {
     if (raw == null) return null;
     if (raw is! Map) return null;
-    final map = Map<String, dynamic>.from(raw as Map);
+    final map = Map<String, dynamic>.from(raw);
     final window = (map['windowMinutes'] as num?)?.toInt();
     final interval = (map['intervalMinutes'] as num?)?.toInt();
     if (window == null || interval == null) return null;

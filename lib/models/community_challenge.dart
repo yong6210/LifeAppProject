@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 enum ChallengePrivacy { private, codeInvite, public }
@@ -23,6 +24,28 @@ class ChallengeMember extends Equatable {
   final DateTime? joinedAt;
   final bool completed;
 
+  factory ChallengeMember.fromFirestore(Map<String, dynamic> data) {
+    return ChallengeMember(
+      id: data['id'] as String,
+      displayName: data['displayName'] as String,
+      focusMinutes: data['focusMinutes'] as int? ?? 0,
+      restMinutes: data['restMinutes'] as int? ?? 0,
+      joinedAt: (data['joinedAt'] as Timestamp?)?.toDate(),
+      completed: data['completed'] as bool? ?? false,
+    );
+  }
+
+  Map<String, dynamic> toFirestore() {
+    return {
+      'id': id,
+      'displayName': displayName,
+      'focusMinutes': focusMinutes,
+      'restMinutes': restMinutes,
+      'joinedAt': joinedAt != null ? Timestamp.fromDate(joinedAt!) : null,
+      'completed': completed,
+    };
+  }
+
   ChallengeMember copyWith({
     int? focusMinutes,
     int? restMinutes,
@@ -40,13 +63,13 @@ class ChallengeMember extends Equatable {
 
   @override
   List<Object?> get props => [
-    id,
-    displayName,
-    focusMinutes,
-    restMinutes,
-    joinedAt,
-    completed,
-  ];
+        id,
+        displayName,
+        focusMinutes,
+        restMinutes,
+        joinedAt,
+        completed,
+      ];
 }
 
 class CommunityChallenge extends Equatable {
@@ -63,6 +86,7 @@ class CommunityChallenge extends Equatable {
     required this.ownerId,
     required this.members,
     this.inviteCode,
+    this.memberIds = const [],
   });
 
   final String id;
@@ -77,6 +101,45 @@ class CommunityChallenge extends Equatable {
   final String ownerId;
   final List<ChallengeMember> members;
   final String? inviteCode;
+  final List<String> memberIds;
+
+  factory CommunityChallenge.fromFirestore(String id, Map<String, dynamic> data) {
+    return CommunityChallenge(
+      id: id,
+      title: data['title'] as String,
+      description: data['description'] as String,
+      template: ChallengeTemplate.values.byName(data['template'] as String),
+      startDate: (data['startDate'] as Timestamp).toDate(),
+      endDate: (data['endDate'] as Timestamp).toDate(),
+      goalMinutesPerDay: data['goalMinutesPerDay'] as int,
+      privacy: ChallengePrivacy.values.byName(data['privacy'] as String),
+      status: ChallengeStatus.values.byName(data['status'] as String),
+      ownerId: data['ownerId'] as String,
+      members: (data['members'] as List<dynamic>)
+          .map((memberData) =>
+              ChallengeMember.fromFirestore(memberData as Map<String, dynamic>))
+          .toList(),
+      inviteCode: data['inviteCode'] as String?,
+      memberIds: List<String>.from(data['memberIds'] as List<dynamic>? ?? []),
+    );
+  }
+
+  Map<String, dynamic> toFirestore() {
+    return {
+      'title': title,
+      'description': description,
+      'template': template.name,
+      'startDate': Timestamp.fromDate(startDate),
+      'endDate': Timestamp.fromDate(endDate),
+      'goalMinutesPerDay': goalMinutesPerDay,
+      'privacy': privacy.name,
+      'status': status.name,
+      'ownerId': ownerId,
+      'members': members.map((member) => member.toFirestore()).toList(),
+      'inviteCode': inviteCode,
+      'memberIds': members.map((m) => m.id).toList(),
+    };
+  }
 
   CommunityChallenge copyWith({
     ChallengeStatus? status,
@@ -96,6 +159,7 @@ class CommunityChallenge extends Equatable {
       ownerId: ownerId,
       members: members ?? this.members,
       inviteCode: inviteCode ?? this.inviteCode,
+      memberIds: members?.map((m) => m.id).toList() ?? memberIds,
     );
   }
 
@@ -106,17 +170,18 @@ class CommunityChallenge extends Equatable {
 
   @override
   List<Object?> get props => [
-    id,
-    title,
-    description,
-    template,
-    startDate,
-    endDate,
-    goalMinutesPerDay,
-    privacy,
-    status,
-    ownerId,
-    members,
-    inviteCode,
-  ];
+        id,
+        title,
+        description,
+        template,
+        startDate,
+        endDate,
+        goalMinutesPerDay,
+        privacy,
+        status,
+        ownerId,
+        members,
+        inviteCode,
+        memberIds,
+      ];
 }

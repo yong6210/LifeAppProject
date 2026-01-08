@@ -12,12 +12,14 @@ import 'package:life_app/features/more/more_page.dart';
 import 'package:life_app/features/account/account_page.dart';
 import 'package:life_app/features/onboarding/onboarding_page.dart';
 import 'package:life_app/models/settings.dart';
+import 'package:life_app/providers/session_providers.dart';
 import 'package:life_app/providers/settings_providers.dart';
 import 'package:life_app/providers/backup_providers.dart';
 import 'package:life_app/services/analytics/analytics_service.dart';
 import 'package:life_app/services/notification_service.dart';
 import 'package:life_app/services/background/workmanager_scheduler.dart';
 import 'package:life_app/services/subscription/revenuecat_service.dart';
+import 'package:life_app/services/widget/widget_update_service.dart';
 import 'package:life_app/l10n/app_localizations.dart';
 import 'package:life_app/widgets/ios_tab_bar.dart';
 
@@ -33,6 +35,7 @@ Future<void> main() async {
       await AnalyticsService.init();
       await NotificationService.init();
       await TimerWorkmanagerGuard.initialize();
+      await WidgetUpdateService.init();
       runApp(const ProviderScope(child: MyApp()));
     },
     (error, stack) {
@@ -54,6 +57,13 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final Locale? locale = ref.watch(appLocaleControllerProvider);
+
+    ref.listen<AsyncValue<TodaySummary>>(todaySummaryProvider, (previous, next) {
+      next.whenData((summary) {
+        WidgetUpdateService.updateWidget(summary);
+      });
+    });
+
     return DynamicColorBuilder(
       builder: (lightDynamic, darkDynamic) {
         return MaterialApp(

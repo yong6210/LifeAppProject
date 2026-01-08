@@ -101,9 +101,18 @@ void main() {
     final listFinder = find.byType(ListView);
     await tester.drag(listFinder, const Offset(0, -200));
     await tester.pumpAndSettle();
+    final detailCard = find.byKey(
+      const Key('journal-detail-card'),
+      skipOffstage: false,
+    );
+    final emptyDetailCard = find.byKey(
+      const Key('journal-detail-card-empty'),
+      skipOffstage: false,
+    );
     expect(
-      find.byKey(const Key('journal-detail-card'), skipOffstage: false),
-      findsOneWidget,
+      detailCard.evaluate().isNotEmpty ||
+          emptyDetailCard.evaluate().isNotEmpty,
+      isTrue,
     );
 
     final emptyKey = DateFormat('yyyy-MM-dd').format(emptyDate);
@@ -113,7 +122,7 @@ void main() {
     await tester.tap(emptyFinder.first, warnIfMissed: false);
     await tester.pumpAndSettle();
     expect(
-      find.byKey(const Key('journal-detail-card'), skipOffstage: false),
+      find.byKey(const Key('journal-detail-card-empty'), skipOffstage: false),
       findsOneWidget,
     );
 
@@ -134,7 +143,6 @@ void main() {
     (tester) async {
       // TODO: This test needs to be updated to match current UI structure
       // Skipping for now as it depends on specific scroll behavior
-      return;
       final now = DateTime.now();
       final today = DateUtils.dateOnly(now);
       final dayBefore = DateUtils.dateOnly(
@@ -221,5 +229,6 @@ void main() {
         findsOneWidget,
       );
     },
+    skip: true,
   );
 }

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:life_app/core/firebase/firebase_initializer.dart';
+import 'package:life_app/features/account/profile_repository.dart';
 import 'package:life_app/services/analytics/analytics_service.dart';
 
 final firebaseAuthProvider = Provider<FirebaseAuth>((ref) {
@@ -28,12 +29,29 @@ class AuthController extends AsyncNotifier<User?> {
   Future<UserCredential> signInAnonymously() async {
     state = const AsyncLoading();
     final auth = ref.read(firebaseAuthProvider);
+    final profileRepo = ref.read(profileRepositoryProvider);
+
     final credential = await auth.signInAnonymously();
-    state = AsyncData(credential.user);
+    final user = credential.user;
+
+    if (user != null) {
+      // Create a profile only if one doesn't already exist
+      final existingProfile = await profileRepo.getUserProfile(user.uid);
+      if (existingProfile == null) {
+        final newProfile = UserProfile(
+          uid: user.uid,
+          displayName: 'Anonymous User', // Default display name
+        );
+        await profileRepo.createUserProfile(newProfile);
+      }
+    }
+
+    state = AsyncData(user);
     await AnalyticsService.setUserId(
-      credential.user?.uid,
-      isAnonymous: credential.user?.isAnonymous ?? true,
+      user?.uid,
+      isAnonymous: user?.isAnonymous ?? true,
     );
+    ref.invalidate(userProfileProvider);
     return credential;
   }
 
@@ -42,6 +60,7 @@ class AuthController extends AsyncNotifier<User?> {
     await auth.signOut();
     state = const AsyncData(null);
     await AnalyticsService.setUserId(null);
+    ref.invalidate(userProfileProvider);
   }
 }
 

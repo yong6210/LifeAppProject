@@ -146,7 +146,7 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
           fontSize: 14,
           color: isSelected
               ? Colors.white
-              : (isDark ? AppTheme.coral.withOpacity(0.9) : AppTheme.coral),
+              : (isDark ? AppTheme.coral.withValues(alpha: 0.9) : AppTheme.coral),
         ),
       ),
     );

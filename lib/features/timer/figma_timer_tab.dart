@@ -156,7 +156,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
     required String hintText,
     required int maxValue,
     required int currentValue,
-    required Function(int) onSubmit,
+    required ValueChanged<int> onSubmit,
   }) async {
     final controller = TextEditingController(text: currentValue.toString());
     return showDialog(
@@ -277,7 +277,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                       shape: BoxShape.circle,
                       gradient: RadialGradient(
                         colors: [
-                          const Color(0xFFFF9A56).withOpacity(0.3 + _glowController.value * 0.2),
+                          const Color(0xFFFF9A56).withValues(alpha: 0.3 + _glowController.value * 0.2),
                           Colors.transparent,
                         ],
                       ),
@@ -299,7 +299,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                       shape: BoxShape.circle,
                       gradient: RadialGradient(
                         colors: [
-                          const Color(0xFFFFD93D).withOpacity(0.3 + (1 - _glowController.value) * 0.2),
+                          const Color(0xFFFFD93D).withValues(alpha: 0.3 + (1 - _glowController.value) * 0.2),
                           Colors.transparent,
                         ],
                       ),
@@ -382,7 +382,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                       '${_selectedPreset.duration} min session',
                       style: theme.textTheme.titleMedium?.copyWith(
                         color: isDark
-                            ? const Color(0xFFFF9A56).withOpacity(0.8)
+                            ? const Color(0xFFFF9A56).withValues(alpha: 0.8)
                             : const Color(0xFFFF9A56),
                         fontWeight: FontWeight.w600,
                       ),
@@ -403,7 +403,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                                 shape: BoxShape.circle,
                                 boxShadow: [
                                   BoxShadow(
-                                    color: const Color(0xFFFF9A56).withOpacity(
+                                    color: const Color(0xFFFF9A56).withValues(alpha: 
                                       0.3 + _glowController.value * 0.3,
                                     ),
                                     blurRadius: 60,
@@ -445,7 +445,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                               isRunning ? '⚡ Focus Mode Active' : 'Ready to focus',
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 color: isDark
-                                    ? const Color(0xFFFF9A56).withOpacity(0.8)
+                                    ? const Color(0xFFFF9A56).withValues(alpha: 0.8)
                                     : const Color(0xFFFF9A56),
                                 fontWeight: FontWeight.w600,
                               ),
@@ -487,7 +487,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: const Color(0xFFFF9A56).withOpacity(0.5),
+                                color: const Color(0xFFFF9A56).withValues(alpha: 0.5),
                                 blurRadius: 24,
                                 offset: const Offset(0, 8),
                               ),
@@ -587,8 +587,8 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                                               '시간',
                                               style: theme.textTheme.bodySmall?.copyWith(
                                                 color: isDark
-                                                    ? Colors.white.withOpacity(0.5)
-                                                    : const Color(0xFFFF9A56).withOpacity(0.5),
+                                                    ? Colors.white.withValues(alpha: 0.5)
+                                                    : const Color(0xFFFF9A56).withValues(alpha: 0.5),
                                               ),
                                             ),
                                             const SizedBox(width: 4),
@@ -596,8 +596,8 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                                               Icons.edit,
                                               size: 12,
                                               color: isDark
-                                                  ? Colors.white.withOpacity(0.3)
-                                                  : const Color(0xFFFF9A56).withOpacity(0.3),
+                                                  ? Colors.white.withValues(alpha: 0.3)
+                                                  : const Color(0xFFFF9A56).withValues(alpha: 0.3),
                                             ),
                                           ],
                                         ),
@@ -616,7 +616,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                                             decoration: BoxDecoration(
                                               border: Border.symmetric(
                                                 horizontal: BorderSide(
-                                                  color: const Color(0xFFFF9A56).withOpacity(0.3),
+                                                  color: const Color(0xFFFF9A56).withValues(alpha: 0.3),
                                                   width: 2,
                                                 ),
                                               ),
@@ -666,8 +666,8 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                                               '분',
                                               style: theme.textTheme.bodySmall?.copyWith(
                                                 color: isDark
-                                                    ? Colors.white.withOpacity(0.5)
-                                                    : const Color(0xFFFF9A56).withOpacity(0.5),
+                                                    ? Colors.white.withValues(alpha: 0.5)
+                                                    : const Color(0xFFFF9A56).withValues(alpha: 0.5),
                                               ),
                                             ),
                                             const SizedBox(width: 4),
@@ -675,8 +675,8 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                                               Icons.edit,
                                               size: 12,
                                               color: isDark
-                                                  ? Colors.white.withOpacity(0.3)
-                                                  : const Color(0xFFFF9A56).withOpacity(0.3),
+                                                  ? Colors.white.withValues(alpha: 0.3)
+                                                  : const Color(0xFFFF9A56).withValues(alpha: 0.3),
                                             ),
                                           ],
                                         ),
@@ -695,7 +695,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                                             decoration: BoxDecoration(
                                               border: Border.symmetric(
                                                 horizontal: BorderSide(
-                                                  color: const Color(0xFFFF9A56).withOpacity(0.3),
+                                                  color: const Color(0xFFFF9A56).withValues(alpha: 0.3),
                                                   width: 2,
                                                 ),
                                               ),
@@ -771,12 +771,12 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                                   end: Alignment.bottomRight,
                                   colors: isDark
                                       ? [
-                                          const Color(0xFFFF9A56).withOpacity(0.3),
-                                          const Color(0xFFFFD93D).withOpacity(0.2),
+                                          const Color(0xFFFF9A56).withValues(alpha: 0.3),
+                                          const Color(0xFFFFD93D).withValues(alpha: 0.2),
                                         ]
                                       : [
-                                          const Color(0xFFFF9A56).withOpacity(0.15),
-                                          const Color(0xFFFFD93D).withOpacity(0.1),
+                                          const Color(0xFFFF9A56).withValues(alpha: 0.15),
+                                          const Color(0xFFFFD93D).withValues(alpha: 0.1),
                                         ],
                                 )
                               : null,
@@ -803,7 +803,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                                 '${preset.duration} minutes',
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: isDark
-                                      ? const Color(0xFFFF9A56).withOpacity(0.8)
+                                      ? const Color(0xFFFF9A56).withValues(alpha: 0.8)
                                       : const Color(0xFFFF9A56),
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -842,7 +842,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                                   'Your brain works best in focused bursts. Eliminate distractions and let your mind enter the flow state. Deep work creates neural pathways that make you smarter!',
                                   style: theme.textTheme.bodyMedium?.copyWith(
                                     color: isDark
-                                        ? Colors.white.withOpacity(0.7)
+                                        ? Colors.white.withValues(alpha: 0.7)
                                         : theme.colorScheme.onSurfaceVariant,
                                     height: 1.5,
                                   ),

@@ -51,13 +51,18 @@ class TimerPermissionService {
       try {
         exactAlarmGranted =
             await _channel.invokeMethod<bool>('hasExactAlarmPermission') ??
-            true;
+            false;
         dndGranted =
             await _channel.invokeMethod<bool>('hasNotificationPolicyAccess') ??
-            true;
-      } on PlatformException {
-        exactAlarmGranted = true;
-        dndGranted = true;
+            false;
+      } on PlatformException catch (e, stack) {
+        exactAlarmGranted = false;
+        dndGranted = false;
+        AnalyticsService.recordError(
+          e,
+          stack,
+          reason: 'permission_channel_query',
+        );
       }
     }
 

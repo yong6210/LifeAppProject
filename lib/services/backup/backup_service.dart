@@ -94,39 +94,34 @@ class BackupService {
         final backupFilePath = p.join(tempDir.path, fileName);
         backupFile = File(backupFilePath);
 
-        // Check available disk space
-        final stat = await tempDir.stat();
-        final requiredSpace = dbFileBytes.length * 2; // Estimate with safety margin
-        // Note: FileStat doesn't provide free space, but we can at least check file creation
-
         await backupFile.writeAsString(jsonEncode(manifest));
 
         final fileSize = backupFile.lengthSync();
-      final provider = settings.backupPreferredProvider;
-      int? updatedStreak;
-      await _settingsDataSource.update((value) {
-        final previousStreak = calculateBackupStreak(value.backupHistory);
-        value.lastBackupAt = now;
-        _appendLog(
-          settings: value,
-          entry: BackupLogEntry()
-            ..timestamp = now
-            ..action = 'backup'
-            ..status = 'success'
-            ..provider = value.backupPreferredProvider
-            ..bytes = fileSize,
-        );
-        final newStreak = calculateBackupStreak(value.backupHistory);
-        if (newStreak > previousStreak) {
-          updatedStreak = newStreak;
-        }
-      });
+        final provider = settings.backupPreferredProvider;
+        int? updatedStreak;
+        await _settingsDataSource.update((value) {
+          final previousStreak = calculateBackupStreak(value.backupHistory);
+          value.lastBackupAt = now;
+          _appendLog(
+            settings: value,
+            entry: BackupLogEntry()
+              ..timestamp = now
+              ..action = 'backup'
+              ..status = 'success'
+              ..provider = value.backupPreferredProvider
+              ..bytes = fileSize,
+          );
+          final newStreak = calculateBackupStreak(value.backupHistory);
+          if (newStreak > previousStreak) {
+            updatedStreak = newStreak;
+          }
+        });
 
-      await AnalyticsService.logEvent('backup_trigger', {
-        'action': 'backup',
-        'provider': provider,
-        'bytes': fileSize,
-      });
+        await AnalyticsService.logEvent('backup_trigger', {
+          'action': 'backup',
+          'provider': provider,
+          'bytes': fileSize,
+        });
 
         if (updatedStreak != null) {
           await AnalyticsService.logEvent('backup_streak_progress', {
@@ -134,7 +129,7 @@ class BackupService {
           });
         }
 
-        return backupFile!;
+        return backupFile;
       } catch (e) {
         // Clean up temporary file on error
         if (backupFile != null && await backupFile.exists()) {

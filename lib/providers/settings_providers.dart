@@ -166,19 +166,21 @@ final appLocaleControllerProvider =
 class AppLocaleController extends Notifier<Locale?> {
   @override
   Locale? build() {
-    unawaited(_load());
-    return null;
-  }
-
-  Future<void> _load() async {
-    final settings = await ref.read(settingsFutureProvider.future);
-    state = _decode(settings.locale);
+    // settingsFutureProvider의 상태를 감시하고,
+    // 성공적으로 로드되면 값을 사용하여 state를 빌드합니다.
+    final settings = ref.watch(settingsFutureProvider);
+    return settings.when(
+      data: (settings) => _decode(settings.locale),
+      loading: () => null, // 로딩 중에는 이전 상태를 유지하거나 null을 반환
+      error: (err, stack) => null, // 에러 발생 시 null 반환
+    );
   }
 
   Future<void> setLocale(String code) async {
     final repo = await ref.read(settingsRepoProvider.future);
     await repo.update((s) => s.locale = code);
-    state = _decode(code);
+    // settingsFutureProvider를 무효화하면
+    // build 메서드가 다시 실행되어 state가 업데이트됩니다.
     ref.invalidate(settingsFutureProvider);
   }
 

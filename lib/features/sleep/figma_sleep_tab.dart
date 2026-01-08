@@ -289,7 +289,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
     if (hours == 24 && minutes == 0) {
       return '0분 남음';
     } else if (hours > 0) {
-      return '$hours시간 ${minutes}분 남음';
+      return '$hours시간 $minutes분 남음';
     } else {
       return '$minutes분 남음';
     }
@@ -301,7 +301,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
     required String hintText,
     required int maxValue,
     required int currentValue,
-    required Function(int) onSubmit,
+    required ValueChanged<int> onSubmit,
   }) async {
     final controller = TextEditingController(text: currentValue.toString());
     return showDialog(
@@ -404,8 +404,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                       gradient: isSelected
                           ? LinearGradient(
                               colors: [
-                                AppTheme.electricViolet.withOpacity(0.3),
-                                Colors.pink.withOpacity(0.2),
+                                AppTheme.electricViolet.withValues(alpha: 0.3),
+                                Colors.pink.withValues(alpha: 0.2),
                               ],
                             )
                           : null,
@@ -432,8 +432,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                   sound.description,
                                   style: theme.textTheme.bodySmall?.copyWith(
                                     color: isDark
-                                        ? Colors.white.withOpacity(0.7)
-                                        : theme.colorScheme.onSurface.withOpacity(0.7),
+                                        ? Colors.white.withValues(alpha: 0.7)
+                                        : theme.colorScheme.onSurface.withValues(alpha: 0.7),
                                   ),
                                 ),
                               ],
@@ -509,7 +509,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                       shape: BoxShape.circle,
                       gradient: RadialGradient(
                         colors: [
-                          AppTheme.electricViolet.withOpacity(0.2 + _glowController.value * 0.15),
+                          AppTheme.electricViolet.withValues(alpha: 0.2 + _glowController.value * 0.15),
                           Colors.transparent,
                         ],
                       ),
@@ -531,7 +531,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                       shape: BoxShape.circle,
                       gradient: RadialGradient(
                         colors: [
-                          Colors.pink.withOpacity(0.2 + (1 - _glowController.value) * 0.15),
+                          Colors.pink.withValues(alpha: 0.2 + (1 - _glowController.value) * 0.15),
                           Colors.transparent,
                         ],
                       ),
@@ -554,7 +554,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                       width: 3,
                       height: 3,
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(_starAnimations[index].value * 0.7),
+                        color: Colors.white.withValues(alpha: _starAnimations[index].value * 0.7),
                         shape: BoxShape.circle,
                       ),
                     );
@@ -636,7 +636,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                       'Journey to the stars ✨',
                       style: theme.textTheme.titleMedium?.copyWith(
                         color: isDark
-                            ? AppTheme.electricViolet.withOpacity(0.8)
+                            ? AppTheme.electricViolet.withValues(alpha: 0.8)
                             : AppTheme.electricViolet,
                         fontWeight: FontWeight.w600,
                       ),
@@ -651,12 +651,12 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                         end: Alignment.bottomRight,
                         colors: isDark
                             ? [
-                                AppTheme.electricViolet.withOpacity(0.2),
-                                Colors.pink.withOpacity(0.15),
+                                AppTheme.electricViolet.withValues(alpha: 0.2),
+                                Colors.pink.withValues(alpha: 0.15),
                               ]
                             : [
-                                AppTheme.electricViolet.withOpacity(0.12),
-                                Colors.pink.withOpacity(0.08),
+                                AppTheme.electricViolet.withValues(alpha: 0.12),
+                                Colors.pink.withValues(alpha: 0.08),
                               ],
                       ),
                       shadowColor: AppTheme.electricViolet,
@@ -686,7 +686,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                       '${sleepHours}h ${sleepMins}m / 8h',
                                       style: theme.textTheme.bodyMedium?.copyWith(
                                         color: isDark
-                                            ? AppTheme.electricViolet.withOpacity(0.8)
+                                            ? AppTheme.electricViolet.withValues(alpha: 0.8)
                                             : AppTheme.electricViolet,
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -713,8 +713,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                   height: 16,
                                   decoration: BoxDecoration(
                                     color: isDark
-                                        ? Colors.white.withOpacity(0.1)
-                                        : AppTheme.electricViolet.withOpacity(0.15),
+                                        ? Colors.white.withValues(alpha: 0.1)
+                                        : AppTheme.electricViolet.withValues(alpha: 0.15),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                 ),
@@ -784,8 +784,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                           : null,
                                       color: _useTargetTime
                                           ? isDark
-                                              ? Colors.white.withOpacity(0.1)
-                                              : Colors.white.withOpacity(0.5)
+                                              ? Colors.white.withValues(alpha: 0.1)
+                                              : Colors.white.withValues(alpha: 0.5)
                                           : null,
                                       borderRadius: BorderRadius.circular(12),
                                     ),
@@ -817,8 +817,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                           : null,
                                       color: !_useTargetTime
                                           ? isDark
-                                              ? Colors.white.withOpacity(0.1)
-                                              : Colors.white.withOpacity(0.5)
+                                              ? Colors.white.withValues(alpha: 0.1)
+                                              : Colors.white.withValues(alpha: 0.5)
                                           : null,
                                       borderRadius: BorderRadius.circular(12),
                                     ),
@@ -871,8 +871,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                                 '시간',
                                                 style: theme.textTheme.bodySmall?.copyWith(
                                                   color: isDark
-                                                      ? Colors.white.withOpacity(0.5)
-                                                      : AppTheme.electricViolet.withOpacity(0.5),
+                                                      ? Colors.white.withValues(alpha: 0.5)
+                                                      : AppTheme.electricViolet.withValues(alpha: 0.5),
                                                 ),
                                               ),
                                               const SizedBox(width: 4),
@@ -880,8 +880,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                                 Icons.edit,
                                                 size: 12,
                                                 color: isDark
-                                                    ? Colors.white.withOpacity(0.3)
-                                                    : AppTheme.electricViolet.withOpacity(0.3),
+                                                    ? Colors.white.withValues(alpha: 0.3)
+                                                    : AppTheme.electricViolet.withValues(alpha: 0.3),
                                               ),
                                             ],
                                           ),
@@ -901,7 +901,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                               decoration: BoxDecoration(
                                                 border: Border.symmetric(
                                                   horizontal: BorderSide(
-                                                    color: AppTheme.electricViolet.withOpacity(0.3),
+                                                    color: AppTheme.electricViolet.withValues(alpha: 0.3),
                                                     width: 2,
                                                   ),
                                                 ),
@@ -952,8 +952,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                                 '분',
                                                 style: theme.textTheme.bodySmall?.copyWith(
                                                   color: isDark
-                                                      ? Colors.white.withOpacity(0.5)
-                                                      : AppTheme.electricViolet.withOpacity(0.5),
+                                                      ? Colors.white.withValues(alpha: 0.5)
+                                                      : AppTheme.electricViolet.withValues(alpha: 0.5),
                                                 ),
                                               ),
                                               const SizedBox(width: 4),
@@ -961,8 +961,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                                 Icons.edit,
                                                 size: 12,
                                                 color: isDark
-                                                    ? Colors.white.withOpacity(0.3)
-                                                    : AppTheme.electricViolet.withOpacity(0.3),
+                                                    ? Colors.white.withValues(alpha: 0.3)
+                                                    : AppTheme.electricViolet.withValues(alpha: 0.3),
                                               ),
                                             ],
                                           ),
@@ -982,7 +982,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                               decoration: BoxDecoration(
                                                 border: Border.symmetric(
                                                   horizontal: BorderSide(
-                                                    color: AppTheme.electricViolet.withOpacity(0.3),
+                                                    color: AppTheme.electricViolet.withValues(alpha: 0.3),
                                                     width: 2,
                                                   ),
                                                 ),
@@ -1027,8 +1027,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                               '',
                                               style: theme.textTheme.bodySmall?.copyWith(
                                                 color: isDark
-                                                    ? Colors.white.withOpacity(0.5)
-                                                    : AppTheme.electricViolet.withOpacity(0.5),
+                                                    ? Colors.white.withValues(alpha: 0.5)
+                                                    : AppTheme.electricViolet.withValues(alpha: 0.5),
                                               ),
                                             ),
                                             const SizedBox(height: 8),
@@ -1040,15 +1040,12 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                                   setState(() {
                                                     _isAM = index == 0;
                                                     // 시간 다이얼의 현재 위치를 읽어옴
-                                                    int hour12 = _targetHourController.selectedItem + 1;
+                                                    final hour12 = _targetHourController.selectedItem + 1;
 
                                                     // 12시간 → 24시간 변환
-                                                    int hour24;
-                                                    if (_isAM) {
-                                                      hour24 = hour12 == 12 ? 0 : hour12;
-                                                    } else {
-                                                      hour24 = hour12 == 12 ? 12 : hour12 + 12;
-                                                    }
+                                                    final hour24 = _isAM
+                                                        ? (hour12 == 12 ? 0 : hour12)
+                                                        : (hour12 == 12 ? 12 : hour12 + 12);
 
                                                     _targetTime = TimeOfDay(
                                                       hour: hour24,
@@ -1060,7 +1057,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                                   decoration: BoxDecoration(
                                                     border: Border.symmetric(
                                                       horizontal: BorderSide(
-                                                        color: AppTheme.electricViolet.withOpacity(0.3),
+                                                        color: AppTheme.electricViolet.withValues(alpha: 0.3),
                                                         width: 2,
                                                       ),
                                                     ),
@@ -1131,8 +1128,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                                     '시',
                                                     style: theme.textTheme.bodySmall?.copyWith(
                                                       color: isDark
-                                                          ? Colors.white.withOpacity(0.5)
-                                                          : AppTheme.electricViolet.withOpacity(0.5),
+                                                          ? Colors.white.withValues(alpha: 0.5)
+                                                          : AppTheme.electricViolet.withValues(alpha: 0.5),
                                                     ),
                                                   ),
                                                   const SizedBox(width: 4),
@@ -1140,8 +1137,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                                     Icons.edit,
                                                     size: 12,
                                                     color: isDark
-                                                        ? Colors.white.withOpacity(0.3)
-                                                        : AppTheme.electricViolet.withOpacity(0.3),
+                                                        ? Colors.white.withValues(alpha: 0.3)
+                                                        : AppTheme.electricViolet.withValues(alpha: 0.3),
                                                   ),
                                                 ],
                                               ),
@@ -1154,10 +1151,12 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                                 looping: true,
                                                 onSelectedItemChanged: (index) {
                                                   setState(() {
-                                                    int hour12 = index + 1; // 0-11 → 1-12
+                                                    final hour12 = index + 1; // 0-11 → 1-12
 
                                                     // 이전 시간 값 구하기
-                                                    final currentHour12 = ((_targetTime?.hour ?? 0) % 12) == 0 ? 12 : ((_targetTime?.hour ?? 0) % 12);
+                                                    final currentHour12 = ((_targetTime?.hour ?? 0) % 12) == 0
+                                                        ? 12
+                                                        : ((_targetTime?.hour ?? 0) % 12);
 
                                                     // 11↔12 경계를 넘을 때 AM/PM 전환
                                                     if (currentHour12 == 11 && hour12 == 12) {
@@ -1171,14 +1170,11 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                                     }
 
                                                     // 12시간 → 24시간 변환
-                                                    int hour24;
-                                                    if (_isAM) {
-                                                      // 오전: 12시 = 0, 1-11시 = 1-11
-                                                      hour24 = hour12 == 12 ? 0 : hour12;
-                                                    } else {
-                                                      // 오후: 12시 = 12, 1-11시 = 13-23
-                                                      hour24 = hour12 == 12 ? 12 : hour12 + 12;
-                                                    }
+                                                    final hour24 = _isAM
+                                                        // 오전: 12시 = 0, 1-11시 = 1-11
+                                                        ? (hour12 == 12 ? 0 : hour12)
+                                                        // 오후: 12시 = 12, 1-11시 = 13-23
+                                                        : (hour12 == 12 ? 12 : hour12 + 12);
                                                     _targetTime = TimeOfDay(
                                                       hour: hour24,
                                                       minute: _targetTime?.minute ?? 0,
@@ -1189,7 +1185,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                                   decoration: BoxDecoration(
                                                     border: Border.symmetric(
                                                       horizontal: BorderSide(
-                                                        color: AppTheme.electricViolet.withOpacity(0.3),
+                                                        color: AppTheme.electricViolet.withValues(alpha: 0.3),
                                                         width: 2,
                                                       ),
                                                     ),
@@ -1241,8 +1237,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                                     '분',
                                                     style: theme.textTheme.bodySmall?.copyWith(
                                                       color: isDark
-                                                          ? Colors.white.withOpacity(0.5)
-                                                          : AppTheme.electricViolet.withOpacity(0.5),
+                                                          ? Colors.white.withValues(alpha: 0.5)
+                                                          : AppTheme.electricViolet.withValues(alpha: 0.5),
                                                     ),
                                                   ),
                                                   const SizedBox(width: 4),
@@ -1250,8 +1246,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                                     Icons.edit,
                                                     size: 12,
                                                     color: isDark
-                                                        ? Colors.white.withOpacity(0.3)
-                                                        : AppTheme.electricViolet.withOpacity(0.3),
+                                                        ? Colors.white.withValues(alpha: 0.3)
+                                                        : AppTheme.electricViolet.withValues(alpha: 0.3),
                                                   ),
                                                 ],
                                               ),
@@ -1264,8 +1260,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                                 looping: true,
                                                 onSelectedItemChanged: (index) {
                                                   setState(() {
-                                                    int newMinute = index;
-                                                    int hourAdjustment = 0;
+                                                    final newMinute = index;
+                                                    var hourAdjustment = 0;
 
                                                     // Detect minute boundary crossing
                                                     if (_previousMinute == 59 && newMinute == 0) {
@@ -1280,47 +1276,28 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
 
                                                     // Calculate new hour if needed
                                                     if (hourAdjustment != 0) {
-                                                      int currentHour24 = _targetTime?.hour ?? 0;
-                                                      int currentHour12 = currentHour24 % 12;
-                                                      if (currentHour12 == 0) currentHour12 = 12;
-
-                                                      int newHour12 = currentHour12 + hourAdjustment;
-
-                                                      print('=== 분 경계 감지 ===');
-                                                      print('현재 24시간: $currentHour24, 현재 12시간: $currentHour12');
-                                                      print('조정값: $hourAdjustment, 새 12시간: $newHour12');
-                                                      print('현재 AM: $_isAM');
+                                                      final currentHour24 = _targetTime?.hour ?? 0;
+                                                      final currentHour12 = (currentHour24 % 12) == 0
+                                                          ? 12
+                                                          : (currentHour24 % 12);
+                                                      final newHour12Raw = currentHour12 + hourAdjustment;
 
                                                       // 먼저 AM/PM 전환 체크 (11↔12 경계)
-                                                      bool amPmChanged = false;
-                                                      if (currentHour12 == 11 && newHour12 == 12) {
-                                                        // 11시 → 12시: AM↔PM 전환
-                                                        print('>>> 11→12 감지! AM/PM 전환');
+                                                      final shouldToggleAmPm = (currentHour12 == 11 && newHour12Raw == 12) ||
+                                                          (currentHour12 == 12 && newHour12Raw == 11);
+                                                      if (shouldToggleAmPm) {
                                                         _isAM = !_isAM;
-                                                        amPmChanged = true;
-                                                      } else if (currentHour12 == 12 && newHour12 == 11) {
-                                                        // 12시 → 11시 (역방향): AM↔PM 전환
-                                                        print('>>> 12→11 감지! AM/PM 전환');
-                                                        _isAM = !_isAM;
-                                                        amPmChanged = true;
                                                       }
 
                                                       // Handle hour boundary wrapping
-                                                      if (newHour12 == 0) {
-                                                        newHour12 = 12;
-                                                      } else if (newHour12 == 13) {
-                                                        newHour12 = 1;
-                                                      }
+                                                      final newHour12 = newHour12Raw == 0
+                                                          ? 12
+                                                          : (newHour12Raw == 13 ? 1 : newHour12Raw);
 
                                                       // 12시간 → 24시간 변환
-                                                      int hour24;
-                                                      if (_isAM) {
-                                                        hour24 = newHour12 == 12 ? 0 : newHour12;
-                                                      } else {
-                                                        hour24 = newHour12 == 12 ? 12 : newHour12 + 12;
-                                                      }
-
-                                                      print('>>> 최종 시간: $newHour12시 (24시간: $hour24), AM: $_isAM');
+                                                      final hour24 = _isAM
+                                                          ? (newHour12 == 12 ? 0 : newHour12)
+                                                          : (newHour12 == 12 ? 12 : newHour12 + 12);
 
                                                       _targetTime = TimeOfDay(
                                                         hour: hour24,
@@ -1330,7 +1307,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                                       // Update pickers (이게 onSelectedItemChanged를 트리거함)
                                                       // 하지만 이미 _targetTime을 설정했으므로 괜찮음
                                                       _targetHourController.jumpToItem(newHour12 - 1);
-                                                      if (amPmChanged) {
+                                                      if (shouldToggleAmPm) {
                                                         _amPmController.jumpToItem(_isAM ? 0 : 1);
                                                       }
                                                     } else {
@@ -1345,7 +1322,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                                   decoration: BoxDecoration(
                                                     border: Border.symmetric(
                                                       horizontal: BorderSide(
-                                                        color: AppTheme.electricViolet.withOpacity(0.3),
+                                                        color: AppTheme.electricViolet.withValues(alpha: 0.3),
                                                         width: 2,
                                                       ),
                                                     ),
@@ -1377,7 +1354,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                   style: theme.textTheme.titleMedium?.copyWith(
                                     fontWeight: FontWeight.w600,
                                     color: isDark
-                                        ? AppTheme.electricViolet.withOpacity(0.8)
+                                        ? AppTheme.electricViolet.withValues(alpha: 0.8)
                                         : AppTheme.electricViolet,
                                   ),
                                 ),
@@ -1400,8 +1377,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 colors: [
-                                  AppTheme.electricViolet.withOpacity(0.3),
-                                  Colors.pink.withOpacity(0.3),
+                                  AppTheme.electricViolet.withValues(alpha: 0.3),
+                                  Colors.pink.withValues(alpha: 0.3),
                                 ],
                               ),
                               borderRadius: BorderRadius.circular(12),
@@ -1421,8 +1398,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                   'Ambient Sounds',
                                   style: theme.textTheme.titleSmall?.copyWith(
                                     color: isDark
-                                        ? Colors.white.withOpacity(0.7)
-                                        : theme.colorScheme.onSurface.withOpacity(0.7),
+                                        ? Colors.white.withValues(alpha: 0.7)
+                                        : theme.colorScheme.onSurface.withValues(alpha: 0.7),
                                   ),
                                 ),
                                 const SizedBox(height: 4),
@@ -1440,8 +1417,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                             Icons.arrow_forward_ios,
                             size: 16,
                             color: isDark
-                                ? Colors.white.withOpacity(0.5)
-                                : theme.colorScheme.onSurface.withOpacity(0.5),
+                                ? Colors.white.withValues(alpha: 0.5)
+                                : theme.colorScheme.onSurface.withValues(alpha: 0.5),
                           ),
                         ],
                       ),
@@ -1487,10 +1464,10 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                             data: SliderThemeData(
                               activeTrackColor: AppTheme.electricViolet,
                               inactiveTrackColor: isDark
-                                  ? Colors.white.withOpacity(0.1)
-                                  : AppTheme.electricViolet.withOpacity(0.2),
+                                  ? Colors.white.withValues(alpha: 0.1)
+                                  : AppTheme.electricViolet.withValues(alpha: 0.2),
                               thumbColor: AppTheme.electricViolet,
-                              overlayColor: AppTheme.electricViolet.withOpacity(0.2),
+                              overlayColor: AppTheme.electricViolet.withValues(alpha: 0.2),
                               trackHeight: 6,
                             ),
                             child: Slider(
@@ -1507,7 +1484,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                 'Whisper',
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: isDark
-                                      ? AppTheme.electricViolet.withOpacity(0.6)
+                                      ? AppTheme.electricViolet.withValues(alpha: 0.6)
                                       : AppTheme.electricViolet,
                                   fontSize: 11,
                                 ),
@@ -1516,7 +1493,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                 'Perfect',
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: isDark
-                                      ? AppTheme.electricViolet.withOpacity(0.6)
+                                      ? AppTheme.electricViolet.withValues(alpha: 0.6)
                                       : AppTheme.electricViolet,
                                   fontSize: 11,
                                 ),
@@ -1548,7 +1525,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                         boxShadow: [
                           BoxShadow(
                             color: (_isPlaying ? Colors.grey : AppTheme.electricViolet)
-                                .withOpacity(0.4),
+                                .withValues(alpha: 0.4),
                             blurRadius: 16,
                             offset: const Offset(0, 8),
                           ),
@@ -1621,7 +1598,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                       'Quality sleep is when your body repairs muscles, consolidates memories, and balances hormones. The cosmic sounds help your brain enter deeper sleep stages naturally. ✨',
                                       style: theme.textTheme.bodyMedium?.copyWith(
                                         color: isDark
-                                            ? Colors.white.withOpacity(0.7)
+                                            ? Colors.white.withValues(alpha: 0.7)
                                             : theme.colorScheme.onSurfaceVariant,
                                         height: 1.5,
                                       ),
@@ -1639,7 +1616,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                 tip,
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: isDark
-                                      ? AppTheme.electricViolet.withOpacity(0.8)
+                                      ? AppTheme.electricViolet.withValues(alpha: 0.8)
                                       : AppTheme.electricViolet,
                                   fontSize: 11,
                                 ),

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:life_app/l10n/app_localizations.dart';
 import 'package:life_app/models/community_challenge.dart';
+import 'package:life_app/providers/auth_providers.dart';
 import 'package:life_app/providers/community_challenges_provider.dart';
 import 'package:life_app/services/engagement/engagement_store.dart';
 import 'package:life_app/services/engagement/reward_store.dart';
@@ -11,10 +12,19 @@ import 'package:life_app/services/engagement/reward_store.dart';
 class CommunityChallengesPage extends ConsumerWidget {
   const CommunityChallengesPage({super.key});
 
+  void _showAuthRequiredSnackbar(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(context.l10n.tr('community_auth_required')),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final challenges = ref.watch(communityChallengesProvider);
+    final challengesAsync = ref.watch(communityChallengesProvider);
     final engagementState = ref.watch(engagementStoreProvider);
+    final isSignedIn = ref.watch(authControllerProvider).value != null;
 
     return Scaffold(
       appBar: AppBar(
@@ -23,39 +33,55 @@ class CommunityChallengesPage extends ConsumerWidget {
           IconButton(
             tooltip: context.l10n.tr('community_join_button'),
             icon: const Icon(Icons.group_add_outlined),
-            onPressed: () => _showJoinSheet(context, ref),
+            onPressed: () {
+              if (!isSignedIn) {
+                _showAuthRequiredSnackbar(context);
+                return;
+              }
+              _showJoinSheet(context, ref);
+            },
           ),
         ],
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          engagementState.when(
-            data: (state) => _EngagementCard(state: state),
-            loading: () => const _EngagementShimmer(),
-            error: (error, _) => _EngagementError(message: '$error'),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            context.l10n.tr('community_my_challenges'),
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          const SizedBox(height: 12),
-          ...challenges.map(
-            (challenge) => _ChallengeCard(challenge: challenge),
-          ),
-          if (challenges.isEmpty)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 32),
-              child: Center(
-                child: Text(context.l10n.tr('community_empty_state')),
-              ),
+      body: challengesAsync.when(
+        data: (challenges) => ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            engagementState.when(
+              data: (state) => _EngagementCard(state: state),
+              loading: () => const _EngagementShimmer(),
+              error: (error, _) => _EngagementError(message: '$error'),
             ),
-        ],
+            const SizedBox(height: 16),
+            Text(
+              context.l10n.tr('community_my_challenges'),
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 12),
+            ...challenges.map(
+              (challenge) => _ChallengeCard(challenge: challenge),
+            ),
+            if (challenges.isEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 32),
+                child: Center(
+                  child: Text(context.l10n.tr('community_empty_state')),
+                ),
+              ),
+          ],
+        ),
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stack) => Center(child: Text('Error: $error')),
       ),
       floatingActionButton: FloatingActionButton.extended(
         heroTag: null,
-        onPressed: () => _showCreateSheet(context, ref),
+        onPressed: () {
+          if (!isSignedIn) {
+            _showAuthRequiredSnackbar(context);
+            return;
+          }
+          _showCreateSheet(context, ref);
+        },
         icon: const Icon(Icons.add),
         label: Text(context.l10n.tr('community_new_challenge')),
       ),
@@ -63,176 +89,29 @@ class CommunityChallengesPage extends ConsumerWidget {
   }
 
   void _showCreateSheet(BuildContext context, WidgetRef ref) {
-    final l10n = context.l10n;
-    final theme = Theme.of(context);
-    final templates = ChallengeTemplate.values;
-    ChallengeTemplateInfo infoFor(ChallengeTemplate template) =>
-        templateCatalog[template]!;
-    var selectedTemplate = templates.first;
-    final titleController = TextEditingController(
-      text: infoFor(selectedTemplate).title,
-    );
-    final descriptionController = TextEditingController(
-      text: infoFor(selectedTemplate).description,
-    );
-    var durationDays = infoFor(selectedTemplate).defaultDurationDays;
-    var goalMinutes = infoFor(selectedTemplate).defaultGoalMinutes;
-    var privacy = ChallengePrivacy.private;
-
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       builder: (sheetContext) {
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(sheetContext).viewInsets.bottom + 16,
-            left: 24,
-            right: 24,
-            top: 24,
-          ),
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              final templateInfo = infoFor(selectedTemplate);
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    l10n.tr('community_create_title'),
-                    style: theme.textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    l10n.tr('community_create_description'),
-                    style: theme.textTheme.bodyMedium,
-                  ),
-                  const SizedBox(height: 20),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: templates.map((template) {
-                      final info = infoFor(template);
-                      final selected = template == selectedTemplate;
-                      return ChoiceChip(
-                        label: Text(l10n.tr(_templateNameKey(template))),
-                        selected: selected,
-                        onSelected: (value) {
-                          if (!value) return;
-                          setState(() {
-                            selectedTemplate = template;
-                            durationDays = info.defaultDurationDays;
-                            goalMinutes = info.defaultGoalMinutes;
-                            titleController.text = info.title;
-                            descriptionController.text = info.description;
-                          });
-                        },
-                      );
-                    }).toList(),
-                  ),
-                  const SizedBox(height: 20),
-                  TextField(
-                    controller: titleController,
-                    decoration: InputDecoration(
-                      labelText: l10n.tr('community_create_name_label'),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  TextField(
-                    controller: descriptionController,
-                    minLines: 2,
-                    maxLines: 4,
-                    decoration: InputDecoration(
-                      labelText: l10n.tr('community_create_description_label'),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  _SliderRow(
-                    label: l10n.tr('community_create_duration_label', {
-                      'days': '$durationDays',
-                    }),
-                    value: durationDays.toDouble(),
-                    min: 3,
-                    max: 30,
-                    divisions: 27,
-                    onChanged: (value) =>
-                        setState(() => durationDays = value.round()),
-                  ),
-                  _SliderRow(
-                    label: l10n.tr('community_create_goal_label', {
-                      'minutes': '$goalMinutes',
-                    }),
-                    value: goalMinutes.toDouble(),
-                    min: 5,
-                    max: 120,
-                    divisions: 23,
-                    onChanged: (value) =>
-                        setState(() => goalMinutes = (value / 5).round() * 5),
-                  ),
-                  const SizedBox(height: 12),
-                  DropdownButtonFormField<ChallengePrivacy>(
-                    initialValue: privacy,
-                    decoration: InputDecoration(
-                      labelText: l10n.tr('community_privacy_label'),
-                    ),
-                    items: ChallengePrivacy.values
-                        .map(
-                          (value) => DropdownMenuItem(
-                            value: value,
-                            child: Text(l10n.tr(_privacyLabelKey(value))),
-                          ),
-                        )
-                        .toList(),
-                    onChanged: (value) {
-                      if (value == null) return;
-                      setState(() => privacy = value);
-                    },
-                  ),
-                  const SizedBox(height: 24),
-                  SizedBox(
-                    width: double.infinity,
-                    child: FilledButton(
-                      onPressed: () {
-                        final newChallenge = ref
-                            .read(communityChallengesProvider.notifier)
-                            .createChallenge(
-                              template: selectedTemplate,
-                              title: titleController.text.trim().isEmpty
-                                  ? templateInfo.title
-                                  : titleController.text.trim(),
-                              description:
-                                  descriptionController.text.trim().isEmpty
-                                  ? templateInfo.description
-                                  : descriptionController.text.trim(),
-                              durationDays: durationDays,
-                              goalMinutes: goalMinutes,
-                              privacy: privacy,
-                            );
-                        Navigator.pop(sheetContext);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(l10n.tr('community_create_success')),
-                            action: newChallenge.inviteCode != null
-                                ? SnackBarAction(
-                                    label: l10n.tr('community_copy_invite'),
-                                    onPressed: () {
-                                      Clipboard.setData(
-                                        ClipboardData(
-                                          text: newChallenge.inviteCode!,
-                                        ),
-                                      );
-                                    },
-                                  )
-                                : null,
-                          ),
-                        );
-                      },
-                      child: Text(l10n.tr('community_create_submit')),
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
+        return Consumer(
+          builder: (context, ref, child) {
+            final templatesAsync = ref.watch(challengeTemplatesProvider);
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(sheetContext).viewInsets.bottom + 16,
+                left: 24,
+                right: 24,
+                top: 24,
+              ),
+              child: templatesAsync.when(
+                data: (templateCatalog) => _CreateChallengeForm(
+                  templateCatalog: templateCatalog,
+                ),
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (err, stack) => Center(child: Text('Error: $err')),
+              ),
+            );
+          },
         );
       },
     );
@@ -241,67 +120,296 @@ class CommunityChallengesPage extends ConsumerWidget {
   void _showJoinSheet(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final controller = TextEditingController();
+    var isLoading = false;
+
     showModalBottomSheet<void>(
       context: context,
       builder: (sheetContext) {
-        return Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                l10n.tr('community_join_title'),
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const SizedBox(height: 12),
-              Text(
-                l10n.tr('community_join_description'),
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: controller,
-                textCapitalization: TextCapitalization.characters,
-                decoration: InputDecoration(
-                  labelText: l10n.tr('community_join_placeholder'),
+        return StatefulBuilder(builder: (context, setState) {
+          return Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.tr('community_join_title'),
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
-              ),
-              const SizedBox(height: 20),
-              SizedBox(
-                width: double.infinity,
-                child: FilledButton(
-                  onPressed: () {
-                    // TODO(profile-data): Replace placeholder member identity with the
-                    // authenticated user's id and display name from the account store.
-                    // 현재는 임시로 생성된 식별자와 라벨을 사용해 DB/프로필 정보와
-                    // 연동되지 않습니다.
-                    final member = ChallengeMember(
-                      id: 'friend_${DateTime.now().millisecondsSinceEpoch}',
-                      displayName: l10n.tr('community_join_you'),
-                      joinedAt: DateTime.now(),
-                    );
-                    final success = ref
-                        .read(communityChallengesProvider.notifier)
-                        .joinByInviteCode(controller.text, member);
-                    Navigator.pop(sheetContext);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          success
-                              ? l10n.tr('community_join_success')
-                              : l10n.tr('community_join_error'),
-                        ),
-                      ),
-                    );
-                  },
-                  child: Text(l10n.tr('community_join_submit')),
+                const SizedBox(height: 12),
+                Text(
+                  l10n.tr('community_join_description'),
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
-              ),
-            ],
-          ),
-        );
+                const SizedBox(height: 16),
+                TextField(
+                  controller: controller,
+                  textCapitalization: TextCapitalization.characters,
+                  decoration: InputDecoration(
+                    labelText: l10n.tr('community_join_placeholder'),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton(
+                    onPressed: isLoading
+                        ? null
+                        : () async {
+                            setState(() => isLoading = true);
+                            try {
+                              final success = await ref
+                                  .read(communityChallengesProvider.notifier)
+                                  .joinByInviteCode(controller.text);
+                              if (!sheetContext.mounted) return;
+                              Navigator.pop(sheetContext);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    success
+                                        ? l10n.tr('community_join_success')
+                                        : l10n.tr('community_join_error'),
+                                  ),
+                                ),
+                              );
+                            } catch (e) {
+                              if (sheetContext.mounted) {
+                                Navigator.pop(sheetContext);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(l10n.tr(
+                                        'community_action_failed',
+                                        {'error': e.toString()})),
+                                  ),
+                                );
+                              }
+                            } finally {
+                              if (sheetContext.mounted) {
+                                setState(() => isLoading = false);
+                              }
+                            }
+                          },
+                    child: isLoading
+                        ? const SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(strokeWidth: 2))
+                        : Text(l10n.tr('community_join_submit')),
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
       },
+    );
+  }
+}
+
+class _CreateChallengeForm extends ConsumerStatefulWidget {
+  const _CreateChallengeForm({required this.templateCatalog});
+  final Map<ChallengeTemplate, ChallengeTemplateInfo> templateCatalog;
+
+  @override
+  ConsumerState<_CreateChallengeForm> createState() =>
+      _CreateChallengeFormState();
+}
+
+class _CreateChallengeFormState extends ConsumerState<_CreateChallengeForm> {
+  late ChallengeTemplate selectedTemplate;
+  late TextEditingController titleController;
+  late TextEditingController descriptionController;
+  late int durationDays;
+  late int goalMinutes;
+  late ChallengePrivacy privacy;
+  bool _isCreating = false;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedTemplate = widget.templateCatalog.keys.first;
+    final info = widget.templateCatalog[selectedTemplate]!;
+    titleController = TextEditingController(text: info.title);
+    descriptionController = TextEditingController(text: info.description);
+    durationDays = info.defaultDurationDays;
+    goalMinutes = info.defaultGoalMinutes;
+    privacy = ChallengePrivacy.private;
+  }
+
+  @override
+  void dispose() {
+    titleController.dispose();
+    descriptionController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+    final templateInfo = widget.templateCatalog[selectedTemplate]!;
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          l10n.tr('community_create_title'),
+          style: theme.textTheme.titleMedium,
+        ),
+        const SizedBox(height: 12),
+        Text(
+          l10n.tr('community_create_description'),
+          style: theme.textTheme.bodyMedium,
+        ),
+        const SizedBox(height: 20),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: widget.templateCatalog.keys.map((template) {
+            final selected = template == selectedTemplate;
+            return ChoiceChip(
+              label: Text(l10n.tr(_templateNameKey(template))),
+              selected: selected,
+              onSelected: (value) {
+                if (!value) return;
+                setState(() {
+                  selectedTemplate = template;
+                  final newInfo = widget.templateCatalog[template]!;
+                  durationDays = newInfo.defaultDurationDays;
+                  goalMinutes = newInfo.defaultGoalMinutes;
+                  titleController.text = newInfo.title;
+                  descriptionController.text = newInfo.description;
+                });
+              },
+            );
+          }).toList(),
+        ),
+        const SizedBox(height: 20),
+        TextField(
+          controller: titleController,
+          decoration: InputDecoration(
+            labelText: l10n.tr('community_create_name_label'),
+          ),
+        ),
+        const SizedBox(height: 12),
+        TextField(
+          controller: descriptionController,
+          minLines: 2,
+          maxLines: 4,
+          decoration: InputDecoration(
+            labelText: l10n.tr('community_create_description_label'),
+          ),
+        ),
+        const SizedBox(height: 20),
+        _SliderRow(
+          label: l10n.tr('community_create_duration_label', {
+            'days': '$durationDays',
+          }),
+          value: durationDays.toDouble(),
+          min: 3,
+          max: 30,
+          divisions: 27,
+          onChanged: (value) => setState(() => durationDays = value.round()),
+        ),
+        _SliderRow(
+          label: l10n.tr('community_create_goal_label', {
+            'minutes': '$goalMinutes',
+          }),
+          value: goalMinutes.toDouble(),
+          min: 5,
+          max: 120,
+          divisions: 23,
+          onChanged: (value) =>
+              setState(() => goalMinutes = (value / 5).round() * 5),
+        ),
+        const SizedBox(height: 12),
+        DropdownButtonFormField<ChallengePrivacy>(
+          initialValue: privacy,
+          decoration: InputDecoration(
+            labelText: l10n.tr('community_privacy_label'),
+          ),
+          items: ChallengePrivacy.values
+              .map(
+                (value) => DropdownMenuItem(
+                  value: value,
+                  child: Text(l10n.tr(_privacyLabelKey(value))),
+                ),
+              )
+              .toList(),
+          onChanged: (value) {
+            if (value == null) return;
+            setState(() => privacy = value);
+          },
+        ),
+        const SizedBox(height: 24),
+        SizedBox(
+          width: double.infinity,
+          child: FilledButton(
+            onPressed: _isCreating
+                ? null
+                : () async {
+                    setState(() => _isCreating = true);
+                    try {
+                      final newChallenge = await ref
+                          .read(communityChallengesProvider.notifier)
+                          .createChallenge(
+                            template: selectedTemplate,
+                            title: titleController.text.trim().isEmpty
+                                ? templateInfo.title
+                                : titleController.text.trim(),
+                            description:
+                                descriptionController.text.trim().isEmpty
+                                    ? templateInfo.description
+                                    : descriptionController.text.trim(),
+                            durationDays: durationDays,
+                            goalMinutes: goalMinutes,
+                            privacy: privacy,
+                          );
+                      if (!context.mounted) return;
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(l10n.tr('community_create_success')),
+                          action: newChallenge.inviteCode != null
+                              ? SnackBarAction(
+                                  label: l10n.tr('community_copy_invite'),
+                                  onPressed: () {
+                                    Clipboard.setData(
+                                      ClipboardData(
+                                        text: newChallenge.inviteCode!,
+                                      ),
+                                    );
+                                  },
+                                )
+                              : null,
+                        ),
+                      );
+                    } catch (e) {
+                      if (context.mounted) {
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(l10n.tr('community_action_failed',
+                                {'error': e.toString()})),
+                          ),
+                        );
+                      }
+                    } finally {
+                      if (mounted) {
+                        setState(() => _isCreating = false);
+                      }
+                    }
+                  },
+            child: _isCreating
+                ? const SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(strokeWidth: 2))
+                : Text(l10n.tr('community_create_submit')),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -614,6 +722,7 @@ class _ChallengeCard extends ConsumerWidget {
       ChallengeStatus.upcoming => l10n.tr('community_status_upcoming'),
       ChallengeStatus.completed => l10n.tr('community_status_completed'),
     };
+    final currentUser = ref.watch(authControllerProvider).value;
 
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
@@ -684,14 +793,14 @@ class _ChallengeCard extends ConsumerWidget {
                 Expanded(
                   child: OutlinedButton(
                     onPressed: () {
-                      // TODO(profile-data): Replace the 'owner' stub with the current
-                      // account id once community membership is driven by persisted
-                      // user records.
-                      // 현재는 하드코딩된 'owner' 식별자를 사용해 실제 사용자 계정과
-                      // 연결되지 않습니다.
+                      if (currentUser == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(l10n.tr('community_auth_required'))));
+                        return;
+                      }
                       ref
                           .read(communityChallengesProvider.notifier)
-                          .leave(challenge.id, 'owner');
+                          .leave(challenge.id);
                     },
                     child: Text(l10n.tr('community_leave')),
                   ),
@@ -700,21 +809,21 @@ class _ChallengeCard extends ConsumerWidget {
                 Expanded(
                   child: FilledButton(
                     onPressed: () {
-                      // TODO(profile-data): Swap hardcoded owner/member identifiers with
-                      // the signed-in user's persisted account id when wiring to real
-                      // community data.
-                      // 현재는 'owner' 문자열로 진행 상황을 업데이트하여 실제 사용자
-                      // 데이터와 동기화되지 않습니다.
+                      if (currentUser == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(l10n.tr('community_auth_required'))));
+                        return;
+                      }
+                      final currentMember = challenge.members.firstWhere(
+                        (m) => m.id == currentUser.uid,
+                        orElse: () => const ChallengeMember(id: '', displayName: ''),
+                      );
+                      if (currentMember.id.isEmpty) return;
                       ref
                           .read(communityChallengesProvider.notifier)
                           .updateProgress(
                             challengeId: challenge.id,
-                            memberId: 'owner',
-                            focusMinutes:
-                                challenge.members
-                                    .firstWhere((m) => m.id == 'owner')
-                                    .focusMinutes +
-                                15,
+                            focusMinutes: currentMember.focusMinutes + 15,
                           );
                     },
                     child: Text(l10n.tr('community_log_focus_action')),

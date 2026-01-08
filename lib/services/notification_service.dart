@@ -43,7 +43,7 @@ class NotificationService {
             AndroidFlutterLocalNotificationsPlugin
           >();
       await androidPlugin
-          ?.requestNotificationsPermission(); // granted == true/false/null (무시해도 무방)
+          ?.requestPermission(); // granted == true/false/null (무시해도 무방)
     }
   }
 
@@ -127,6 +127,7 @@ class NotificationService {
         ),
         importance: Importance.max,
         priority: Priority.high,
+        scheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       ),
       iOS: const DarwinNotificationDetails(),
       macOS: const DarwinNotificationDetails(),
@@ -140,7 +141,7 @@ class NotificationService {
       body,
       tzDateTime,
       details,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
     );
   }
 
@@ -200,6 +201,7 @@ class NotificationService {
           importance: isFinal ? Importance.max : Importance.defaultImportance,
           priority: isFinal ? Priority.high : Priority.defaultPriority,
           fullScreenIntent: isFinal,
+          scheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         ),
         iOS: DarwinNotificationDetails(presentSound: isFinal),
         macOS: const DarwinNotificationDetails(),
@@ -218,7 +220,7 @@ class NotificationService {
         body,
         tzDateTime,
         details,
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
       );
     }
   }
@@ -271,6 +273,7 @@ class NotificationService {
         importance: Importance.defaultImportance,
         priority: Priority.defaultPriority,
         category: AndroidNotificationCategory.reminder,
+        scheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       ),
       iOS: const DarwinNotificationDetails(),
       macOS: const DarwinNotificationDetails(),
@@ -282,7 +285,7 @@ class NotificationService {
       body,
       tzDateTime,
       details,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,
     );
   }

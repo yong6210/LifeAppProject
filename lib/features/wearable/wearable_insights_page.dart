@@ -219,8 +219,8 @@ class _SummaryView extends ConsumerWidget {
           borderRadius: 20,
           gradient: LinearGradient(
             colors: [
-              AppTheme.electricViolet.withOpacity(0.8),
-              AppTheme.teal.withOpacity(0.8),
+              AppTheme.electricViolet.withValues(alpha: 0.8),
+              AppTheme.teal.withValues(alpha: 0.8),
             ],
           ),
           child: Row(
@@ -295,14 +295,14 @@ class _SummaryView extends ConsumerWidget {
               Icon(
                 Icons.info_outline,
                 size: 18,
-                color: isDark ? Colors.white70 : theme.colorScheme.onSurface.withOpacity(0.7),
+                color: isDark ? Colors.white70 : theme.colorScheme.onSurface.withValues(alpha: 0.7),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
                   l10n.tr('wearable_disclaimer'),
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: isDark ? Colors.white70 : theme.colorScheme.onSurface.withOpacity(0.7),
+                    color: isDark ? Colors.white70 : theme.colorScheme.onSurface.withValues(alpha: 0.7),
                   ),
                 ),
               ),
@@ -509,8 +509,8 @@ class _InfoTile extends StatelessWidget {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  AppTheme.electricViolet.withOpacity(0.3),
-                  AppTheme.teal.withOpacity(0.3),
+                  AppTheme.electricViolet.withValues(alpha: 0.3),
+                  AppTheme.teal.withValues(alpha: 0.3),
                 ],
               ),
               borderRadius: BorderRadius.circular(12),
@@ -537,7 +537,7 @@ class _InfoTile extends StatelessWidget {
                 Text(
                   subtitle,
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: isDark ? Colors.white70 : theme.colorScheme.onSurface.withOpacity(0.7),
+                    color: isDark ? Colors.white70 : theme.colorScheme.onSurface.withValues(alpha: 0.7),
                   ),
                 ),
               ],
@@ -580,7 +580,7 @@ class _MetricTile extends StatelessWidget {
           Text(
             label,
             style: theme.textTheme.bodySmall?.copyWith(
-              color: isDark ? Colors.white70 : theme.colorScheme.onSurface.withOpacity(0.7),
+              color: isDark ? Colors.white70 : theme.colorScheme.onSurface.withValues(alpha: 0.7),
             ),
           ),
           const SizedBox(height: 4),

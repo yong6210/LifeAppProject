@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:life_app/features/timer/timer_controller.dart';
 import 'package:life_app/features/timer/timer_state.dart';
 import 'package:life_app/features/timer/timer_plan.dart';
+import 'package:life_app/features/timer/widgets/sleep_analysis_result_card.dart';
 import 'package:life_app/models/routine.dart';
 import 'package:life_app/models/settings.dart';
 import 'package:life_app/providers/session_providers.dart';
@@ -844,6 +845,8 @@ class _TimerPageState extends ConsumerState<TimerPage> {
                           );
                         },
                       ),
+                      const SizedBox(height: 16),
+                      const SleepAnalysisResultCard(),
                     ],
                     const SizedBox(height: 16),
                     _TimerStatusCard(

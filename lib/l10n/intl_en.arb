@@ -4,6 +4,16 @@
   "tab_home": "Home",
   "tab_more": "More",
   "tab_profile": "Profile",
+  "more_title": "More",
+  "more_section_focus_rest": "Focus & Rest",
+  "more_section_health": "Wellness",
+  "more_section_records": "Records & Insights",
+  "more_item_focus": "Focus",
+  "more_item_workout": "Workout",
+  "more_item_sleep": "Sleep",
+  "more_item_journal": "Journal",
+  "more_item_stats": "Stats",
+  "more_item_backup": "Backup",
   "home_greeting": "Hello again",
   "home_routine_focus_title": "Deep focus",
   "home_routine_focus_body": "Stay in flow with balanced work and break intervals.",
@@ -389,68 +399,6 @@
   "home_dashboard_state_error_message": "Check your connection or pull to refresh.",
   "home_dashboard_state_retry": "Retry",
   "home_dashboard_routines_title": "Your routines",
-  "home_dashboard_progress_title": "Today's progress",
-  "home_dashboard_integrations_title": "Integrations",
-  "home_dashboard_integrations_wearables_title": "Wearables",
-  "home_dashboard_integrations_wearables_subtitle": "Connect devices",
-  "home_dashboard_integrations_backup_title": "Backup",
-  "home_dashboard_integrations_backup_subtitle": "Auto-sync enabled",
-  "home_dashboard_premium_title": "Go premium",
-  "home_dashboard_premium_subtitle": "Advanced insights & more",
-  "home_dashboard_premium_cta": "Start free trial • 7 days",
-  "home_dashboard_routine_stat_today": "Today {value}",
-  "@home_dashboard_routine_stat_today": {
-    "description": "Label describing how much time was logged today for a routine.",
-    "placeholders": {
-      "value": {
-        "example": "1h 20m"
-      }
-    }
-  },
-  "home_dashboard_routine_stat_streak": "{days}-day streak",
-  "@home_dashboard_routine_stat_streak": {
-    "description": "Label describing the user's current routine streak in days.",
-    "placeholders": {
-      "days": {
-        "example": "5"
-      }
-    }
-  },
-  "home_dashboard_life_buddy_label": "Life Buddy",
-  "home_dashboard_today_label": "TODAY",
-  "common_percent_symbol": "%",
-  "common_percent_value": "{value}%",
-  "@common_percent_value": {
-    "placeholders": {
-      "value": {}
-    }
-  },
-  "home_dashboard_streak_label": "STREAK",
-  "home_dashboard_level_label": "LEVEL",
-  "home_dashboard_focus_card_title": "Focus",
-  "home_dashboard_move_card_title": "Move",
-  "home_dashboard_goal_minutes_label": "/ {minutes} min",
-  "@home_dashboard_goal_minutes_label": {
-    "placeholders": {
-      "minutes": {}
-    }
-  },
-  "home_dashboard_rest_card_title": "Rest & Recovery",
-  "home_dashboard_sleep_goal_label_one": "/ {hours} hour",
-  "@home_dashboard_sleep_goal_label_one": {
-    "placeholders": {
-      "hours": {}
-    }
-  },
-  "home_dashboard_sleep_goal_label_other": "/ {hours} hours",
-  "@home_dashboard_sleep_goal_label_other": {
-    "placeholders": {
-      "hours": {}
-    }
-  },
-  "home_dashboard_stats_cta_title": "View statistics",
-  "home_dashboard_stats_cta_subtitle": "Insights & trends",
-  "home_dashboard_routines_today_title": "Today's routines",
   "home_dashboard_routines_count_zero": "No routines",
   "home_dashboard_routines_count_one": "{count} routine",
   "@home_dashboard_routines_count_one": {
@@ -1053,7 +1001,8 @@
   },
   "@timer_preset_dialog_title": {
     "placeholders": {
-      "label": {}
+      "label": {},
+      "minutes": {}
     }
   },
   "@timer_preset_label": {
@@ -1465,6 +1414,59 @@
     }
   },
   "@timer_init_save_error": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "generic_error_short": "Error: {error}",
+  "@generic_error_short": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "sleep_analysis_no_data_title": "No Sleep Analysis Data",
+  "sleep_analysis_no_data_body": "Use the sleep timer to get insights about your sleep quality.",
+  "sleep_analysis_restful_title": "Mostly Restful Sleep",
+  "sleep_analysis_moderate_title": "Some Disruptions Detected",
+  "sleep_analysis_disrupted_title": "Disrupted Sleep Detected",
+  "sleep_analysis_restful_minutes": "About {minutes} minutes of your sleep were restful.",
+  "@sleep_analysis_restful_minutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "sleep_analysis_loud_events": "{count} loud events were detected.",
+  "@sleep_analysis_loud_events": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "sleep_analysis_detail_title": "Sleep Analysis Details",
+  "sleep_detail_total_duration": "Total duration",
+  "sleep_detail_restful_ratio": "Restful ratio",
+  "sleep_detail_restful_minutes": "Restful minutes",
+  "sleep_detail_loud_events": "Loud events",
+  "sleep_detail_max_amplitude": "Max amplitude",
+  "sleep_detail_noise_timeline": "Noise event timeline",
+  "sleep_detail_noise_event_at": "Noise event at {time}",
+  "@sleep_detail_noise_event_at": {
+    "placeholders": {
+      "time": {}
+    }
+  },
+  "sleep_detail_noise_event_duration": "Duration: {duration}",
+  "@sleep_detail_noise_event_duration": {
+    "placeholders": {
+      "duration": {}
+    }
+  },
+  "community_auth_required": "Please sign in to use community features.",
+  "community_action_failed": "Action failed: {error}",
+  "@community_action_failed": {
     "placeholders": {
       "error": {}
     }

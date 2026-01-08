@@ -154,8 +154,8 @@ class BackupPage extends ConsumerWidget {
                         borderRadius: 16,
                         gradient: LinearGradient(
                           colors: [
-                            Colors.red.withOpacity(0.2),
-                            Colors.red.withOpacity(0.1),
+                            Colors.red.withValues(alpha: 0.2),
+                            Colors.red.withValues(alpha: 0.1),
                           ],
                         ),
                         child: Row(
@@ -232,8 +232,8 @@ class _BackupActions extends ConsumerWidget {
             borderRadius: 20,
             gradient: LinearGradient(
               colors: [
-                AppTheme.electricViolet.withOpacity(0.8),
-                AppTheme.teal.withOpacity(0.8),
+                AppTheme.electricViolet.withValues(alpha: 0.8),
+                AppTheme.teal.withValues(alpha: 0.8),
               ],
             ),
             child: Row(
@@ -396,7 +396,7 @@ class _PreferredProviderSection extends ConsumerWidget {
           Text(
             l10n.tr('backup_preferred_storage_help'),
             style: theme.textTheme.bodySmall?.copyWith(
-              color: isDark ? Colors.white70 : theme.colorScheme.onSurface.withOpacity(0.7),
+              color: isDark ? Colors.white70 : theme.colorScheme.onSurface.withValues(alpha: 0.7),
             ),
           ),
           const SizedBox(height: 16),
@@ -507,7 +507,7 @@ class _BackupHelpCard extends StatelessWidget {
           child: Text(
             text,
             style: theme.textTheme.bodySmall?.copyWith(
-              color: isDark ? Colors.white70 : theme.colorScheme.onSurface.withOpacity(0.8),
+              color: isDark ? Colors.white70 : theme.colorScheme.onSurface.withValues(alpha: 0.8),
             ),
           ),
         ),
@@ -535,7 +535,7 @@ class _BackupHistoryList extends StatelessWidget {
           child: Text(
             l10n.tr('backup_history_empty'),
             style: theme.textTheme.bodyMedium?.copyWith(
-              color: isDark ? Colors.white70 : theme.colorScheme.onSurface.withOpacity(0.7),
+              color: isDark ? Colors.white70 : theme.colorScheme.onSurface.withValues(alpha: 0.7),
             ),
           ),
         ),
@@ -613,7 +613,7 @@ class _BackupHistoryTile extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.2),
+              color: color.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(icon, color: color, size: 20),
@@ -638,7 +638,7 @@ class _BackupHistoryTile extends StatelessWidget {
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: isDark
                         ? Colors.white70
-                        : theme.colorScheme.onSurface.withOpacity(0.7),
+                        : theme.colorScheme.onSurface.withValues(alpha: 0.7),
                   ),
                 ),
               ],
