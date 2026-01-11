@@ -157,9 +157,7 @@ Future<void> pumpOnboarding(
   });
 
   final overrides = <Override>[
-    remoteConfigProvider.overrideWithValue(
-      AsyncValue<RemoteConfigSnapshot>.data(snapshot),
-    ),
+    remoteConfigProvider.overrideWith((ref) => snapshot),
     if (overrideMutationProvider)
       settingsMutationControllerProvider.overrideWith(
         () => FakeSettingsMutationController(),

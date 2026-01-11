@@ -1,33 +1,107 @@
+import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:life_app/features/account/profile_repository.dart';
 import 'package:life_app/features/community/community_repository.dart';
 import 'package:life_app/models/community_challenge.dart';
 import 'package:life_app/providers/auth_providers.dart';
 import 'package:life_app/providers/community_challenges_provider.dart';
-import 'package:firebase_auth/firebase_auth.dart' as auth;
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
 
-import 'community_challenges_provider_test.mocks.dart';
+class _FakeAuthController extends AuthController {
+  _FakeAuthController(this._user);
 
-@GenerateMocks([CommunityRepository, auth.User])
+  final auth.User? _user;
+
+  @override
+  Future<auth.User?> build() async => _user;
+}
+
+class _FakeCommunityRepository implements CommunityRepository {
+  int getChallengesCallCount = 0;
+  String? lastGetChallengesUserId;
+  Stream<List<CommunityChallenge>> Function(String userId)? onGetChallenges;
+
+  CommunityChallenge? createdChallenge;
+  String? leaveChallengeId;
+  String? leaveMemberId;
+  _UpdateProgressCall? updateProgressCall;
+
+  @override
+  Stream<List<CommunityChallenge>> getChallenges(String userId) {
+    getChallengesCallCount += 1;
+    lastGetChallengesUserId = userId;
+    return onGetChallenges?.call(userId) ??
+        Stream.value(const <CommunityChallenge>[]);
+  }
+
+  @override
+  Future<CommunityChallenge?> getChallengeByInviteCode(String code) async {
+    return null;
+  }
+
+  @override
+  Future<void> createChallenge(CommunityChallenge challenge) async {
+    createdChallenge = challenge;
+  }
+
+  @override
+  Future<void> joinChallenge(String challengeId, ChallengeMember member) async {}
+
+  @override
+  Future<void> leaveChallenge(String challengeId, String memberId) async {
+    leaveChallengeId = challengeId;
+    leaveMemberId = memberId;
+  }
+
+  @override
+  Future<void> updateProgress({
+    required String challengeId,
+    required String memberId,
+    int? focusMinutes,
+  }) async {
+    updateProgressCall = _UpdateProgressCall(
+      challengeId: challengeId,
+      memberId: memberId,
+      focusMinutes: focusMinutes,
+    );
+  }
+}
+
+class _UpdateProgressCall {
+  const _UpdateProgressCall({
+    required this.challengeId,
+    required this.memberId,
+    required this.focusMinutes,
+  });
+
+  final String challengeId;
+  final String memberId;
+  final int? focusMinutes;
+}
+
 void main() {
   group('CommunityChallengesNotifier', () {
     late ProviderContainer container;
-    late MockCommunityRepository mockRepository;
-    late MockUser mockUser;
+    late _FakeCommunityRepository fakeRepository;
+    late auth.User mockUser;
 
     setUp(() {
-      mockRepository = MockCommunityRepository();
-      mockUser = MockUser();
-      
-      // Mock the user's UID
-      when(mockUser.uid).thenReturn('test_user_id');
+      fakeRepository = _FakeCommunityRepository();
+      mockUser = MockUser(uid: 'test_user_id');
 
       container = ProviderContainer(
         overrides: [
-          communityRepositoryProvider.overrideWithValue(mockRepository),
-          authControllerProvider.overrideWith((ref) => Stream.value(mockUser)),
+          communityRepositoryProvider.overrideWithValue(fakeRepository),
+          authControllerProvider.overrideWith(
+            () => _FakeAuthController(mockUser),
+          ),
+          userProfileProvider.overrideWith(
+            (ref) => const UserProfile(
+              uid: 'test_user_id',
+              displayName: 'Tester',
+            ),
+          ),
         ],
       );
     });
@@ -37,39 +111,60 @@ void main() {
     });
 
     test('build returns empty list when user is not logged in', () async {
-      // Override auth to be logged out for this specific test
       container.dispose();
       container = ProviderContainer(
         overrides: [
-          communityRepositoryProvider.overrideWithValue(mockRepository),
-          authControllerProvider.overrideWith((ref) => Stream.value(null)),
+          communityRepositoryProvider.overrideWithValue(fakeRepository),
+          authControllerProvider.overrideWith(
+            () => _FakeAuthController(null),
+          ),
+          userProfileProvider.overrideWith((ref) => null),
         ],
       );
 
-      // We need to listen to the provider to trigger the build method
-      final listener = container.listen(communityChallengesProvider, (_, __) {});
-      
-      // Wait for the future to complete
-      await expectLater(listener.read(), completion(isEmpty));
-
-      verifyNever(mockRepository.getChallenges(any));
-    });
-
-    test('build calls repository and returns challenges when user is logged in', () async {
-      final challenges = [
-        CommunityChallenge(id: 'c1', title: 'Test Challenge', description: '', template: ChallengeTemplate.focusSprint, startDate: DateTime.now(), endDate: DateTime.now(), goalMinutesPerDay: 1, privacy: ChallengePrivacy.private, status: ChallengeStatus.active, ownerId: 'test_user_id', members: [])
-      ];
-      when(mockRepository.getChallenges('test_user_id')).thenAnswer((_) => Stream.value(challenges));
-
+      await container.read(authControllerProvider.future);
       final result = await container.read(communityChallengesProvider.future);
-      
-      expect(result, challenges);
-      verify(mockRepository.getChallenges('test_user_id')).called(1);
+
+      expect(result, isEmpty);
+      expect(fakeRepository.getChallengesCallCount, 0);
     });
+
+    test(
+      'build calls repository and returns challenges when user is logged in',
+      () async {
+        final challenges = [
+          CommunityChallenge(
+            id: 'c1',
+            title: 'Test Challenge',
+            description: '',
+            template: ChallengeTemplate.focusSprint,
+            startDate: DateTime.now(),
+            endDate: DateTime.now(),
+            goalMinutesPerDay: 1,
+            privacy: ChallengePrivacy.private,
+            status: ChallengeStatus.active,
+            ownerId: 'test_user_id',
+            members: [],
+          ),
+        ];
+        fakeRepository.onGetChallenges = (userId) {
+          return Stream.value(challenges);
+        };
+
+        await container.read(authControllerProvider.future);
+        final result = await container.read(communityChallengesProvider.future);
+
+        expect(result, challenges);
+        expect(fakeRepository.getChallengesCallCount, 1);
+        expect(fakeRepository.lastGetChallengesUserId, 'test_user_id');
+      },
+    );
 
     test('createChallenge calls repository with correct data', () async {
+      await container.read(authControllerProvider.future);
+      await container.read(communityChallengesProvider.future);
       final notifier = container.read(communityChallengesProvider.notifier);
-      
+
       await notifier.createChallenge(
         template: ChallengeTemplate.focusSprint,
         title: 'New Sprint',
@@ -79,33 +174,39 @@ void main() {
         privacy: ChallengePrivacy.private,
       );
 
-      final captured = verify(mockRepository.createChallenge(captureAny)).captured.single as CommunityChallenge;
-      expect(captured.title, 'New Sprint');
-      expect(captured.ownerId, 'test_user_id');
-      expect(captured.members.first.id, 'test_user_id');
+      final created = fakeRepository.createdChallenge;
+      expect(created, isNotNull);
+      expect(created?.title, 'New Sprint');
+      expect(created?.ownerId, 'test_user_id');
+      expect(created?.members.first.id, 'test_user_id');
     });
 
-     test('leave calls repository with correct challengeId', () async {
+    test('leave calls repository with correct challengeId', () async {
+      await container.read(authControllerProvider.future);
+      await container.read(communityChallengesProvider.future);
       final notifier = container.read(communityChallengesProvider.notifier);
-      
+
       await notifier.leave('challenge_to_leave');
 
-      verify(mockRepository.leaveChallenge('challenge_to_leave', 'test_user_id')).called(1);
+      expect(fakeRepository.leaveChallengeId, 'challenge_to_leave');
+      expect(fakeRepository.leaveMemberId, 'test_user_id');
     });
 
     test('updateProgress calls repository with correct data', () async {
+      await container.read(authControllerProvider.future);
+      await container.read(communityChallengesProvider.future);
       final notifier = container.read(communityChallengesProvider.notifier);
-      
+
       await notifier.updateProgress(
         challengeId: 'challenge_to_update',
         focusMinutes: 50,
       );
 
-      verify(mockRepository.updateProgress(
-        challengeId: 'challenge_to_update',
-        memberId: 'test_user_id',
-        focusMinutes: 50,
-      )).called(1);
+      final call = fakeRepository.updateProgressCall;
+      expect(call, isNotNull);
+      expect(call?.challengeId, 'challenge_to_update');
+      expect(call?.memberId, 'test_user_id');
+      expect(call?.focusMinutes, 50);
     });
   });
 }

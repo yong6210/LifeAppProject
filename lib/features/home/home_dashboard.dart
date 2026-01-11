@@ -18,6 +18,7 @@ import 'package:life_app/providers/settings_providers.dart';
 import 'package:life_app/providers/sleep_analysis_providers.dart';
 import 'package:life_app/providers/stats_providers.dart';
 import 'package:life_app/providers/sync_providers.dart';
+import 'package:life_app/widgets/glass_card.dart';
 import 'package:life_app/widgets/modern_animations.dart';
 
 class HomeDashboardTab extends ConsumerWidget {
@@ -28,6 +29,10 @@ class HomeDashboardTab extends ConsumerWidget {
     final l10n = context.l10n;
     final locale = Localizations.localeOf(context);
     final theme = Theme.of(context);
+    final backgroundColors = [
+      theme.colorScheme.surface,
+      theme.colorScheme.surfaceContainerLowest,
+    ];
 
     final now = DateTime.now();
     final greeting = l10n.tr(_greetingKeyForHour(now.hour));
@@ -50,6 +55,19 @@ class HomeDashboardTab extends ConsumerWidget {
 
     final focusGoalMinutes = ((settings?.focusMinutes ?? 25) * 4)
         .clamp(0, 600)
+        .toInt();
+    final workoutGoalMinutes =
+        (settings?.workoutMinutes ?? 20).clamp(0, 180).toInt();
+    final sleepGoalMinutes =
+        (settings?.sleepMinutes ?? 30).clamp(0, 600).toInt();
+    final focusRemaining = (focusGoalMinutes - todaySummary.focus)
+        .clamp(0, focusGoalMinutes)
+        .toInt();
+    final workoutRemaining = (workoutGoalMinutes - todaySummary.workout)
+        .clamp(0, workoutGoalMinutes)
+        .toInt();
+    final sleepRemaining = (sleepGoalMinutes - todaySummary.sleep)
+        .clamp(0, sleepGoalMinutes)
         .toInt();
 
     final banner = _buildSyncBanner(
@@ -120,7 +138,7 @@ class HomeDashboardTab extends ConsumerWidget {
         description: l10n.tr('home_dashboard_card_focus_description'),
         minutes: todaySummary.focus,
         accent: AppTheme.accentBlue,
-        icon: Icons.timer_outlined,
+        icon: Icons.timer_rounded,
         primaryLabel: l10n.tr('home_dashboard_action_start'),
         secondaryLabel: l10n.tr('home_dashboard_action_customize'),
         onPrimary: openFocus,
@@ -131,7 +149,7 @@ class HomeDashboardTab extends ConsumerWidget {
         description: l10n.tr('home_dashboard_card_workout_description'),
         minutes: todaySummary.workout,
         accent: AppTheme.accentGreen,
-        icon: Icons.fitness_center_outlined,
+        icon: Icons.fitness_center_rounded,
         primaryLabel: l10n.tr('home_dashboard_action_start'),
         secondaryLabel: l10n.tr('home_dashboard_action_customize'),
         onPrimary: openWorkout,
@@ -142,7 +160,7 @@ class HomeDashboardTab extends ConsumerWidget {
         description: l10n.tr('home_dashboard_card_sleep_description'),
         minutes: todaySummary.sleep,
         accent: AppTheme.accentPurple,
-        icon: Icons.nights_stay_outlined,
+        icon: Icons.nights_stay_rounded,
         primaryLabel: l10n.tr('home_dashboard_action_start'),
         secondaryLabel: l10n.tr('home_dashboard_action_customize'),
         onPrimary: openSleep,
@@ -150,18 +168,60 @@ class HomeDashboardTab extends ConsumerWidget {
       ),
     ];
 
+    final nextAction = () {
+      if (focusRemaining > 0) {
+        return _NextActionData(
+          title: l10n.tr('home_dashboard_next_action_focus_title'),
+          subtitle: l10n.tr('home_dashboard_next_action_focus_subtitle', {
+            'minutes': '$focusRemaining',
+          }),
+          ctaLabel: l10n.tr('home_dashboard_next_action_cta_focus'),
+          accent: AppTheme.accentBlue,
+          icon: Icons.psychology_rounded,
+          onTap: openFocus,
+        );
+      }
+      if (workoutRemaining > 0) {
+        return _NextActionData(
+          title: l10n.tr('home_dashboard_next_action_workout_title'),
+          subtitle: l10n.tr('home_dashboard_next_action_workout_subtitle', {
+            'minutes': '$workoutRemaining',
+          }),
+          ctaLabel: l10n.tr('home_dashboard_next_action_cta_workout'),
+          accent: AppTheme.accentGreen,
+          icon: Icons.fitness_center_rounded,
+          onTap: openWorkout,
+        );
+      }
+      if (sleepRemaining > 0) {
+        return _NextActionData(
+          title: l10n.tr('home_dashboard_next_action_sleep_title'),
+          subtitle: l10n.tr('home_dashboard_next_action_sleep_subtitle', {
+            'minutes': '$sleepRemaining',
+          }),
+          ctaLabel: l10n.tr('home_dashboard_next_action_cta_sleep'),
+          accent: AppTheme.accentPurple,
+          icon: Icons.nights_stay_rounded,
+          onTap: openSleep,
+        );
+      }
+      return _NextActionData(
+        title: l10n.tr('home_dashboard_next_action_complete_title'),
+        subtitle: l10n.tr('home_dashboard_next_action_complete_subtitle'),
+        ctaLabel: l10n.tr('home_dashboard_next_action_cta_complete'),
+        accent: AppTheme.eucalyptus,
+        icon: Icons.emoji_events_rounded,
+        onTap: openStats,
+      );
+    }();
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              const Color(0xFFD8E5E0), // Darker pastel mint
-              const Color(0xFFD0E4D8), // Darker pastel sage green
-              const Color(0xFFD8E0DD), // Darker pastel aqua
-            ],
-            stops: const [0.0, 0.5, 1.0],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: backgroundColors,
           ),
         ),
         child: SafeArea(
@@ -191,8 +251,16 @@ class HomeDashboardTab extends ConsumerWidget {
                   subtitle: greetingSubtitle,
                 ),
                 if (banner != null) ...[const SizedBox(height: 20), banner],
+                const SizedBox(height: 24),
+                _NextActionCard(
+                  title: l10n.tr('home_dashboard_next_action_title'),
+                  data: nextAction,
+                ),
                 const SizedBox(height: 28),
-                _SectionLabel(text: l10n.tr('home_dashboard_progress_title')),
+                _SectionLabel(
+                  key: const Key('home_section_progress'),
+                  text: l10n.tr('home_dashboard_progress_title'),
+                ),
                 const SizedBox(height: 16),
                 _DailyProgressCard(
                   l10n: l10n,
@@ -203,7 +271,10 @@ class HomeDashboardTab extends ConsumerWidget {
                   focusTarget: focusGoalMinutes,
                 ),
                 const SizedBox(height: 28),
-                _SectionLabel(text: l10n.tr('home_dashboard_routines_title')),
+                _SectionLabel(
+                  key: const Key('home_section_routines'),
+                  text: l10n.tr('home_dashboard_routines_title'),
+                ),
                 const SizedBox(height: 16),
                 _RoutineCarousel(
                   cards: routineCards,
@@ -213,6 +284,7 @@ class HomeDashboardTab extends ConsumerWidget {
                 ),
                 const SizedBox(height: 28),
                 _SectionLabel(
+                  key: const Key('home_section_integrations'),
                   text: l10n.tr('home_dashboard_integrations_title'),
                 ),
                 const SizedBox(height: 16),
@@ -229,13 +301,16 @@ class HomeDashboardTab extends ConsumerWidget {
                   backupSubtitle: l10n.tr(
                     'home_dashboard_integrations_backup_subtitle',
                   ),
+                  actionLabel: l10n.tr('home_dashboard_open_action'),
                   onOpenWearables: openAccount,
                   onOpenBackup: openBackup,
                 ),
                 const SizedBox(height: 36),
                 _PremiumUpsellCard(
+                  key: const Key('home_section_premium'),
                   title: l10n.tr('home_dashboard_premium_title'),
                   subtitle: l10n.tr('home_dashboard_premium_subtitle'),
+                  badgeLabel: l10n.tr('home_dashboard_premium_badge'),
                   ctaLabel: l10n.tr('home_dashboard_premium_cta'),
                   onTap: openPremium,
                 ),
@@ -437,7 +512,7 @@ class _GreetingSection extends StatelessWidget {
 }
 
 class _SectionLabel extends StatelessWidget {
-  const _SectionLabel({required this.text});
+  const _SectionLabel({required this.text, super.key});
 
   final String text;
 
@@ -447,6 +522,133 @@ class _SectionLabel extends StatelessWidget {
     return Text(
       text,
       style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
+    );
+  }
+}
+
+class _NextActionData {
+  const _NextActionData({
+    required this.title,
+    required this.subtitle,
+    required this.ctaLabel,
+    required this.accent,
+    required this.icon,
+    required this.onTap,
+  });
+
+  final String title;
+  final String subtitle;
+  final String ctaLabel;
+  final Color accent;
+  final IconData icon;
+  final VoidCallback onTap;
+}
+
+class _NextActionCard extends StatelessWidget {
+  const _NextActionCard({
+    required this.title,
+    required this.data,
+  });
+
+  final String title;
+  final _NextActionData data;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return GlassCard(
+      padding: const EdgeInsets.all(20),
+      borderRadius: 24,
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          data.accent.withValues(alpha: 0.14),
+          data.accent.withValues(alpha: 0.05),
+        ],
+      ),
+      shadowColor: data.accent,
+      shadowOpacity: 0.18,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.w700,
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      data.accent,
+                      data.accent.withValues(alpha: 0.75),
+                    ],
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: data.accent.withValues(alpha: 0.35),
+                      blurRadius: 12,
+                      offset: const Offset(0, 6),
+                    ),
+                  ],
+                ),
+                child: Icon(data.icon, color: Colors.white, size: 22),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      data.title,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: theme.colorScheme.onSurface,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      data.subtitle,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                        height: 1.4,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12),
+              FilledButton(
+                onPressed: data.onTap,
+                style: FilledButton.styleFrom(
+                  backgroundColor: data.accent,
+                  foregroundColor: Colors.white,
+                  minimumSize: const Size(0, 44),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                  textStyle: theme.textTheme.labelLarge?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                child: Text(data.ctaLabel),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
@@ -524,6 +726,7 @@ class _RoutineCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final todayLabel = l10n.tr('home_dashboard_routine_stat_today', {
       'value': _formatMinutesLabel(data.minutes, locale: locale),
     });
@@ -534,31 +737,19 @@ class _RoutineCard extends StatelessWidget {
       delay: const Duration(milliseconds: 100),
       child: SizedBox(
         width: 300,
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(24),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Colors.white,
-                data.accent.withValues(alpha: 0.05),
-              ],
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: data.accent.withValues(alpha: 0.2),
-                blurRadius: 25,
-                offset: const Offset(0, 10),
-              ),
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.05),
-                blurRadius: 15,
-                offset: const Offset(0, 5),
-              ),
+        child: GlassCard(
+          padding: const EdgeInsets.all(26),
+          borderRadius: 24,
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.white,
+              data.accent.withValues(alpha: 0.05),
             ],
           ),
-          padding: const EdgeInsets.all(26),
+          shadowColor: data.accent,
+          shadowOpacity: 0.18,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -607,9 +798,10 @@ class _RoutineCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          '${data.minutes}분',
-                          style: TextStyle(
-                            fontSize: 12,
+                          l10n.tr('home_dashboard_routine_duration_label', {
+                            'minutes': '${data.minutes}',
+                          }),
+                          style: theme.textTheme.labelSmall?.copyWith(
                             color: data.accent,
                             fontWeight: FontWeight.w700,
                           ),
@@ -622,8 +814,7 @@ class _RoutineCard extends StatelessWidget {
               const SizedBox(height: 20),
               Text(
                 data.title,
-                style: TextStyle(
-                  fontSize: 22,
+                style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.w800,
                   color: data.accent,
                   height: 1.2,
@@ -632,9 +823,8 @@ class _RoutineCard extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 data.description,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[700],
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.w500,
                   height: 1.6,
                 ),
@@ -690,10 +880,9 @@ class _RoutineCard extends StatelessWidget {
                         children: [
                           Text(
                             data.primaryLabel,
-                            style: const TextStyle(
+                            style: theme.textTheme.titleSmall?.copyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.w700,
-                              fontSize: 16,
                             ),
                           ),
                           const SizedBox(width: 6),
@@ -773,37 +962,35 @@ class _DailyProgressCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final total = focusMinutes + workoutMinutes + sleepMinutes;
     final focusProgress = focusTarget <= 0 ? 0.0 : (focusMinutes / focusTarget).clamp(0.0, 1.0);
     final workoutProgress = (workoutMinutes / 60).clamp(0.0, 1.0);
     final sleepProgress = (sleepMinutes / 480).clamp(0.0, 1.0);
     final overallProgress = ((focusProgress + workoutProgress + sleepProgress) / 3 * 100).round();
+    final focusTargetLabel = l10n.tr('home_dashboard_target_minutes', {
+      'minutes': '$focusTarget',
+    });
+    final workoutTargetLabel = l10n.tr('home_dashboard_target_minutes', {
+      'minutes': '60',
+    });
+    final sleepTargetLabel = l10n.tr('home_dashboard_target_hours', {
+      'hours': '8',
+    });
 
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(28),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Colors.white,
-            Colors.white.withValues(alpha: 0.9),
-          ],
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppTheme.accentBlue.withValues(alpha: 0.08),
-            blurRadius: 30,
-            offset: const Offset(0, 10),
-          ),
-          BoxShadow(
-            color: AppTheme.accentGreen.withValues(alpha: 0.06),
-            blurRadius: 20,
-            offset: const Offset(0, 5),
-          ),
+    return GlassCard(
+      padding: const EdgeInsets.all(28),
+      borderRadius: 28,
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          Colors.white,
+          Colors.white.withValues(alpha: 0.9),
         ],
       ),
-      padding: const EdgeInsets.all(28),
+      shadowColor: AppTheme.accentBlue,
+      shadowOpacity: 0.15,
       child: Column(
         children: [
           Row(
@@ -814,18 +1001,16 @@ class _DailyProgressCard extends StatelessWidget {
                 children: [
                   Text(
                     l10n.tr('home_dashboard_progress_title'),
-                    style: const TextStyle(
-                      fontSize: 24,
+                    style: theme.textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.w800,
-                      color: Color(0xFF1A1A1A),
+                      color: theme.colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Today\'s Activity',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
+                    l10n.tr('home_dashboard_today_activity'),
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -859,10 +1044,9 @@ class _DailyProgressCard extends StatelessWidget {
                     const SizedBox(width: 6),
                     Text(
                       l10n.tr('duration_minutes_only', {'minutes': '$total'}),
-                      style: const TextStyle(
+                      style: theme.textTheme.titleSmall?.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.w700,
-                        fontSize: 15,
                       ),
                     ),
                   ],
@@ -877,7 +1061,7 @@ class _DailyProgressCard extends StatelessWidget {
               _CircularProgressMetric(
                 label: l10n.tr('timer_mode_focus'),
                 value: focusMinutes,
-                target: focusTarget,
+                targetLabel: focusTargetLabel,
                 progress: focusProgress,
                 color: AppTheme.accentBlue,
                 icon: Icons.psychology_rounded,
@@ -885,7 +1069,7 @@ class _DailyProgressCard extends StatelessWidget {
               _CircularProgressMetric(
                 label: l10n.tr('timer_mode_workout'),
                 value: workoutMinutes,
-                target: 60,
+                targetLabel: workoutTargetLabel,
                 progress: workoutProgress,
                 color: AppTheme.accentGreen,
                 icon: Icons.fitness_center_rounded,
@@ -893,11 +1077,10 @@ class _DailyProgressCard extends StatelessWidget {
               _CircularProgressMetric(
                 label: l10n.tr('timer_mode_sleep'),
                 value: (sleepMinutes / 60).round(),
-                target: 8,
+                targetLabel: sleepTargetLabel,
                 progress: sleepProgress,
                 color: AppTheme.accentPurple,
                 icon: Icons.nights_stay_rounded,
-                isSleep: true,
               ),
             ],
           ),
@@ -945,19 +1128,19 @@ class _DailyProgressCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Overall Progress',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[700],
+                      l10n.tr('home_dashboard_overall_progress_title'),
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     Text(
-                      '$overallProgress% Complete',
-                      style: const TextStyle(
-                        fontSize: 18,
+                      l10n.tr('home_dashboard_overall_progress_complete', {
+                        'percent': '$overallProgress',
+                      }),
+                      style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w800,
-                        color: Color(0xFF1A1A1A),
+                        color: theme.colorScheme.onSurface,
                       ),
                     ),
                   ],
@@ -975,23 +1158,22 @@ class _CircularProgressMetric extends StatelessWidget {
   const _CircularProgressMetric({
     required this.label,
     required this.value,
-    required this.target,
+    required this.targetLabel,
     required this.progress,
     required this.color,
     required this.icon,
-    this.isSleep = false,
   });
 
   final String label;
   final int value;
-  final int target;
+  final String targetLabel;
   final double progress;
   final Color color;
   final IconData icon;
-  final bool isSleep;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Column(
       children: [
         Stack(
@@ -1033,8 +1215,7 @@ class _CircularProgressMetric extends StatelessWidget {
         const SizedBox(height: 12),
         Text(
           '$value',
-          style: TextStyle(
-            fontSize: 20,
+          style: theme.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.w800,
             color: color,
           ),
@@ -1042,18 +1223,16 @@ class _CircularProgressMetric extends StatelessWidget {
         const SizedBox(height: 2),
         Text(
           label,
-          style: TextStyle(
-            fontSize: 11,
-            color: Colors.grey[600],
+          style: theme.textTheme.labelSmall?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
             fontWeight: FontWeight.w600,
           ),
           textAlign: TextAlign.center,
         ),
         Text(
-          isSleep ? '/ ${target}h' : '/ $target min',
-          style: TextStyle(
-            fontSize: 10,
-            color: Colors.grey[500],
+          targetLabel,
+          style: theme.textTheme.labelSmall?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -1068,6 +1247,7 @@ class _IntegrationsRow extends StatelessWidget {
     required this.wearablesSubtitle,
     required this.backupTitle,
     required this.backupSubtitle,
+    required this.actionLabel,
     required this.onOpenWearables,
     required this.onOpenBackup,
   });
@@ -1076,6 +1256,7 @@ class _IntegrationsRow extends StatelessWidget {
   final String wearablesSubtitle;
   final String backupTitle;
   final String backupSubtitle;
+  final String actionLabel;
   final VoidCallback onOpenWearables;
   final VoidCallback onOpenBackup;
 
@@ -1085,9 +1266,10 @@ class _IntegrationsRow extends StatelessWidget {
       children: [
         Expanded(
           child: _IntegrationCard(
-            icon: Icons.wifi_tethering,
+            icon: Icons.wifi_tethering_rounded,
             title: wearablesTitle,
             subtitle: wearablesSubtitle,
+            actionLabel: actionLabel,
             onTap: onOpenWearables,
             gradientColors: const [
               Color(0xFF667EEA), // Purple-blue
@@ -1098,9 +1280,10 @@ class _IntegrationsRow extends StatelessWidget {
         const SizedBox(width: 12),
         Expanded(
           child: _IntegrationCard(
-            icon: Icons.cloud_upload_outlined,
+            icon: Icons.cloud_upload_rounded,
             title: backupTitle,
             subtitle: backupSubtitle,
+            actionLabel: actionLabel,
             onTap: onOpenBackup,
             gradientColors: const [
               Color(0xFFF093FB), // Pink
@@ -1118,6 +1301,7 @@ class _IntegrationCard extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.subtitle,
+    required this.actionLabel,
     required this.onTap,
     required this.gradientColors,
   });
@@ -1125,90 +1309,80 @@ class _IntegrationCard extends StatelessWidget {
   final IconData icon;
   final String title;
   final String subtitle;
+  final String actionLabel;
   final VoidCallback onTap;
   final List<Color> gradientColors;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    final theme = Theme.of(context);
+    return GlassCard(
       onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24),
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: gradientColors,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: gradientColors[0].withValues(alpha: 0.3),
-              blurRadius: 20,
-              offset: const Offset(0, 10),
-            ),
-          ],
-        ),
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 56,
-              height: 56,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                color: Colors.white.withValues(alpha: 0.3),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.white.withValues(alpha: 0.2),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Icon(icon, color: Colors.white, size: 28),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 6),
-            Text(
-              subtitle,
-              style: TextStyle(
-                fontSize: 13,
-                color: Colors.white.withValues(alpha: 0.9),
-                fontWeight: FontWeight.w500,
-                height: 1.5,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Text(
-                  'Open',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.white.withValues(alpha: 0.9),
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const SizedBox(width: 4),
-                Icon(
-                  Icons.arrow_forward_rounded,
-                  color: Colors.white.withValues(alpha: 0.9),
-                  size: 18,
+      padding: const EdgeInsets.all(24),
+      borderRadius: 24,
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: gradientColors,
+      ),
+      shadowColor: gradientColors.first,
+      shadowOpacity: 0.25,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 56,
+            height: 56,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              color: Colors.white.withValues(alpha: 0.3),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.white.withValues(alpha: 0.2),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
                 ),
               ],
             ),
-          ],
-        ),
+            child: Icon(icon, color: Colors.white, size: 28),
+          ),
+          const SizedBox(height: 20),
+          Text(
+            title,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w800,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            subtitle,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: Colors.white.withValues(alpha: 0.9),
+              fontWeight: FontWeight.w500,
+              height: 1.5,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Text(
+                actionLabel,
+                style: theme.textTheme.labelLarge?.copyWith(
+                  color: Colors.white.withValues(alpha: 0.9),
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(width: 4),
+              Icon(
+                Icons.arrow_forward_rounded,
+                color: Colors.white.withValues(alpha: 0.9),
+                size: 18,
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -1216,177 +1390,168 @@ class _IntegrationCard extends StatelessWidget {
 
 class _PremiumUpsellCard extends StatelessWidget {
   const _PremiumUpsellCard({
+    super.key,
     required this.title,
     required this.subtitle,
+    required this.badgeLabel,
     required this.ctaLabel,
     required this.onTap,
   });
 
   final String title;
   final String subtitle;
+  final String badgeLabel;
   final String ctaLabel;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    final theme = Theme.of(context);
+    return GlassCard(
       onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(28),
-          gradient: const LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFFFFD89B), // Gold
-              Color(0xFFFF6B95), // Pink
-              Color(0xFF9B59B6), // Purple
-            ],
-            stops: [0.0, 0.5, 1.0],
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFFFF6B95).withValues(alpha: 0.4),
-              blurRadius: 30,
-              offset: const Offset(0, 15),
-            ),
-          ],
-        ),
-        padding: const EdgeInsets.all(28),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  width: 64,
-                  height: 64,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(18),
-                    color: Colors.white.withValues(alpha: 0.3),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.white.withValues(alpha: 0.3),
-                        blurRadius: 15,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                  child: const Icon(
-                    Icons.auto_awesome,
-                    color: Colors.white,
-                    size: 32,
-                  ),
+      padding: const EdgeInsets.all(28),
+      borderRadius: 28,
+      gradient: const LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          Color(0xFFFFD89B), // Gold
+          Color(0xFFFF6B95), // Pink
+          Color(0xFF9B59B6), // Purple
+        ],
+        stops: [0.0, 0.5, 1.0],
+      ),
+      shadowColor: const Color(0xFFFF6B95),
+      shadowOpacity: 0.35,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 64,
+                height: 64,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(18),
+                  color: Colors.white.withValues(alpha: 0.3),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.white.withValues(alpha: 0.3),
+                      blurRadius: 15,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
                 ),
-                const Spacer(),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: const Row(
-                    children: [
-                      Icon(Icons.stars, color: Colors.white, size: 16),
-                      SizedBox(width: 4),
-                      Text(
-                        'PREMIUM',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w800,
-                          fontSize: 11,
-                          letterSpacing: 0.5,
-                        ),
+                child: const Icon(
+                  Icons.auto_awesome_rounded,
+                  color: Colors.white,
+                  size: 32,
+                ),
+              ),
+              const Spacer(),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.stars, color: Colors.white, size: 16),
+                    const SizedBox(width: 4),
+                    Text(
+                      badgeLabel,
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 0.5,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          Text(
+            title,
+            style: theme.textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.w900,
+              color: Colors.white,
+              height: 1.2,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            subtitle,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: Colors.white.withValues(alpha: 0.95),
+              fontWeight: FontWeight.w500,
+              height: 1.6,
+            ),
+          ),
+          const SizedBox(height: 24),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.1),
+                  blurRadius: 15,
+                  offset: const Offset(0, 5),
                 ),
               ],
             ),
-            const SizedBox(height: 24),
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 26,
-                fontWeight: FontWeight.w900,
-                color: Colors.white,
-                height: 1.2,
-              ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              subtitle,
-              style: TextStyle(
-                fontSize: 15,
-                color: Colors.white.withValues(alpha: 0.95),
-                fontWeight: FontWeight.w500,
-                height: 1.6,
-              ),
-            ),
-            const SizedBox(height: 24),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: onTap,
                 borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.1),
-                    blurRadius: 15,
-                    offset: const Offset(0, 5),
-                  ),
-                ],
-              ),
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: onTap,
-                  borderRadius: BorderRadius.circular(16),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 18),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ShaderMask(
-                          shaderCallback: (bounds) => const LinearGradient(
-                            colors: [
-                              Color(0xFFFF6B95),
-                              Color(0xFF9B59B6),
-                            ],
-                          ).createShader(bounds),
-                          child: Text(
-                            ctaLabel,
-                            style: const TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w800,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        ShaderMask(
-                          shaderCallback: (bounds) => const LinearGradient(
-                            colors: [
-                              Color(0xFFFF6B95),
-                              Color(0xFF9B59B6),
-                            ],
-                          ).createShader(bounds),
-                          child: const Icon(
-                            Icons.arrow_forward_rounded,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 18),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ShaderMask(
+                        shaderCallback: (bounds) => const LinearGradient(
+                          colors: [
+                            Color(0xFFFF6B95),
+                            Color(0xFF9B59B6),
+                          ],
+                        ).createShader(bounds),
+                        child: Text(
+                          ctaLabel,
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w800,
                             color: Colors.white,
-                            size: 22,
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(width: 8),
+                      ShaderMask(
+                        shaderCallback: (bounds) => const LinearGradient(
+                          colors: [
+                            Color(0xFFFF6B95),
+                            Color(0xFF9B59B6),
+                          ],
+                        ).createShader(bounds),
+                        child: const Icon(
+                          Icons.arrow_forward_rounded,
+                          color: Colors.white,
+                          size: 22,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

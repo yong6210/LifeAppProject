@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:life_app/core/firebase/firestore_sync_service.dart';
+import 'package:life_app/core/firebase/firebase_initializer.dart';
 import 'package:life_app/providers/auth_providers.dart';
 import 'package:life_app/providers/db_provider.dart';
 import 'package:life_app/models/change_log.dart';
@@ -15,6 +16,9 @@ final firestoreSyncServiceProvider = FutureProvider<FirestoreSyncService>((
   ref,
 ) async {
   final auth = ref.watch(firebaseAuthProvider);
+  if (auth == null) {
+    throw StateError('Firebase Auth is unavailable.');
+  }
   final firestore = FirebaseFirestore.instance;
   final isar = await ref.watch(isarProvider.future);
   final settingsRepo = SettingsRepository(isar);
@@ -35,6 +39,12 @@ class SyncController extends AsyncNotifier<void> {
 
   @override
   Future<void> build() async {
+    await FirebaseInitializer.ensureInitialized();
+    final auth = ref.read(firebaseAuthProvider);
+    if (auth == null) {
+      state = const AsyncData(null);
+      return;
+    }
     final service = await ref.watch(firestoreSyncServiceProvider.future);
     final isar = await ref.watch(isarProvider.future);
 

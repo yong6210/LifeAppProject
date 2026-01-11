@@ -32,7 +32,7 @@ final settingsMutationControllerProvider =
       SettingsMutationController.new,
     );
 
-class SettingsMutationController extends AsyncNotifier<void> {
+class SettingsMutationController extends AutoDisposeAsyncNotifier<void> {
   @override
   FutureOr<void> build() {}
 

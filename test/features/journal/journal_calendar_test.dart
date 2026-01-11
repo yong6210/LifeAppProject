@@ -122,7 +122,7 @@ void main() {
     await tester.tap(emptyFinder.first, warnIfMissed: false);
     await tester.pumpAndSettle();
     expect(
-      find.byKey(const Key('journal-detail-card-empty'), skipOffstage: false),
+      find.byKey(const Key('journal-detail-card'), skipOffstage: false),
       findsOneWidget,
     );
 

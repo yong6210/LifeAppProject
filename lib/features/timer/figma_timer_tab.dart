@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:life_app/design/app_theme.dart';
 import 'package:life_app/features/stats/stats_page.dart';
 import 'package:life_app/features/timer/timer_controller.dart';
+import 'package:life_app/l10n/app_localizations.dart';
 import 'package:life_app/services/analytics/analytics_service.dart';
 import 'package:life_app/widgets/circular_progress_ring.dart';
 import 'package:life_app/widgets/glass_card.dart';
@@ -13,15 +14,17 @@ import 'package:life_app/widgets/glass_card.dart';
 class TimerPreset {
   const TimerPreset({
     required this.id,
-    required this.name,
+    required this.nameKey,
     required this.duration,
     required this.emoji,
   });
 
   final String id;
-  final String name;
+  final String nameKey;
   final int duration; // in minutes
   final String emoji;
+
+  String label(AppLocalizations l10n) => l10n.tr(nameKey);
 }
 
 /// Figma-styled timer tab with glassmorphism and beautiful animations
@@ -42,24 +45,84 @@ class FigmaTimerTab extends ConsumerStatefulWidget {
 class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
     with SingleTickerProviderStateMixin {
   static const focusPresets = [
-    TimerPreset(id: '1', name: 'Focus Boost', duration: 25, emoji: '⚡'),
-    TimerPreset(id: '2', name: 'Quick Reset', duration: 5, emoji: '🌊'),
-    TimerPreset(id: '3', name: 'Deep Dive', duration: 52, emoji: '🧠'),
-    TimerPreset(id: '4', name: 'Power Hour', duration: 60, emoji: '🚀'),
+    TimerPreset(
+      id: '1',
+      nameKey: 'figma_timer_preset_focus_boost',
+      duration: 25,
+      emoji: '⚡',
+    ),
+    TimerPreset(
+      id: '2',
+      nameKey: 'figma_timer_preset_quick_reset',
+      duration: 5,
+      emoji: '🌊',
+    ),
+    TimerPreset(
+      id: '3',
+      nameKey: 'figma_timer_preset_deep_dive',
+      duration: 52,
+      emoji: '🧠',
+    ),
+    TimerPreset(
+      id: '4',
+      nameKey: 'figma_timer_preset_power_hour_focus',
+      duration: 60,
+      emoji: '🚀',
+    ),
   ];
 
   static const workoutPresets = [
-    TimerPreset(id: '1', name: 'Quick Workout', duration: 15, emoji: '💪'),
-    TimerPreset(id: '2', name: 'Full Session', duration: 30, emoji: '🔥'),
-    TimerPreset(id: '3', name: 'Power Hour', duration: 60, emoji: '⚡'),
-    TimerPreset(id: '4', name: 'Endurance', duration: 90, emoji: '🏃'),
+    TimerPreset(
+      id: '1',
+      nameKey: 'figma_timer_preset_quick_workout',
+      duration: 15,
+      emoji: '💪',
+    ),
+    TimerPreset(
+      id: '2',
+      nameKey: 'figma_timer_preset_full_session',
+      duration: 30,
+      emoji: '🔥',
+    ),
+    TimerPreset(
+      id: '3',
+      nameKey: 'figma_timer_preset_power_hour_workout',
+      duration: 60,
+      emoji: '⚡',
+    ),
+    TimerPreset(
+      id: '4',
+      nameKey: 'figma_timer_preset_endurance',
+      duration: 90,
+      emoji: '🏃',
+    ),
   ];
 
   static const sleepPresets = [
-    TimerPreset(id: '1', name: 'Power Nap', duration: 20, emoji: '😴'),
-    TimerPreset(id: '2', name: 'Short Rest', duration: 30, emoji: '🌙'),
-    TimerPreset(id: '3', name: 'Deep Sleep', duration: 60, emoji: '💤'),
-    TimerPreset(id: '4', name: 'Full Night', duration: 480, emoji: '🛌'),
+    TimerPreset(
+      id: '1',
+      nameKey: 'figma_timer_preset_power_nap',
+      duration: 20,
+      emoji: '😴',
+    ),
+    TimerPreset(
+      id: '2',
+      nameKey: 'figma_timer_preset_short_rest',
+      duration: 30,
+      emoji: '🌙',
+    ),
+    TimerPreset(
+      id: '3',
+      nameKey: 'figma_timer_preset_deep_sleep',
+      duration: 60,
+      emoji: '💤',
+    ),
+    TimerPreset(
+      id: '4',
+      nameKey: 'figma_timer_preset_full_night',
+      duration: 480,
+      emoji: '🛌',
+    ),
   ];
 
   late List<TimerPreset> _currentPresets;
@@ -127,7 +190,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
 
     AnalyticsService.logEvent('figma_timer_preset_select', {
       'mode': widget.initialMode,
-      'preset': preset.name,
+      'preset_key': preset.nameKey,
       'duration': preset.duration,
     });
   }
@@ -158,6 +221,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
     required int currentValue,
     required ValueChanged<int> onSubmit,
   }) async {
+    final l10n = context.l10n;
     final controller = TextEditingController(text: currentValue.toString());
     return showDialog(
       context: context,
@@ -182,7 +246,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(l10n.tr('common_cancel')),
           ),
           FilledButton(
             onPressed: () {
@@ -192,7 +256,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                 Navigator.pop(context);
               }
             },
-            child: const Text('OK'),
+            child: Text(l10n.tr('common_ok')),
           ),
         ],
       ),
@@ -205,7 +269,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
 
     if (!timerState.isRunning) {
       AnalyticsService.logEvent('figma_timer_start', {
-        'preset': _selectedPreset.name,
+        'preset_key': _selectedPreset.nameKey,
         'duration': _selectedPreset.duration,
       });
     }
@@ -218,7 +282,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
     await controller.reset();
 
     AnalyticsService.logEvent('figma_timer_reset', {
-      'preset': _selectedPreset.name,
+      'preset_key': _selectedPreset.nameKey,
     });
   }
 
@@ -228,10 +292,45 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
     return '$mins:${secs.toString().padLeft(2, '0')}';
   }
 
+  String _modeLabel(AppLocalizations l10n) {
+    switch (widget.initialMode) {
+      case 'workout':
+        return l10n.tr('timer_mode_workout');
+      case 'sleep':
+        return l10n.tr('timer_mode_sleep');
+      default:
+        return l10n.tr('timer_mode_focus');
+    }
+  }
+
+  String _badgeLabel(AppLocalizations l10n) {
+    switch (widget.initialMode) {
+      case 'workout':
+        return l10n.tr('figma_timer_badge_workout');
+      case 'sleep':
+        return l10n.tr('figma_timer_badge_sleep');
+      default:
+        return l10n.tr('figma_timer_badge_focus');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final l10n = context.l10n;
+    final backgroundColors = [
+      theme.colorScheme.surface,
+      theme.colorScheme.surfaceContainerLowest,
+    ];
+    final customTimeLabel = _customHours > 0
+        ? l10n.tr('figma_timer_time_label_hours_minutes', {
+            'hours': '$_customHours',
+            'minutes': '$_customMinutes',
+          })
+        : l10n.tr('figma_timer_time_label_minutes', {
+            'minutes': '$_customMinutes',
+          });
 
     // Watch timer state from TimerController
     final timerState = ref.watch(timerControllerProvider);
@@ -248,17 +347,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: isDark
-                ? [
-                    const Color(0xFF2a1f1a),
-                    const Color(0xFF1a1214),
-                    const Color(0xFF140a0e),
-                  ]
-                : [
-                    const Color(0xFFFFF4E8),
-                    const Color(0xFFFFEED9),
-                    const Color(0xFFFFFBF5),
-                  ],
+            colors: backgroundColors,
           ),
         ),
         child: Stack(
@@ -277,7 +366,9 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                       shape: BoxShape.circle,
                       gradient: RadialGradient(
                         colors: [
-                          const Color(0xFFFF9A56).withValues(alpha: 0.3 + _glowController.value * 0.2),
+                          const Color(0xFFFF9A56).withValues(
+                            alpha: 0.12 + _glowController.value * 0.12,
+                          ),
                           Colors.transparent,
                         ],
                       ),
@@ -299,7 +390,9 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                       shape: BoxShape.circle,
                       gradient: RadialGradient(
                         colors: [
-                          const Color(0xFFFFD93D).withValues(alpha: 0.3 + (1 - _glowController.value) * 0.2),
+                          const Color(0xFFFFD93D).withValues(
+                            alpha: 0.12 + (1 - _glowController.value) * 0.12,
+                          ),
                           Colors.transparent,
                         ],
                       ),
@@ -340,13 +433,13 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
-                            Icons.psychology,
+                            Icons.psychology_rounded,
                             size: 18,
                             color: const Color(0xFFFF9A56),
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            'Neural Focus',
+                            _badgeLabel(l10n),
                             style: theme.textTheme.titleSmall?.copyWith(
                               fontWeight: FontWeight.w600,
                               color: isDark ? Colors.white : const Color(0xFFFF9A56),
@@ -354,7 +447,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                           ),
                           const SizedBox(width: 4),
                           Icon(
-                            Icons.auto_awesome,
+                            Icons.auto_awesome_rounded,
                             size: 14,
                             color: AppTheme.lime,
                           ),
@@ -370,7 +463,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                         ],
                       ).createShader(bounds),
                       child: Text(
-                        _selectedPreset.name,
+                        _selectedPreset.label(l10n),
                         style: theme.textTheme.headlineLarge?.copyWith(
                           fontWeight: FontWeight.w700,
                           color: Colors.white,
@@ -379,7 +472,9 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '${_selectedPreset.duration} min session',
+                      l10n.tr('figma_timer_session_duration', {
+                        'minutes': '${_selectedPreset.duration}',
+                      }),
                       style: theme.textTheme.titleMedium?.copyWith(
                         color: isDark
                             ? const Color(0xFFFF9A56).withValues(alpha: 0.8)
@@ -442,7 +537,13 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              isRunning ? '⚡ Focus Mode Active' : 'Ready to focus',
+                              isRunning
+                                  ? l10n.tr('figma_timer_status_active', {
+                                      'mode': _modeLabel(l10n),
+                                    })
+                                  : l10n.tr('figma_timer_status_ready', {
+                                      'mode': _modeLabel(l10n),
+                                    }),
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 color: isDark
                                     ? const Color(0xFFFF9A56).withValues(alpha: 0.8)
@@ -455,61 +556,81 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                       ],
                     ),
                     const SizedBox(height: 40),
-                    // Control buttons
+                    // Primary action
+                    Container(
+                      height: 56,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: isRunning
+                              ? [
+                                  Colors.grey.shade600,
+                                  Colors.grey.shade700,
+                                ]
+                              : [
+                                  const Color(0xFFFF9A56),
+                                  const Color(0xFFFFD93D),
+                                ],
+                        ),
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: (isRunning
+                                    ? Colors.grey
+                                    : const Color(0xFFFF9A56))
+                                .withValues(alpha: 0.35),
+                            blurRadius: 16,
+                            offset: const Offset(0, 8),
+                          ),
+                        ],
+                      ),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: _handlePlayPause,
+                          borderRadius: BorderRadius.circular(16),
+                          child: Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  isRunning
+                                      ? Icons.pause_rounded
+                                      : Icons.play_arrow_rounded,
+                                  color: Colors.white,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  isRunning
+                                      ? l10n.tr('figma_timer_action_pause')
+                                      : l10n.tr('figma_timer_action_start'),
+                                  style: theme.textTheme.titleMedium?.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // Reset button
                         GlassCard(
                           onTap: _handleReset,
-                          padding: const EdgeInsets.all(14),
-                          borderRadius: 16,
+                          padding: const EdgeInsets.all(12),
+                          borderRadius: 14,
                           child: Icon(
-                            Icons.refresh,
-                            size: 24,
+                            Icons.refresh_rounded,
+                            size: 22,
                             color: isDark ? Colors.white : const Color(0xFFFF9A56),
                           ),
                         ),
-                        const SizedBox(width: 24),
-                        // Play/Pause button
-                        Container(
-                          width: 80,
-                          height: 80,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(24),
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                const Color(0xFFFF9A56),
-                                const Color(0xFFFFD93D),
-                              ],
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: const Color(0xFFFF9A56).withValues(alpha: 0.5),
-                                blurRadius: 24,
-                                offset: const Offset(0, 8),
-                              ),
-                            ],
-                          ),
-                          child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              onTap: _handlePlayPause,
-                              borderRadius: BorderRadius.circular(24),
-                              child: Center(
-                                child: Icon(
-                                  isRunning ? Icons.pause : Icons.play_arrow,
-                                  size: 40,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 24),
-                        // Stats button
+                        const SizedBox(width: 12),
                         GlassCard(
                           onTap: () {
                             Navigator.push(
@@ -519,17 +640,17 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                               ),
                             );
                           },
-                          padding: const EdgeInsets.all(14),
-                          borderRadius: 16,
+                          padding: const EdgeInsets.all(12),
+                          borderRadius: 14,
                           child: Icon(
                             Icons.bolt,
-                            size: 24,
+                            size: 22,
                             color: isDark ? Colors.white : const Color(0xFFFF9A56),
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 32),
                     // Custom time picker
                     GlassCard(
                       padding: const EdgeInsets.all(20),
@@ -540,13 +661,13 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                           Row(
                             children: [
                               Icon(
-                                Icons.schedule,
+                                Icons.schedule_rounded,
                                 size: 18,
                                 color: isDark ? Colors.white : const Color(0xFFFF9A56),
                               ),
                               const SizedBox(width: 8),
                               Text(
-                                'Custom Timer',
+                                l10n.tr('figma_timer_custom_title'),
                                 style: theme.textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.w700,
                                   color: isDark ? Colors.white : theme.colorScheme.onSurface,
@@ -569,8 +690,12 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                                       GestureDetector(
                                         onTap: () => _showDirectInputDialog(
                                           context: context,
-                                          title: 'Enter Hours',
-                                          hintText: '0-24',
+                                          title: l10n.tr(
+                                            'figma_timer_input_hours_title',
+                                          ),
+                                          hintText: l10n.tr(
+                                            'figma_timer_input_hours_hint',
+                                          ),
                                           maxValue: 24,
                                           currentValue: _customHours,
                                           onSubmit: (value) {
@@ -584,7 +709,9 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
                                             Text(
-                                              '시간',
+                                              l10n.tr(
+                                                'figma_timer_picker_hours',
+                                              ),
                                               style: theme.textTheme.bodySmall?.copyWith(
                                                 color: isDark
                                                     ? Colors.white.withValues(alpha: 0.5)
@@ -593,7 +720,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                                             ),
                                             const SizedBox(width: 4),
                                             Icon(
-                                              Icons.edit,
+                                              Icons.edit_rounded,
                                               size: 12,
                                               color: isDark
                                                   ? Colors.white.withValues(alpha: 0.3)
@@ -646,8 +773,12 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                                       GestureDetector(
                                         onTap: () => _showDirectInputDialog(
                                           context: context,
-                                          title: 'Enter Minutes',
-                                          hintText: '0-55 (5 min intervals)',
+                                          title: l10n.tr(
+                                            'figma_timer_input_minutes_title',
+                                          ),
+                                          hintText: l10n.tr(
+                                            'figma_timer_input_minutes_hint',
+                                          ),
                                           maxValue: 55,
                                           currentValue: _customMinutes,
                                           onSubmit: (value) {
@@ -663,7 +794,9 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
                                             Text(
-                                              '분',
+                                              l10n.tr(
+                                                'figma_timer_picker_minutes',
+                                              ),
                                               style: theme.textTheme.bodySmall?.copyWith(
                                                 color: isDark
                                                     ? Colors.white.withValues(alpha: 0.5)
@@ -672,7 +805,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                                             ),
                                             const SizedBox(width: 4),
                                             Icon(
-                                              Icons.edit,
+                                              Icons.edit_rounded,
                                               size: 12,
                                               color: isDark
                                                   ? Colors.white.withValues(alpha: 0.3)
@@ -735,8 +868,10 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                                 ),
                               ),
                               child: Text(
-                                'Set ${_customHours > 0 ? "${_customHours}h " : ""}${_customMinutes}min',
-                                style: const TextStyle(
+                                l10n.tr('figma_timer_set_button', {
+                                  'label': customTimeLabel,
+                                }),
+                                style: theme.textTheme.titleSmall?.copyWith(
                                   fontWeight: FontWeight.w600,
                                   color: Colors.white,
                                 ),
@@ -792,7 +927,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                preset.name,
+                                preset.label(l10n),
                                 style: theme.textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.w700,
                                   color: isDark ? Colors.white : theme.colorScheme.onSurface,
@@ -800,7 +935,9 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                               ),
                               const SizedBox(height: 2),
                               Text(
-                                '${preset.duration} minutes',
+                                l10n.tr('figma_timer_preset_duration', {
+                                  'minutes': '${preset.duration}',
+                                }),
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: isDark
                                       ? const Color(0xFFFF9A56).withValues(alpha: 0.8)
@@ -831,7 +968,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Neural Boost Active',
+                                  l10n.tr('figma_timer_focus_tip_title'),
                                   style: theme.textTheme.titleMedium?.copyWith(
                                     fontWeight: FontWeight.w700,
                                     color: isDark ? Colors.white : theme.colorScheme.onSurface,
@@ -839,7 +976,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
-                                  'Your brain works best in focused bursts. Eliminate distractions and let your mind enter the flow state. Deep work creates neural pathways that make you smarter!',
+                                  l10n.tr('figma_timer_focus_tip_body'),
                                   style: theme.textTheme.bodyMedium?.copyWith(
                                     color: isDark
                                         ? Colors.white.withValues(alpha: 0.7)

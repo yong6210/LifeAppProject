@@ -1438,5 +1438,335 @@
     "placeholders": {
       "error": {}
     }
+  },
+  "common_ok": "확인",
+  "home_dashboard_today_activity": "오늘의 활동",
+  "home_dashboard_overall_progress_title": "전체 진행",
+  "home_dashboard_overall_progress_complete": "{percent}% 완료",
+  "@home_dashboard_overall_progress_complete": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "home_dashboard_target_minutes": "/ {minutes}분",
+  "@home_dashboard_target_minutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "home_dashboard_target_hours": "/ {hours}시간",
+  "@home_dashboard_target_hours": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "home_dashboard_open_action": "열기",
+  "home_dashboard_premium_badge": "프리미엄",
+  "figma_timer_preset_focus_boost": "집중 부스트",
+  "figma_timer_preset_quick_reset": "빠른 리셋",
+  "figma_timer_preset_deep_dive": "깊은 몰입",
+  "figma_timer_preset_power_hour_focus": "파워 아워",
+  "figma_timer_preset_quick_workout": "빠른 운동",
+  "figma_timer_preset_full_session": "풀 세션",
+  "figma_timer_preset_power_hour_workout": "파워 아워",
+  "figma_timer_preset_endurance": "지구력",
+  "figma_timer_preset_power_nap": "파워 낮잠",
+  "figma_timer_preset_short_rest": "짧은 휴식",
+  "figma_timer_preset_deep_sleep": "깊은 수면",
+  "figma_timer_preset_full_night": "숙면",
+  "figma_timer_badge_focus": "뉴럴 포커스",
+  "figma_timer_badge_workout": "에너지 플로우",
+  "figma_timer_badge_sleep": "코스믹 드림",
+  "figma_timer_session_duration": "{minutes}분 세션",
+  "@figma_timer_session_duration": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_timer_status_active": "⚡ {mode} 진행 중",
+  "@figma_timer_status_active": {
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_timer_status_ready": "{mode} 준비 완료",
+  "@figma_timer_status_ready": {
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_timer_action_pause": "세션 일시정지",
+  "figma_timer_action_start": "세션 시작",
+  "figma_timer_custom_title": "맞춤 타이머",
+  "figma_timer_input_hours_title": "시간 입력",
+  "figma_timer_input_hours_hint": "0-24",
+  "figma_timer_picker_hours": "시간",
+  "figma_timer_input_minutes_title": "분 입력",
+  "figma_timer_input_minutes_hint": "0-55 (5분 단위)",
+  "figma_timer_picker_minutes": "분",
+  "figma_timer_time_label_hours_minutes": "{hours}시간 {minutes}분",
+  "@figma_timer_time_label_hours_minutes": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_timer_time_label_minutes": "{minutes}분",
+  "@figma_timer_time_label_minutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_timer_set_button": "{label} 설정",
+  "@figma_timer_set_button": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_timer_preset_duration": "{minutes}분",
+  "@figma_timer_preset_duration": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_timer_focus_tip_title": "뉴럴 부스트 활성",
+  "figma_timer_focus_tip_body": "뇌는 짧고 집중된 몰입에서 가장 잘 작동합니다. 방해 요소를 줄이고 흐름 상태에 들어가 보세요. 깊은 몰입은 더 똑똑해지는 신경 회로를 만들어 줍니다!",
+  "figma_workout_start_toast": "{emoji} 운동 시작! 💪",
+  "@figma_workout_start_toast": {
+    "placeholders": {
+      "emoji": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_workout_filter_all": "전체",
+  "figma_workout_filter_light": "저강도",
+  "figma_workout_filter_moderate": "중강도",
+  "figma_workout_filter_vigorous": "고강도",
+  "figma_workout_badge_label": "에너지 플로우",
+  "figma_workout_title": "움직임",
+  "figma_workout_subtitle": "에너지를 느껴보세요 ⚡",
+  "figma_workout_energy_bank_title": "에너지 뱅크",
+  "figma_workout_energy_bank_progress": "{minutes} / {target}분",
+  "@figma_workout_energy_bank_progress": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_workout_energy_bank_percent": "{percent}%",
+  "@figma_workout_energy_bank_percent": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_workout_in_progress": "⚡ 운동 진행 중",
+  "figma_workout_stop_button": "중지",
+  "figma_workout_calories": "{calories} kcal",
+  "@figma_workout_calories": {
+    "placeholders": {
+      "calories": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_workout_duration": "{minutes}분",
+  "@figma_workout_duration": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_workout_start_button": "운동 시작",
+  "figma_workout_tip_title": "에너지 상승!",
+  "figma_workout_tip_body": "운동은 엔도르핀을 분비해 몇 시간 동안 대사를 높여줍니다! 단 10분만 움직여도 에너지 수준이 20%까지 올라갈 수 있어요. 지금 시작해요! 🚀",
+  "figma_sleep_sound_rain": "빗소리",
+  "figma_sleep_sound_rain_desc": "잔잔한 빗소리",
+  "figma_sleep_sound_ocean": "바다",
+  "figma_sleep_sound_ocean_desc": "편안한 파도 소리",
+  "figma_sleep_sound_wind": "바람",
+  "figma_sleep_sound_wind_desc": "부드러운 바람",
+  "figma_sleep_sound_cosmic": "코스믹",
+  "figma_sleep_sound_cosmic_desc": "우주 분위기",
+  "figma_sleep_start_toast": "🌙 수면 모드가 시작됐어요. {sound}와 함께 편안한 꿈으로 떠나세요.",
+  "@figma_sleep_start_toast": {
+    "placeholders": {
+      "sound": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_sleep_note_target": "{sound} · {time}까지",
+  "@figma_sleep_note_target": {
+    "placeholders": {
+      "sound": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_sleep_note_duration": "{sound} · {minutes}분",
+  "@figma_sleep_note_duration": {
+    "placeholders": {
+      "sound": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_sleep_db_not_ready": "데이터베이스가 준비되지 않았습니다. 다시 시도해주세요.",
+  "figma_sleep_log_success": "💤 휴식 기록 완료! 좋은 꿈 꾸세요. 회복도 성장입니다.",
+  "figma_sleep_log_error": "수면 저장 오류: {error}",
+  "@figma_sleep_log_error": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_sleep_time_remaining_zero": "0분 남음",
+  "figma_sleep_time_remaining_hours_minutes": "{hours}시간 {minutes}분 남음",
+  "@figma_sleep_time_remaining_hours_minutes": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_sleep_time_remaining_minutes": "{minutes}분 남음",
+  "@figma_sleep_time_remaining_minutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_sleep_sound_modal_title": "배경 사운드 선택",
+  "figma_sleep_badge_label": "코스믹 드림",
+  "figma_sleep_title": "휴식과 재충전",
+  "figma_sleep_subtitle": "별빛 속으로 떠나기 ✨",
+  "figma_sleep_dream_bank_title": "드림 뱅크",
+  "figma_sleep_dream_bank_progress": "{hours}시간 {minutes}분 / {target}시간",
+  "@figma_sleep_dream_bank_progress": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_sleep_dream_bank_percent": "{percent}%",
+  "@figma_sleep_dream_bank_percent": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_sleep_duration_title": "수면 시간",
+  "figma_sleep_mode_duration": "지속시간",
+  "figma_sleep_mode_target": "목표 시간",
+  "figma_sleep_input_hours_title": "시간 입력",
+  "figma_sleep_input_hours_hint": "0-24",
+  "figma_sleep_picker_hours": "시간",
+  "figma_sleep_input_minutes_title": "분 입력",
+  "figma_sleep_input_minutes_hint": "0-55 (5분 단위)",
+  "figma_sleep_picker_minutes": "분",
+  "figma_sleep_picker_am": "오전",
+  "figma_sleep_picker_pm": "오후",
+  "figma_sleep_input_target_hour_title": "시 입력",
+  "figma_sleep_input_target_hour_hint": "1-12",
+  "figma_sleep_picker_hour_unit": "시",
+  "figma_sleep_sound_button_label": "배경 사운드",
+  "figma_sleep_volume_title": "볼륨",
+  "figma_sleep_volume_min": "속삭임",
+  "figma_sleep_volume_max": "완벽",
+  "figma_sleep_action_stop": "세션 중지",
+  "figma_sleep_action_start": "꿈 여행 시작",
+  "figma_sleep_action_log": "지금 수면 기록",
+  "figma_sleep_science_title": "수면 과학",
+  "figma_sleep_science_body": "양질의 수면은 근육을 회복하고 기억을 정리하며 호르몬 균형을 맞춰줍니다. 우주 사운드는 뇌가 더 깊은 수면 단계로 들어가도록 도와줘요. ✨",
+  "home_dashboard_next_action_title": "다음 액션",
+  "home_dashboard_next_action_focus_title": "집중 시작하기",
+  "home_dashboard_next_action_focus_subtitle": "오늘의 집중 목표까지 {minutes}분 남았어요.",
+  "@home_dashboard_next_action_focus_subtitle": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "home_dashboard_next_action_cta_focus": "집중 시작",
+  "home_dashboard_next_action_workout_title": "운동 시작하기",
+  "home_dashboard_next_action_workout_subtitle": "오늘 목표까지 {minutes}분만 더 움직여요.",
+  "@home_dashboard_next_action_workout_subtitle": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "home_dashboard_next_action_cta_workout": "운동 열기",
+  "home_dashboard_next_action_sleep_title": "수면 준비하기",
+  "home_dashboard_next_action_sleep_subtitle": "{minutes}분 수면 루틴으로 오늘을 마무리해요.",
+  "@home_dashboard_next_action_sleep_subtitle": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "home_dashboard_next_action_cta_sleep": "수면 시작",
+  "home_dashboard_next_action_complete_title": "오늘 목표 달성",
+  "home_dashboard_next_action_complete_subtitle": "모든 목표를 달성했어요. 통계를 확인해 내일을 계획해보세요.",
+  "home_dashboard_next_action_cta_complete": "통계 보기",
+  "figma_workout_current_step": "현재 단계: {step}",
+  "@figma_workout_current_step": {
+    "placeholders": {
+      "step": {
+        "type": "String"
+      }
+    }
   }
 }

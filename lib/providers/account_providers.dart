@@ -18,6 +18,11 @@ class AccountDeletionController extends AsyncNotifier<AccountDeletionResult?> {
     state = const AsyncLoading();
     try {
       final auth = ref.read(firebaseAuthProvider);
+      if (auth == null) {
+        throw UnsupportedError(
+          'Firebase Auth is unavailable on this platform.',
+        );
+      }
       final service = AccountDeletionService(
         auth: auth,
         firestore: FirebaseFirestore.instance,

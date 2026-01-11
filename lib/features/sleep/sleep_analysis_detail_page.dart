@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:life_app/l10n/app_localizations.dart';
 import 'package:life_app/services/audio/sleep_sound_analyzer.dart';
-import 'package:intl/intl.dart';
 
 class SleepAnalysisDetailPage extends StatelessWidget {
   const SleepAnalysisDetailPage({super.key, required this.summary});

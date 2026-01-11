@@ -61,9 +61,9 @@ final defaultTemplateCatalog = <ChallengeTemplate, ChallengeTemplateInfo>{
 final challengeTemplatesProvider =
     FutureProvider<Map<ChallengeTemplate, ChallengeTemplateInfo>>((ref) async {
   final remoteConfig = await ref.watch(remoteConfigProvider.future);
-  final jsonString = remoteConfig.getString('challenge_templates');
+  final jsonString = remoteConfig.challengeTemplatesJson;
 
-  if (jsonString.isNotEmpty) {
+  if (jsonString != null && jsonString.isNotEmpty) {
     try {
       final decoded = jsonDecode(jsonString) as Map<String, dynamic>;
       final templates = <ChallengeTemplate, ChallengeTemplateInfo>{};
@@ -75,6 +75,7 @@ final challengeTemplatesProvider =
       }
       return templates;
     } catch (_) {
+      // Fallback to default if parsing fails
       return defaultTemplateCatalog;
     }
   }

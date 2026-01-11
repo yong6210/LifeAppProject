@@ -80,7 +80,7 @@ class SleepAnalysisResultCard extends ConsumerWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
+                MaterialPageRoute<void>(
                   builder: (context) =>
                       SleepAnalysisDetailPage(summary: summary),
                 ),

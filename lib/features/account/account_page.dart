@@ -374,7 +374,9 @@ class AccountPage extends ConsumerWidget {
                                 subject: l10n.tr(
                                   'account_diagnostics_share_subject',
                                 ),
-                                text: l10n.tr('account_diagnostics_share_body'),
+                                text: l10n.tr(
+                                  'account_diagnostics_share_body',
+                                ),
                               ),
                             );
                           },

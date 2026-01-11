@@ -24,8 +24,8 @@ void main() {
           revenueCatControllerProvider.overrideWith(
             () => _FakeRevenueCatController(null),
           ),
-          paywallVariantProvider.overrideWithValue(
-            const AsyncValue<PaywallVariant>.data(PaywallVariant.focusValue),
+          paywallVariantProvider.overrideWith(
+            (ref) => PaywallVariant.focusValue,
           ),
         ],
         child: MaterialApp(

@@ -46,7 +46,13 @@ devices, and ready for future subscription and wearable integrations.
 - `test/` – Unit and widget tests, including coverage for sleep analysis UI and timer functionalities.
 
 ## Key Documentation
-This `README.md` file serves as the primary source of documentation. The `docs/` directory mentioned in previous versions is outdated and has been removed.
+- `README.md` - Project overview, architecture, and testing
+- `TODO.md` - Active checklist for upcoming work
+- `docs/release_readiness.md` - Release checklist, signing, and CI guidance
+- `docs/product_features.md` - Product feature roadmap
+- `docs/community_challenges.md` - Community challenges expansion plan
+- `docs/privacy_sleep_sound.md` - Sleep sound analysis privacy notes
+- `docs/design_review.md` - UI/UX review notes
 
 ## Testing
 - Run all tests:

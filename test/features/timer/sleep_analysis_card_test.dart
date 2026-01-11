@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -60,14 +62,20 @@ void main() {
   group('SleepAnalysisResultCard', () {
     testWidgets('shows loading indicator when provider is loading',
         (tester) async {
+      final completer = Completer<SleepSoundSummary?>();
+      addTearDown(() {
+        if (!completer.isCompleted) {
+          completer.complete(null);
+        }
+      });
       await pumpSleepCard(
         tester,
         latestSleepSoundSummaryProvider.overrideWith(
-          (ref) => Future.delayed(const Duration(milliseconds: 100)),
+          (ref) => completer.future,
         ),
       );
       // Pump a short duration to show the loading indicator
-      await tester.pump(const Duration(milliseconds: 50));
+      await tester.pump();
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
 

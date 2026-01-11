@@ -1,15 +1,22 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:life_app/core/firebase/firebase_initializer.dart';
 import 'package:life_app/features/account/profile_repository.dart';
 import 'package:life_app/services/analytics/analytics_service.dart';
 
-final firebaseAuthProvider = Provider<FirebaseAuth>((ref) {
+final firebaseAuthProvider = Provider<FirebaseAuth?>((ref) {
+  if (!FirebaseInitializer.isAvailable || Firebase.apps.isEmpty) {
+    return null;
+  }
   return FirebaseAuth.instance;
 });
 
 final authStateProvider = StreamProvider<User?>((ref) {
   final auth = ref.watch(firebaseAuthProvider);
+  if (auth == null) {
+    return Stream<User?>.value(null);
+  }
   return auth.authStateChanges();
 });
 
@@ -18,6 +25,9 @@ class AuthController extends AsyncNotifier<User?> {
   Future<User?> build() async {
     await FirebaseInitializer.ensureInitialized();
     final auth = ref.read(firebaseAuthProvider);
+    if (auth == null) {
+      return null;
+    }
     final user = auth.currentUser;
     await AnalyticsService.setUserId(
       user?.uid,
@@ -29,6 +39,13 @@ class AuthController extends AsyncNotifier<User?> {
   Future<UserCredential> signInAnonymously() async {
     state = const AsyncLoading();
     final auth = ref.read(firebaseAuthProvider);
+    if (auth == null) {
+      final error = UnsupportedError(
+        'Firebase Auth is unavailable on this platform.',
+      );
+      state = AsyncError(error, StackTrace.current);
+      throw error;
+    }
     final profileRepo = ref.read(profileRepositoryProvider);
 
     final credential = await auth.signInAnonymously();
@@ -57,6 +74,10 @@ class AuthController extends AsyncNotifier<User?> {
 
   Future<void> signOut() async {
     final auth = ref.read(firebaseAuthProvider);
+    if (auth == null) {
+      state = const AsyncData(null);
+      return;
+    }
     await auth.signOut();
     state = const AsyncData(null);
     await AnalyticsService.setUserId(null);

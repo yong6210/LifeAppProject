@@ -10,6 +10,7 @@ class RemoteConfigSnapshot {
     this.telemetryDefault,
     this.fetchedAt,
     this.sleepSoundEnabled,
+    this.challengeTemplatesJson,
   });
 
   final String? paywallVariant;
@@ -17,6 +18,7 @@ class RemoteConfigSnapshot {
   final bool? telemetryDefault;
   final DateTime? fetchedAt;
   final bool? sleepSoundEnabled;
+  final String? challengeTemplatesJson;
 
   static const empty = RemoteConfigSnapshot();
 }
@@ -43,6 +45,7 @@ class RemoteConfigService {
         telemetryDefault: data['telemetry_default'] as bool?,
         fetchedAt: DateTime.now().toUtc(),
         sleepSoundEnabled: data['sleep_sound_enabled'] as bool?,
+        challengeTemplatesJson: data['challenge_templates'] as String?,
       );
     } catch (error, stack) {
       debugPrint('Remote config fetch failed: $error');

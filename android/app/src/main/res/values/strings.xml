@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">Life App</string>
     <string name="widget_focus_default_title">Ready to focus</string>
     <string name="widget_focus_paused_title">Paused · %1$s</string>
     <string name="widget_focus_running_title">%1$s in progress</string>

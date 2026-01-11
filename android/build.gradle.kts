@@ -1,5 +1,12 @@
 import com.android.build.gradle.LibraryExtension
 import org.gradle.api.tasks.compile.JavaCompile
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+// Keep Android build output under the repo build/ directory (Flutter expects this).
+buildDir = file("../build")
+subprojects {
+    buildDir = File(rootProject.buildDir, name)
+}
 
 // ---- 전역 리포지토리 ----
 allprojects {
@@ -17,6 +24,17 @@ subprojects {
         targetCompatibility = "17"
         // Java 8 옵션 경고 숨김(옵션)
         options.compilerArgs.add("-Xlint:-options")
+    }
+    tasks.withType(KotlinCompile::class.java).configureEach {
+        kotlinOptions.jvmTarget = "17"
+    }
+    plugins.withId("com.android.library") {
+        extensions.configure<LibraryExtension> {
+            compileOptions {
+                sourceCompatibility = JavaVersion.VERSION_17
+                targetCompatibility = JavaVersion.VERSION_17
+            }
+        }
     }
 }
 
@@ -42,6 +60,31 @@ subprojects {
             tasks.matching { it.name == "verifyReleaseResources" }.configureEach {
                 enabled = false
             }
+        }
+    }
+    if (project.name == "flutter_foreground_task") {
+        plugins.withId("com.android.library") {
+            extensions.configure<LibraryExtension> {
+                namespace = "com.pravera.flutter_foreground_task"
+                compileSdk = 36
+                compileOptions {
+                    sourceCompatibility = JavaVersion.VERSION_17
+                    targetCompatibility = JavaVersion.VERSION_17
+                }
+            }
+        }
+    }
+    if (project.name == "health") {
+        plugins.withId("com.android.library") {
+            extensions.configure<LibraryExtension> {
+                compileOptions {
+                    sourceCompatibility = JavaVersion.VERSION_11
+                    targetCompatibility = JavaVersion.VERSION_11
+                }
+            }
+        }
+        tasks.withType(KotlinCompile::class.java).configureEach {
+            kotlinOptions.jvmTarget = "11"
         }
     }
 }

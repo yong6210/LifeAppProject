@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/legacy.dart' show StateProvider;
 import 'package:flutter/material.dart';
 import 'package:life_app/features/life_buddy/life_buddy_service.dart';
 import 'package:life_app/providers/db_provider.dart';
@@ -100,6 +99,9 @@ class LifeBuddyInventoryController extends AsyncNotifier<LifeBuddyInventory> {
 
   Future<LifeBuddyInventory> _fetchInventory() async {
     final auth = ref.read(firebaseAuthProvider);
+    if (auth == null) {
+      return LifeBuddyInventory.initial();
+    }
     final user = auth.currentUser;
     if (user == null) {
       return LifeBuddyInventory.initial();

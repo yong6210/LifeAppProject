@@ -1470,5 +1470,335 @@
     "placeholders": {
       "error": {}
     }
+  },
+  "common_ok": "OK",
+  "home_dashboard_today_activity": "Today's activity",
+  "home_dashboard_overall_progress_title": "Overall progress",
+  "home_dashboard_overall_progress_complete": "{percent}% complete",
+  "@home_dashboard_overall_progress_complete": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "home_dashboard_target_minutes": "/ {minutes} min",
+  "@home_dashboard_target_minutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "home_dashboard_target_hours": "/ {hours}h",
+  "@home_dashboard_target_hours": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "home_dashboard_open_action": "Open",
+  "home_dashboard_premium_badge": "Premium",
+  "figma_timer_preset_focus_boost": "Focus Boost",
+  "figma_timer_preset_quick_reset": "Quick Reset",
+  "figma_timer_preset_deep_dive": "Deep Dive",
+  "figma_timer_preset_power_hour_focus": "Power Hour",
+  "figma_timer_preset_quick_workout": "Quick Workout",
+  "figma_timer_preset_full_session": "Full Session",
+  "figma_timer_preset_power_hour_workout": "Power Hour",
+  "figma_timer_preset_endurance": "Endurance",
+  "figma_timer_preset_power_nap": "Power Nap",
+  "figma_timer_preset_short_rest": "Short Rest",
+  "figma_timer_preset_deep_sleep": "Deep Sleep",
+  "figma_timer_preset_full_night": "Full Night",
+  "figma_timer_badge_focus": "Neural Focus",
+  "figma_timer_badge_workout": "Energy Flow",
+  "figma_timer_badge_sleep": "Cosmic Dreams",
+  "figma_timer_session_duration": "{minutes} min session",
+  "@figma_timer_session_duration": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_timer_status_active": "⚡ {mode} active",
+  "@figma_timer_status_active": {
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_timer_status_ready": "Ready for {mode}",
+  "@figma_timer_status_ready": {
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_timer_action_pause": "Pause session",
+  "figma_timer_action_start": "Start session",
+  "figma_timer_custom_title": "Custom timer",
+  "figma_timer_input_hours_title": "Enter hours",
+  "figma_timer_input_hours_hint": "0-24",
+  "figma_timer_picker_hours": "Hours",
+  "figma_timer_input_minutes_title": "Enter minutes",
+  "figma_timer_input_minutes_hint": "0-55 (5 min intervals)",
+  "figma_timer_picker_minutes": "Minutes",
+  "figma_timer_time_label_hours_minutes": "{hours}h {minutes}m",
+  "@figma_timer_time_label_hours_minutes": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_timer_time_label_minutes": "{minutes}m",
+  "@figma_timer_time_label_minutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_timer_set_button": "Set {label}",
+  "@figma_timer_set_button": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_timer_preset_duration": "{minutes} minutes",
+  "@figma_timer_preset_duration": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_timer_focus_tip_title": "Neural boost active",
+  "figma_timer_focus_tip_body": "Your brain works best in focused bursts. Eliminate distractions and let your mind enter the flow state. Deep work creates neural pathways that make you smarter!",
+  "figma_workout_start_toast": "{emoji} Workout started! 💪",
+  "@figma_workout_start_toast": {
+    "placeholders": {
+      "emoji": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_workout_filter_all": "All",
+  "figma_workout_filter_light": "Light",
+  "figma_workout_filter_moderate": "Moderate",
+  "figma_workout_filter_vigorous": "Vigorous",
+  "figma_workout_badge_label": "Energy Flow",
+  "figma_workout_title": "Movement",
+  "figma_workout_subtitle": "Feel the energy ⚡",
+  "figma_workout_energy_bank_title": "Energy Bank",
+  "figma_workout_energy_bank_progress": "{minutes} / {target} min",
+  "@figma_workout_energy_bank_progress": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_workout_energy_bank_percent": "{percent}%",
+  "@figma_workout_energy_bank_percent": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_workout_in_progress": "⚡ Workout in progress",
+  "figma_workout_stop_button": "Stop",
+  "figma_workout_calories": "{calories} cal",
+  "@figma_workout_calories": {
+    "placeholders": {
+      "calories": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_workout_duration": "{minutes} min",
+  "@figma_workout_duration": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_workout_start_button": "Start workout",
+  "figma_workout_tip_title": "Energy surge!",
+  "figma_workout_tip_body": "Movement releases endorphins and boosts your metabolism for hours! Even 10 minutes of exercise can increase your energy levels by 20%. Let's move! 🚀",
+  "figma_sleep_sound_rain": "Rain",
+  "figma_sleep_sound_rain_desc": "Gentle rainfall",
+  "figma_sleep_sound_ocean": "Ocean",
+  "figma_sleep_sound_ocean_desc": "Peaceful waves",
+  "figma_sleep_sound_wind": "Wind",
+  "figma_sleep_sound_wind_desc": "Soft breeze",
+  "figma_sleep_sound_cosmic": "Cosmic",
+  "figma_sleep_sound_cosmic_desc": "Space ambience",
+  "figma_sleep_start_toast": "🌙 Sleep mode activated — drift into peaceful dreams with {sound}",
+  "@figma_sleep_start_toast": {
+    "placeholders": {
+      "sound": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_sleep_note_target": "{sound} · until {time}",
+  "@figma_sleep_note_target": {
+    "placeholders": {
+      "sound": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_sleep_note_duration": "{sound} · {minutes} min",
+  "@figma_sleep_note_duration": {
+    "placeholders": {
+      "sound": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_sleep_db_not_ready": "Database not ready. Please try again.",
+  "figma_sleep_log_success": "💤 Rest logged! Sweet dreams! Recovery is progress.",
+  "figma_sleep_log_error": "Error saving sleep: {error}",
+  "@figma_sleep_log_error": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_sleep_time_remaining_zero": "0 min left",
+  "figma_sleep_time_remaining_hours_minutes": "{hours}h {minutes}m left",
+  "@figma_sleep_time_remaining_hours_minutes": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_sleep_time_remaining_minutes": "{minutes} min left",
+  "@figma_sleep_time_remaining_minutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_sleep_sound_modal_title": "Select ambient sound",
+  "figma_sleep_badge_label": "Cosmic Dreams",
+  "figma_sleep_title": "Rest & recharge",
+  "figma_sleep_subtitle": "Journey to the stars ✨",
+  "figma_sleep_dream_bank_title": "Dream Bank",
+  "figma_sleep_dream_bank_progress": "{hours}h {minutes}m / {target}h",
+  "@figma_sleep_dream_bank_progress": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_sleep_dream_bank_percent": "{percent}%",
+  "@figma_sleep_dream_bank_percent": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_sleep_duration_title": "Dream duration",
+  "figma_sleep_mode_duration": "Duration",
+  "figma_sleep_mode_target": "Target time",
+  "figma_sleep_input_hours_title": "Enter hours",
+  "figma_sleep_input_hours_hint": "0-24",
+  "figma_sleep_picker_hours": "Hours",
+  "figma_sleep_input_minutes_title": "Enter minutes",
+  "figma_sleep_input_minutes_hint": "0-55 (5 min intervals)",
+  "figma_sleep_picker_minutes": "Minutes",
+  "figma_sleep_picker_am": "AM",
+  "figma_sleep_picker_pm": "PM",
+  "figma_sleep_input_target_hour_title": "Enter hour",
+  "figma_sleep_input_target_hour_hint": "1-12",
+  "figma_sleep_picker_hour_unit": "Hour",
+  "figma_sleep_sound_button_label": "Ambient sounds",
+  "figma_sleep_volume_title": "Volume",
+  "figma_sleep_volume_min": "Whisper",
+  "figma_sleep_volume_max": "Perfect",
+  "figma_sleep_action_stop": "Stop session",
+  "figma_sleep_action_start": "Begin dream journey",
+  "figma_sleep_action_log": "Log sleep now",
+  "figma_sleep_science_title": "Sleep science",
+  "figma_sleep_science_body": "Quality sleep is when your body repairs muscles, consolidates memories, and balances hormones. The cosmic sounds help your brain enter deeper sleep stages naturally. ✨",
+  "home_dashboard_next_action_title": "Next action",
+  "home_dashboard_next_action_focus_title": "Start a focus block",
+  "home_dashboard_next_action_focus_subtitle": "You're {minutes} min away from today's focus target.",
+  "@home_dashboard_next_action_focus_subtitle": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "home_dashboard_next_action_cta_focus": "Start focus",
+  "home_dashboard_next_action_workout_title": "Schedule a workout",
+  "home_dashboard_next_action_workout_subtitle": "Put in {minutes} min of movement to hit today's goal.",
+  "@home_dashboard_next_action_workout_subtitle": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "home_dashboard_next_action_cta_workout": "Open workout",
+  "home_dashboard_next_action_sleep_title": "Plan tonight's rest",
+  "home_dashboard_next_action_sleep_subtitle": "Wind down with a {minutes}-minute sleep routine.",
+  "@home_dashboard_next_action_sleep_subtitle": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "home_dashboard_next_action_cta_sleep": "Start sleep",
+  "home_dashboard_next_action_complete_title": "You're on track",
+  "home_dashboard_next_action_complete_subtitle": "Everything looks good. Review your stats to plan tomorrow.",
+  "home_dashboard_next_action_cta_complete": "View stats",
+  "figma_workout_current_step": "Current step: {step}",
+  "@figma_workout_current_step": {
+    "placeholders": {
+      "step": {
+        "type": "String"
+      }
+    }
   }
 }

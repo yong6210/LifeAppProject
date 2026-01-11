@@ -17,14 +17,12 @@ class NotificationService {
   static Future<void> init() async {
     if (_initialized) return;
 
-    // iOS/macOS 설정
     const darwin = DarwinInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
       requestSoundPermission: true,
     );
 
-    // Android 설정 (기본 아이콘은 앱 아이콘 사용)
     const android = AndroidInitializationSettings('@mipmap/ic_launcher');
 
     const settings = InitializationSettings(
@@ -36,14 +34,12 @@ class NotificationService {
     await _plugin.initialize(settings);
     _initialized = true;
 
-    // Android 13+ 알림 권한 요청
     if (Platform.isAndroid) {
       final androidPlugin = _plugin
           .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin
           >();
-      await androidPlugin
-          ?.requestPermission(); // granted == true/false/null (무시해도 무방)
+      await androidPlugin?.requestNotificationsPermission();
     }
   }
 
@@ -78,7 +74,7 @@ class NotificationService {
       macOS: darwinDetails,
     );
     await _plugin.show(
-      1001, // notification id
+      1001,
       l10n.tr('notification_timer_done_title'),
       l10n.tr('notification_timer_done_body', {'mode': modeLabel}),
       details,
@@ -127,7 +123,6 @@ class NotificationService {
         ),
         importance: Importance.max,
         priority: Priority.high,
-        scheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       ),
       iOS: const DarwinNotificationDetails(),
       macOS: const DarwinNotificationDetails(),
@@ -141,7 +136,9 @@ class NotificationService {
       body,
       tzDateTime,
       details,
-      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
     );
   }
 
@@ -201,7 +198,6 @@ class NotificationService {
           importance: isFinal ? Importance.max : Importance.defaultImportance,
           priority: isFinal ? Priority.high : Priority.defaultPriority,
           fullScreenIntent: isFinal,
-          scheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         ),
         iOS: DarwinNotificationDetails(presentSound: isFinal),
         macOS: const DarwinNotificationDetails(),
@@ -220,7 +216,9 @@ class NotificationService {
         body,
         tzDateTime,
         details,
-        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
       );
     }
   }
@@ -273,7 +271,6 @@ class NotificationService {
         importance: Importance.defaultImportance,
         priority: Priority.defaultPriority,
         category: AndroidNotificationCategory.reminder,
-        scheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       ),
       iOS: const DarwinNotificationDetails(),
       macOS: const DarwinNotificationDetails(),
@@ -285,7 +282,9 @@ class NotificationService {
       body,
       tzDateTime,
       details,
-      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,
     );
   }

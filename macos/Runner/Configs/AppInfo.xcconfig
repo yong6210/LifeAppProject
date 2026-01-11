@@ -10,5 +10,8 @@ PRODUCT_NAME = life_app
 // The application's bundle identifier
 PRODUCT_BUNDLE_IDENTIFIER = com.ymcompany.lifeapp
 
+// Apple Developer team for code signing
+DEVELOPMENT_TEAM = 8TPQ69CJD4
+
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2025 com.ymcompany. All rights reserved.

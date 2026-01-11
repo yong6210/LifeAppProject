@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:life_app/design/app_theme.dart';
+import 'package:life_app/l10n/app_localizations.dart';
 import 'package:life_app/models/session.dart';
 import 'package:life_app/providers/session_providers.dart';
 import 'package:life_app/providers/settings_providers.dart';
@@ -13,15 +14,18 @@ import 'package:life_app/widgets/glass_card.dart';
 class SoundPreset {
   const SoundPreset({
     required this.id,
-    required this.name,
+    required this.nameKey,
     required this.emoji,
-    required this.description,
+    required this.descriptionKey,
   });
 
   final String id;
-  final String name;
+  final String nameKey;
   final String emoji;
-  final String description;
+  final String descriptionKey;
+
+  String label(AppLocalizations l10n) => l10n.tr(nameKey);
+  String descriptionText(AppLocalizations l10n) => l10n.tr(descriptionKey);
 }
 
 /// Figma-styled sleep tab with cosmic dreams design
@@ -48,27 +52,27 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
   static const soundPresets = [
     SoundPreset(
       id: 'rain',
-      name: 'Rain',
+      nameKey: 'figma_sleep_sound_rain',
       emoji: '🌧️',
-      description: 'Gentle rainfall',
+      descriptionKey: 'figma_sleep_sound_rain_desc',
     ),
     SoundPreset(
       id: 'ocean',
-      name: 'Ocean',
+      nameKey: 'figma_sleep_sound_ocean',
       emoji: '🌊',
-      description: 'Peaceful waves',
+      descriptionKey: 'figma_sleep_sound_ocean_desc',
     ),
     SoundPreset(
       id: 'wind',
-      name: 'Wind',
+      nameKey: 'figma_sleep_sound_wind',
       emoji: '🍃',
-      description: 'Soft breeze',
+      descriptionKey: 'figma_sleep_sound_wind_desc',
     ),
     SoundPreset(
       id: 'cosmic',
-      name: 'Cosmic',
+      nameKey: 'figma_sleep_sound_cosmic',
       emoji: '✨',
-      description: 'Space ambience',
+      descriptionKey: 'figma_sleep_sound_cosmic_desc',
     ),
   ];
 
@@ -156,14 +160,19 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
     });
 
     if (_isPlaying) {
+      final l10n = context.l10n;
       AnalyticsService.logEvent('figma_sleep_start', {
-        'sound': _selectedSound.name,
+        'sound_key': _selectedSound.nameKey,
         'duration': _duration,
         'volume': _volume,
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('🌙 Sleep mode activated - Drift into peaceful dreams with ${_selectedSound.name}'),
+          content: Text(
+            l10n.tr('figma_sleep_start_toast', {
+              'sound': _selectedSound.label(l10n),
+            }),
+          ),
           backgroundColor: AppTheme.electricViolet,
           behavior: SnackBarBehavior.floating,
         ),
@@ -172,6 +181,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
   }
 
   Future<void> _handleLogSleep() async {
+    final l10n = context.l10n;
+    final soundLabel = '${_selectedSound.emoji} ${_selectedSound.label(l10n)}';
     // Calculate actual duration based on mode
     int actualDuration;
     String note;
@@ -192,14 +203,20 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
       }
 
       actualDuration = target.difference(now).inMinutes;
-      note = '${_selectedSound.emoji} ${_selectedSound.name} - ${_targetTime!.format(context)}까지';
+      note = l10n.tr('figma_sleep_note_target', {
+        'sound': soundLabel,
+        'time': _targetTime!.format(context),
+      });
     } else {
       actualDuration = _duration;
-      note = '${_selectedSound.emoji} ${_selectedSound.name} - ${_duration}min';
+      note = l10n.tr('figma_sleep_note_duration', {
+        'sound': soundLabel,
+        'minutes': '$actualDuration',
+      });
     }
 
     AnalyticsService.logEvent('figma_sleep_log', {
-      'sound': _selectedSound.name,
+      'sound_key': _selectedSound.nameKey,
       'duration': actualDuration,
       'mode': _useTargetTime ? 'target_time' : 'duration',
     });
@@ -211,8 +228,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
     if (repo == null) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Database not ready. Please try again.'),
+        SnackBar(
+          content: Text(l10n.tr('figma_sleep_db_not_ready')),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
         ),
@@ -227,7 +244,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
       ..startedAt = now
       ..endedAt = now.add(Duration(minutes: actualDuration))
       ..deviceId = settings.deviceId
-      ..tags = [_selectedSound.name, 'figma-sleep']
+      ..tags = [_selectedSound.id, 'figma-sleep']
       ..note = note;
 
     try {
@@ -239,8 +256,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('💤 Rest logged! Sweet dreams! Recovery is progress.'),
+        SnackBar(
+          content: Text(l10n.tr('figma_sleep_log_success')),
           backgroundColor: AppTheme.electricViolet,
           behavior: SnackBarBehavior.floating,
         ),
@@ -249,7 +266,9 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error saving sleep: $e'),
+          content: Text(
+            l10n.tr('figma_sleep_log_error', {'error': e.toString()}),
+          ),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
         ),
@@ -287,11 +306,16 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
 
     // 24시간 0분인 경우 0분으로 표시
     if (hours == 24 && minutes == 0) {
-      return '0분 남음';
+      return context.l10n.tr('figma_sleep_time_remaining_zero');
     } else if (hours > 0) {
-      return '$hours시간 $minutes분 남음';
+      return context.l10n.tr('figma_sleep_time_remaining_hours_minutes', {
+        'hours': '$hours',
+        'minutes': '$minutes',
+      });
     } else {
-      return '$minutes분 남음';
+      return context.l10n.tr('figma_sleep_time_remaining_minutes', {
+        'minutes': '$minutes',
+      });
     }
   }
 
@@ -303,6 +327,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
     required int currentValue,
     required ValueChanged<int> onSubmit,
   }) async {
+    final l10n = context.l10n;
     final controller = TextEditingController(text: currentValue.toString());
     return showDialog(
       context: context,
@@ -327,7 +352,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('취소'),
+            child: Text(l10n.tr('common_cancel')),
           ),
           FilledButton(
             onPressed: () {
@@ -337,7 +362,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                 Navigator.pop(context);
               }
             },
-            child: const Text('확인'),
+            child: Text(l10n.tr('common_ok')),
           ),
         ],
       ),
@@ -345,6 +370,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
   }
 
   void _showSoundSelectionModal(BuildContext context, ThemeData theme, bool isDark) {
+    final l10n = context.l10n;
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: Colors.transparent,
@@ -354,15 +380,10 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: isDark
-                ? [
-                    const Color(0xFF1a0f2e),
-                    const Color(0xFF0f0a1a),
-                  ]
-                : [
-                    const Color(0xFFF5E8FF),
-                    const Color(0xFFFFFFFF),
-                  ],
+            colors: [
+              theme.colorScheme.surface,
+              theme.colorScheme.surfaceContainerLowest,
+            ],
           ),
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
@@ -376,12 +397,12 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                 Row(
                   children: [
                     Icon(
-                      Icons.volume_up,
+                      Icons.volume_up_rounded,
                       color: isDark ? Colors.white : AppTheme.electricViolet,
                     ),
                     const SizedBox(width: 12),
                     Text(
-                      'Select Ambient Sound',
+                      l10n.tr('figma_sleep_sound_modal_title'),
                       style: theme.textTheme.headlineSmall?.copyWith(
                         fontWeight: FontWeight.w700,
                         color: isDark ? Colors.white : theme.colorScheme.onSurface,
@@ -421,7 +442,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  sound.name,
+                                  sound.label(l10n),
                                   style: theme.textTheme.titleMedium?.copyWith(
                                     fontWeight: FontWeight.w700,
                                     color: isDark ? Colors.white : theme.colorScheme.onSurface,
@@ -429,7 +450,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
-                                  sound.description,
+                                  sound.descriptionText(l10n),
                                   style: theme.textTheme.bodySmall?.copyWith(
                                     color: isDark
                                         ? Colors.white.withValues(alpha: 0.7)
@@ -441,7 +462,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                           ),
                           if (isSelected)
                             Icon(
-                              Icons.check_circle,
+                              Icons.check_circle_rounded,
                               color: AppTheme.electricViolet,
                             ),
                         ],
@@ -461,6 +482,11 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final l10n = context.l10n;
+    final backgroundColors = [
+      theme.colorScheme.surface,
+      theme.colorScheme.surfaceContainerLowest,
+    ];
 
     // Get today's sleep minutes from actual database
     final todaySummaryAsync = ref.watch(todaySummaryProvider);
@@ -480,17 +506,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: isDark
-                ? [
-                    const Color(0xFF1a0f2e),
-                    const Color(0xFF0f0a1a),
-                    const Color(0xFF0a0510),
-                  ]
-                : [
-                    const Color(0xFFF5E8FF),
-                    const Color(0xFFEED8FF),
-                    const Color(0xFFFFFFFF),
-                  ],
+            colors: backgroundColors,
           ),
         ),
         child: Stack(
@@ -509,7 +525,9 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                       shape: BoxShape.circle,
                       gradient: RadialGradient(
                         colors: [
-                          AppTheme.electricViolet.withValues(alpha: 0.2 + _glowController.value * 0.15),
+                          AppTheme.electricViolet.withValues(
+                            alpha: 0.1 + _glowController.value * 0.08,
+                          ),
                           Colors.transparent,
                         ],
                       ),
@@ -531,7 +549,9 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                       shape: BoxShape.circle,
                       gradient: RadialGradient(
                         colors: [
-                          Colors.pink.withValues(alpha: 0.2 + (1 - _glowController.value) * 0.15),
+                          Colors.pink.withValues(
+                            alpha: 0.1 + (1 - _glowController.value) * 0.08,
+                          ),
                           Colors.transparent,
                         ],
                       ),
@@ -600,7 +620,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            'Cosmic Dreams',
+                            l10n.tr('figma_sleep_badge_label'),
                             style: theme.textTheme.titleSmall?.copyWith(
                               fontWeight: FontWeight.w600,
                               color: isDark ? Colors.white : AppTheme.electricViolet,
@@ -608,7 +628,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                           ),
                           const SizedBox(width: 4),
                           Icon(
-                            Icons.auto_awesome,
+                            Icons.auto_awesome_rounded,
                             size: 14,
                             color: Colors.pink,
                           ),
@@ -624,7 +644,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                         ],
                       ).createShader(bounds),
                       child: Text(
-                        'Rest & Recharge',
+                        l10n.tr('figma_sleep_title'),
                         style: theme.textTheme.headlineLarge?.copyWith(
                           fontWeight: FontWeight.w700,
                           color: Colors.white,
@@ -633,7 +653,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Journey to the stars ✨',
+                      l10n.tr('figma_sleep_subtitle'),
                       style: theme.textTheme.titleMedium?.copyWith(
                         color: isDark
                             ? AppTheme.electricViolet.withValues(alpha: 0.8)
@@ -675,7 +695,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Dream Bank',
+                                      l10n.tr('figma_sleep_dream_bank_title'),
                                       style: theme.textTheme.titleLarge?.copyWith(
                                         fontWeight: FontWeight.w700,
                                         color: isDark ? Colors.white : theme.colorScheme.onSurface,
@@ -683,7 +703,11 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
-                                      '${sleepHours}h ${sleepMins}m / 8h',
+                                      l10n.tr('figma_sleep_dream_bank_progress', {
+                                        'hours': '$sleepHours',
+                                        'minutes': '$sleepMins',
+                                        'target': '8',
+                                      }),
                                       style: theme.textTheme.bodyMedium?.copyWith(
                                         color: isDark
                                             ? AppTheme.electricViolet.withValues(alpha: 0.8)
@@ -695,7 +719,9 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                 ),
                               ),
                               Text(
-                                '${sleepPercent.round()}%',
+                                l10n.tr('figma_sleep_dream_bank_percent', {
+                                  'percent': '${sleepPercent.round()}',
+                                }),
                                 style: theme.textTheme.displaySmall?.copyWith(
                                   fontWeight: FontWeight.w700,
                                   color: AppTheme.electricViolet,
@@ -756,7 +782,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                               ),
                               const SizedBox(width: 8),
                               Text(
-                                'Dream Duration',
+                                l10n.tr('figma_sleep_duration_title'),
                                 style: theme.textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.w700,
                                   color: isDark ? Colors.white : theme.colorScheme.onSurface,
@@ -790,7 +816,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                     child: Text(
-                                      '지속시간',
+                                      l10n.tr('figma_sleep_mode_duration'),
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         color: !_useTargetTime ? Colors.white : AppTheme.electricViolet,
@@ -823,7 +849,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                     child: Text(
-                                      '목표시간',
+                                      l10n.tr('figma_sleep_mode_target'),
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         color: _useTargetTime ? Colors.white : AppTheme.electricViolet,
@@ -852,8 +878,12 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                         GestureDetector(
                                           onTap: () => _showDirectInputDialog(
                                             context: context,
-                                            title: '시간 입력',
-                                            hintText: '0-24',
+                                            title: l10n.tr(
+                                              'figma_sleep_input_hours_title',
+                                            ),
+                                            hintText: l10n.tr(
+                                              'figma_sleep_input_hours_hint',
+                                            ),
                                             maxValue: 24,
                                             currentValue: _duration ~/ 60,
                                             onSubmit: (value) {
@@ -868,7 +898,9 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                '시간',
+                                                l10n.tr(
+                                                  'figma_sleep_picker_hours',
+                                                ),
                                                 style: theme.textTheme.bodySmall?.copyWith(
                                                   color: isDark
                                                       ? Colors.white.withValues(alpha: 0.5)
@@ -877,7 +909,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                               ),
                                               const SizedBox(width: 4),
                                               Icon(
-                                                Icons.edit,
+                                                Icons.edit_rounded,
                                                 size: 12,
                                                 color: isDark
                                                     ? Colors.white.withValues(alpha: 0.3)
@@ -931,8 +963,12 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                         GestureDetector(
                                           onTap: () => _showDirectInputDialog(
                                             context: context,
-                                            title: '분 입력',
-                                            hintText: '0-55 (5분 단위)',
+                                            title: l10n.tr(
+                                              'figma_sleep_input_minutes_title',
+                                            ),
+                                            hintText: l10n.tr(
+                                              'figma_sleep_input_minutes_hint',
+                                            ),
                                             maxValue: 55,
                                             currentValue: _duration % 60,
                                             onSubmit: (value) {
@@ -949,7 +985,9 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                '분',
+                                                l10n.tr(
+                                                  'figma_sleep_picker_minutes',
+                                                ),
                                                 style: theme.textTheme.bodySmall?.copyWith(
                                                   color: isDark
                                                       ? Colors.white.withValues(alpha: 0.5)
@@ -958,7 +996,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                               ),
                                               const SizedBox(width: 4),
                                               Icon(
-                                                Icons.edit,
+                                                Icons.edit_rounded,
                                                 size: 12,
                                                 color: isDark
                                                     ? Colors.white.withValues(alpha: 0.3)
@@ -1066,7 +1104,9 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                                 children: [
                                                   Center(
                                                     child: Text(
-                                                      '오전',
+                                                      l10n.tr(
+                                                        'figma_sleep_picker_am',
+                                                      ),
                                                       style: theme.textTheme.titleMedium?.copyWith(
                                                         color: isDark ? Colors.white : AppTheme.electricViolet,
                                                         fontWeight: FontWeight.w700,
@@ -1075,7 +1115,9 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                                   ),
                                                   Center(
                                                     child: Text(
-                                                      '오후',
+                                                      l10n.tr(
+                                                        'figma_sleep_picker_pm',
+                                                      ),
                                                       style: theme.textTheme.titleMedium?.copyWith(
                                                         color: isDark ? Colors.white : AppTheme.electricViolet,
                                                         fontWeight: FontWeight.w700,
@@ -1096,8 +1138,12 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                             GestureDetector(
                                               onTap: () => _showDirectInputDialog(
                                                 context: context,
-                                                title: '시 입력',
-                                                hintText: '1-12',
+                                                title: l10n.tr(
+                                                  'figma_sleep_input_target_hour_title',
+                                                ),
+                                                hintText: l10n.tr(
+                                                  'figma_sleep_input_target_hour_hint',
+                                                ),
                                                 maxValue: 12,
                                                 currentValue: (_targetTime?.hour ?? 0) % 12 == 0 ? 12 : (_targetTime?.hour ?? 0) % 12,
                                                 onSubmit: (value) {
@@ -1125,7 +1171,9 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                                 mainAxisAlignment: MainAxisAlignment.center,
                                                 children: [
                                                   Text(
-                                                    '시',
+                                                    l10n.tr(
+                                                      'figma_sleep_picker_hour_unit',
+                                                    ),
                                                     style: theme.textTheme.bodySmall?.copyWith(
                                                       color: isDark
                                                           ? Colors.white.withValues(alpha: 0.5)
@@ -1134,7 +1182,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                                   ),
                                                   const SizedBox(width: 4),
                                                   Icon(
-                                                    Icons.edit,
+                                                    Icons.edit_rounded,
                                                     size: 12,
                                                     color: isDark
                                                         ? Colors.white.withValues(alpha: 0.3)
@@ -1384,7 +1432,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Icon(
-                              Icons.volume_up,
+                              Icons.volume_up_rounded,
                               color: isDark ? Colors.white : AppTheme.electricViolet,
                               size: 24,
                             ),
@@ -1395,7 +1443,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Ambient Sounds',
+                                  l10n.tr('figma_sleep_sound_button_label'),
                                   style: theme.textTheme.titleSmall?.copyWith(
                                     color: isDark
                                         ? Colors.white.withValues(alpha: 0.7)
@@ -1404,7 +1452,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  '${_selectedSound.emoji} ${_selectedSound.name}',
+                                  '${_selectedSound.emoji} ${_selectedSound.label(l10n)}',
                                   style: theme.textTheme.titleMedium?.copyWith(
                                     fontWeight: FontWeight.w700,
                                     color: isDark ? Colors.white : theme.colorScheme.onSurface,
@@ -1436,13 +1484,13 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                               Row(
                                 children: [
                                   Icon(
-                                    Icons.volume_up,
+                                    Icons.volume_up_rounded,
                                     size: 18,
                                     color: isDark ? Colors.white : AppTheme.electricViolet,
                                   ),
                                   const SizedBox(width: 8),
                                   Text(
-                                    'Volume',
+                                    l10n.tr('figma_sleep_volume_title'),
                                     style: theme.textTheme.titleMedium?.copyWith(
                                       fontWeight: FontWeight.w700,
                                       color: isDark ? Colors.white : theme.colorScheme.onSurface,
@@ -1481,7 +1529,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Whisper',
+                                l10n.tr('figma_sleep_volume_min'),
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: isDark
                                       ? AppTheme.electricViolet.withValues(alpha: 0.6)
@@ -1490,7 +1538,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                 ),
                               ),
                               Text(
-                                'Perfect',
+                                l10n.tr('figma_sleep_volume_max'),
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: isDark
                                       ? AppTheme.electricViolet.withValues(alpha: 0.6)
@@ -1538,11 +1586,12 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                           borderRadius: BorderRadius.circular(16),
                           child: Center(
                             child: Text(
-                              _isPlaying ? 'Stop Session' : 'Begin Dream Journey',
+                              _isPlaying
+                                  ? l10n.tr('figma_sleep_action_stop')
+                                  : l10n.tr('figma_sleep_action_start'),
                               style: theme.textTheme.titleMedium?.copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w700,
-                                fontSize: 18,
                               ),
                             ),
                           ),
@@ -1557,7 +1606,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                         borderRadius: 12,
                         child: Center(
                           child: Text(
-                            'Log Sleep Now',
+                            l10n.tr('figma_sleep_action_log'),
                             style: theme.textTheme.titleMedium?.copyWith(
                               color: AppTheme.electricViolet,
                               fontWeight: FontWeight.w700,
@@ -1587,7 +1636,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Sleep Science',
+                                      l10n.tr('figma_sleep_science_title'),
                                       style: theme.textTheme.titleMedium?.copyWith(
                                         fontWeight: FontWeight.w700,
                                         color: isDark ? Colors.white : theme.colorScheme.onSurface,
@@ -1595,7 +1644,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
-                                      'Quality sleep is when your body repairs muscles, consolidates memories, and balances hormones. The cosmic sounds help your brain enter deeper sleep stages naturally. ✨',
+                                      l10n.tr('figma_sleep_science_body'),
                                       style: theme.textTheme.bodyMedium?.copyWith(
                                         color: isDark
                                             ? Colors.white.withValues(alpha: 0.7)

@@ -21,25 +21,26 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('HomeDashboardTab', () {
-    testWidgets('shows loading skeleton while settings are loading', (
+    testWidgets('shows progress section while settings are loading', (
       tester,
     ) async {
       final pendingSettings = Completer<Settings>();
 
       await _pumpDashboard(tester, settingsFuture: pendingSettings.future);
 
-      expect(find.text("Today's progress"), findsNothing);
-      expect(find.byType(ModernSkeleton), findsWidgets);
+      expect(find.text("Today's progress"), findsWidgets);
+      expect(find.byType(ModernSkeleton), findsNothing);
     });
 
-    testWidgets('shows retry banner when today summary fails', (tester) async {
+    testWidgets('falls back to defaults when today summary fails', (tester) async {
       await _pumpDashboard(
         tester,
         todaySummaryStream: Stream<TodaySummary>.error('failed'),
       );
 
-      expect(find.text("Can't load dashboard"), findsOneWidget);
-      expect(find.text('Retry'), findsOneWidget);
+      expect(find.text("Can't load dashboard"), findsNothing);
+      expect(find.text('Retry'), findsNothing);
+      expect(find.text("Today's progress"), findsWidgets);
     });
 
     testWidgets('renders progress and premium sections when data is ready', (
@@ -48,9 +49,32 @@ void main() {
       await _pumpDashboard(tester);
 
       expect(find.text("Today's progress"), findsWidgets);
-      expect(find.text('Quick start'), findsOneWidget);
-      expect(find.text('Go premium'), findsOneWidget);
-      expect(find.text('Integrations'), findsOneWidget);
+
+      final verticalScrollable = find.byWidgetPredicate(
+        (widget) =>
+            widget is Scrollable && widget.axisDirection == AxisDirection.down,
+      );
+
+      await tester.scrollUntilVisible(
+        find.byKey(const Key('home_section_routines')),
+        300,
+        scrollable: verticalScrollable,
+      );
+      expect(find.text('Your routines'), findsWidgets);
+
+      await tester.scrollUntilVisible(
+        find.byKey(const Key('home_section_integrations')),
+        300,
+        scrollable: verticalScrollable,
+      );
+      expect(find.text('Integrations'), findsWidgets);
+
+      await tester.scrollUntilVisible(
+        find.byKey(const Key('home_section_premium')),
+        300,
+        scrollable: verticalScrollable,
+      );
+      expect(find.text('Go premium'), findsWidgets);
     });
   });
 }
@@ -61,6 +85,16 @@ Future<void> _pumpDashboard(
   Stream<TodaySummary>? todaySummaryStream,
   Future<int>? streakFuture,
 }) async {
+  final view = tester.view;
+  final originalPhysicalSize = view.physicalSize;
+  final originalDevicePixelRatio = view.devicePixelRatio;
+  view.physicalSize = const Size(1080, 1920);
+  view.devicePixelRatio = 1.0;
+  addTearDown(() {
+    view.physicalSize = originalPhysicalSize;
+    view.devicePixelRatio = originalDevicePixelRatio;
+  });
+
   final l10n = AppLocalizations.testing(translations: _testTranslations);
   final settings = Settings()
     ..focusMinutes = 30
