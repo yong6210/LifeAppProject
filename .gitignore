@@ -25,7 +25,9 @@ Library/
 *.ipr
 *.iws
 .idea/
-.vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
 
 ########################################
 # Flutter / Dart
@@ -39,7 +41,8 @@ Library/
 .flutter-plugins-dependencies
 .flutter/
 .metadata
-.fvm/
+.fvm/*
+!.fvm/fvm_config.json
 .packages
 .pub-cache/
 .pub/
