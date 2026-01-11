@@ -39,7 +39,7 @@ class AnalyticsConsent {
 class AnalyticsService {
   AnalyticsService._();
 
-  static final bool _defaultTelemetry = const bool.fromEnvironment(
+  static const bool _defaultTelemetry = bool.fromEnvironment(
     'LIFEAPP_TELEMETRY_DEFAULT',
     defaultValue: false,
   );
@@ -77,7 +77,7 @@ class AnalyticsService {
     _analytics = FirebaseAnalytics.instance;
     _consent =
         initialConsent ??
-        AnalyticsConsent(
+        const AnalyticsConsent(
           analytics: _defaultTelemetry,
           crashlytics: _defaultTelemetry,
           performance: _defaultTelemetry,

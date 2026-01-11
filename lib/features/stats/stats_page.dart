@@ -200,7 +200,7 @@ class _TotalsCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
+                    gradient: const LinearGradient(
                       colors: [AppTheme.eucalyptus, AppTheme.teal],
                     ),
                     borderRadius: BorderRadius.circular(12),
@@ -311,7 +311,7 @@ class _ActivityRingPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = min(size.width, size.height) / 2;
-    final strokeWidth = 12.0;
+    const strokeWidth = 12.0;
 
     // Background ring
     final bgPaint = Paint()
@@ -398,7 +398,7 @@ class _WeeklyHighlightCard extends StatelessWidget {
               width: 56,
               height: 56,
               decoration: BoxDecoration(
-                gradient: LinearGradient(
+                gradient: const LinearGradient(
                   colors: [AppTheme.lime, AppTheme.limeLight],
                 ),
                 shape: BoxShape.circle,

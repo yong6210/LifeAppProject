@@ -23,7 +23,7 @@ void main() {
 
   test('recommends closest predefined running route', () {
     final recommendation = controller.recommendFor(
-      WorkoutNavigatorTarget.distance(
+      const WorkoutNavigatorTarget.distance(
         discipline: WorkoutDiscipline.running,
         intensity: WorkoutIntensity.moderate,
         kilometers: 5.0,
@@ -40,7 +40,7 @@ void main() {
 
   test('falls back to dynamic route when no preset matches', () {
     final recommendation = controller.recommendFor(
-      WorkoutNavigatorTarget.duration(
+      const WorkoutNavigatorTarget.duration(
         discipline: WorkoutDiscipline.cycling,
         intensity: WorkoutIntensity.light,
         minutes: 55,

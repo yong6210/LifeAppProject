@@ -237,7 +237,7 @@ class _ProgressCard extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.auto_awesome,
                         size: 18,
                         color: AppTheme.accentOrange,
@@ -269,7 +269,7 @@ class _ProgressCard extends StatelessWidget {
                 minHeight: 14,
                 value: progress,
                 backgroundColor: AppTheme.accentOrange.withValues(alpha: 0.1),
-                valueColor: AlwaysStoppedAnimation<Color>(
+                valueColor: const AlwaysStoppedAnimation<Color>(
                   AppTheme.accentOrange,
                 ),
               ),

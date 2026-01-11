@@ -37,7 +37,7 @@ class _SmokeAppState extends State<_SmokeApp> {
 
   @override
   Widget build(BuildContext context) {
-    final encoder = const JsonEncoder.withIndent('  ');
+    const encoder = JsonEncoder.withIndent('  ');
     return MaterialApp(
       home: Scaffold(
         body: Center(

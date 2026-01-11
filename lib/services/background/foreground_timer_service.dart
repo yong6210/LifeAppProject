@@ -128,7 +128,7 @@ class ForegroundTimerService {
         showNotification: true,
         playSound: false,
       ),
-      foregroundTaskOptions: ForegroundTaskOptions(
+      foregroundTaskOptions: const ForegroundTaskOptions(
         interval: 60000,
         isOnceEvent: false,
         autoRunOnBoot: false,

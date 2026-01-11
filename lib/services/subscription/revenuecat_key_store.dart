@@ -41,7 +41,7 @@ class RevenueCatKeyStore {
   }
 
   static Future<String?> androidKey() async {
-    final envKey = RevenueCatKeys.androidKey;
+    const envKey = RevenueCatKeys.androidKey;
     if (!_isPlaceholder(envKey)) {
       return envKey;
     }
@@ -51,7 +51,7 @@ class RevenueCatKeyStore {
   }
 
   static Future<String?> iosKey() async {
-    final envKey = RevenueCatKeys.iosKey;
+    const envKey = RevenueCatKeys.iosKey;
     if (!_isPlaceholder(envKey)) {
       return envKey;
     }

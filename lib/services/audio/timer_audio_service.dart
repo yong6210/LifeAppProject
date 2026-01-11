@@ -244,7 +244,7 @@ class TimerAudioService implements TimerAudioEngine {
     }
     const sampleRate = 44100;
     const durationSeconds = 1;
-    final totalSamples = sampleRate * durationSeconds;
+    const totalSamples = sampleRate * durationSeconds;
     final bytes = BytesBuilder();
 
     void writeString(String value) => bytes.add(value.codeUnits);
@@ -296,7 +296,7 @@ class TimerAudioService implements TimerAudioEngine {
 
     const sampleRate = 44100;
     const durationSeconds = 4;
-    final totalSamples = sampleRate * durationSeconds;
+    const totalSamples = sampleRate * durationSeconds;
     final bytes = BytesBuilder();
 
     void writeString(String value) => bytes.add(value.codeUnits);

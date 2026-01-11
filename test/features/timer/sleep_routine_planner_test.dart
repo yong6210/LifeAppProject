@@ -74,7 +74,7 @@ void main() {
         now: DateTime.utc(2025, 1, 3, 20, 0),
       );
 
-      final usage = DailyUsageContext(
+      const usage = DailyUsageContext(
         focusMinutes: 360,
         restMinutes: 10,
         workoutMinutes: 45,

@@ -1203,9 +1203,7 @@ class TimerController extends Notifier<TimerState> {
 
   Future<void> _cancelScheduledNotifications({int? segmentCount}) async {
     var count = segmentCount ?? _currentPlan?.segments.length;
-    if (count == null) {
-      count = state.segments.length;
-    }
+    count ??= state.segments.length;
     await _notifications.cancelNotificationRange(
       _notificationIdBase,
       count * 10 + 10,

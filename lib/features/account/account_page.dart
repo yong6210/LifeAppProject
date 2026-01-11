@@ -131,7 +131,7 @@ class AccountPage extends ConsumerWidget {
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
+                        gradient: const LinearGradient(
                           colors: [AppTheme.teal, AppTheme.eucalyptus],
                         ),
                         borderRadius: BorderRadius.circular(12),

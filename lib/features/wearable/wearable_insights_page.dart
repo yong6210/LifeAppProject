@@ -97,7 +97,7 @@ class _SummaryView extends ConsumerWidget {
             const SizedBox(width: 16),
             Expanded(
               child: ShaderMask(
-                shaderCallback: (bounds) => LinearGradient(
+                shaderCallback: (bounds) => const LinearGradient(
                   colors: [
                     AppTheme.electricViolet,
                     AppTheme.teal,

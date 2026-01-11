@@ -85,7 +85,7 @@ class _JournalPageState extends ConsumerState<JournalPage> {
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
+                        gradient: const LinearGradient(
                           colors: [AppTheme.teal, AppTheme.eucalyptus],
                         ),
                         borderRadius: BorderRadius.circular(12),
@@ -248,7 +248,7 @@ class _JournalPageState extends ConsumerState<JournalPage> {
 
   void _handleTimelineTap(JournalEntry entry, List<JournalEntry> allEntries) {
     _handleDateSelected(entry.date);
-    final engine = const LifeBuddyCommentEngine();
+    const engine = LifeBuddyCommentEngine();
     final comment = engine.generate(allEntries);
     final suggestions = _suggestionsForEntry(entry);
     _showEntryDetailSheet(entry, comment, suggestions);
@@ -607,9 +607,9 @@ class _JournalCalendar extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 12),
-                Row(
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
+                  children: [
                     _CalendarWeekdayLabel('일'),
                     _CalendarWeekdayLabel('월'),
                     _CalendarWeekdayLabel('화'),
@@ -1416,7 +1416,7 @@ class _BuddyCommentCard extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _BuddyAvatar(emoji: '✨'),
+                const _BuddyAvatar(emoji: '✨'),
                 const SizedBox(width: 16),
                 Expanded(
                   child: Text(

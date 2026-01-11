@@ -13,7 +13,7 @@ import 'package:life_app/services/audio/sleep_sound_models.dart';
 Future<void> main(List<String> args) async {
   final argMap = _parseArgs(args);
   final outputPath = argMap['out'] ?? 'build/sleep_summary_simulated.json';
-  final sampleInterval = const Duration(milliseconds: 400);
+  const sampleInterval = Duration(milliseconds: 400);
 
   final session = _SimulatedSession(
     segments: [

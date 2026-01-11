@@ -263,7 +263,7 @@ class NotificationService {
     }
 
     final tzDateTime = tz.TZDateTime.from(scheduled, tz.local);
-    final details = NotificationDetails(
+    const details = NotificationDetails(
       android: AndroidNotificationDetails(
         'journal_reminder_channel',
         'Journal Reminder',
@@ -272,8 +272,8 @@ class NotificationService {
         priority: Priority.defaultPriority,
         category: AndroidNotificationCategory.reminder,
       ),
-      iOS: const DarwinNotificationDetails(),
-      macOS: const DarwinNotificationDetails(),
+      iOS: DarwinNotificationDetails(),
+      macOS: DarwinNotificationDetails(),
     );
 
     await _plugin.zonedSchedule(

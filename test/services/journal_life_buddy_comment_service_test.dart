@@ -4,7 +4,7 @@ import 'package:life_app/features/journal/journal_entry.dart';
 import 'package:life_app/services/journal/life_buddy_comment_service.dart';
 
 void main() {
-  final engine = const LifeBuddyCommentEngine();
+  const engine = LifeBuddyCommentEngine();
 
   JournalEntry entry({
     required String id,

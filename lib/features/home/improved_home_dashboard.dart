@@ -31,8 +31,8 @@ class ImprovedHomeDashboard extends ConsumerWidget {
 
     // 목표 설정
     final focusGoal = (settings?.focusMinutes ?? 25);
-    final workoutGoal = 30;
-    final sleepGoalHours = 8;
+    const workoutGoal = 30;
+    const sleepGoalHours = 8;
 
     // 진행률
     final focusProgress = ((todaySummary.focus / focusGoal) * 100).clamp(

@@ -36,15 +36,15 @@ Future<void> pumpSleepCard(
   await tester.pumpWidget(
     ProviderScope(
       overrides: [summaryOverride],
-      child: MaterialApp(
-        localizationsDelegates: const [
+      child: const MaterialApp(
+        localizationsDelegates: [
           _TestAppLocalizationsDelegate(),
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
         supportedLocales: AppLocalizations.supportedLocales,
-        home: const Scaffold(
+        home: Scaffold(
           body: Center(
             child: SleepAnalysisResultCard(),
           ),

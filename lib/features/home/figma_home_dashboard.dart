@@ -46,9 +46,9 @@ class FigmaHomeDashboard extends ConsumerWidget {
 
     // Calculate progress
     final focusGoal = (settings?.focusMinutes ?? 25);
-    final workoutGoal = 30;
-    final sleepGoalHours = 8;
-    final sleepGoalMinutes = sleepGoalHours * 60;
+    const workoutGoal = 30;
+    const sleepGoalHours = 8;
+    const sleepGoalMinutes = sleepGoalHours * 60;
 
     final focusProgress =
         ((todaySummary.focus / focusGoal) * 100).clamp(0.0, 100.0);
@@ -69,16 +69,16 @@ class FigmaHomeDashboard extends ConsumerWidget {
 
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              const Color(0xFF0A0E14),
-              const Color(0xFF0F1419),
-              const Color(0xFF141B2D),
+              Color(0xFF0A0E14),
+              Color(0xFF0F1419),
+              Color(0xFF141B2D),
             ],
-            stops: const [0.0, 0.4, 1.0],
+            stops: [0.0, 0.4, 1.0],
           ),
         ),
         child: Stack(
@@ -261,7 +261,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                   height: 16,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    gradient: LinearGradient(
+                    gradient: const LinearGradient(
                       colors: [AppTheme.eucalyptus, AppTheme.teal],
                     ),
                     boxShadow: [
@@ -508,7 +508,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                   width: 48,
                   height: 48,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
+                    gradient: const LinearGradient(
                       colors: [AppTheme.teal, AppTheme.tealLight],
                     ),
                     borderRadius: BorderRadius.circular(16),
@@ -616,7 +616,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                   width: 48,
                   height: 48,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
+                    gradient: const LinearGradient(
                       colors: [AppTheme.coral, AppTheme.coralLight],
                     ),
                     borderRadius: BorderRadius.circular(16),
@@ -721,7 +721,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
               width: 56,
               height: 56,
               decoration: BoxDecoration(
-                gradient: LinearGradient(
+                gradient: const LinearGradient(
                   colors: [
                     AppTheme.electricViolet,
                     AppTheme.electricVioletLight
@@ -841,7 +841,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                gradient: LinearGradient(
+                gradient: const LinearGradient(
                   colors: [AppTheme.eucalyptus, AppTheme.teal],
                 ),
                 borderRadius: BorderRadius.circular(16),
@@ -1018,7 +1018,7 @@ class FigmaHomeDashboard extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.play_circle_outline,
                     color: Colors.white,
                     size: 24,

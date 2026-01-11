@@ -195,7 +195,7 @@ class AppTheme {
             letterSpacing: 0,
           ),
           // iOS Body (17px, regular) -> bodyLarge
-          bodyLarge: TextStyle(
+          bodyLarge: const TextStyle(
             fontSize: 17,
             fontWeight: FontWeight.w400,
             height: 1.47,
@@ -203,7 +203,7 @@ class AppTheme {
             color: _neutralSubtitleLight,
           ),
           // iOS Callout (16px, regular) -> bodyMedium
-          bodyMedium: TextStyle(
+          bodyMedium: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w400,
             height: 1.5,
@@ -211,7 +211,7 @@ class AppTheme {
             color: _neutralSubtitleLight,
           ),
           // iOS Footnote (13px, regular) -> bodySmall
-          bodySmall: TextStyle(
+          bodySmall: const TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w400,
             height: 1.38,
@@ -473,7 +473,7 @@ class AppTheme {
             color: Colors.white,
           ),
           // iOS Body (17px, regular) -> bodyLarge
-          bodyLarge: TextStyle(
+          bodyLarge: const TextStyle(
             fontSize: 17,
             fontWeight: FontWeight.w400,
             height: 1.47,
@@ -481,7 +481,7 @@ class AppTheme {
             color: _neutralSubtitleDark,
           ),
           // iOS Callout (16px, regular) -> bodyMedium
-          bodyMedium: TextStyle(
+          bodyMedium: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w400,
             height: 1.5,
@@ -489,7 +489,7 @@ class AppTheme {
             color: _neutralSubtitleDark,
           ),
           // iOS Footnote (13px, regular) -> bodySmall
-          bodySmall: TextStyle(
+          bodySmall: const TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w400,
             height: 1.38,

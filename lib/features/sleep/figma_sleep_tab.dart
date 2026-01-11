@@ -461,7 +461,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                             ),
                           ),
                           if (isSelected)
-                            Icon(
+                            const Icon(
                               Icons.check_circle_rounded,
                               color: AppTheme.electricViolet,
                             ),
@@ -613,7 +613,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.nightlight_round,
                             size: 18,
                             color: AppTheme.electricViolet,
@@ -627,7 +627,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                             ),
                           ),
                           const SizedBox(width: 4),
-                          Icon(
+                          const Icon(
                             Icons.auto_awesome_rounded,
                             size: 14,
                             color: Colors.pink,
@@ -637,7 +637,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                     ),
                     // Title
                     ShaderMask(
-                      shaderCallback: (bounds) => LinearGradient(
+                      shaderCallback: (bounds) => const LinearGradient(
                         colors: [
                           AppTheme.electricViolet,
                           Colors.pink,
@@ -749,7 +749,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                   child: Container(
                                     height: 16,
                                     decoration: BoxDecoration(
-                                      gradient: LinearGradient(
+                                      gradient: const LinearGradient(
                                         colors: [
                                           AppTheme.electricViolet,
                                           Colors.pink,
@@ -801,7 +801,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                     padding: const EdgeInsets.symmetric(vertical: 12),
                                     decoration: BoxDecoration(
                                       gradient: !_useTargetTime
-                                          ? LinearGradient(
+                                          ? const LinearGradient(
                                               colors: [
                                                 AppTheme.electricViolet,
                                                 Colors.pink,
@@ -834,7 +834,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                     padding: const EdgeInsets.symmetric(vertical: 12),
                                     decoration: BoxDecoration(
                                       gradient: _useTargetTime
-                                          ? LinearGradient(
+                                          ? const LinearGradient(
                                               colors: [
                                                 AppTheme.electricViolet,
                                                 Colors.pink,
@@ -1563,7 +1563,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                   Colors.grey.shade700,
                                 ],
                               )
-                            : LinearGradient(
+                            : const LinearGradient(
                                 colors: [
                                   AppTheme.electricViolet,
                                   Colors.pink,

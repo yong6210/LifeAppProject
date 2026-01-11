@@ -68,7 +68,7 @@ class MyApp extends ConsumerWidget {
       builder: (lightDynamic, darkDynamic) {
         return MaterialApp(
           onGenerateTitle: (context) => context.l10n.tr('app_title'),
-          localizationsDelegates: [
+          localizationsDelegates: const [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
@@ -165,7 +165,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
       }
     });
     final l10n = context.l10n;
-    final tabs = const [HomeDashboardTab(), MorePage(), AccountPage()];
+    const tabs = [HomeDashboardTab(), MorePage(), AccountPage()];
 
     // iOS-style tab bar items with Life Buddy colors
     final tabItems = [

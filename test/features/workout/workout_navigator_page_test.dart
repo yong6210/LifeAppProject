@@ -29,11 +29,11 @@ class _TestAppLocalizationsDelegate
 }
 
 MaterialApp _buildApp() {
-  return MaterialApp(
-    home: const WorkoutNavigatorPage(),
-    locale: const Locale('en'),
+  return const MaterialApp(
+    home: WorkoutNavigatorPage(),
+    locale: Locale('en'),
     supportedLocales: AppLocalizations.supportedLocales,
-    localizationsDelegates: const [
+    localizationsDelegates: [
       _TestAppLocalizationsDelegate(),
       GlobalMaterialLocalizations.delegate,
       GlobalCupertinoLocalizations.delegate,

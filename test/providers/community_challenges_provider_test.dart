@@ -144,7 +144,7 @@ void main() {
             privacy: ChallengePrivacy.private,
             status: ChallengeStatus.active,
             ownerId: 'test_user_id',
-            members: [],
+            members: const [],
           ),
         ];
         fakeRepository.onGetChallenges = (userId) {

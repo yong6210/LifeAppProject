@@ -36,7 +36,7 @@ void main() {
             GlobalCupertinoLocalizations.delegate,
           ],
           supportedLocales: const [Locale('en')],
-          home: PaywallPage(),
+          home: const PaywallPage(),
         ),
       ),
     );

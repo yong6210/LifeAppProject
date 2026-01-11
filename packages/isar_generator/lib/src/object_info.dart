@@ -10,8 +10,8 @@ class ObjectInfo {
   ObjectInfo({
     required this.dartName,
     required this.isarName,
-    this.accessor,
     required List<ObjectProperty> properties,
+    this.accessor,
     this.embeddedDartNames = const {},
     this.indexes = const [],
     this.links = const [],
@@ -59,7 +59,6 @@ class ObjectProperty {
     required this.dartName,
     required this.isarName,
     required this.typeClassName,
-    this.targetIsarName,
     required this.isarType,
     required this.isId,
     required this.enumMap,
@@ -67,9 +66,10 @@ class ObjectProperty {
     required this.defaultEnumElement,
     required this.nullable,
     required this.elementNullable,
-    this.userDefaultValue,
     required this.deserialize,
     required this.assignable,
+    this.targetIsarName,
+    this.userDefaultValue,
     this.constructorPosition,
   });
 
@@ -184,10 +184,10 @@ class ObjectLink {
   const ObjectLink({
     required this.dartName,
     required this.isarName,
-    this.targetLinkIsarName,
     required this.targetCollectionDartName,
     required this.targetCollectionIsarName,
     required this.isSingle,
+    this.targetLinkIsarName,
   });
 
   final String dartName;

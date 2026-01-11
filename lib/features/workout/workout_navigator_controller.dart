@@ -333,9 +333,9 @@ class WorkoutNavigatorController extends Notifier<WorkoutNavigatorState> {
 - Hold your target effort through the middle of the session.
 - Finish with a short cooldown walk or spin.''',
       segments: [
-        WorkoutNavigatorSegment(
+        const WorkoutNavigatorSegment(
           startOffset: Duration.zero,
-          endOffset: const Duration(minutes: 3),
+          endOffset: Duration(minutes: 3),
           focus: 'Warm-up',
           cue: 'Keep the opening minutes relaxed and let breathing settle.',
         ),

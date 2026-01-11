@@ -18,7 +18,6 @@ import 'package:life_app/services/permission_service.dart';
 import 'package:life_app/services/subscription/revenuecat_service.dart';
 import 'package:life_app/services/audio/sleep_sound_catalog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:riverpod/src/framework.dart' show Override;
 
 late AppLocalizations _testLocalizations;
 
@@ -132,7 +131,8 @@ class _FakeTimerController extends TimerController {
 }
 
 class _SilentAnnouncer extends TimerAnnouncer {
-  _SilentAnnouncer() : super(sendAnnouncement: (message, direction) async {});
+  _SilentAnnouncer()
+      : super(sendAnnouncement: (_, __, ___) async {});
 }
 
 SleepSoundCatalog _emptyCatalog() {
@@ -225,16 +225,16 @@ void main() {
             timerAnnouncerProvider.overrideWithValue(_SilentAnnouncer()),
             ...extraOverrides,
           ],
-          child: MaterialApp(
-            localizationsDelegates: const [
+          child: const MaterialApp(
+            localizationsDelegates: [
               _TestAppLocalizationsDelegate(),
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
-            locale: const Locale('en'),
+            locale: Locale('en'),
             supportedLocales: AppLocalizations.supportedLocales,
-            home: const TimerPage(useForegroundTask: false),
+            home: TimerPage(useForegroundTask: false),
           ),
         ),
       );

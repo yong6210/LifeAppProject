@@ -245,7 +245,7 @@ class TimerPlanFactory {
     final totalSecondsTarget = (settings.workoutMinutes * 60).clamp(60, 3600);
     const activeSeconds = 45;
     const restSeconds = 15;
-    final cycleSeconds = activeSeconds + restSeconds;
+    const cycleSeconds = activeSeconds + restSeconds;
     var rounds = (totalSecondsTarget / cycleSeconds).round();
     if (rounds < 1) rounds = 1;
     if (rounds > 20) rounds = 20;

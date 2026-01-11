@@ -40,14 +40,14 @@ class PremiumRoutinePlanBuilder {
   static const _premiumProfile = 'premium_routine';
 
   static final Map<String, PremiumRoutineDefinition> _definitions = {
-    'focus_deep_work': PremiumRoutineDefinition(
+    'focus_deep_work': const PremiumRoutineDefinition(
       id: 'focus_deep_work',
       mode: PremiumRoutineMode.focus,
       segments: [
         PremiumRoutineSegmentDefinition(
           id: 'warmup',
           type: 'rest',
-          duration: const Duration(minutes: 5),
+          duration: Duration(minutes: 5),
           localizationKey: 'premium_focus_deep_warmup_label',
           soundProfile: 'breath',
           recordSession: false,
@@ -55,7 +55,7 @@ class PremiumRoutinePlanBuilder {
         PremiumRoutineSegmentDefinition(
           id: 'main',
           type: 'focus',
-          duration: const Duration(minutes: 40),
+          duration: Duration(minutes: 40),
           localizationKey: 'premium_focus_deep_main_label',
           soundProfile: _premiumProfile,
           recordSession: true,
@@ -63,21 +63,21 @@ class PremiumRoutinePlanBuilder {
         PremiumRoutineSegmentDefinition(
           id: 'cooldown',
           type: 'rest',
-          duration: const Duration(minutes: 5),
+          duration: Duration(minutes: 5),
           localizationKey: 'premium_focus_deep_cooldown_label',
           soundProfile: 'calm',
           recordSession: false,
         ),
       ],
     ),
-    'focus_flow_cycle': PremiumRoutineDefinition(
+    'focus_flow_cycle': const PremiumRoutineDefinition(
       id: 'focus_flow_cycle',
       mode: PremiumRoutineMode.focus,
       segments: [
         PremiumRoutineSegmentDefinition(
           id: 'activate',
           type: 'rest',
-          duration: const Duration(minutes: 5),
+          duration: Duration(minutes: 5),
           localizationKey: 'premium_focus_flow_activate_label',
           soundProfile: 'breath',
           recordSession: false,
@@ -85,7 +85,7 @@ class PremiumRoutinePlanBuilder {
         PremiumRoutineSegmentDefinition(
           id: 'cycle1_focus',
           type: 'focus',
-          duration: const Duration(minutes: 10),
+          duration: Duration(minutes: 10),
           localizationKey: 'premium_focus_flow_focus_label',
           localizationArgs: {'cycle': '1'},
           soundProfile: _premiumProfile,
@@ -93,7 +93,7 @@ class PremiumRoutinePlanBuilder {
         PremiumRoutineSegmentDefinition(
           id: 'cycle1_reset',
           type: 'rest',
-          duration: const Duration(minutes: 2),
+          duration: Duration(minutes: 2),
           localizationKey: 'premium_focus_flow_reset_label',
           localizationArgs: {'cycle': '1'},
           soundProfile: 'rest',
@@ -102,7 +102,7 @@ class PremiumRoutinePlanBuilder {
         PremiumRoutineSegmentDefinition(
           id: 'cycle2_focus',
           type: 'focus',
-          duration: const Duration(minutes: 10),
+          duration: Duration(minutes: 10),
           localizationKey: 'premium_focus_flow_focus_label',
           localizationArgs: {'cycle': '2'},
           soundProfile: _premiumProfile,
@@ -110,7 +110,7 @@ class PremiumRoutinePlanBuilder {
         PremiumRoutineSegmentDefinition(
           id: 'cycle2_reset',
           type: 'rest',
-          duration: const Duration(minutes: 2),
+          duration: Duration(minutes: 2),
           localizationKey: 'premium_focus_flow_reset_label',
           localizationArgs: {'cycle': '2'},
           soundProfile: 'rest',
@@ -119,7 +119,7 @@ class PremiumRoutinePlanBuilder {
         PremiumRoutineSegmentDefinition(
           id: 'cycle3_focus',
           type: 'focus',
-          duration: const Duration(minutes: 10),
+          duration: Duration(minutes: 10),
           localizationKey: 'premium_focus_flow_focus_label',
           localizationArgs: {'cycle': '3'},
           soundProfile: _premiumProfile,
@@ -127,21 +127,21 @@ class PremiumRoutinePlanBuilder {
         PremiumRoutineSegmentDefinition(
           id: 'cycle3_calm',
           type: 'rest',
-          duration: const Duration(minutes: 6),
+          duration: Duration(minutes: 6),
           localizationKey: 'premium_focus_flow_calm_label',
           soundProfile: 'calm',
           recordSession: false,
         ),
       ],
     ),
-    'rest_mindful_break': PremiumRoutineDefinition(
+    'rest_mindful_break': const PremiumRoutineDefinition(
       id: 'rest_mindful_break',
       mode: PremiumRoutineMode.rest,
       segments: [
         PremiumRoutineSegmentDefinition(
           id: 'arrive',
           type: 'rest',
-          duration: const Duration(minutes: 5),
+          duration: Duration(minutes: 5),
           localizationKey: 'premium_rest_mindful_arrive_label',
           soundProfile: 'breath',
           recordSession: false,
@@ -149,28 +149,28 @@ class PremiumRoutinePlanBuilder {
         PremiumRoutineSegmentDefinition(
           id: 'guided',
           type: 'rest',
-          duration: const Duration(minutes: 15),
+          duration: Duration(minutes: 15),
           localizationKey: 'premium_rest_mindful_guided_label',
           soundProfile: _premiumProfile,
         ),
         PremiumRoutineSegmentDefinition(
           id: 'integrate',
           type: 'rest',
-          duration: const Duration(minutes: 10),
+          duration: Duration(minutes: 10),
           localizationKey: 'premium_rest_mindful_integrate_label',
           soundProfile: 'calm',
           recordSession: false,
         ),
       ],
     ),
-    'rest_guided_unwind': PremiumRoutineDefinition(
+    'rest_guided_unwind': const PremiumRoutineDefinition(
       id: 'rest_guided_unwind',
       mode: PremiumRoutineMode.rest,
       segments: [
         PremiumRoutineSegmentDefinition(
           id: 'release',
           type: 'rest',
-          duration: const Duration(minutes: 5),
+          duration: Duration(minutes: 5),
           localizationKey: 'premium_rest_guided_release_label',
           soundProfile: 'breath',
           recordSession: false,
@@ -178,28 +178,28 @@ class PremiumRoutinePlanBuilder {
         PremiumRoutineSegmentDefinition(
           id: 'journey',
           type: 'rest',
-          duration: const Duration(minutes: 15),
+          duration: Duration(minutes: 15),
           localizationKey: 'premium_rest_guided_journey_label',
           soundProfile: _premiumProfile,
         ),
         PremiumRoutineSegmentDefinition(
           id: 'reflection',
           type: 'rest',
-          duration: const Duration(minutes: 5),
+          duration: Duration(minutes: 5),
           localizationKey: 'premium_rest_guided_reflection_label',
           soundProfile: 'calm',
           recordSession: false,
         ),
       ],
     ),
-    'sleep_lunar_waves': PremiumRoutineDefinition(
+    'sleep_lunar_waves': const PremiumRoutineDefinition(
       id: 'sleep_lunar_waves',
       mode: PremiumRoutineMode.sleep,
       segments: [
         PremiumRoutineSegmentDefinition(
           id: 'prepare',
           type: 'sleep',
-          duration: const Duration(minutes: 8),
+          duration: Duration(minutes: 8),
           localizationKey: 'premium_sleep_lunar_prepare_label',
           soundProfile: 'sleep_prepare',
           recordSession: false,
@@ -207,7 +207,7 @@ class PremiumRoutinePlanBuilder {
         PremiumRoutineSegmentDefinition(
           id: 'drift',
           type: 'sleep',
-          duration: const Duration(minutes: 22),
+          duration: Duration(minutes: 22),
           localizationKey: 'premium_sleep_lunar_drift_label',
           soundProfile: _premiumProfile,
           recordSession: true,
@@ -216,21 +216,21 @@ class PremiumRoutinePlanBuilder {
         PremiumRoutineSegmentDefinition(
           id: 'deep',
           type: 'sleep',
-          duration: const Duration(minutes: 10),
+          duration: Duration(minutes: 10),
           localizationKey: 'premium_sleep_lunar_deep_label',
           soundProfile: 'sleep',
           recordSession: true,
         ),
       ],
     ),
-    'sleep_breath_release': PremiumRoutineDefinition(
+    'sleep_breath_release': const PremiumRoutineDefinition(
       id: 'sleep_breath_release',
       mode: PremiumRoutineMode.sleep,
       segments: [
         PremiumRoutineSegmentDefinition(
           id: 'breath',
           type: 'sleep',
-          duration: const Duration(minutes: 12),
+          duration: Duration(minutes: 12),
           localizationKey: 'premium_sleep_release_breath_label',
           soundProfile: _premiumProfile,
           recordSession: false,
@@ -238,7 +238,7 @@ class PremiumRoutinePlanBuilder {
         PremiumRoutineSegmentDefinition(
           id: 'unwind',
           type: 'sleep',
-          duration: const Duration(minutes: 8),
+          duration: Duration(minutes: 8),
           localizationKey: 'premium_sleep_release_unwind_label',
           soundProfile: 'sleep_relax',
           recordSession: false,
@@ -246,7 +246,7 @@ class PremiumRoutinePlanBuilder {
         PremiumRoutineSegmentDefinition(
           id: 'drift',
           type: 'sleep',
-          duration: const Duration(minutes: 10),
+          duration: Duration(minutes: 10),
           localizationKey: 'premium_sleep_release_drift_label',
           soundProfile: 'sleep',
           recordSession: true,

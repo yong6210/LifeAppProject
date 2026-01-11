@@ -432,10 +432,10 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.psychology_rounded,
                             size: 18,
-                            color: const Color(0xFFFF9A56),
+                            color: Color(0xFFFF9A56),
                           ),
                           const SizedBox(width: 8),
                           Text(
@@ -446,7 +446,7 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                             ),
                           ),
                           const SizedBox(width: 4),
-                          Icon(
+                          const Icon(
                             Icons.auto_awesome_rounded,
                             size: 14,
                             color: AppTheme.lime,
@@ -456,10 +456,10 @@ class _FigmaTimerTabState extends ConsumerState<FigmaTimerTab>
                     ),
                     // Preset name
                     ShaderMask(
-                      shaderCallback: (bounds) => LinearGradient(
+                      shaderCallback: (bounds) => const LinearGradient(
                         colors: [
-                          const Color(0xFFFF9A56),
-                          const Color(0xFFFFD93D),
+                          Color(0xFFFF9A56),
+                          Color(0xFFFFD93D),
                         ],
                       ).createShader(bounds),
                       child: Text(

@@ -40,7 +40,7 @@ void main() {
     test('computes correlations and averages', () {
       final start = DateTime(2025, 1, 1);
       final endExclusive = DateTime(2025, 1, 4);
-      final deviceId = 'device';
+      const deviceId = 'device';
       final summaries = [
         _summary(
           DateTime(2025, 1, 1),

@@ -37,7 +37,7 @@ extension ClassElementX on ClassElement {
   bool get hasZeroArgsConstructor {
     return constructors.any(
       (ConstructorElement c) =>
-          c.isPublic && !c.formalParameters.any((param) => param.isRequired),
+          c.isPublic && !c.parameters.any((param) => param.isRequired),
     );
   }
 
@@ -59,14 +59,13 @@ extension ClassElementX on ClassElement {
       return element.isPublic &&
           !element.isStatic &&
           !_ignoreChecker.hasAnnotationOf(element.nonSynthetic) &&
-          name != null &&
           !ignoreFields.contains(name);
     });
 
     final seen = <String>{};
     return [
       for (final element in filtered)
-        if (seen.add(element.name!)) element,
+        if (seen.add(element.name)) element,
     ];
   }
 

@@ -135,10 +135,10 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       borderRadius: 20,
       gradient: isSelected
-          ? LinearGradient(
+          ? const LinearGradient(
               colors: [
                 AppTheme.coral,
-                const Color(0xFFFFA726),
+                Color(0xFFFFA726),
               ],
             )
           : null,
@@ -284,7 +284,7 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.local_fire_department_rounded,
                             size: 18,
                             color: AppTheme.coral,
@@ -298,18 +298,18 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                             ),
                           ),
                           const SizedBox(width: 4),
-                          Icon(
+                          const Icon(
                             Icons.bolt,
                             size: 14,
-                            color: const Color(0xFFFFA726),
+                            color: Color(0xFFFFA726),
                           ),
                         ],
                       ),
                     ),
                     // Title
                     ShaderMask(
-                      shaderCallback: (bounds) => LinearGradient(
-                        colors: [AppTheme.coral, const Color(0xFFFFA726)],
+                      shaderCallback: (bounds) => const LinearGradient(
+                        colors: [AppTheme.coral, Color(0xFFFFA726)],
                       ).createShader(bounds),
                       child: Text(
                         l10n.tr('figma_workout_title'),
@@ -427,10 +427,10 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                   child: Container(
                                     height: 16,
                                     decoration: BoxDecoration(
-                                      gradient: LinearGradient(
+                                      gradient: const LinearGradient(
                                         colors: [
                                           AppTheme.coral,
-                                          const Color(0xFFFFA726),
+                                          Color(0xFFFFA726),
                                         ],
                                       ),
                                       borderRadius: BorderRadius.circular(12),
@@ -482,10 +482,10 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                 Container(
                                   padding: const EdgeInsets.all(8),
                                   decoration: BoxDecoration(
-                                    gradient: LinearGradient(
+                                    gradient: const LinearGradient(
                                       colors: [
                                         AppTheme.coral,
-                                        const Color(0xFFFFA726),
+                                        Color(0xFFFFA726),
                                       ],
                                     ),
                                     borderRadius: BorderRadius.circular(8),
@@ -563,7 +563,7 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                 backgroundColor: Colors.white.withValues(
                                   alpha: 0.2,
                                 ),
-                                valueColor: AlwaysStoppedAnimation<Color>(
+                                valueColor: const AlwaysStoppedAnimation<Color>(
                                   AppTheme.coral,
                                 ),
                               ),
@@ -792,7 +792,7 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                               child: Row(
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
-                                                  Icon(
+                                                  const Icon(
                                                     Icons.favorite_rounded,
                                                     size: 14,
                                                     color: AppTheme.coral,
@@ -866,10 +866,10 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                                 decoration: BoxDecoration(
                                                   gradient:
                                                       index < intensityLevel
-                                                      ? LinearGradient(
+                                                      ? const LinearGradient(
                                                           colors: [
                                                             AppTheme.coral,
-                                                            const Color(
+                                                            Color(
                                                               0xFFFFA726,
                                                             ),
                                                           ],
@@ -903,10 +903,10 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                               Container(
                                 height: 56,
                                 decoration: BoxDecoration(
-                                  gradient: LinearGradient(
+                                  gradient: const LinearGradient(
                                     colors: [
                                       AppTheme.coral,
-                                      const Color(0xFFFFA726),
+                                      Color(0xFFFFA726),
                                     ],
                                   ),
                                   borderRadius: BorderRadius.circular(16),

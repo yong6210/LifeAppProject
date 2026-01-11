@@ -100,7 +100,7 @@ void main() {
     isExpired: false,
   );
 
-  final sampleInventory = LifeBuddyInventory(
+  const sampleInventory = LifeBuddyInventory(
     ownedDecorIds: {'bed_basic', 'desk_focus'},
     coins: 250,
     isPremiumUser: true,

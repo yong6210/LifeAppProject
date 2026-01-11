@@ -1,7 +1,7 @@
 import 'package:life_app/features/workout/models/workout_navigator_models.dart';
 
 final List<WorkoutNavigatorRoute> workoutNavigatorRoutes = [
-  WorkoutNavigatorRoute(
+  const WorkoutNavigatorRoute(
     id: 'run_park_loop',
     title: 'Park Loop (5 km)',
     description:
@@ -46,7 +46,7 @@ final List<WorkoutNavigatorRoute> workoutNavigatorRoutes = [
 - Settle into a steady tempo for 20 minutes.
 - Finish with a 7 minute push, then walk to cool down.''',
   ),
-  WorkoutNavigatorRoute(
+  const WorkoutNavigatorRoute(
     id: 'run_river_trail',
     title: 'River Trail Cruise (8 km)',
     description:
@@ -91,7 +91,7 @@ final List<WorkoutNavigatorRoute> workoutNavigatorRoutes = [
 - Maintain conversation pace along the river loop.
 - Cool down with a relaxed jog and finish walking.''',
   ),
-  WorkoutNavigatorRoute(
+  const WorkoutNavigatorRoute(
     id: 'run_neighborhood_easy',
     title: 'Neighborhood Shake-out (3 km)',
     description:
@@ -131,7 +131,7 @@ final List<WorkoutNavigatorRoute> workoutNavigatorRoutes = [
 - Jog easily around your block, focusing on relaxed strides.
 - Finish with a short walk and light stretching.''',
   ),
-  WorkoutNavigatorRoute(
+  const WorkoutNavigatorRoute(
     id: 'ride_greenbelt',
     title: 'Greenbelt Spin (12 km)',
     description:
@@ -172,7 +172,7 @@ final List<WorkoutNavigatorRoute> workoutNavigatorRoutes = [
 - Maintain steady effort through rolling hills.
 - Cool down with an easy spin back to the start.''',
   ),
-  WorkoutNavigatorRoute(
+  const WorkoutNavigatorRoute(
     id: 'ride_commute_intervals',
     title: 'City Commute Sprint (18 km)',
     description:

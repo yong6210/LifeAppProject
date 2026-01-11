@@ -183,7 +183,7 @@ class HealthWearableRepository implements WearableRepository {
     }
     _authorized = false;
     _poller?.cancel();
-    final summary = const WearableSummary.disconnected();
+    const summary = WearableSummary.disconnected();
     _emit(summary);
     return summary;
   }

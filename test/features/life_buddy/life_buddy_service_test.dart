@@ -36,7 +36,7 @@ void main() {
 
   group('LifeBuddyService buffs', () {
     test('aggregates buffs from equipped decor', () {
-      final loadout = RoomLoadout(
+      const loadout = RoomLoadout(
         equipped: {
           DecorSlot.bed: 'bed_basic',
           DecorSlot.accent: 'plant_companion',
@@ -48,7 +48,7 @@ void main() {
     });
 
     test('effectiveMultiplier returns base plus aggregate', () {
-      final loadout = RoomLoadout(
+      const loadout = RoomLoadout(
         equipped: {
           DecorSlot.desk: 'desk_focus',
           DecorSlot.wall: 'poster_motivation',

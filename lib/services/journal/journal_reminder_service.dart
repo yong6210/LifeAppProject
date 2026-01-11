@@ -23,9 +23,9 @@ class JournalReminderSettings {
   }
 
   factory JournalReminderSettings.defaults() {
-    return JournalReminderSettings(
+    return const JournalReminderSettings(
       enabled: false,
-      timeOfDay: const TimeOfDay(hour: _defaultHour, minute: 0),
+      timeOfDay: TimeOfDay(hour: _defaultHour, minute: 0),
     );
   }
 }

@@ -265,8 +265,8 @@ class SleepSoundAnalyzer {
         : startTime.difference(_startTime!);
     final endTime = DateTime.now();
     final rawDuration = endTime.difference(startTime);
-    final minDuration = const Duration(milliseconds: 400);
-    final maxDuration = const Duration(minutes: 5);
+    const minDuration = Duration(milliseconds: 400);
+    const maxDuration = Duration(minutes: 5);
     final duration = rawDuration < minDuration
         ? minDuration
         : (rawDuration > maxDuration ? maxDuration : rawDuration);
