@@ -142,9 +142,9 @@ class RevenueCatController extends AsyncNotifier<RevenueCatState?> {
         'RevenueCat purchase unsupported on this platform',
       );
     }
-    final customerInfo = await Purchases.purchasePackage(package);
+    final result = await Purchases.purchase(PurchaseParams.package(package));
     await refreshCustomerInfo();
-    return customerInfo;
+    return result.customerInfo;
   }
 
   Future<bool> _configureIfNeeded(String? appUserId) async {

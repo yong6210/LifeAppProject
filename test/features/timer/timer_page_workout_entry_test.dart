@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:riverpod/misc.dart' show Override;
 import 'package:life_app/features/timer/timer_controller.dart';
 import 'package:life_app/features/timer/timer_page.dart';
 import 'package:life_app/features/timer/timer_plan.dart';
