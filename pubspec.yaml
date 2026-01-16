@@ -79,5 +79,9 @@ dependency_overrides:
   analyzer: ^6.4.1
   _fe_analyzer_shared: ^67.0.0
   dart_style: ^2.3.6
+  firebase_core:
+    path: packages/firebase_core
+  firebase_auth:
+    path: packages/firebase_auth
   flutter_native_timezone:
     path: packages/flutter_native_timezone

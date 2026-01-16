@@ -476,10 +476,9 @@ packages:
   firebase_auth:
     dependency: "direct main"
     description:
-      name: firebase_auth
-      sha256: "060a9bfc9877538dfdc69f2fdc1e0bf068439a7e9f22da6513f7b9bde308bb93"
-      url: "https://pub.dev"
-    source: hosted
+      path: "packages/firebase_auth"
+      relative: true
+    source: path
     version: "6.1.3"
   firebase_auth_mocks:
     dependency: "direct dev"
@@ -508,10 +507,9 @@ packages:
   firebase_core:
     dependency: "direct main"
     description:
-      name: firebase_core
-      sha256: "29cfa93c771d8105484acac340b5ea0835be371672c91405a300303986f4eba9"
-      url: "https://pub.dev"
-    source: hosted
+      path: "packages/firebase_core"
+      relative: true
+    source: path
     version: "4.3.0"
   firebase_core_platform_interface:
     dependency: transitive
