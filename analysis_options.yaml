@@ -19,6 +19,10 @@ analyzer:
     - lib/**/*.g.dart
     - lib/**/*.freezed.dart
     - lib/**/*.mocks.dart
+    - packages/**/build/**
+    - packages/**/example/**
+    - packages/**/test/**
+    - packages/**/.dart_tool/**
 
 linter:
   rules:
