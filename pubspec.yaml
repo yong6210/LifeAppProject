@@ -66,6 +66,7 @@ dev_dependencies:
   riverpod: ^3.1.0
   very_good_analysis: ^10.0.0
   mockito: ^5.4.4
+  msix: ^3.16.9
 
 flutter:
   uses-material-design: true
@@ -74,6 +75,17 @@ flutter:
     - assets/audio/manifest.json
     - assets/audio/app/
     - assets/maps/
+
+msix_config:
+  display_name: Life App
+  identity_name: com.ymcompany.lifeapp
+  msix_version: 1.0.0.0
+  store: false
+  install_certificate: false
+  output_name: life_app
+  toast_activator:
+    clsid: "8e5a1c36-8e9d-4a7f-9b7d-eb9a3f9c8f2b"
+    display_name: "Life App"
 
 dependency_overrides:
   analyzer: ^6.4.1

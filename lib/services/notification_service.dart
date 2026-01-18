@@ -16,6 +16,12 @@ class NotificationService {
 
   static Future<void> init() async {
     if (_initialized) return;
+    if (!Platform.isAndroid &&
+        !Platform.isIOS &&
+        !Platform.isMacOS &&
+        !Platform.isWindows) {
+      return;
+    }
 
     const darwin = DarwinInitializationSettings(
       requestAlertPermission: true,
@@ -25,10 +31,17 @@ class NotificationService {
 
     const android = AndroidInitializationSettings('@mipmap/ic_launcher');
 
+    const windows = WindowsInitializationSettings(
+      appName: 'Life App',
+      appUserModelId: 'com.ymcompany.lifeapp',
+      guid: '8e5a1c36-8e9d-4a7f-9b7d-eb9a3f9c8f2b',
+    );
+
     const settings = InitializationSettings(
       android: android,
       iOS: darwin,
       macOS: darwin,
+      windows: windows,
     );
 
     await _plugin.initialize(settings);

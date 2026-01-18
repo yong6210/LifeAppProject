@@ -68,6 +68,10 @@ class AnalyticsService {
   /// Initializes Firebase Analytics/Crashlytics hooks. Call once on app start.
   static Future<void> init({AnalyticsConsent? initialConsent}) async {
     if (_initialized) return;
+    if (!_isSupportedPlatform()) {
+      _initialized = true;
+      return;
+    }
 
     if (Firebase.apps.isEmpty) {
       // Firebase failed to initialise; skip analytics.
@@ -98,6 +102,18 @@ class AnalyticsService {
     while (_pendingEvents.isNotEmpty) {
       final event = _pendingEvents.removeAt(0);
       unawaited(logEvent(event.name, event.parameters));
+    }
+  }
+
+  static bool _isSupportedPlatform() {
+    if (kIsWeb) return false;
+    switch (defaultTargetPlatform) {
+      case TargetPlatform.android:
+      case TargetPlatform.iOS:
+      case TargetPlatform.macOS:
+        return true;
+      default:
+        return false;
     }
   }
 
