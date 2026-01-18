@@ -107,11 +107,15 @@ class SettingsMutationController extends AsyncNotifier<void> {
     Future<void> Function(SettingsRepository repo) action,
   ) async {
     state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
+    final next = await AsyncValue.guard(() async {
       final repo = await ref.read(settingsRepoProvider.future);
       await action(repo);
-      ref.invalidate(settingsFutureProvider);
+      if (ref.mounted) {
+        ref.invalidate(settingsFutureProvider);
+      }
     });
+    if (!ref.mounted) return;
+    state = next;
   }
 }
 

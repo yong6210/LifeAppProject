@@ -24,19 +24,11 @@ import 'package:life_app/l10n/app_localizations.dart';
 import 'package:life_app/widgets/ios_tab_bar.dart';
 
 Future<void> main() async {
-  await runZonedGuarded(
-    () async {
+  runZonedGuarded(
+    () {
       WidgetsFlutterBinding.ensureInitialized();
-      try {
-        await FirebaseInitializer.ensureInitialized();
-      } catch (_) {
-        // Continue boot; Firebase operations will throw descriptive errors later.
-      }
-      await AnalyticsService.init();
-      await NotificationService.init();
-      await TimerWorkmanagerGuard.initialize();
-      await WidgetUpdateService.init();
       runApp(const ProviderScope(child: MyApp()));
+      unawaited(_bootstrapServices());
     },
     (error, stack) {
       unawaited(
@@ -49,6 +41,18 @@ Future<void> main() async {
       );
     },
   );
+}
+
+Future<void> _bootstrapServices() async {
+  try {
+    await FirebaseInitializer.ensureInitialized();
+  } catch (_) {
+    // Continue boot; Firebase operations will throw descriptive errors later.
+  }
+  await AnalyticsService.init();
+  await NotificationService.init();
+  await TimerWorkmanagerGuard.initialize();
+  await WidgetUpdateService.init();
 }
 
 class MyApp extends ConsumerWidget {
