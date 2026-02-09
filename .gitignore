@@ -1,0 +1,32 @@
+# Secrets / Credentials
+.env
+.env.*
+!.env.example
+!.env.sample
+
+# Firebase config (contains project IDs / API keys)
+**/google-services.json
+**/GoogleService-Info.plist
+**/firebase-adminsdk*.json
+**/serviceAccount*.json
+**/service-account*.json
+**/gcp-key*.json
+**/google-credentials*.json
+
+# Android signing
+android/key.properties
+*.jks
+*.keystore
+
+# Apple signing / provisioning
+*.p12
+*.pfx
+*.pem
+*.key
+*.crt
+*.cer
+*.der
+*.mobileprovision
+
+# Bundled dependencies (avoid committing vendor directories)
+macos/vendor/

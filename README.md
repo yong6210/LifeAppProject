@@ -54,6 +54,12 @@ devices, and ready for future subscription and wearable integrations.
 - `docs/privacy_sleep_sound.md` - Sleep sound analysis privacy notes
 - `docs/design_review.md` - UI/UX review notes
 
+## Secrets & Firebase Config
+- This repository is public, so real Firebase configs and signing keys are not committed.
+- Use the `*.example` files as templates and create the real files locally.
+- You can regenerate Firebase configs with `flutterfire configure`.
+- CI should inject the real files from secrets before builds.
+
 ## Testing
 - Run all tests:
   ```shell
