@@ -22,7 +22,7 @@ jobs:
             ${{ runner.os }}-pub-
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.35.3'
+          flutter-version: '3.38.7'
       - name: Install dependencies
         run: flutter pub get
       - name: Flutter analyze
@@ -61,7 +61,7 @@ jobs:
             ${{ runner.os }}-gradle-
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.35.3'
+          flutter-version: '3.38.7'
       - name: Install dependencies
         run: flutter pub get
       - name: Android APK
