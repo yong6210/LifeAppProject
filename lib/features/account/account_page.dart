@@ -1992,57 +1992,69 @@ class _BackupEntryTile extends StatelessWidget {
         : l10n.tr('backup_entry_restore');
     final timestamp = _formatDate(entry.timestamp);
     final theme = Theme.of(context);
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      leading: Icon(
-        isSuccess ? Icons.check_circle : Icons.error_outline,
-        color: isSuccess ? theme.colorScheme.primary : theme.colorScheme.error,
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.78),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: UiBorders.subtle),
       ),
-      isThreeLine: true,
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            actionLabel,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurface,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            timestamp,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-            softWrap: true,
-          ),
-        ],
-      ),
-      subtitle: Column(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            l10n.tr('backup_entry_storage', {'provider': entry.provider}),
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
+          Icon(
+            isSuccess ? Icons.check_circle : Icons.error_outline,
+            color: isSuccess
+                ? theme.colorScheme.primary
+                : theme.colorScheme.error,
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  actionLabel,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSurface,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  timestamp,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  l10n.tr('backup_entry_storage', {'provider': entry.provider}),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                if (entry.bytes > 0)
+                  Text(
+                    l10n.tr('backup_entry_size', {
+                      'size': _formatBytes(entry.bytes),
+                    }),
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                if (!isSuccess && entry.errorMessage != null)
+                  Text(
+                    l10n.tr('backup_entry_error', {
+                      'message': entry.errorMessage!,
+                    }),
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.error,
+                    ),
+                  ),
+              ],
             ),
           ),
-          if (entry.bytes > 0)
-            Text(
-              l10n.tr('backup_entry_size', {'size': _formatBytes(entry.bytes)}),
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-          if (!isSuccess && entry.errorMessage != null)
-            Text(
-              l10n.tr('backup_entry_error', {'message': entry.errorMessage!}),
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.error,
-              ),
-            ),
         ],
       ),
     );
@@ -2361,36 +2373,11 @@ class _DataDisclosureCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      color: theme.colorScheme.surfaceContainerHighest,
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-        leading: Icon(
-          Icons.privacy_tip_outlined,
-          color: theme.colorScheme.primary,
-        ),
-        title: Text(
-          l10n.tr('data_disclosure_title'),
-          style: theme.textTheme.bodyLarge?.copyWith(
-            color: theme.colorScheme.onSurface,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        subtitle: Text(
-          l10n.tr('data_disclosure_subtitle'),
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
-        ),
-        trailing: Icon(
-          Icons.keyboard_arrow_right,
-          color: theme.colorScheme.onSurfaceVariant,
-        ),
-        onTap: onViewDetails,
-      ),
+    return _AccountActionTile(
+      icon: Icons.privacy_tip_outlined,
+      title: l10n.tr('data_disclosure_title'),
+      subtitle: l10n.tr('data_disclosure_subtitle'),
+      onTap: onViewDetails,
     );
   }
 }
@@ -2403,36 +2390,11 @@ class _PrivacyPolicyCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      color: theme.colorScheme.surfaceContainerHighest,
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-        leading: Icon(
-          Icons.description_outlined,
-          color: theme.colorScheme.primary,
-        ),
-        title: Text(
-          l10n.tr('privacy_policy_title'),
-          style: theme.textTheme.bodyLarge?.copyWith(
-            color: theme.colorScheme.onSurface,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        subtitle: Text(
-          l10n.tr('privacy_policy_subtitle'),
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
-        ),
-        trailing: Icon(
-          Icons.keyboard_arrow_right,
-          color: theme.colorScheme.onSurfaceVariant,
-        ),
-        onTap: onOpen,
-      ),
+    return _AccountActionTile(
+      icon: Icons.description_outlined,
+      title: l10n.tr('privacy_policy_title'),
+      subtitle: l10n.tr('privacy_policy_subtitle'),
+      onTap: onOpen,
     );
   }
 }
@@ -2445,32 +2407,85 @@ class _OpenSourceLicensesCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return _AccountActionTile(
+      icon: Icons.code_outlined,
+      title: l10n.tr('licenses_title'),
+      subtitle: l10n.tr('licenses_subtitle'),
+      onTap: onOpen,
+    );
+  }
+}
+
+class _AccountActionTile extends StatelessWidget {
+  const _AccountActionTile({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      color: theme.colorScheme.surfaceContainerHighest,
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-        leading: Icon(Icons.code_outlined, color: theme.colorScheme.primary),
-        title: Text(
-          l10n.tr('licenses_title'),
-          style: theme.textTheme.bodyLarge?.copyWith(
-            color: theme.colorScheme.onSurface,
-            fontWeight: FontWeight.w500,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(UiRadii.md),
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.92),
+            borderRadius: BorderRadius.circular(UiRadii.md),
+            border: Border.all(color: UiBorders.subtle),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 38,
+                height: 38,
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primary.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(icon, color: theme.colorScheme.primary, size: 20),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        color: const Color(0xFF1F2633),
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitle,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: const Color(0xFF667289),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              Icon(
+                Icons.chevron_right_rounded,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ],
           ),
         ),
-        subtitle: Text(
-          l10n.tr('licenses_subtitle'),
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
-        ),
-        trailing: Icon(
-          Icons.keyboard_arrow_right,
-          color: theme.colorScheme.onSurfaceVariant,
-        ),
-        onTap: onOpen,
       ),
     );
   }
@@ -2513,6 +2528,19 @@ class _PersonalizationSettingsCard extends ConsumerWidget {
     }
 
     final theme = Theme.of(context);
+
+    Future<void> handleToneSelection(String value) async {
+      await handleAction(() async {
+        await ref
+            .read(settingsMutationControllerProvider.notifier)
+            .setLifeBuddyTone(value);
+        await AnalyticsService.logEvent(
+          'personalization_tone_select',
+          {'tone': value},
+        );
+      });
+    }
+
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -2537,13 +2565,10 @@ class _PersonalizationSettingsCard extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 16),
-            SwitchListTile(
-              contentPadding: EdgeInsets.zero,
+            _AccountToggleTile(
+              title: l10n.tr('account_personalization_enabled_title'),
+              subtitle: l10n.tr('account_personalization_enabled_subtitle'),
               value: suggestionsEnabled,
-              title: Text(l10n.tr('account_personalization_enabled_title')),
-              subtitle: Text(
-                l10n.tr('account_personalization_enabled_subtitle'),
-              ),
               onChanged: (value) async {
                 await handleAction(() async {
                   await ref
@@ -2555,11 +2580,11 @@ class _PersonalizationSettingsCard extends ConsumerWidget {
                 });
               },
             ),
-            SwitchListTile(
-              contentPadding: EdgeInsets.zero,
+            const SizedBox(height: 10),
+            _AccountToggleTile(
+              title: l10n.tr('account_personalization_sync_title'),
+              subtitle: syncSubtitle(),
               value: syncEnabled,
-              title: Text(l10n.tr('account_personalization_sync_title')),
-              subtitle: Text(syncSubtitle()),
               onChanged: suggestionsEnabled
                   ? (value) async {
                       await handleAction(() async {
@@ -2582,42 +2607,21 @@ class _PersonalizationSettingsCard extends ConsumerWidget {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            RadioGroup<String>(
-              groupValue: tone,
-              onChanged: (value) async {
-                if (value == null) return;
-                await handleAction(() async {
-                  await ref
-                      .read(settingsMutationControllerProvider.notifier)
-                      .setLifeBuddyTone(value);
-                  await AnalyticsService.logEvent(
-                    'personalization_tone_select',
-                    {'tone': value},
-                  );
-                });
-              },
-              child: Column(
-                children: [
-                  RadioListTile<String>(
-                    contentPadding: EdgeInsets.zero,
-                    value: 'friend',
-                    title: Text(l10n.tr('account_personalization_tone_friend')),
-                    subtitle: Text(
-                      l10n.tr(
-                        'account_personalization_tone_friend_description',
-                      ),
-                    ),
-                  ),
-                  RadioListTile<String>(
-                    contentPadding: EdgeInsets.zero,
-                    value: 'coach',
-                    title: Text(l10n.tr('account_personalization_tone_coach')),
-                    subtitle: Text(
-                      l10n.tr('account_personalization_tone_coach_description'),
-                    ),
-                  ),
-                ],
+            const SizedBox(height: 10),
+            _AccountToneOptionTile(
+              title: l10n.tr('account_personalization_tone_friend'),
+              subtitle: l10n.tr(
+                'account_personalization_tone_friend_description',
               ),
+              selected: tone == 'friend',
+              onTap: () => handleToneSelection('friend'),
+            ),
+            const SizedBox(height: 8),
+            _AccountToneOptionTile(
+              title: l10n.tr('account_personalization_tone_coach'),
+              subtitle: l10n.tr('account_personalization_tone_coach_description'),
+              selected: tone == 'coach',
+              onTap: () => handleToneSelection('coach'),
             ),
           ],
         ),
@@ -2664,12 +2668,149 @@ class _AccessibilitySettingsCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
-            SwitchListTile(
+            _AccountToggleTile(
+              title: l10n.tr('account_accessibility_reduced_motion'),
+              subtitle: l10n.tr('account_accessibility_body'),
               value: reducedMotion,
               onChanged: onChanged,
-              title: Text(l10n.tr('account_accessibility_reduced_motion')),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _AccountToggleTile extends StatelessWidget {
+  const _AccountToggleTile({
+    required this.title,
+    required this.subtitle,
+    required this.value,
+    required this.onChanged,
+  });
+
+  final String title;
+  final String subtitle;
+  final bool value;
+  final ValueChanged<bool>? onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final enabled = onChanged != null;
+    final theme = Theme.of(context);
+    return Opacity(
+      opacity: enabled ? 1 : 0.55,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.85),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: UiBorders.subtle),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: theme.colorScheme.onSurface,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 12),
+            Switch(
+              value: value,
+              onChanged: onChanged,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _AccountToneOptionTile extends StatelessWidget {
+  const _AccountToneOptionTile({
+    required this.title,
+    required this.subtitle,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String title;
+  final String subtitle;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final accent = selected ? theme.colorScheme.primary : const Color(0xFF667289);
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.9),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: selected
+                  ? theme.colorScheme.primary.withValues(alpha: 0.45)
+                  : UiBorders.subtle,
+            ),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(
+                selected
+                    ? Icons.radio_button_checked_rounded
+                    : Icons.radio_button_off_rounded,
+                color: accent,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        color: const Color(0xFF1F2633),
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitle,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: const Color(0xFF667289),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

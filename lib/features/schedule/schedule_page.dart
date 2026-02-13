@@ -162,11 +162,11 @@ class _SchedulePageState extends ConsumerState<SchedulePage> {
   }
 
   bool _isTaskEntry(ScheduleEntry entry) {
-    return entry.repeatRule == ScheduleRepeatRule.none &&
-        entry.routineType == ScheduleRoutineType.custom;
+    return entry.repeatRule == ScheduleRepeatRule.none;
   }
 
-  bool _isRoutineEntry(ScheduleEntry entry) => !_isTaskEntry(entry);
+  bool _isRoutineEntry(ScheduleEntry entry) =>
+      entry.repeatRule != ScheduleRepeatRule.none;
 
   Future<void> _toggleCompletion(ScheduleEntry entry, bool nextValue) async {
     await ref.read(scheduleControllerProvider.notifier).addOrUpdateEntry(
@@ -192,9 +192,9 @@ class _SchedulePageState extends ConsumerState<SchedulePage> {
     var startTime = initialStart;
     var endTime = initialEnd;
     var repeatRule = existing?.repeatRule ?? ScheduleRepeatRule.none;
-    var routineType = existing?.routineType ?? ScheduleRoutineType.builtIn;
+    var routineType = existing?.routineType ?? ScheduleRoutineType.custom;
     var routineId =
-        existing?.routineId ?? routines.firstOrNull?.id ?? 'focus_default';
+        existing?.routineId ?? routines.firstOrNull?.id ?? 'custom_manual';
     var routineLabel = existing?.title ?? l10n.tr('schedule_default_focus');
     if (existing != null) {
       routineLabel = existing.title;

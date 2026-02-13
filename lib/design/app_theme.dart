@@ -272,7 +272,7 @@ class AppTheme {
         style: FilledButton.styleFrom(
           backgroundColor: scheme.primary,
           foregroundColor: scheme.onPrimary,
-          minimumSize: const Size.fromHeight(56),
+          minimumSize: const Size(64, 56),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           textStyle: textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.w600,
@@ -555,7 +555,7 @@ class AppTheme {
         style: FilledButton.styleFrom(
           backgroundColor: scheme.primary,
           foregroundColor: scheme.onPrimary,
-          minimumSize: const Size.fromHeight(56),
+          minimumSize: const Size(64, 56),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           textStyle: textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.w600,

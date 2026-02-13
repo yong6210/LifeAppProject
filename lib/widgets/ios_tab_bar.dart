@@ -26,7 +26,9 @@ class IOSTabBar extends StatelessWidget {
     return SafeArea(
       top: false,
       minimum: const EdgeInsets.fromLTRB(12, 0, 12, 8),
-      child: Center(
+      child: Align(
+        alignment: Alignment.center,
+        heightFactor: 1,
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 720),
           child: DecoratedBox(

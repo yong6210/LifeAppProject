@@ -12,7 +12,6 @@ import 'package:life_app/features/journal/journal_page.dart';
 import 'package:life_app/features/schedule/schedule_page.dart';
 import 'package:life_app/features/account/account_page.dart';
 import 'package:life_app/features/onboarding/onboarding_page.dart';
-import 'package:life_app/features/timer/focus_session_page.dart';
 import 'package:life_app/models/settings.dart';
 import 'package:life_app/providers/session_providers.dart';
 import 'package:life_app/providers/settings_providers.dart';
@@ -139,7 +138,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
 
     final l10n = context.l10n;
 
-    // Stitch v2 tab IA: Home / Tasks / Focus / Record / My
+    // Primary shell tabs: Home / Tasks / Record / My
     final tabItems = [
       IOSTabItem(
         icon: Icons.home_outlined,
@@ -149,11 +148,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
       IOSTabItem(
         icon: Icons.checklist_rounded,
         label: l10n.tr('tab_tasks'),
-        color: AppTheme.teal,
-      ),
-      IOSTabItem(
-        icon: Icons.timer_outlined,
-        label: l10n.tr('tab_focus'),
         color: AppTheme.teal,
       ),
       IOSTabItem(
@@ -170,8 +164,9 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
 
     return Scaffold(
       body: IndexedStack(
+        sizing: StackFit.expand,
         index: _currentIndex,
-        children: List<Widget>.generate(5, (index) {
+        children: List<Widget>.generate(4, (index) {
           if (index == _currentIndex || _tabCache.containsKey(index)) {
             return _tabFor(index);
           }
@@ -216,10 +211,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
       case 1:
         return const SchedulePage();
       case 2:
-        return const FocusSessionPage();
-      case 3:
         return const JournalPage();
-      case 4:
+      case 3:
         return const AccountPage();
       default:
         return const SizedBox.shrink();
