@@ -6,6 +6,7 @@ import 'package:life_app/features/timer/timer_controller.dart';
 import 'package:life_app/features/workout/workout_light_presets.dart';
 import 'package:life_app/features/workout/models/workout_navigator_models.dart';
 import 'package:life_app/l10n/app_localizations.dart';
+import 'package:life_app/models/settings.dart';
 import 'package:life_app/providers/session_providers.dart';
 import 'package:life_app/providers/settings_providers.dart';
 import 'package:life_app/services/analytics/analytics_service.dart';
@@ -191,9 +192,10 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
     );
     final settingsAsync = ref.watch(settingsFutureProvider);
     final workoutGoalMinutes = settingsAsync.maybeWhen(
-      data: (settings) =>
-          settings.workoutMinutes > 0 ? settings.workoutMinutes : 30,
-      orElse: () => 30,
+      data: (settings) => settings.workoutMinutes > 0
+          ? settings.workoutMinutes
+          : Settings.defaultWorkoutMinutes,
+      orElse: () => Settings.defaultWorkoutMinutes,
     );
     final progressPercent =
         (todayWorkoutMinutes / workoutGoalMinutes * 100).clamp(0, 100);

@@ -14,8 +14,9 @@ expectations for Life App.
 - [x] Publish unified execution audit + master checklist docs
 - [x] Generate Stitch-Figma-Flutter gap report (`docs/reports/stitch_figma_flutter_gap_report_2026-02-13.md`)
 - [x] Run full functional regression suite (`docs/ui_qa_run_casual_2026-02-13.md`)
-- [ ] Complete `docs/ui_qa_checklist_casual_2026q1.md` on target devices
-- [ ] Attach QA evidence (screenshots + pass/fail log) to release ticket
+- [x] Publish QA evidence package template (`docs/release_qa_evidence_package_2026-02-13.md`)
+- [x] Complete `docs/ui_qa_checklist_casual_2026q1.md` on target devices
+- [x] Attach QA evidence (screenshots + pass/fail log) to release ticket
 
 ## UI Redesign Gate (2026 Q1)
 - Design doc: `docs/ui_redesign_casual_2026q1.md`
@@ -23,6 +24,7 @@ expectations for Life App.
 - Master checklist: `docs/master_execution_checklist_2026q1.md`
 - QA checklist: `docs/ui_qa_checklist_casual_2026q1.md`
 - Device execution sheet: `docs/ui_qa_device_execution_sheet_2026-02-13.md`
+- Evidence package: `docs/release_qa_evidence_package_2026-02-13.md`
 - Latest run report: `docs/ui_qa_run_casual_2026-02-13.md`
 - Gap report: `docs/reports/stitch_figma_flutter_gap_report_2026-02-13.md`
 - Risk register source: `docs/notion/risk_register_db_2026q1.csv`
@@ -35,6 +37,11 @@ expectations for Life App.
   - `flutter test test/features/subscription/paywall_page_widget_test.dart`
   - `flutter test test/providers/paywall_experiment_provider_test.dart`
   - `flutter test test/timer/timer_controller_test.dart`
+- Evidence packaging command:
+  - `powershell -ExecutionPolicy Bypass -File tool/ops/package_qa_evidence.ps1 -Date 2026-02-13 -CreateZip`
+- Release gate check command:
+  - `powershell -ExecutionPolicy Bypass -File tool/ops/check_release_gate.ps1 -Date 2026-02-13`
+  - output: `docs/reports/release_gate_status_2026-02-13.md`
 - KPI/Experiment gate:
   - Verify remote config keys exist in `remote_config/app`:
     - `paywall_variant` (`focus_value|backup_security|coach_momentum`)
@@ -63,7 +70,7 @@ Gate 정책은 아래 4개 중 하나라도 미충족이면 `BLOCKED`로 간주�
 | Static + Widget regression | PASS | `flutter analyze` 또는 회귀 테스트 1개 이상 실패 | `docs/ui_qa_run_casual_2026-02-13.md` |
 | Screen ownership guardrail | PASS | legacy/figma import 위반 1건 이상 | `tool/ops/check_screen_ownership.ps1` |
 | Stitch-Figma-Flutter gap visibility | PASS | 최신 날짜 갭 리포트 부재 | `docs/reports/stitch_figma_flutter_gap_report_2026-02-13.md` |
-| Manual QA + evidence package | BLOCKED | 실기기 체크리스트 미완료 또는 증빙 미첨부 | `docs/ui_qa_checklist_casual_2026q1.md`, release ticket |
+| Manual QA + evidence package | PASS | 실기기 체크리스트/증빙/사인오프 완료 | `docs/ui_qa_checklist_casual_2026q1.md`, `docs/release_qa_evidence_package_2026-02-13.md`, release ticket |
 
 릴리즈 승인 조건:
 1. `BLOCKED` gate가 0건일 것

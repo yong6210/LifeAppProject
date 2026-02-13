@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
+import 'package:life_app/design/ui_tokens.dart';
 import 'package:life_app/l10n/app_localizations.dart';
 import 'package:life_app/providers/schedule_providers.dart';
 import 'package:life_app/services/schedule/schedule_models.dart';
@@ -530,7 +531,7 @@ class _ScheduleSectionPlaceholder extends StatelessWidget {
       decoration: BoxDecoration(
         color:
             theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.35),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(UiRadii.sm),
       ),
       child: Text(
         text,
@@ -582,7 +583,7 @@ class _ScheduleExecutionTile extends StatelessWidget {
 
     return Card(
       child: InkWell(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(UiRadii.sm),
         onTap: onEdit,
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -640,7 +641,7 @@ class _ScheduleExecutionTile extends StatelessWidget {
                     ),
                     decoration: BoxDecoration(
                       color: statusColor.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(999),
+                      borderRadius: BorderRadius.circular(UiRadii.pill),
                     ),
                     child: Text(
                       statusText,
@@ -716,12 +717,12 @@ class _TimeField extends StatelessWidget {
     final theme = Theme.of(context);
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(UiRadii.sm),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
           border: Border.all(color: theme.colorScheme.outlineVariant),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(UiRadii.sm),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import 'package:life_app/design/app_theme.dart';
+import 'package:life_app/design/ui_tokens.dart';
 import 'package:life_app/features/journal/journal_entry.dart';
 import 'package:life_app/l10n/app_localizations.dart';
 import 'package:life_app/providers/journal_providers.dart';
@@ -89,7 +90,7 @@ class _JournalPageState extends ConsumerState<JournalPage> {
                       GlassCard(
                         onTap: () => Navigator.of(context).pop(),
                         padding: const EdgeInsets.all(12),
-                        borderRadius: 12,
+                        borderRadius: UiRadii.sm,
                         child: Icon(
                           Icons.arrow_back_ios_new,
                           size: 18,
@@ -105,7 +106,7 @@ class _JournalPageState extends ConsumerState<JournalPage> {
                         gradient: const LinearGradient(
                           colors: [AppTheme.teal, AppTheme.eucalyptus],
                         ),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(UiRadii.sm),
                       ),
                       child: const Icon(
                         Icons.book_outlined,
@@ -582,7 +583,9 @@ class _JournalCalendar extends StatelessWidget {
     final theme = Theme.of(context);
     return Card(
       key: const Key('journal-calendar-card'),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(UiRadii.lg),
+      ),
       elevation: 0,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 20, 16, 12),
@@ -710,11 +713,11 @@ class _JournalCalendar extends StatelessWidget {
                       child: InkWell(
                         key: ValueKey('journal-calendar-day-$cellKey'),
                         onTap: isFuture ? null : () => onDateSelected(day),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(UiRadii.sm),
                         child: Ink(
                           decoration: BoxDecoration(
                             color: backgroundColor,
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(UiRadii.sm),
                             border: Border.all(color: borderColor, width: 1.4),
                           ),
                           padding: const EdgeInsets.symmetric(
@@ -840,7 +843,9 @@ class _EntryDetailCard extends StatelessWidget {
       return Card(
         key: const Key('journal-detail-card-empty'),
         elevation: 0,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(UiRadii.lg),
+        ),
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
@@ -874,7 +879,9 @@ class _EntryDetailCard extends StatelessWidget {
     return Card(
       key: const Key('journal-detail-card'),
       elevation: 0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(UiRadii.lg),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -956,7 +963,9 @@ class _JournalEntryDetailSheet extends StatelessWidget {
         key: const Key('journal-entry-detail-sheet'),
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+          borderRadius: const BorderRadius.vertical(
+            top: Radius.circular(UiRadii.xl),
+          ),
         ),
         child: Column(
           children: [
@@ -968,7 +977,7 @@ class _JournalEntryDetailSheet extends StatelessWidget {
                 color: theme.colorScheme.onSurfaceVariant.withValues(
                   alpha: 0.3,
                 ),
-                borderRadius: BorderRadius.circular(2),
+                borderRadius: BorderRadius.circular(UiRadii.sm / 6),
               ),
             ),
             Expanded(
@@ -1152,7 +1161,7 @@ class _JournalStatChip extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(UiRadii.md),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -1400,7 +1409,7 @@ class _MonthlyRecapCard extends StatelessWidget {
             context,
           ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(UiRadii.md),
           ),
           child: Padding(
             padding: const EdgeInsets.all(20),
@@ -1457,7 +1466,7 @@ class _BuddyCommentCard extends StatelessWidget {
         return Card(
           elevation: 0,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(18),
+            borderRadius: BorderRadius.circular(UiRadii.md),
           ),
           child: Padding(
             padding: const EdgeInsets.all(20),

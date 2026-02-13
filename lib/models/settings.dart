@@ -4,6 +4,8 @@ part 'settings.g.dart';
 
 @collection
 class Settings {
+  static const int defaultWorkoutMinutes = 20;
+
   Id id = 0;
 
   String theme = 'system';
@@ -24,7 +26,7 @@ class Settings {
 
   int restMinutes = 5;
 
-  int workoutMinutes = 20;
+  int workoutMinutes = defaultWorkoutMinutes;
 
   int sleepMinutes = 30;
 
