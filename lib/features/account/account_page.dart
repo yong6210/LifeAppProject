@@ -5,10 +5,10 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:life_app/design/app_theme.dart';
 import 'package:life_app/features/subscription/paywall_page.dart';
 import 'package:life_app/models/settings.dart';
 import 'package:life_app/features/backup/backup_page.dart';
+import 'package:life_app/features/stats/stats_page.dart';
 import 'package:life_app/providers/account_providers.dart';
 import 'package:life_app/providers/accessibility_providers.dart';
 import 'package:life_app/providers/auth_providers.dart';
@@ -20,7 +20,9 @@ import 'package:life_app/services/analytics/analytics_service.dart';
 import 'package:life_app/services/backup/backup_metrics.dart';
 import 'package:life_app/services/diagnostics/timer_diagnostics_service.dart';
 import 'package:life_app/services/subscription/revenuecat_service.dart';
+import 'package:life_app/design/ui_tokens.dart';
 import 'package:life_app/l10n/app_localizations.dart';
+import 'package:life_app/widgets/app_state_widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
@@ -31,6 +33,10 @@ class AccountPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final sidePadding = math.max(14.0, (screenWidth - 620) / 2);
+    final compact = screenWidth < 380;
+
     final authAsync = ref.watch(authControllerProvider);
     final premiumStatus = ref.watch(premiumStatusProvider);
     final isPremium = premiumStatus.isPremium;
@@ -42,13 +48,17 @@ class AccountPage extends ConsumerWidget {
     final isAuthLoading = authAsync.isLoading;
     final user = authAsync.value;
     final l10n = context.l10n;
+    void refreshSettings() => ref.invalidate(settingsFutureProvider);
+    void refreshAccessibility() =>
+        ref.invalidate(accessibilityControllerProvider);
+    void refreshDiagnostics() => ref.invalidate(timerAccuracySamplesProvider);
 
     final Widget languageSection = settingsAsync.when<Widget>(
       data: (settings) {
         final selected =
             (settings.locale.isEmpty || settings.locale == 'system')
-            ? 'system'
-            : settings.locale;
+                ? 'system'
+                : settings.locale;
         final AppLocaleController localeController = ref.read(
           appLocaleControllerProvider.notifier,
         );
@@ -71,6 +81,7 @@ class AccountPage extends ConsumerWidget {
       error: (error, _) => _ErrorCard(
         title: l10n.tr('account_language_title'),
         message: '$error',
+        onRetry: refreshSettings,
       ),
     );
 
@@ -101,305 +112,501 @@ class AccountPage extends ConsumerWidget {
       },
     );
 
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final canPop = Navigator.of(context).canPop();
 
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
+      backgroundColor: const Color(0xFFFFFBF7),
+      body: DecoratedBox(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: isDark
-                ? [const Color(0xFF000000), const Color(0xFF1A1A1A)]
-                : [
-                    const Color(0xFFD8E5E0), // Darker pastel mint
-                    const Color(0xFFD0E4D8), // Darker pastel sage green
-                    const Color(0xFFD8E0DD), // Darker pastel aqua
-                  ],
-            stops: isDark ? const [0.0, 1.0] : const [0.0, 0.5, 1.0],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFFFFFBF7),
+              Color(0xFFF7F1E8),
+              Color(0xFFF3F4FF),
+            ],
           ),
         ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              // Custom AppBar
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [AppTheme.teal, AppTheme.eucalyptus],
-                        ),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const Icon(
-                        Icons.person_outline,
-                        color: Colors.white,
-                        size: 20,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Text(
-                      l10n.tr('account_title'),
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w700,
-                        color: isDark
-                            ? Colors.white
-                            : theme.colorScheme.onSurface,
-                      ),
-                    ),
-                  ],
+        child: Stack(
+          children: [
+            Positioned(
+              top: -140,
+              left: -90,
+              child: IgnorePointer(
+                child: Container(
+                  width: 260,
+                  height: 260,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFDAB9).withValues(alpha: 0.35),
+                    shape: BoxShape.circle,
+                  ),
                 ),
               ),
-              Expanded(
-                child: RefreshIndicator(
-                  onRefresh: () async {
-                    await ref
-                        .read(revenueCatControllerProvider.notifier)
-                        .refreshCustomerInfo();
-                    ref.invalidate(settingsFutureProvider);
-                    await ref.read(settingsFutureProvider.future);
-                  },
-                  child: ListView(
-                    padding: const EdgeInsets.all(16),
-                    children: [
-                      _AccountStatusCard(
-                        l10n: l10n,
-                        user: user,
-                        isLoading: isAuthLoading,
-                        onSignIn: () async {
-                          try {
-                            await ref
-                                .read(authControllerProvider.notifier)
-                                .signInAnonymously();
-                          } catch (error) {
-                            if (context.mounted) {
-                              _showError(
-                                context,
-                                l10n.tr('error_login_failed', {
-                                  'error': '$error',
-                                }),
-                              );
-                            }
-                          }
-                        },
-                        onSignOut: () async {
-                          try {
-                            await ref
-                                .read(authControllerProvider.notifier)
-                                .signOut();
-                          } catch (error) {
-                            if (context.mounted) {
-                              _showError(
-                                context,
-                                l10n.tr('error_logout_failed', {
-                                  'error': '$error',
-                                }),
-                              );
-                            }
-                          }
-                        },
+            ),
+            Positioned(
+              top: 70,
+              right: -80,
+              child: IgnorePointer(
+                child: Container(
+                  width: 240,
+                  height: 240,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFC3D6FF).withValues(alpha: 0.3),
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+            ),
+            SafeArea(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(
+                      sidePadding,
+                      compact ? 10 : 12,
+                      sidePadding,
+                      8,
+                    ),
+                    child: Container(
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.96),
+                        borderRadius: BorderRadius.circular(UiRadii.lg),
+                        border: Border.all(color: UiBorders.sectionHeader),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.045),
+                            blurRadius: 14,
+                            offset: const Offset(0, 6),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 16),
-                      _SubscriptionStatusCard(
-                        l10n: l10n,
-                        status: premiumStatus,
-                        onManageSubscription: () {
-                          Navigator.push<void>(
-                            context,
-                            MaterialPageRoute<void>(
-                              builder: (_) => const PaywallPage(),
+                      child: Row(
+                        children: [
+                          if (canPop) ...[
+                            IconButton.filledTonal(
+                              onPressed: () => Navigator.of(context).pop(),
+                              style: IconButton.styleFrom(
+                                backgroundColor: const Color(0xFFF3EEE5),
+                                foregroundColor: const Color(0xFF36445A),
+                              ),
+                              icon: const Icon(
+                                Icons.arrow_back_ios_new,
+                                size: 18,
+                              ),
                             ),
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      languageSection,
-                      const SizedBox(height: 16),
-                      _DataDisclosureCard(
-                        l10n: l10n,
-                        onViewDetails: () =>
-                            _showDataRetentionDisclosure(context),
-                      ),
-                      const SizedBox(height: 16),
-                      settingsAsync.when(
-                        loading: () => const _LoadingCard(),
-                        error: (error, _) => _ErrorCard(
-                          title: l10n.tr('account_personalization_title'),
-                          message: l10n.tr('generic_settings_error', {
-                            'error': '$error',
-                          }),
-                        ),
-                        data: (settings) => _PersonalizationSettingsCard(
-                          l10n: l10n,
-                          settings: settings,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      accessibilityAsync.when(
-                        loading: () => const _LoadingCard(),
-                        error: (error, _) => _ErrorCard(
-                          title: l10n.tr('account_accessibility_title'),
-                          message: '$error',
-                        ),
-                        data: (state) => _AccessibilitySettingsCard(
-                          l10n: l10n,
-                          reducedMotion: state.reducedMotion,
-                          onChanged: (value) async {
-                            await ref
-                                .read(accessibilityControllerProvider.notifier)
-                                .setReducedMotion(value);
-                          },
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      _PrivacyPolicyCard(
-                        l10n: l10n,
-                        onOpen: () => _showPrivacyPolicy(context),
-                      ),
-                      const SizedBox(height: 16),
-                      _OpenSourceLicensesCard(
-                        l10n: l10n,
-                        onOpen: () => _showLicenses(context),
-                      ),
-                      const SizedBox(height: 16),
-                      settingsAsync.when(
-                        loading: () => _LoadingCard(
-                          title: l10n.tr('backup_loading_title'),
-                        ),
-                        error: (error, _) => _ErrorCard(
-                          title: l10n.tr('backup_error_title'),
-                          message: error.toString(),
-                        ),
-                        data: (settings) => FutureBuilder<bool>(
-                          future: ref
-                              .read(backupBannerServiceProvider.future)
-                              .then((service) => service.shouldShow(settings)),
-                          builder: (context, snapshot) {
-                            final showBanner = snapshot.data ?? false;
-                            return _BackupHistoryCard(
-                              l10n: l10n,
-                              settings: settings,
-                              isPremium: isPremium,
-                              showReminderBanner: showBanner,
-                              onDismissReminder: () async {
-                                final service = await ref.read(
-                                  backupBannerServiceProvider.future,
-                                );
-                                await service.snooze();
-                                if (context.mounted) {
-                                  AnalyticsService.logEvent(
-                                    'backup_banner_dismiss',
-                                  );
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        l10n.tr('backup_banner_dismissed'),
+                            const SizedBox(width: 8),
+                          ],
+                          Container(
+                            width: 42,
+                            height: 42,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFEDE9FF),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: const Icon(
+                              Icons.person_outline,
+                              color: Color(0xFF4A4FB2),
+                              size: 22,
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  l10n.tr('account_title'),
+                                  style: const TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w800,
+                                    color: Color(0xFF1F2633),
+                                  ),
+                                ),
+                                const SizedBox(height: 3),
+                                Text(
+                                  l10n.tr('account_casual_subtitle'),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(
+                                        color: const Color(0xFF667289),
+                                        fontWeight: FontWeight.w600,
                                       ),
-                                    ),
-                                  );
-                                }
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF3EEE6),
+                              borderRadius: BorderRadius.circular(999),
+                            ),
+                            child: Text(
+                              l10n.tr('account_casual_badge'),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelSmall
+                                  ?.copyWith(
+                                    color: const Color(0xFF4A4FB2),
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: RefreshIndicator(
+                      onRefresh: () async {
+                        await ref
+                            .read(revenueCatControllerProvider.notifier)
+                            .refreshCustomerInfo();
+                        ref.invalidate(settingsFutureProvider);
+                        await ref.read(settingsFutureProvider.future);
+                      },
+                      child: Scrollbar(
+                        child: ListView(
+                          padding: EdgeInsets.fromLTRB(
+                            sidePadding,
+                            16,
+                            sidePadding,
+                            20,
+                          ),
+                          children: [
+                            _AccountProgressHubCard(
+                              l10n: l10n,
+                              displayName: user == null
+                                  ? l10n.tr('account_profile_guest')
+                                  : (user.isAnonymous
+                                      ? l10n.tr('account_profile_anonymous')
+                                      : (user.email ??
+                                          l10n.tr('account_profile_user'))),
+                              uid: user?.uid,
+                              settings: settingsAsync.asData?.value,
+                              isPremium: isPremium,
+                              onOpenStats: () {
+                                Navigator.push<void>(
+                                  context,
+                                  MaterialPageRoute<void>(
+                                    builder: (_) => const StatsPage(),
+                                  ),
+                                );
                               },
-                              onRequestPremium: () async {
-                                AnalyticsService.logEvent('premium_gate', {
-                                  'feature': 'backup_history',
-                                });
-                                await Navigator.push<void>(
+                              onManagePremium: () {
+                                Navigator.push<void>(
                                   context,
                                   MaterialPageRoute<void>(
                                     builder: (_) => const PaywallPage(),
                                   ),
                                 );
                               },
-                            );
-                          },
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      timerDiagnosticsAsync.when(
-                        loading: () => const _LoadingCard(),
-                        error: (error, _) => _ErrorCard(
-                          title: l10n.tr('account_diagnostics_title'),
-                          message: error.toString(),
-                        ),
-                        data: (samples) => _TimerDiagnosticsCard(
-                          l10n: l10n,
-                          samples: samples,
-                          locale: Localizations.localeOf(context),
-                          onClear: () async {
-                            final service = await ref.read(
-                              timerDiagnosticsServiceProvider.future,
-                            );
-                            await service.clearAccuracySamples();
-                            ref.invalidate(timerAccuracySamplesProvider);
-                          },
-                          onShare: () async {
-                            final service = await ref.read(
-                              timerDiagnosticsServiceProvider.future,
-                            );
-                            final csv = await service
-                                .exportAccuracySamplesAsCsv();
-                            if (csv.trim().isEmpty ||
-                                csv.trim() ==
-                                    'recorded_at_utc,mode,segment_id,segment_label,skew_ms') {
-                              if (!context.mounted) return;
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    l10n.tr('account_diagnostics_share_empty'),
-                                  ),
-                                ),
-                              );
-                              return;
-                            }
-                            final dir = await getTemporaryDirectory();
-                            final filename =
-                                'life_app_timer_accuracy_${DateTime.now().millisecondsSinceEpoch}.csv';
-                            final file = File(p.join(dir.path, filename));
-                            await file.writeAsString(csv, flush: true);
-                            await SharePlus.instance.share(
-                              ShareParams(
-                                files: [
-                                  XFile(
-                                    file.path,
-                                    mimeType: 'text/csv',
-                                    name: 'timer_accuracy.csv',
-                                  ),
-                                ],
-                                subject: l10n.tr(
-                                  'account_diagnostics_share_subject',
-                                ),
-                                text: l10n.tr(
-                                  'account_diagnostics_share_body',
-                                ),
+                            ),
+                            const SizedBox(height: 16),
+                            _AccountSectionTitle(
+                              title: l10n.tr('account_section_identity_title'),
+                              subtitle:
+                                  l10n.tr('account_section_identity_subtitle'),
+                            ),
+                            const SizedBox(height: 10),
+                            settingsAsync.when(
+                              loading: () => const _LoadingCard(),
+                              error: (error, _) => _ErrorCard(
+                                title: l10n.tr('account_checklist_title'),
+                                message: error.toString(),
+                                onRetry: refreshSettings,
                               ),
-                            );
-                          },
+                              data: (settings) => _AccountQuestBoardCard(
+                                l10n: l10n,
+                                settings: settings,
+                                isPremium: isPremium,
+                                onOpenBackup: () {
+                                  Navigator.push<void>(
+                                    context,
+                                    MaterialPageRoute<void>(
+                                      builder: (_) => const BackupPage(),
+                                    ),
+                                  );
+                                },
+                                onOpenDataPolicy: () =>
+                                    _showDataRetentionDisclosure(context),
+                                onOpenPremium: () {
+                                  Navigator.push<void>(
+                                    context,
+                                    MaterialPageRoute<void>(
+                                      builder: (_) => const PaywallPage(),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            _AccountStatusCard(
+                              l10n: l10n,
+                              user: user,
+                              isLoading: isAuthLoading,
+                              onSignIn: () async {
+                                try {
+                                  await ref
+                                      .read(authControllerProvider.notifier)
+                                      .signInAnonymously();
+                                } catch (error) {
+                                  if (context.mounted) {
+                                    _showError(
+                                      context,
+                                      l10n.tr('error_login_failed', {
+                                        'error': '$error',
+                                      }),
+                                    );
+                                  }
+                                }
+                              },
+                              onSignOut: () async {
+                                try {
+                                  await ref
+                                      .read(authControllerProvider.notifier)
+                                      .signOut();
+                                } catch (error) {
+                                  if (context.mounted) {
+                                    _showError(
+                                      context,
+                                      l10n.tr('error_logout_failed', {
+                                        'error': '$error',
+                                      }),
+                                    );
+                                  }
+                                }
+                              },
+                            ),
+                            const SizedBox(height: 16),
+                            _SubscriptionStatusCard(
+                              l10n: l10n,
+                              status: premiumStatus,
+                              onManageSubscription: () {
+                                Navigator.push<void>(
+                                  context,
+                                  MaterialPageRoute<void>(
+                                    builder: (_) => const PaywallPage(),
+                                  ),
+                                );
+                              },
+                            ),
+                            const SizedBox(height: 16),
+                            _AccountSectionTitle(
+                              title:
+                                  l10n.tr('account_section_preferences_title'),
+                              subtitle: l10n
+                                  .tr('account_section_preferences_subtitle'),
+                            ),
+                            const SizedBox(height: 10),
+                            languageSection,
+                            const SizedBox(height: 16),
+                            _DataDisclosureCard(
+                              l10n: l10n,
+                              onViewDetails: () =>
+                                  _showDataRetentionDisclosure(context),
+                            ),
+                            const SizedBox(height: 16),
+                            settingsAsync.when(
+                              loading: () => const _LoadingCard(),
+                              error: (error, _) => _ErrorCard(
+                                title: l10n.tr('account_personalization_title'),
+                                message: l10n.tr('generic_settings_error', {
+                                  'error': '$error',
+                                }),
+                                onRetry: refreshSettings,
+                              ),
+                              data: (settings) => _PersonalizationSettingsCard(
+                                l10n: l10n,
+                                settings: settings,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            accessibilityAsync.when(
+                              loading: () => const _LoadingCard(),
+                              error: (error, _) => _ErrorCard(
+                                title: l10n.tr('account_accessibility_title'),
+                                message: '$error',
+                                onRetry: refreshAccessibility,
+                              ),
+                              data: (state) => _AccessibilitySettingsCard(
+                                l10n: l10n,
+                                reducedMotion: state.reducedMotion,
+                                onChanged: (value) async {
+                                  await ref
+                                      .read(accessibilityControllerProvider
+                                          .notifier)
+                                      .setReducedMotion(value);
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            _PrivacyPolicyCard(
+                              l10n: l10n,
+                              onOpen: () => _showPrivacyPolicy(context),
+                            ),
+                            const SizedBox(height: 16),
+                            _OpenSourceLicensesCard(
+                              l10n: l10n,
+                              onOpen: () => _showLicenses(context),
+                            ),
+                            const SizedBox(height: 16),
+                            _AccountSectionTitle(
+                              title: l10n.tr('account_section_safety_title'),
+                              subtitle:
+                                  l10n.tr('account_section_safety_subtitle'),
+                            ),
+                            const SizedBox(height: 10),
+                            settingsAsync.when(
+                              loading: () => _LoadingCard(
+                                title: l10n.tr('backup_loading_title'),
+                              ),
+                              error: (error, _) => _ErrorCard(
+                                title: l10n.tr('backup_error_title'),
+                                message: error.toString(),
+                                onRetry: refreshSettings,
+                              ),
+                              data: (settings) => FutureBuilder<bool>(
+                                future: ref
+                                    .read(backupBannerServiceProvider.future)
+                                    .then((service) =>
+                                        service.shouldShow(settings)),
+                                builder: (context, snapshot) {
+                                  final showBanner = snapshot.data ?? false;
+                                  return _BackupHistoryCard(
+                                    l10n: l10n,
+                                    settings: settings,
+                                    isPremium: isPremium,
+                                    showReminderBanner: showBanner,
+                                    onDismissReminder: () async {
+                                      final service = await ref.read(
+                                        backupBannerServiceProvider.future,
+                                      );
+                                      await service.snooze();
+                                      if (context.mounted) {
+                                        AnalyticsService.logEvent(
+                                          'backup_banner_dismiss',
+                                        );
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              l10n.tr(
+                                                  'backup_banner_dismissed'),
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    onRequestPremium: () async {
+                                      AnalyticsService.logEvent(
+                                          'premium_gate', {
+                                        'feature': 'backup_history',
+                                      });
+                                      await Navigator.push<void>(
+                                        context,
+                                        MaterialPageRoute<void>(
+                                          builder: (_) => const PaywallPage(),
+                                        ),
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            timerDiagnosticsAsync.when(
+                              loading: () => const _LoadingCard(),
+                              error: (error, _) => _ErrorCard(
+                                title: l10n.tr('account_diagnostics_title'),
+                                message: error.toString(),
+                                onRetry: refreshDiagnostics,
+                              ),
+                              data: (samples) => _TimerDiagnosticsCard(
+                                l10n: l10n,
+                                samples: samples,
+                                locale: Localizations.localeOf(context),
+                                onClear: () async {
+                                  final service = await ref.read(
+                                    timerDiagnosticsServiceProvider.future,
+                                  );
+                                  await service.clearAccuracySamples();
+                                  ref.invalidate(timerAccuracySamplesProvider);
+                                },
+                                onShare: () async {
+                                  final service = await ref.read(
+                                    timerDiagnosticsServiceProvider.future,
+                                  );
+                                  final csv = await service
+                                      .exportAccuracySamplesAsCsv();
+                                  if (csv.trim().isEmpty ||
+                                      csv.trim() ==
+                                          'recorded_at_utc,mode,segment_id,segment_label,skew_ms') {
+                                    if (!context.mounted) return;
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          l10n.tr(
+                                              'account_diagnostics_share_empty'),
+                                        ),
+                                      ),
+                                    );
+                                    return;
+                                  }
+                                  final dir = await getTemporaryDirectory();
+                                  final filename =
+                                      'life_app_timer_accuracy_${DateTime.now().millisecondsSinceEpoch}.csv';
+                                  final file = File(p.join(dir.path, filename));
+                                  await file.writeAsString(csv, flush: true);
+                                  await SharePlus.instance.share(
+                                    ShareParams(
+                                      files: [
+                                        XFile(
+                                          file.path,
+                                          mimeType: 'text/csv',
+                                          name: 'timer_accuracy.csv',
+                                        ),
+                                      ],
+                                      subject: l10n.tr(
+                                        'account_diagnostics_share_subject',
+                                      ),
+                                      text: l10n.tr(
+                                        'account_diagnostics_share_body',
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            _AccountDeletionSection(
+                              l10n: l10n,
+                              isProcessing: deletionState.isLoading,
+                              requiresReauth:
+                                  deletionResult?.requiresReauthentication ??
+                                      false,
+                              errorMessage: deletionState.maybeWhen(
+                                error: (error, _) => error.toString(),
+                                orElse: () => null,
+                              ),
+                              onDelete: () =>
+                                  _confirmAccountDeletion(context, ref),
+                            ),
+                          ],
                         ),
                       ),
-                      const SizedBox(height: 16),
-                      _AccountDeletionSection(
-                        l10n: l10n,
-                        isProcessing: deletionState.isLoading,
-                        requiresReauth:
-                            deletionResult?.requiresReauthentication ?? false,
-                        errorMessage: deletionState.maybeWhen(
-                          error: (error, _) => error.toString(),
-                          orElse: () => null,
-                        ),
-                        onDelete: () => _confirmAccountDeletion(context, ref),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -566,6 +773,501 @@ class AccountPage extends ConsumerWidget {
   }
 }
 
+class _AccountProgressHubCard extends StatelessWidget {
+  const _AccountProgressHubCard({
+    required this.l10n,
+    required this.displayName,
+    required this.uid,
+    required this.settings,
+    required this.isPremium,
+    required this.onOpenStats,
+    required this.onManagePremium,
+  });
+
+  final AppLocalizations l10n;
+  final String displayName;
+  final String? uid;
+  final Settings? settings;
+  final bool isPremium;
+  final VoidCallback onOpenStats;
+  final VoidCallback onManagePremium;
+
+  @override
+  Widget build(BuildContext context) {
+    final isCloudConnected = uid != null;
+    final backupDays = settings?.lastBackupAt == null
+        ? null
+        : DateTime.now()
+            .toUtc()
+            .difference(settings!.lastBackupAt!.toUtc())
+            .inDays;
+    final planLabel = isPremium
+        ? l10n.tr('subscription_premium')
+        : l10n.tr('subscription_free');
+    final syncLabel = isCloudConnected
+        ? l10n.tr('account_sync_connected')
+        : l10n.tr('account_sync_local');
+    final backupLabel = backupDays == null
+        ? l10n.tr('account_backup_none')
+        : (backupDays <= 3
+            ? l10n.tr('account_backup_fresh')
+            : l10n.tr('account_backup_days_ago', {'days': '$backupDays'}));
+    final safetyLabel = backupDays == null || backupDays > 7
+        ? l10n.tr('account_safety_needs_check')
+        : l10n.tr('account_safety_good');
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF1F2537), Color(0xFF2E3C5A)],
+        ),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.18),
+            blurRadius: 14,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 42,
+                height: 42,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(
+                  Icons.shield_moon_outlined,
+                  color: Colors.white,
+                  size: 22,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      displayName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w800,
+                          ),
+                    ),
+                    Text(
+                      '$planLabel • $syncLabel',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Colors.white.withValues(alpha: 0.85),
+                            fontWeight: FontWeight.w700,
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                child: Text(
+                  isPremium
+                      ? l10n.tr('account_plan_badge_premium')
+                      : l10n.tr('account_plan_badge_standard'),
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 0.4,
+                      ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              _ProgressStat(
+                icon: Icons.cloud_done_outlined,
+                label: syncLabel,
+              ),
+              const SizedBox(width: 8),
+              _ProgressStat(
+                icon: Icons.backup_outlined,
+                label: backupLabel,
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Icon(Icons.verified_user_outlined,
+                  color: Colors.white.withValues(alpha: 0.9), size: 15),
+              const SizedBox(width: 6),
+              Text(
+                safetyLabel,
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: Colors.white.withValues(alpha: 0.9),
+                      fontWeight: FontWeight.w700,
+                    ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: FilledButton.tonalIcon(
+                  onPressed: onOpenStats,
+                  icon: const Icon(Icons.stacked_bar_chart_rounded),
+                  label: Text(l10n.tr('stats_appbar_title')),
+                  style: FilledButton.styleFrom(
+                    backgroundColor: Colors.white.withValues(alpha: 0.2),
+                    foregroundColor: Colors.white,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: FilledButton.tonalIcon(
+                  onPressed: onManagePremium,
+                  icon: const Icon(Icons.workspace_premium_outlined),
+                  label: Text(l10n.tr('account_manage_plan')),
+                  style: FilledButton.styleFrom(
+                    backgroundColor: Colors.white.withValues(alpha: 0.2),
+                    foregroundColor: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ProgressStat extends StatelessWidget {
+  const _ProgressStat({
+    required this.icon,
+    required this.label,
+  });
+
+  final IconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.16),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: Colors.white, size: 16),
+            const SizedBox(width: 6),
+            Flexible(
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
+                    ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _AccountSectionTitle extends StatelessWidget {
+  const _AccountSectionTitle({
+    required this.title,
+    required this.subtitle,
+  });
+
+  final String title;
+  final String subtitle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                color: const Color(0xFF1F2633),
+                fontWeight: FontWeight.w800,
+              ),
+        ),
+        const SizedBox(height: 3),
+        Text(
+          subtitle,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: const Color(0xFF667289),
+                fontWeight: FontWeight.w600,
+              ),
+        ),
+      ],
+    );
+  }
+}
+
+class _AccountQuestBoardCard extends StatelessWidget {
+  const _AccountQuestBoardCard({
+    required this.l10n,
+    required this.settings,
+    required this.isPremium,
+    required this.onOpenBackup,
+    required this.onOpenDataPolicy,
+    required this.onOpenPremium,
+  });
+
+  final AppLocalizations l10n;
+  final Settings settings;
+  final bool isPremium;
+  final VoidCallback onOpenBackup;
+  final VoidCallback onOpenDataPolicy;
+  final VoidCallback onOpenPremium;
+
+  @override
+  Widget build(BuildContext context) {
+    final now = DateTime.now().toUtc();
+    final backupDays = settings.lastBackupAt == null
+        ? 999
+        : now.difference(settings.lastBackupAt!.toUtc()).inDays;
+    final backupDone = backupDays <= 3;
+    final riskState = backupDays > 14
+        ? _ChecklistRisk.high
+        : (backupDays > 7 ? _ChecklistRisk.medium : _ChecklistRisk.low);
+    final (riskLabel, riskDescription, riskColor) = switch (riskState) {
+      _ChecklistRisk.high => (
+          l10n.tr('account_checklist_risk_high_title'),
+          l10n.tr('account_checklist_risk_high_body'),
+          const Color(0xFFD16C3D),
+        ),
+      _ChecklistRisk.medium => (
+          l10n.tr('account_checklist_risk_medium_title'),
+          l10n.tr('account_checklist_risk_medium_body'),
+          const Color(0xFF5D79B3),
+        ),
+      _ChecklistRisk.low => (
+          l10n.tr('account_checklist_risk_low_title'),
+          l10n.tr('account_checklist_risk_low_body'),
+          const Color(0xFF4B68C7),
+        ),
+    };
+    final needsBackupAction = riskState != _ChecklistRisk.low;
+
+    final tasks = [
+      _AccountQuestItem(
+        title: l10n.tr('account_checklist_task_backup_title'),
+        subtitle: backupDone
+            ? l10n.tr('account_checklist_task_backup_done')
+            : l10n.tr('account_checklist_task_backup_pending'),
+        done: backupDone,
+        color: const Color(0xFF4B8DF8),
+        onTap: onOpenBackup,
+      ),
+      _AccountQuestItem(
+        title: l10n.tr('account_checklist_task_policy_title'),
+        subtitle: l10n.tr('account_checklist_task_policy_subtitle'),
+        done: false,
+        color: const Color(0xFF7B6DF2),
+        onTap: onOpenDataPolicy,
+      ),
+      _AccountQuestItem(
+        title: l10n.tr('account_checklist_task_plan_title'),
+        subtitle: isPremium
+            ? l10n.tr('account_checklist_task_plan_premium')
+            : l10n.tr('account_checklist_task_plan_free'),
+        done: isPremium,
+        color: const Color(0xFFFF9A56),
+        onTap: onOpenPremium,
+      ),
+    ];
+
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.96),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color(0xFFE6EAF3)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l10n.tr('account_checklist_title'),
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: const Color(0xFF243248),
+                  fontWeight: FontWeight.w800,
+                ),
+          ),
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+            decoration: BoxDecoration(
+              color: riskColor.withValues(alpha: 0.14),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.info_outline_rounded, color: riskColor, size: 18),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        riskLabel,
+                        style:
+                            Theme.of(context).textTheme.labelMedium?.copyWith(
+                                  color: riskColor,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                      ),
+                      const SizedBox(height: 1),
+                      Text(
+                        riskDescription,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: const Color(0xFF5E6D85),
+                              fontWeight: FontWeight.w600,
+                            ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (needsBackupAction)
+                  TextButton(
+                    onPressed: onOpenBackup,
+                    style: TextButton.styleFrom(
+                      foregroundColor: riskColor,
+                      visualDensity: VisualDensity.compact,
+                    ),
+                    child: Text(l10n.tr('account_checklist_backup_action')),
+                  ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 8),
+          for (var i = 0; i < tasks.length; i++) ...[
+            _AccountQuestTile(item: tasks[i]),
+            if (i != tasks.length - 1) const SizedBox(height: 8),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _AccountQuestTile extends StatelessWidget {
+  const _AccountQuestTile({required this.item});
+
+  final _AccountQuestItem item;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: const Color(0xFFFCFDFF),
+      borderRadius: BorderRadius.circular(14),
+      child: InkWell(
+        onTap: item.onTap,
+        borderRadius: BorderRadius.circular(14),
+        child: Ink(
+          padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: const Color(0xFFE7EBF5)),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 34,
+                height: 34,
+                decoration: BoxDecoration(
+                  color: item.color.withValues(alpha: 0.16),
+                  borderRadius: BorderRadius.circular(9),
+                ),
+                child: Icon(
+                  item.done ? Icons.check_rounded : Icons.flag_outlined,
+                  color: item.color,
+                  size: 18,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item.title,
+                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                            color: const Color(0xFF2C3D55),
+                            fontWeight: FontWeight.w800,
+                          ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      item.subtitle,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: const Color(0xFF60708B),
+                            fontWeight: FontWeight.w600,
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(Icons.chevron_right_rounded, color: item.color, size: 22),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _AccountQuestItem {
+  const _AccountQuestItem({
+    required this.title,
+    required this.subtitle,
+    required this.done,
+    required this.color,
+    required this.onTap,
+  });
+
+  final String title;
+  final String subtitle;
+  final bool done;
+  final Color color;
+  final VoidCallback onTap;
+}
+
+enum _ChecklistRisk {
+  low,
+  medium,
+  high,
+}
+
 class _AccountStatusCard extends StatelessWidget {
   const _AccountStatusCard({
     required this.l10n,
@@ -614,8 +1316,8 @@ class _AccountStatusCard extends StatelessWidget {
             Text(
               isSignedIn
                   ? (isAnonymous
-                        ? l10n.tr('account_status_anonymous')
-                        : l10n.tr('account_status_logged_in'))
+                      ? l10n.tr('account_status_anonymous')
+                      : l10n.tr('account_status_logged_in'))
                   : l10n.tr('account_status_logged_out'),
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
@@ -893,6 +1595,22 @@ class _BackupHistoryCard extends StatelessWidget {
               }),
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: FilledButton.tonalIcon(
+                onPressed: () {
+                  Navigator.push<void>(
+                    context,
+                    MaterialPageRoute<void>(
+                      builder: (_) => const BackupPage(),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.cloud_upload_outlined),
+                label: Text(l10n.tr('backup_banner_button')),
               ),
             ),
             const SizedBox(height: 12),
@@ -1224,9 +1942,8 @@ DiagnosticsStats computeDiagnosticsStats(List<TimerAccuracySample> samples) {
       .map((sample) => sample.skewMs.abs())
       .fold<int>(0, (max, value) => math.max(max, value))
       .toDouble();
-  final withinTarget = samples
-      .where((sample) => sample.skewMs.abs() <= 60000)
-      .length;
+  final withinTarget =
+      samples.where((sample) => sample.skewMs.abs() <= 60000).length;
   final percent = withinTarget == 0
       ? 0.0
       : (withinTarget / count * 100).clamp(0, 100).toDouble();
@@ -1338,8 +2055,8 @@ Widget _buildSummary(AppLocalizations l10n, List<BackupLogEntry> history) {
       builder: (context) => Text(
         l10n.tr('backup_summary_never'),
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-          color: Theme.of(context).colorScheme.onSurfaceVariant,
-        ),
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
       ),
     );
   }
@@ -1575,9 +2292,8 @@ class _LanguagePreferenceCard extends StatelessWidget {
       _LanguageOption('en', l10n.tr('account_language_english')),
       _LanguageOption('ko', l10n.tr('account_language_korean')),
     ];
-    final normalizedSelected = options.any((option) => option.code == selected)
-        ? selected
-        : 'system';
+    final normalizedSelected =
+        options.any((option) => option.code == selected) ? selected : 'system';
 
     return Card(
       elevation: 0,
@@ -1967,61 +2683,31 @@ class _LoadingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      color: theme.colorScheme.surfaceContainerHighest,
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-        title: title != null
-            ? Text(
-                title!,
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  color: theme.colorScheme.onSurface,
-                  fontWeight: FontWeight.w500,
-                ),
-              )
-            : null,
-        subtitle: const Padding(
-          padding: EdgeInsets.only(top: 8),
-          child: LinearProgressIndicator(minHeight: 4),
-        ),
-      ),
+    return AppLoadingState(
+      title: title,
+      compact: true,
     );
   }
 }
 
 class _ErrorCard extends StatelessWidget {
-  const _ErrorCard({required this.title, required this.message});
+  const _ErrorCard({
+    required this.title,
+    required this.message,
+    this.onRetry,
+  });
 
   final String title;
   final String message;
+  final VoidCallback? onRetry;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      color: theme.colorScheme.surfaceContainerHighest,
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-        leading: Icon(Icons.error_outline, color: theme.colorScheme.error),
-        title: Text(
-          title,
-          style: theme.textTheme.bodyLarge?.copyWith(
-            color: theme.colorScheme.onSurface,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        subtitle: Text(
-          message,
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: theme.colorScheme.error,
-          ),
-        ),
-      ),
+    return AppErrorState(
+      title: title,
+      message: message,
+      retryLabel: onRetry != null ? context.l10n.tr('common_retry') : null,
+      onRetry: onRetry,
     );
   }
 }
@@ -2035,9 +2721,8 @@ String _formatBytes(int bytes) {
     size /= 1024;
     unitIndex++;
   }
-  final formatted = size >= 10
-      ? size.toStringAsFixed(0)
-      : size.toStringAsFixed(1);
+  final formatted =
+      size >= 10 ? size.toStringAsFixed(0) : size.toStringAsFixed(1);
   return '$formatted ${units[unitIndex]}';
 }
 

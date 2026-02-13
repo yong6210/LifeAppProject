@@ -1,8 +1,7 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:life_app/design/ui_tokens.dart';
 
-/// iOS-style tab bar with glassmorphism effect
-/// Matches Figma design with backdrop blur and translucent background
+/// Bottom tab shell tuned for clarity over decoration.
 class IOSTabBar extends StatelessWidget {
   const IOSTabBar({
     super.key,
@@ -18,49 +17,44 @@ class IOSTabBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final brightness = theme.brightness;
-    final isDark = brightness == Brightness.dark;
+    final isDark = theme.brightness == Brightness.dark;
+    final shellColor =
+        isDark ? const Color(0xFF171C26) : const Color(0xFFFEFDFC);
+    final borderColor =
+        isDark ? Colors.white.withValues(alpha: 0.12) : UiBorders.subtle;
 
-    return Container(
-      decoration: BoxDecoration(
-        border: Border(
-          top: BorderSide(
-            color: isDark
-                ? Colors.white.withValues(alpha: 0.1)
-                : Colors.black.withValues(alpha: 0.1),
-            width: 0.5,
-          ),
-        ),
-      ),
-      child: ClipRect(
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
-          child: Container(
-            color: isDark
-                ? Colors.black.withValues(alpha: 0.8)
-                : Colors.white.withValues(alpha: 0.8),
-            child: SafeArea(
-              top: false,
-              child: Container(
-                height: 64, // iOS tab bar height (excluding safe area)
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: List.generate(items.length, (index) {
-                    final item = items[index];
-                    final isActive = currentIndex == index;
-
-                    return Expanded(
-                      child: _IOSTabButton(
-                        icon: item.icon,
-                        label: item.label,
-                        color: item.color,
-                        isActive: isActive,
+    return SafeArea(
+      top: false,
+      minimum: const EdgeInsets.fromLTRB(12, 0, 12, 8),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 720),
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: shellColor,
+              borderRadius: BorderRadius.circular(UiRadii.lg),
+              border: Border.all(color: borderColor),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: isDark ? 0.28 : 0.08),
+                  blurRadius: 14,
+                  offset: const Offset(0, 6),
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+              child: Row(
+                children: [
+                  for (var index = 0; index < items.length; index++)
+                    Expanded(
+                      child: _TabButton(
+                        item: items[index],
+                        isActive: index == currentIndex,
                         onTap: () => onTap(index),
                       ),
-                    );
-                  }),
-                ),
+                    ),
+                ],
               ),
             ),
           ),
@@ -70,100 +64,90 @@ class IOSTabBar extends StatelessWidget {
   }
 }
 
-class _IOSTabButton extends StatefulWidget {
-  const _IOSTabButton({
-    required this.icon,
-    required this.label,
-    required this.color,
+class _TabButton extends StatelessWidget {
+  const _TabButton({
+    required this.item,
     required this.isActive,
     required this.onTap,
   });
 
-  final IconData icon;
-  final String label;
-  final Color color;
+  final IOSTabItem item;
   final bool isActive;
   final VoidCallback onTap;
 
   @override
-  State<_IOSTabButton> createState() => _IOSTabButtonState();
-}
-
-class _IOSTabButtonState extends State<_IOSTabButton>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _scaleAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 100),
-      vsync: this,
-    );
-    _scaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: 0.95,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  void _handleTapDown(TapDownDetails details) {
-    _controller.forward();
-  }
-
-  void _handleTapUp(TapUpDetails details) {
-    _controller.reverse();
-    widget.onTap();
-  }
-
-  void _handleTapCancel() {
-    _controller.reverse();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final activeColor = item.color;
+    final selectedColor = isDark
+        ? activeColor
+        : Color.alphaBlend(
+            Colors.black.withValues(alpha: 0.42),
+            activeColor,
+          );
+    final inactiveColor =
+        isDark ? const Color(0xFFAAB4C5) : const Color(0xFF4F5B6D);
 
-    final iconColor = widget.isActive
-        ? widget.color
-        : (isDark
-              ? const Color(0xFF8E8E93)
-              : const Color(0xFF8E8E93)); // iOS gray
-
-    final labelColor = widget.isActive
-        ? widget.color
-        : (isDark ? const Color(0xFF8E8E93) : const Color(0xFF8E8E93));
-
-    return ScaleTransition(
-      scale: _scaleAnimation,
-      child: GestureDetector(
-        onTapDown: _handleTapDown,
-        onTapUp: _handleTapUp,
-        onTapCancel: _handleTapCancel,
-        child: Container(
-          color: Colors.transparent,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(widget.icon, size: 24, color: iconColor),
-              const SizedBox(height: 2),
-              Text(
-                widget.label,
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w400,
-                  height: 1.27,
-                  color: labelColor,
+    return Semantics(
+      button: true,
+      selected: isActive,
+      label: item.label,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(UiRadii.md),
+          onTap: onTap,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: 60),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 180),
+              curve: Curves.easeOutCubic,
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 7),
+              decoration: BoxDecoration(
+                color: isActive
+                    ? activeColor.withValues(alpha: isDark ? 0.24 : 0.14)
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(UiRadii.md),
+                border: Border.all(
+                  color: isActive
+                      ? activeColor.withValues(alpha: isDark ? 0.40 : 0.28)
+                      : Colors.transparent,
                 ),
               ),
-            ],
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 180),
+                    curve: Curves.easeOutCubic,
+                    width: isActive ? 20 : 0,
+                    height: 3,
+                    decoration: BoxDecoration(
+                      color: selectedColor,
+                      borderRadius: BorderRadius.circular(UiRadii.pill),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Icon(
+                    item.icon,
+                    size: 22,
+                    color: isActive ? selectedColor : inactiveColor,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    item.label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: isActive ? FontWeight.w800 : FontWeight.w600,
+                      color: isActive ? selectedColor : inactiveColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ),

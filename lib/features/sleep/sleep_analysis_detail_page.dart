@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:life_app/l10n/app_localizations.dart';
+import 'package:life_app/providers/sleep_analysis_providers.dart';
 import 'package:life_app/services/audio/sleep_sound_analyzer.dart';
 
-class SleepAnalysisDetailPage extends StatelessWidget {
+class SleepAnalysisDetailPage extends ConsumerWidget {
   const SleepAnalysisDetailPage({super.key, required this.summary});
 
   final SleepSoundSummary summary;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
     final score = summary.score;
@@ -38,10 +40,52 @@ class SleepAnalysisDetailPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.tr('sleep_analysis_detail_title')),
+        actions: [
+          IconButton(
+            tooltip: l10n.tr('sleep_analysis_delete_data_tooltip'),
+            icon: const Icon(Icons.delete_outline_rounded),
+            onPressed: () async {
+              final confirm = await showDialog<bool>(
+                context: context,
+                builder: (dialogContext) => AlertDialog(
+                  title: Text(l10n.tr('sleep_analysis_delete_data_title')),
+                  content: Text(l10n.tr('sleep_analysis_delete_data_message')),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(dialogContext, false),
+                      child: Text(l10n.tr('dialog_cancel')),
+                    ),
+                    FilledButton(
+                      onPressed: () => Navigator.pop(dialogContext, true),
+                      child:
+                          Text(l10n.tr('sleep_analysis_delete_data_confirm')),
+                    ),
+                  ],
+                ),
+              );
+              if (confirm != true) return;
+              await ref.read(clearSleepSoundSummaryProvider(summary).future);
+              if (!context.mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                    content: Text(l10n.tr('sleep_analysis_delete_data_done'))),
+              );
+              Navigator.of(context).maybePop();
+            },
+          ),
+        ],
       ),
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.privacy_tip_outlined),
+              title: Text(l10n.tr('sleep_analysis_privacy_title')),
+              subtitle: Text(l10n.tr('sleep_analysis_privacy_body')),
+            ),
+          ),
+          const SizedBox(height: 12),
           Card(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -85,12 +129,11 @@ class SleepAnalysisDetailPage extends StatelessWidget {
               children: summary.noiseEvents
                   .map((event) => ListTile(
                         leading: const Icon(Icons.volume_up),
-                        title: Text(l10n.tr('sleep_detail_noise_event_at', {
-                          'time': _formatDuration(event.offset)
-                        })),
-                        subtitle: Text(l10n.tr('sleep_detail_noise_event_duration', {
-                          'duration': '${event.duration.inSeconds}s'
-                        })),
+                        title: Text(l10n.tr('sleep_detail_noise_event_at',
+                            {'time': _formatDuration(event.offset)})),
+                        subtitle: Text(l10n.tr(
+                            'sleep_detail_noise_event_duration',
+                            {'duration': '${event.duration.inSeconds}s'})),
                       ))
                   .toList(),
             ),

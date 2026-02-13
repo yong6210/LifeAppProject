@@ -17,6 +17,12 @@ final latestSleepSoundSummaryProvider = FutureProvider<SleepSoundSummary?>((
 /// [SleepSoundAnalyzer.stop] completes.
 final saveSleepSoundSummaryProvider =
     FutureProvider.family<void, SleepSoundSummary>((ref, summary) async {
-      final store = ref.watch(sleepSoundSummaryStoreProvider);
-      await store.saveLatest(summary);
-    });
+  final store = ref.watch(sleepSoundSummaryStoreProvider);
+  await store.saveLatest(summary);
+});
+
+final clearSleepSoundSummaryProvider =
+    FutureProvider.family<void, SleepSoundSummary>((ref, summary) async {
+  final store = ref.watch(sleepSoundSummaryStoreProvider);
+  await store.deleteSummaryAndRecording(summary);
+});

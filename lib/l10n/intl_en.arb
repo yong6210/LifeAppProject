@@ -2,6 +2,10 @@
   "@@locale": "en",
   "app_title": "Life App",
   "tab_home": "Home",
+  "tab_tasks": "Tasks",
+  "tab_focus": "Focus",
+  "tab_record": "Record",
+  "tab_my": "My",
   "tab_more": "More",
   "tab_profile": "Profile",
   "more_title": "More",
@@ -14,6 +18,48 @@
   "more_item_journal": "Journal",
   "more_item_stats": "Stats",
   "more_item_backup": "Backup",
+  "schedule_page_title": "Today's Plan",
+  "schedule_add_block": "Add Task",
+  "schedule_edit_block": "Edit Task",
+  "schedule_empty_state": "No tasks scheduled yet.",
+  "schedule_empty_cta": "Add First Task",
+  "schedule_loading_title": "Loading your tasks",
+  "schedule_loading_message": "Preparing items for today's execution.",
+  "schedule_error_title": "Couldn't load tasks",
+  "schedule_error_retry": "Try again",
+  "schedule_filter_all": "All",
+  "schedule_filter_tasks": "Tasks",
+  "schedule_filter_routine": "Routine",
+  "schedule_filter_done": "Done",
+  "schedule_section_now_title": "Do Now",
+  "schedule_section_routine_title": "Routine",
+  "schedule_section_now_empty": "No immediate tasks right now.",
+  "schedule_section_routine_empty": "No routines added yet.",
+  "schedule_status_urgent": "Urgent",
+  "schedule_status_normal": "Normal",
+  "schedule_status_done": "Done",
+  "schedule_action_edit": "Edit",
+  "schedule_action_delete": "Delete",
+  "schedule_default_focus": "Default focus session",
+  "schedule_field_title": "Title",
+  "schedule_field_title_hint": "e.g. Morning focus session",
+  "schedule_field_title_required": "Please enter a title.",
+  "schedule_field_start": "Start time",
+  "schedule_field_end": "End time",
+  "schedule_field_repeat": "Repeat",
+  "schedule_repeat_none": "No repeat",
+  "schedule_repeat_daily": "Daily",
+  "schedule_repeat_weekdays": "Weekdays",
+  "schedule_repeat_weekend": "Weekend",
+  "schedule_field_routine_type": "Routine type",
+  "schedule_routine_type_builtIn": "Built-in routine",
+  "schedule_routine_type_custom": "Custom routine",
+  "schedule_field_select_custom": "Select custom routine",
+  "schedule_field_built_in_label": "Built-in routine",
+  "schedule_field_built_in_helper": "Built-in routines are used as default recommendations.",
+  "schedule_field_notes": "Notes",
+  "schedule_field_notes_hint": "Add optional notes for this task.",
+  "schedule_field_notes_helper": "Use notes for context or reminders.",
   "home_greeting": "Hello again",
   "home_routine_focus_title": "Deep focus",
   "home_routine_focus_body": "Stay in flow with balanced work and break intervals.",
@@ -104,6 +150,48 @@
   "account_logout_button": "Sign Out",
   "account_processing": "Processing...",
   "account_upgrade_hint": "Email and other sign-in upgrades will be added later.",
+  "account_casual_subtitle": "Control account, subscription, and data safety in one place.",
+  "account_casual_badge": "ACCOUNT HUB",
+  "account_profile_guest": "Guest user",
+  "account_profile_anonymous": "Anonymous user",
+  "account_profile_user": "User",
+  "account_sync_connected": "Cloud connected",
+  "account_sync_local": "Local-only mode",
+  "account_backup_none": "No backup history",
+  "account_backup_fresh": "Backup up to date",
+  "account_backup_days_ago": "Backup {days}d ago",
+  "@account_backup_days_ago": {
+    "placeholders": {
+      "days": {}
+    }
+  },
+  "account_safety_needs_check": "Backup check recommended",
+  "account_safety_good": "Data safety looks good",
+  "account_manage_plan": "Manage plan",
+  "account_plan_badge_premium": "PREMIUM",
+  "account_plan_badge_standard": "STANDARD",
+  "account_checklist_title": "Readiness checklist",
+  "account_checklist_risk_high_title": "Needs attention",
+  "account_checklist_risk_high_body": "Backups are stale and risk of data loss is increasing.",
+  "account_checklist_risk_medium_title": "Review recommended",
+  "account_checklist_risk_medium_body": "Tighten your backup cadence to improve resilience.",
+  "account_checklist_risk_low_title": "Stable state",
+  "account_checklist_risk_low_body": "Your account safety posture looks healthy.",
+  "account_checklist_backup_action": "Backup",
+  "account_checklist_task_backup_title": "Backup status",
+  "account_checklist_task_backup_done": "Recent backups are complete and your data looks safe.",
+  "account_checklist_task_backup_pending": "Backup is outdated. Refresh it now.",
+  "account_checklist_task_policy_title": "Data policy check",
+  "account_checklist_task_policy_subtitle": "Review retention and sync defaults for this device.",
+  "account_checklist_task_plan_title": "Plan check",
+  "account_checklist_task_plan_premium": "Premium is active.",
+  "account_checklist_task_plan_free": "Upgrade to unlock advanced flows.",
+  "account_section_identity_title": "Identity & Plan",
+  "account_section_identity_subtitle": "Account state, subscription, and readiness checks.",
+  "account_section_preferences_title": "Preferences & Policy",
+  "account_section_preferences_subtitle": "Language, personalization, accessibility, and policy.",
+  "account_section_safety_title": "Data & Safety",
+  "account_section_safety_subtitle": "Backup history, diagnostics, and destructive actions.",
   "account_language_title": "App language",
   "account_language_description": "Switch languages any time. Content updates instantly.",
   "account_language_system": "System default",
@@ -884,6 +972,22 @@
   "timer_button_start": "Start",
   "timer_button_pause": "Pause",
   "timer_button_reset": "Reset",
+  "timer_advanced_controls_title": "Advanced controls",
+  "timer_advanced_controls_subtitle": "Adjust sound, segment timeline, and quick presets.",
+  "timer_advanced_controls_show": "Show",
+  "timer_advanced_controls_hide": "Hide",
+  "timer_section_switch_title": "Control level",
+  "timer_section_switch_subtitle": "Switch between simple flow and advanced setup.",
+  "timer_section_basic_label": "Basic",
+  "timer_section_advanced_label": "Advanced",
+  "timer_mode_mascot_focus_title": "Focus session ready",
+  "timer_mode_mascot_sleep_title": "Sleep routine ready",
+  "timer_mode_mascot_workout_title": "Workout session ready",
+  "timer_mode_mascot_default_title": "Timer ready",
+  "timer_mode_mascot_focus_subtitle": "Pick a routine and start right away.",
+  "timer_mode_mascot_sleep_subtitle": "Check sleep duration and wake guidance.",
+  "timer_mode_mascot_workout_subtitle": "Review route and target before you go.",
+  "timer_mode_mascot_default_subtitle": "Select a mode to start the timer.",
   "timer_sound_switch_title": "Background sound",
   "timer_sound_switch_enabled": "Current profile: {profile}",
   "timer_sound_switch_disabled": "Sound off",
@@ -1080,6 +1184,78 @@
   "stats_trend_toggle_table": "Show table",
   "stats_table_period": "Period",
   "stats_table_total": "Total",
+  "stats_casual_subtitle": "Track execution quality and balance at a glance.",
+  "stats_casual_lifetime": "Lifetime total",
+  "stats_casual_level": "Consistency level",
+  "stats_casual_best_focus_title": "Best focus day this week",
+  "stats_casual_best_focus_empty": "No focus record yet this week.",
+  "stats_casual_trend_title": "Recent execution trend",
+  "stats_casual_no_trend": "No trend data yet. Complete a session to start tracking.",
+  "stats_casual_share_label": "Domain balance",
+  "stats_casual_open_advanced": "Open advanced analytics",
+  "analytics_dashboard_title": "Cross-domain analytics",
+  "analytics_dashboard_export": "Export PDF",
+  "analytics_dashboard_loading_title": "Building your analytics dashboard",
+  "analytics_dashboard_loading_message": "Collecting focus, sleep, and mood signals.",
+  "analytics_dashboard_error_title": "Unable to load analytics",
+  "analytics_dashboard_range_label": "Range",
+  "analytics_dashboard_range_7": "7 days",
+  "analytics_dashboard_range_14": "14 days",
+  "analytics_dashboard_range_30": "30 days",
+  "analytics_dashboard_last_updated": "Last updated: {date}",
+  "analytics_dashboard_avg_focus": "Average focus",
+  "analytics_dashboard_avg_sleep": "Average sleep",
+  "analytics_dashboard_avg_mood": "Average mood",
+  "analytics_dashboard_summary_minutes": "{minutes} min",
+  "analytics_dashboard_sleep_debt": "Sleep debt",
+  "analytics_dashboard_sleep_debt_hours": "{hours} hr",
+  "analytics_dashboard_correlation_focus_sleep": "Focus vs sleep",
+  "analytics_dashboard_correlation_sleep_mood": "Sleep vs mood",
+  "analytics_dashboard_correlation_focus_mood": "Focus vs mood",
+  "analytics_dashboard_correlation_positive": "Positive correlation",
+  "analytics_dashboard_correlation_negative": "Negative correlation",
+  "analytics_dashboard_correlation_neutral": "Neutral / weak correlation",
+  "analytics_dashboard_highlight_focus": "Best focus day",
+  "analytics_dashboard_highlight_sleep": "Best sleep day",
+  "analytics_dashboard_highlight_mood": "Lowest mood day",
+  "analytics_dashboard_highlight_missing": "No record",
+  "analytics_dashboard_chart_label_focus": "Focus",
+  "analytics_dashboard_chart_label_sleep": "Sleep",
+  "analytics_dashboard_chart_label_mood": "Mood",
+  "analytics_dashboard_table_header_date": "Date",
+  "analytics_dashboard_table_header_focus": "Focus (min)",
+  "analytics_dashboard_table_header_sleep": "Sleep (min)",
+  "analytics_dashboard_table_header_mood": "Mood",
+  "analytics_dashboard_table_header_journal_sleep": "Journal sleep (hr)",
+  "analytics_dashboard_empty_title": "No analytics data yet",
+  "analytics_dashboard_empty": "Complete sessions and journal logs to generate analytics.",
+  "analytics_dashboard_export_success": "PDF exported to: {path}",
+  "analytics_dashboard_export_error": "Export failed: {error}",
+  "@analytics_dashboard_last_updated": {
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "@analytics_dashboard_summary_minutes": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "@analytics_dashboard_sleep_debt_hours": {
+    "placeholders": {
+      "hours": {}
+    }
+  },
+  "@analytics_dashboard_export_success": {
+    "placeholders": {
+      "path": {}
+    }
+  },
+  "@analytics_dashboard_export_error": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "@stats_total_label": {
     "placeholders": {
       "duration": {}
@@ -1159,12 +1335,24 @@
   "paywall_focus_body": "Unlock detailed stats, smart alarms, and multi-mode presets to stay on track longer.",
   "paywall_backup_title": "Keep your data safe everywhere",
   "paywall_backup_body": "Automated backups and cross-device restores ensure you never lose progress.",
+  "paywall_coach_title": "Turn streaks into measurable progress",
+  "paywall_coach_body": "Get weekly coaching reports and execution feedback that make your next week sharper.",
   "paywall_focus_benefit_1": "Detailed session & routine insights",
   "paywall_focus_benefit_2": "Smart alarms and sleep mixer for focus & rest modes",
   "paywall_focus_benefit_3": "Unlimited presets synced across devices",
   "paywall_backup_benefit_1": "Automatic weekly backups with restore history",
   "paywall_backup_benefit_2": "Light sync to move between devices quickly",
   "paywall_backup_benefit_3": "Priority support and early access to new features",
+  "paywall_coach_benefit_1": "Weekly AI performance summary with habit drift detection",
+  "paywall_coach_benefit_2": "Suggested plan adjustments from your real completion data",
+  "paywall_coach_benefit_3": "Priority access to guided routines tuned to your weak spots",
+  "paywall_value_section_title": "What you unlock",
+  "paywall_value_section_subtitle": "Premium gives stronger execution and clearer progress evidence.",
+  "paywall_plan_section_title": "Choose your plan",
+  "paywall_plan_section_subtitle": "Select one option and continue with a single checkout.",
+  "paywall_badge_best_value": "Best value",
+  "paywall_checkout_title": "Ready to start Premium?",
+  "paywall_checkout_subtitle": "Selected plan details and checkout action.",
   "paywall_package_semantics_label": "Subscription option {product} for {price}",
   "@paywall_package_semantics_label": {
     "placeholders": {
@@ -1231,6 +1419,7 @@
   "common_open_settings": "Open settings",
   "common_cancel": "Cancel",
   "common_save": "Save",
+  "common_retry": "Retry",
   "permission_notification_required": "Notification permission is required to deliver timer alerts.",
   "permission_exact_title": "Allow exact alarms",
   "permission_exact_message": "Enable exact alarms so scheduled timers fire precisely. Open settings?",
@@ -1800,5 +1989,662 @@
         "type": "String"
       }
     }
-  }
+  },
+  "casual_home_quick_focus": "Start focus",
+  "casual_home_quick_workout": "Workout routine",
+  "casual_home_quick_sleep": "Sleep routine",
+  "casual_home_quick_journal": "Write journal",
+  "casual_home_quick_stats": "View stats",
+  "casual_home_quick_guided": "Guided Sessions",
+  "casual_home_quick_title": "Quick links",
+  "casual_home_quick_subtitle": "Jump straight to your most-used tools.",
+  "casual_home_topbar_streak": "{days}-day routine streak",
+  "@casual_home_topbar_streak": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "casual_home_overview_title": "Today's rhythm summary",
+  "casual_home_overview_subtitle": "See focus, workout, and sleep at a glance.",
+  "casual_home_overview_stats_cta": "Detailed stats",
+  "casual_home_hours_value": "{hours}h",
+  "@casual_home_hours_value": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "casual_home_next_focus_title": "Focus block comes first",
+  "casual_home_next_focus_subtitle": "{minutes} min left to hit today’s target.",
+  "@casual_home_next_focus_subtitle": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "casual_home_next_focus_cta": "Start focus",
+  "casual_home_next_workout_title": "Keep momentum with movement",
+  "casual_home_next_workout_subtitle": "A short routine can quickly boost energy.",
+  "casual_home_next_workout_cta": "Open workout",
+  "casual_home_next_sleep_title": "Start sleep prep early",
+  "casual_home_next_sleep_subtitle": "Your bedtime routine shapes tomorrow’s focus.",
+  "casual_home_next_sleep_cta": "Sleep routine",
+  "casual_home_next_done_title": "All daily goals completed",
+  "casual_home_next_done_subtitle": "Wrap up your day with stats and journaling.",
+  "casual_home_next_done_cta": "View stats",
+  "casual_home_signal_streak": "{days}d streak",
+  "@casual_home_signal_streak": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "casual_home_signal_focus_low": "Focus is low",
+  "casual_home_signal_focus_ok": "Focus is stable",
+  "casual_home_signal_workout_low": "Need movement",
+  "casual_home_signal_workout_ok": "Workout active",
+  "casual_home_signal_sleep_low": "Sleep prep needed",
+  "casual_home_signal_sleep_ok": "Sleep rhythm is good",
+  "casual_home_flow_title": "Daily routine flow",
+  "casual_home_flow_subtitle": "Move through your steps in order.",
+  "casual_home_flow_done_count": "{done}/{total} complete",
+  "@casual_home_flow_done_count": {
+    "placeholders": {
+      "done": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "casual_home_flow_done": "Goal done",
+  "casual_home_flow_focus_title": "Focus session",
+  "casual_home_flow_focus_progress": "{current}/{goal} min",
+  "@casual_home_flow_focus_progress": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      },
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "casual_home_flow_workout_title": "Workout routine",
+  "casual_home_flow_workout_progress": "{current}/30 min",
+  "@casual_home_flow_workout_progress": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      }
+    }
+  },
+  "casual_home_flow_sleep_title": "Sleep routine",
+  "casual_home_flow_sleep_progress": "{current}/8h",
+  "@casual_home_flow_sleep_progress": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      }
+    }
+  },
+  "casual_home_flow_journal_title": "Day journal",
+  "casual_home_flow_journal_after_done": "Write your routine reflection",
+  "casual_home_flow_journal_before_done": "Leave a short status note",
+  "casual_home_state_done": "Done",
+  "casual_home_state_ready": "In progress",
+  "casual_home_state_suggested": "Suggested",
+  "casual_home_insight_focus_title": "Insight: focus is the key variable",
+  "casual_home_insight_focus_message": "Improving focus raises total completion fastest.",
+  "casual_home_insight_focus_action": "Fill {minutes} min of focus",
+  "@casual_home_insight_focus_action": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "casual_home_insight_workout_title": "Insight: energy balance is low",
+  "casual_home_insight_workout_message": "Short movement improves both stamina and clarity.",
+  "casual_home_insight_workout_action": "Do {minutes} min workout",
+  "@casual_home_insight_workout_action": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "casual_home_insight_sleep_title": "Insight: sleep prep matters most",
+  "casual_home_insight_sleep_message": "Early wind-down reduces tomorrow’s focus swings.",
+  "casual_home_insight_sleep_action": "Recover {hours}h sleep",
+  "@casual_home_insight_sleep_action": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "more_hub_title": "Life Hub",
+  "more_hub_subtitle": "Manage execution, tracking, and backup by purpose.",
+  "more_hub_section_now_title": "Do now",
+  "more_hub_section_now_subtitle": "Start today’s routine immediately.",
+  "more_hub_section_tracking_title": "Track and review",
+  "more_hub_section_tracking_subtitle": "Record today and inspect long-term trends.",
+  "more_hub_section_data_title": "Data management",
+  "more_hub_section_data_subtitle": "Keep your history safe and recoverable.",
+  "more_hub_action_focus_title": "Start focus",
+  "more_hub_action_focus_subtitle_done": "Today's focus target is complete.",
+  "more_hub_action_focus_subtitle_pending": "Launch a focus timer now.",
+  "more_hub_action_workout_title": "Workout routine",
+  "more_hub_action_workout_subtitle_done": "Workout target complete.",
+  "more_hub_action_workout_subtitle_pending": "Boost condition with a short session.",
+  "more_hub_action_sleep_title": "Sleep routine",
+  "more_hub_action_sleep_subtitle_done": "Sleep target complete today.",
+  "more_hub_action_sleep_subtitle_pending": "Run your wind-down plan before bed.",
+  "more_hub_action_journal_title": "Journal",
+  "more_hub_action_journal_subtitle": "Capture today’s status and thoughts.",
+  "more_hub_action_journal_status": "Recommended: 3-line summary",
+  "more_hub_action_stats_title": "Stats",
+  "more_hub_action_stats_subtitle": "Check trend and routine changes.",
+  "more_hub_action_stats_status": "Completion {percent}%",
+  "@more_hub_action_stats_status": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "more_hub_action_backup_title": "Backup",
+  "more_hub_action_backup_subtitle": "Keep your data safe.",
+  "more_hub_action_backup_status_none": "No backup history",
+  "more_hub_action_backup_status_days": "Last backup {days} days ago",
+  "@more_hub_action_backup_status_days": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "more_hub_action_guided_title": "Guided Session",
+  "more_hub_action_guided_subtitle": "Run curated multi-step routines.",
+  "more_hub_action_guided_status": "Coach flow available",
+  "more_hub_status_done": "Done",
+  "more_hub_status_minutes_left": "{minutes}m left",
+  "@more_hub_status_minutes_left": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "more_hub_status_hours_left": "{hours}h left",
+  "@more_hub_status_hours_left": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "more_hub_tag_now": "Now",
+  "more_hub_tag_recommended": "Recommended",
+  "more_hub_tag_evening": "Evening",
+  "more_hub_tag_record": "Record",
+  "more_hub_tag_analysis": "Analysis",
+  "more_hub_tag_safe": "Safe",
+  "more_hub_summary_title": "Today's recommended run",
+  "more_hub_summary_body_done": "All major routines are complete. Wrap up with review.",
+  "more_hub_summary_body_pending": "Start the most needed routine right now.",
+  "more_hub_summary_chip_focus_done": "Focus done",
+  "more_hub_summary_chip_focus_left": "Focus {minutes}m left",
+  "@more_hub_summary_chip_focus_left": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "more_hub_summary_chip_workout_done": "Workout done",
+  "more_hub_summary_chip_workout_left": "Workout {minutes}m left",
+  "@more_hub_summary_chip_workout_left": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "more_hub_summary_chip_sleep_done": "Sleep done",
+  "more_hub_summary_chip_sleep_left": "Sleep {hours}h left",
+  "@more_hub_summary_chip_sleep_left": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "more_hub_summary_focus_cta": "Start focus",
+  "more_hub_summary_stats_cta": "Open stats",
+  "more_hub_pinned_title": "Pinned shortcuts",
+  "guided_sessions_title": "Guided sessions",
+  "guided_sessions_intro": "Multi-step session templates for focus, energy, and sleep.",
+  "guided_session_step_item": "{mode} {minutes}m",
+  "@guided_session_step_item": {
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "guided_session_start_button": "Start now ({minutes}m)",
+  "@guided_session_start_button": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "guided_session_focus_boost_title": "Focus Boost 45",
+  "guided_session_focus_boost_subtitle": "Two focus blocks with one reset break.",
+  "guided_session_energy_reset_title": "Energy Reset Sprint",
+  "guided_session_energy_reset_subtitle": "Wake up body first, then lock into focus.",
+  "guided_session_sleep_landing_title": "Sleep Landing",
+  "guided_session_sleep_landing_subtitle": "Soft transition from rest to sleep flow.",
+  "guided_session_badge_focus": "Focus",
+  "guided_session_badge_energy": "Energy",
+  "guided_session_badge_night": "Night",
+  "guided_session_voice_step_start": "Step {step} of {total}. {mode} for {minutes} minutes.",
+  "@guided_session_voice_step_start": {
+    "placeholders": {
+      "step": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      },
+      "mode": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "guided_session_voice_complete": "Guided session complete. Great consistency today.",
+  "guided_session_progress_title": "Guided run status",
+  "guided_session_progress_count": "Step {current}/{total}",
+  "@guided_session_progress_count": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "guided_session_progress_now": "Now: {segment}",
+  "@guided_session_progress_now": {
+    "placeholders": {
+      "segment": {
+        "type": "String"
+      }
+    }
+  },
+  "guided_session_progress_next": "Next: {segment}",
+  "@guided_session_progress_next": {
+    "placeholders": {
+      "segment": {
+        "type": "String"
+      }
+    }
+  },
+  "guided_session_progress_all_done": "Final step in progress",
+  "guided_session_now_badge": "Now",
+  "guided_session_complete_title": "Guided session completed",
+  "guided_session_complete_body": "You completed {title}. Keep the rhythm going.",
+  "@guided_session_complete_body": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "guided_session_complete_summary": "{steps} steps · {minutes} minutes",
+  "@guided_session_complete_summary": {
+    "placeholders": {
+      "steps": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "guided_session_complete_restart": "Run again",
+  "guided_session_complete_home": "Back to home",
+  "recommendation_focus_title": "Recommendation: strengthen focus first",
+  "recommendation_focus_message": "Completing focus target gives the fastest daily quality gain.",
+  "recommendation_focus_message_streak": "Your streak is solid. One more focus block keeps momentum.",
+  "recommendation_focus_action": "Add {minutes}m focus",
+  "@recommendation_focus_action": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "recommendation_workout_title": "Recommendation: add a movement break",
+  "recommendation_workout_message": "A short workout improves both stamina and concentration.",
+  "recommendation_workout_action": "Do {minutes}m workout",
+  "@recommendation_workout_action": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "recommendation_sleep_title": "Recommendation: secure sleep before night",
+  "recommendation_sleep_message": "Early wind-down stabilizes tomorrow’s mental performance.",
+  "recommendation_sleep_action": "Recover {hours}h sleep",
+  "@recommendation_sleep_action": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "recommendation_dismiss_tooltip": "Hide recommendation for today",
+  "paywall_proof_title": "Your current momentum",
+  "paywall_proof_body": "Premium becomes more valuable as your routine consistency grows.",
+  "paywall_proof_streak": "{days}-day streak",
+  "@paywall_proof_streak": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "paywall_proof_completion": "{percent}% complete today",
+  "@paywall_proof_completion": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "paywall_preview_title": "Your 7-day performance preview",
+  "paywall_preview_subtitle": "Premium turns this weekly pattern into measurable improvements.",
+  "paywall_preview_weekly_total": "{minutes}m tracked this week",
+  "@paywall_preview_weekly_total": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "paywall_preview_daily_average": "{minutes}m daily average",
+  "@paywall_preview_daily_average": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "paywall_preview_momentum_score": "Momentum score {score}/100",
+  "@paywall_preview_momentum_score": {
+    "placeholders": {
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "paywall_preview_next_milestone": "{days} days to your {target}-day streak milestone",
+  "@paywall_preview_next_milestone": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "paywall_preview_goal_reached": "Milestone reached. Keep compounding your streak.",
+  "sleep_analysis_privacy_title": "Privacy note",
+  "sleep_analysis_privacy_body": "Sleep sound analysis runs on-device. You can delete local summary and recording anytime.",
+  "sleep_analysis_delete_data_tooltip": "Delete local sleep data",
+  "sleep_analysis_delete_data_title": "Delete sleep sound data?",
+  "sleep_analysis_delete_data_message": "This removes the latest analysis summary and local recording file from this device.",
+  "sleep_analysis_delete_data_confirm": "Delete now",
+  "sleep_analysis_delete_data_done": "Local sleep sound data deleted.",
+  "onboarding_skip_button": "Skip for now",
+  "casual_home_detail_title": "Today detail insight",
+  "casual_home_detail_subtitle": "Open to see flow health and recommendation",
+  "timer_focus_quick_routine_title": "Quick focus routine",
+  "timer_focus_quick_preset_25": "25m Pomodoro",
+  "timer_focus_quick_preset_45": "45m Deep Work",
+  "timer_focus_quick_preset_90": "90m Flow",
+  "timer_workout_overlay_distance_km": "{distance} km",
+  "@timer_workout_overlay_distance_km": {
+    "placeholders": {
+      "distance": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_workout_overlay_estimated_min": "{minutes} min",
+  "@timer_workout_overlay_estimated_min": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_workout_overlay_map_preview_fallback": "Map preview coming soon",
+  "timer_workout_overlay_session_complete": "Session complete",
+  "timer_workout_overlay_time_remaining": "Time remaining {time}",
+  "@timer_workout_overlay_time_remaining": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_workout_overlay_target_distance": "Target • {distance} km",
+  "@timer_workout_overlay_target_distance": {
+    "placeholders": {
+      "distance": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_workout_overlay_target_duration": "Target • {minutes} min",
+  "@timer_workout_overlay_target_duration": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_workout_overlay_voice_on": "Voice guidance • On",
+  "timer_workout_overlay_voice_off": "Voice guidance • Off",
+  "timer_workout_overlay_last_cue": "Last cue • {ago}",
+  "@timer_workout_overlay_last_cue": {
+    "placeholders": {
+      "ago": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_workout_overlay_next_cue_in": "Next cue in {time}",
+  "@timer_workout_overlay_next_cue_in": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_workout_overlay_offline_instructions": "Offline instructions",
+  "timer_workout_overlay_cue_just_now": "Just now",
+  "timer_workout_overlay_cue_seconds_ago": "{seconds}s ago",
+  "@timer_workout_overlay_cue_seconds_ago": {
+    "placeholders": {
+      "seconds": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_workout_overlay_cue_minutes_ago": "{minutes}m ago",
+  "@timer_workout_overlay_cue_minutes_ago": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_workout_overlay_cue_hours_ago": "{hours}h ago",
+  "@timer_workout_overlay_cue_hours_ago": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_workout_overlay_cue_hours_minutes_ago": "{hours}h {minutes}m ago",
+  "@timer_workout_overlay_cue_hours_minutes_ago": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_duration_hours_short": "{hours}h",
+  "@timer_duration_hours_short": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_duration_hours_minutes_short": "{hours}h {minutes}m",
+  "@timer_duration_hours_minutes_short": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_duration_minutes_short": "{minutes}m",
+  "@timer_duration_minutes_short": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_duration_minutes_seconds_short": "{minutes}m {seconds}s",
+  "@timer_duration_minutes_seconds_short": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      },
+      "seconds": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_duration_seconds_short": "{seconds}s",
+  "@timer_duration_seconds_short": {
+    "placeholders": {
+      "seconds": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_workout_summary_voice_on": "On",
+  "timer_workout_summary_voice_off": "Off",
+  "timer_workout_summary_checklist_one": "1 item",
+  "timer_workout_summary_checklist_many": "{count} items",
+  "@timer_workout_summary_checklist_many": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_workout_summary_target_distance": "{distance} km distance",
+  "@timer_workout_summary_target_distance": {
+    "placeholders": {
+      "distance": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_workout_summary_target_duration": "{minutes} min duration",
+  "@timer_workout_summary_target_duration": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_workout_summary_title": "Workout navigator summary",
+  "timer_workout_summary_completed_at": "Completed at {time}",
+  "@timer_workout_summary_completed_at": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_workout_summary_badge_duration": "Duration • {duration}",
+  "@timer_workout_summary_badge_duration": {
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_workout_summary_badge_target": "Target • {target}",
+  "@timer_workout_summary_badge_target": {
+    "placeholders": {
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_workout_summary_badge_voice_guidance": "Voice guidance • {status}",
+  "@timer_workout_summary_badge_voice_guidance": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_workout_summary_badge_checklist": "Checklist • {count}",
+  "@timer_workout_summary_badge_checklist": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_sleep_input_target_minute_hint": "0-59",
+  "figma_sleep_science_tip_room": "🌙 Cool, dark room = better sleep",
+  "figma_sleep_science_tip_screens": "✨ No screens 1 hour before bed",
+  "figma_sleep_science_tip_consistency": "🌟 Consistent sleep schedule helps"
 }

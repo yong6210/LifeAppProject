@@ -24,8 +24,12 @@ void main() {
           revenueCatControllerProvider.overrideWith(
             () => _FakeRevenueCatController(null),
           ),
-          paywallVariantProvider.overrideWith(
-            (ref) => PaywallVariant.focusValue,
+          paywallExperimentProvider.overrideWith(
+            (ref) => const PaywallExperimentConfig(
+              variant: PaywallVariant.focusValue,
+              experimentId: 'test_exp',
+              emphasizeAnnualPlan: true,
+            ),
           ),
         ],
         child: MaterialApp(

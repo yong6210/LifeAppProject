@@ -4,8 +4,11 @@ import 'package:intl/intl.dart';
 
 import 'package:life_app/design/app_theme.dart';
 import 'package:life_app/features/journal/journal_entry.dart';
+import 'package:life_app/l10n/app_localizations.dart';
 import 'package:life_app/providers/journal_providers.dart';
 import 'package:life_app/services/journal/life_buddy_comment_service.dart';
+import 'package:life_app/widgets/app_state_widgets.dart';
+import 'package:life_app/widgets/glass_card.dart';
 
 /// Stage 0 journal page with 30-day retention and monthly recap.
 class JournalPage extends ConsumerStatefulWidget {
@@ -47,13 +50,13 @@ class _JournalPageState extends ConsumerState<JournalPage> {
     final fallbackDate = entries.isNotEmpty
         ? DateUtils.dateOnly(entries.first.date)
         : _selectedDate;
-    final effectiveDate = entryMap.containsKey(_selectedDate)
-        ? _selectedDate
-        : fallbackDate;
+    final effectiveDate =
+        entryMap.containsKey(_selectedDate) ? _selectedDate : fallbackDate;
     final selectedEntry = entryMap[effectiveDate];
 
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final canPop = Navigator.of(context).canPop();
 
     return Scaffold(
       body: Container(
@@ -82,6 +85,20 @@ class _JournalPageState extends ConsumerState<JournalPage> {
                 padding: const EdgeInsets.all(16),
                 child: Row(
                   children: [
+                    if (canPop) ...[
+                      GlassCard(
+                        onTap: () => Navigator.of(context).pop(),
+                        padding: const EdgeInsets.all(12),
+                        borderRadius: 12,
+                        child: Icon(
+                          Icons.arrow_back_ios_new,
+                          size: 18,
+                          color:
+                              isDark ? Colors.white : AppTheme.electricViolet,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                    ],
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
@@ -102,7 +119,8 @@ class _JournalPageState extends ConsumerState<JournalPage> {
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w700,
-                        color: isDark ? Colors.white : theme.colorScheme.onSurface,
+                        color:
+                            isDark ? Colors.white : theme.colorScheme.onSurface,
                       ),
                     ),
                   ],
@@ -114,76 +132,93 @@ class _JournalPageState extends ConsumerState<JournalPage> {
                   child: ListView(
                     padding: const EdgeInsets.all(16),
                     children: [
-            _JournalCalendar(
-              entries: entriesAsync,
-              selectedDate: effectiveDate,
-              visibleMonth: _visibleMonth,
-              onMonthChanged: _changeMonth,
-              onDateSelected: _handleDateSelected,
-            ),
-            const SizedBox(height: 16),
-            _EntryDetailCard(
-              selectedDate: effectiveDate,
-              entry: selectedEntry,
-              onWriteEntry: () => _prefillEntryForDate(effectiveDate),
-            ),
-            const SizedBox(height: 24),
-            const Divider(),
-            const SizedBox(height: 16),
-            _DatePickerField(
-              initialDate: _entryDate,
-              onChanged: (value) => setState(() => _entryDate = value),
-            ),
-            const SizedBox(height: 12),
-            _MoodChipSelector(
-              value: _selectedMood,
-              onChanged: (value) => setState(() => _selectedMood = value),
-            ),
-            const SizedBox(height: 12),
-            _EnergySelector(
-              value: _energyLevel,
-              onChanged: (value) => setState(() => _energyLevel = value),
-            ),
-            const SizedBox(height: 12),
-            Text('Sleep hours: ${_sleepHours.toStringAsFixed(1)} h'),
-            Slider(
-              min: 0,
-              max: 12,
-              divisions: 24,
-              value: _sleepHours,
-              label: _sleepHours.toStringAsFixed(1),
-              onChanged: (value) => setState(() => _sleepHours = value),
-            ),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: _notesController,
-              minLines: 3,
-              maxLines: 6,
-              maxLength: 1000,
-              decoration: const InputDecoration(
-                labelText: 'Notes (optional)',
-                border: OutlineInputBorder(),
-                hintText: 'How was your day? Any thoughts or reflections...',
-                helperText: 'Capture your thoughts and feelings',
-              ),
-              textCapitalization: TextCapitalization.sentences,
-            ),
-            const SizedBox(height: 20),
-            FilledButton(onPressed: _submit, child: const Text('Add entry')),
-            const SizedBox(height: 24),
-            _MonthlyRecapCard(summary: summaryAsync),
-            const SizedBox(height: 16),
-            _BuddyCommentCard(comment: commentAsync),
-            const SizedBox(height: 24),
-            const Divider(),
-            Text('Timeline', style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 12),
-            _TimelineSection(
-              entries: entriesAsync,
-              onRemove: (entry) =>
-                  ref.read(journalEntriesProvider.notifier).deleteEntry(entry),
-              onSelect: (entry) => _handleTimelineTap(entry, entries),
-            ),
+                      _JournalCalendar(
+                        entries: entriesAsync,
+                        selectedDate: effectiveDate,
+                        visibleMonth: _visibleMonth,
+                        onMonthChanged: _changeMonth,
+                        onDateSelected: _handleDateSelected,
+                        onRetry: () => ref.invalidate(journalEntriesProvider),
+                      ),
+                      const SizedBox(height: 16),
+                      _EntryDetailCard(
+                        selectedDate: effectiveDate,
+                        entry: selectedEntry,
+                        onWriteEntry: () => _prefillEntryForDate(effectiveDate),
+                      ),
+                      const SizedBox(height: 24),
+                      const Divider(),
+                      const SizedBox(height: 16),
+                      _DatePickerField(
+                        initialDate: _entryDate,
+                        onChanged: (value) =>
+                            setState(() => _entryDate = value),
+                      ),
+                      const SizedBox(height: 12),
+                      _MoodChipSelector(
+                        value: _selectedMood,
+                        onChanged: (value) =>
+                            setState(() => _selectedMood = value),
+                      ),
+                      const SizedBox(height: 12),
+                      _EnergySelector(
+                        value: _energyLevel,
+                        onChanged: (value) =>
+                            setState(() => _energyLevel = value),
+                      ),
+                      const SizedBox(height: 12),
+                      Text('Sleep hours: ${_sleepHours.toStringAsFixed(1)} h'),
+                      Slider(
+                        min: 0,
+                        max: 12,
+                        divisions: 24,
+                        value: _sleepHours,
+                        label: _sleepHours.toStringAsFixed(1),
+                        onChanged: (value) =>
+                            setState(() => _sleepHours = value),
+                      ),
+                      const SizedBox(height: 12),
+                      TextFormField(
+                        controller: _notesController,
+                        minLines: 3,
+                        maxLines: 6,
+                        maxLength: 1000,
+                        decoration: const InputDecoration(
+                          labelText: 'Notes (optional)',
+                          border: OutlineInputBorder(),
+                          hintText:
+                              'How was your day? Any thoughts or reflections...',
+                          helperText: 'Capture your thoughts and feelings',
+                        ),
+                        textCapitalization: TextCapitalization.sentences,
+                      ),
+                      const SizedBox(height: 20),
+                      FilledButton(
+                          onPressed: _submit, child: const Text('Add entry')),
+                      const SizedBox(height: 24),
+                      _MonthlyRecapCard(
+                        summary: summaryAsync,
+                        onRetry: () => ref.invalidate(journalSummaryProvider),
+                      ),
+                      const SizedBox(height: 16),
+                      _BuddyCommentCard(
+                        comment: commentAsync,
+                        onRetry: () =>
+                            ref.invalidate(journalBuddyCommentProvider),
+                      ),
+                      const SizedBox(height: 24),
+                      const Divider(),
+                      Text('Timeline',
+                          style: Theme.of(context).textTheme.titleMedium),
+                      const SizedBox(height: 12),
+                      _TimelineSection(
+                        entries: entriesAsync,
+                        onRemove: (entry) => ref
+                            .read(journalEntriesProvider.notifier)
+                            .deleteEntry(entry),
+                        onSelect: (entry) => _handleTimelineTap(entry, entries),
+                        onRetry: () => ref.invalidate(journalEntriesProvider),
+                      ),
                     ],
                   ),
                 ),
@@ -479,18 +514,24 @@ class _TimelineSection extends StatelessWidget {
     required this.entries,
     required this.onRemove,
     required this.onSelect,
+    required this.onRetry,
   });
 
   final AsyncValue<List<JournalEntry>> entries;
   final ValueChanged<JournalEntry> onRemove;
   final ValueChanged<JournalEntry> onSelect;
+  final VoidCallback onRetry;
 
   @override
   Widget build(BuildContext context) {
     return entries.when(
       data: (items) {
         if (items.isEmpty) {
-          return const Text('최근 기록이 없어요. 오늘 하루를 짧게 남겨볼까요?');
+          return const AppEmptyState(
+            title: '최근 기록이 없어요',
+            message: '오늘 하루를 짧게 남겨볼까요?',
+            actionLabel: null,
+          );
         }
         return Column(
           children: [
@@ -505,15 +546,15 @@ class _TimelineSection extends StatelessWidget {
           ],
         );
       },
-      error: (error, _) => Text(
-        '저널을 불러오지 못했어요. 잠시 후 다시 시도해 주세요.',
-        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-          color: Theme.of(context).colorScheme.error,
-        ),
+      error: (error, _) => AppErrorState(
+        title: '저널을 불러오지 못했어요',
+        message: '$error',
+        retryLabel: context.l10n.tr('common_retry'),
+        onRetry: onRetry,
       ),
       loading: () => const Padding(
-        padding: EdgeInsets.symmetric(vertical: 24),
-        child: Center(child: CircularProgressIndicator()),
+        padding: EdgeInsets.symmetric(vertical: 8),
+        child: AppLoadingState(title: '저널 기록 불러오는 중', compact: true),
       ),
     );
   }
@@ -526,6 +567,7 @@ class _JournalCalendar extends StatelessWidget {
     required this.visibleMonth,
     required this.onMonthChanged,
     required this.onDateSelected,
+    required this.onRetry,
   });
 
   final AsyncValue<List<JournalEntry>> entries;
@@ -533,6 +575,7 @@ class _JournalCalendar extends StatelessWidget {
   final DateTime visibleMonth;
   final ValueChanged<int> onMonthChanged;
   final ValueChanged<DateTime> onDateSelected;
+  final VoidCallback onRetry;
 
   @override
   Widget build(BuildContext context) {
@@ -546,20 +589,16 @@ class _JournalCalendar extends StatelessWidget {
         child: entries.when(
           loading: () => const SizedBox(
             height: 240,
-            child: Center(child: CircularProgressIndicator()),
+            child: AppLoadingState(title: '캘린더 불러오는 중', compact: true),
           ),
-          error: (error, _) => Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Icon(Icons.event_busy, size: 42),
-              const SizedBox(height: 12),
-              Text('캘린더를 불러오지 못했어요.', style: theme.textTheme.bodyMedium),
-              const SizedBox(height: 12),
-              FilledButton(
-                onPressed: () => onMonthChanged(0),
-                child: const Text('다시 시도'),
-              ),
-            ],
+          error: (error, _) => SizedBox(
+            height: 240,
+            child: AppErrorState(
+              title: '캘린더를 불러오지 못했어요',
+              message: '$error',
+              retryLabel: context.l10n.tr('common_retry'),
+              onRetry: onRetry,
+            ),
           ),
           data: (items) {
             final entryMap = <DateTime, JournalEntry>{
@@ -907,9 +946,8 @@ class _JournalEntryDetailSheet extends StatelessWidget {
     final theme = Theme.of(context);
     final dateLabel = DateFormat.yMMMMd().format(entry.date);
     final sleepLabel = '${entry.sleepHours.toStringAsFixed(1)} h';
-    final energyLabel = entry.energyLevel?.isNotEmpty == true
-        ? entry.energyLevel!
-        : null;
+    final energyLabel =
+        entry.energyLevel?.isNotEmpty == true ? entry.energyLevel! : null;
     final notes = entry.notes?.trim();
 
     return FractionallySizedBox(
@@ -958,10 +996,10 @@ class _JournalEntryDetailSheet extends StatelessWidget {
                                 avatar: Text(_emojiForMood(entry.mood)),
                                 backgroundColor: theme.colorScheme.primary
                                     .withValues(alpha: 0.12),
-                                labelStyle: theme.textTheme.bodyMedium
-                                    ?.copyWith(
-                                      color: theme.colorScheme.primary,
-                                    ),
+                                labelStyle:
+                                    theme.textTheme.bodyMedium?.copyWith(
+                                  color: theme.colorScheme.primary,
+                                ),
                               ),
                             ],
                           ),
@@ -1238,8 +1276,7 @@ class _TimelineEntry extends StatelessWidget {
                             Chip(
                               label: Text('에너지 ${entry.energyLevel}'),
                               backgroundColor: theme
-                                  .colorScheme
-                                  .surfaceContainerHighest
+                                  .colorScheme.surfaceContainerHighest
                                   .withValues(alpha: 0.5),
                             ),
                         ],
@@ -1318,16 +1355,21 @@ extension _MoodColorShade on Color {
 }
 
 class _MonthlyRecapCard extends StatelessWidget {
-  const _MonthlyRecapCard({required this.summary});
+  const _MonthlyRecapCard({required this.summary, required this.onRetry});
 
   final AsyncValue<JournalSummary?> summary;
+  final VoidCallback onRetry;
 
   @override
   Widget build(BuildContext context) {
     return summary.when(
       data: (value) {
         if (value == null) {
-          return const _EmptyRecapMessage();
+          return const AppEmptyState(
+            title: '월간 리캡 준비 중',
+            message: '최근 30일 기록이 쌓이면 자동으로 생성됩니다.',
+            actionLabel: null,
+          );
         }
         final buffer = StringBuffer();
         final averageSleep = value.averageSleepHours.toStringAsFixed(1);
@@ -1368,8 +1410,8 @@ class _MonthlyRecapCard extends StatelessWidget {
                 Text(
                   '월간 리캡',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
+                        fontWeight: FontWeight.w700,
+                      ),
                 ),
                 const SizedBox(height: 12),
                 Text(
@@ -1380,24 +1422,30 @@ class _MonthlyRecapCard extends StatelessWidget {
                 Text(
                   '무료 플랜은 최근 30일 데이터를 기준으로 요약해요. 더 상세한 그래프는 곧 만나볼 수 있어요!',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
                 ),
               ],
             ),
           ),
         );
       },
-      error: (error, _) => const _EmptyRecapMessage(),
-      loading: () => const _EmptyRecapMessage(isLoading: true),
+      error: (error, _) => AppErrorState(
+        title: '월간 리캡을 불러오지 못했어요',
+        message: '$error',
+        retryLabel: context.l10n.tr('common_retry'),
+        onRetry: onRetry,
+      ),
+      loading: () => const AppLoadingState(title: '월간 리캡 분석 중', compact: true),
     );
   }
 }
 
 class _BuddyCommentCard extends StatelessWidget {
-  const _BuddyCommentCard({required this.comment});
+  const _BuddyCommentCard({required this.comment, required this.onRetry});
 
   final AsyncValue<LifeBuddyComment?> comment;
+  final VoidCallback onRetry;
 
   @override
   Widget build(BuildContext context) {
@@ -1429,10 +1477,15 @@ class _BuddyCommentCard extends StatelessWidget {
           ),
         );
       },
-      error: (error, _) => const SizedBox.shrink(),
+      error: (error, _) => AppErrorState(
+        title: '라이프 버디 코멘트를 불러오지 못했어요',
+        message: '$error',
+        retryLabel: context.l10n.tr('common_retry'),
+        onRetry: onRetry,
+      ),
       loading: () => const Padding(
-        padding: EdgeInsets.symmetric(vertical: 12),
-        child: LinearProgressIndicator(),
+        padding: EdgeInsets.symmetric(vertical: 8),
+        child: AppLoadingState(title: '라이프 버디 코멘트 준비 중', compact: true),
       ),
     );
   }
@@ -1460,33 +1513,6 @@ class _BuddyAvatar extends StatelessWidget {
       ),
       alignment: Alignment.center,
       child: Text(emoji, style: const TextStyle(fontSize: 28)),
-    );
-  }
-}
-
-class _EmptyRecapMessage extends StatelessWidget {
-  const _EmptyRecapMessage({this.isLoading = false});
-
-  final bool isLoading;
-
-  @override
-  Widget build(BuildContext context) {
-    if (isLoading) {
-      return const Padding(
-        padding: EdgeInsets.symmetric(vertical: 12),
-        child: LinearProgressIndicator(),
-      );
-    }
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Text(
-          '월간 리캡은 최근 30일 동안 기록을 남기면 자동으로 만들어져요.',
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
-      ),
     );
   }
 }

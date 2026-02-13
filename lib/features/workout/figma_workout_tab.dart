@@ -6,6 +6,7 @@ import 'package:life_app/features/workout/workout_light_presets.dart';
 import 'package:life_app/features/workout/models/workout_navigator_models.dart';
 import 'package:life_app/l10n/app_localizations.dart';
 import 'package:life_app/providers/session_providers.dart';
+import 'package:life_app/providers/settings_providers.dart';
 import 'package:life_app/services/analytics/analytics_service.dart';
 import 'package:life_app/widgets/glass_card.dart';
 
@@ -185,10 +186,13 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
       data: (summary) => summary.workout,
       orElse: () => 0,
     );
-
-    // TODO(settings-sync): Replace 30-minute baseline with the user's configured workout goal.
-    // 운동 목표 시간이 하드코딩되어 있어 DB/설정 값과 일치하지 않습니다.
-    final progressPercent = (todayWorkoutMinutes / 30 * 100).clamp(0, 100);
+    final settingsAsync = ref.watch(settingsFutureProvider);
+    final workoutGoalMinutes = settingsAsync.maybeWhen(
+      data: (settings) => settings.workoutMinutes > 0 ? settings.workoutMinutes : 30,
+      orElse: () => 30,
+    );
+    final progressPercent =
+        (todayWorkoutMinutes / workoutGoalMinutes * 100).clamp(0, 100);
 
     return Scaffold(
       body: Container(
@@ -378,7 +382,7 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                         'figma_workout_energy_bank_progress',
                                         {
                                           'minutes': '$todayWorkoutMinutes',
-                                          'target': '30',
+                                          'target': '$workoutGoalMinutes',
                                         },
                                       ),
                                       style: theme.textTheme.bodyMedium

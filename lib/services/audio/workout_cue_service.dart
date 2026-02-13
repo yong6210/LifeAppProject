@@ -64,6 +64,27 @@ class WorkoutCueService {
     await _speak(message);
   }
 
+  Future<void> speakGuidedStepStart({
+    required AppLocalizations l10n,
+    required int step,
+    required int totalSteps,
+    required String mode,
+    required int minutes,
+  }) async {
+    await _speak(
+      l10n.tr('guided_session_voice_step_start', {
+        'step': '$step',
+        'total': '$totalSteps',
+        'mode': mode,
+        'minutes': '$minutes',
+      }),
+    );
+  }
+
+  Future<void> speakGuidedComplete({required AppLocalizations l10n}) async {
+    await _speak(l10n.tr('guided_session_voice_complete'));
+  }
+
   Future<void> _speak(String message) async {
     if (message.trim().isEmpty) return;
     await _ensureInitialized();

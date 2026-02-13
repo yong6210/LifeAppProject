@@ -3,6 +3,20 @@
 Notes based on current Flutter screen implementations. Validate on-device to
 confirm visual outcomes.
 
+## 2026 Q1 Casual Redesign Update
+- Implemented core-tab redesign is documented in:
+  - `docs/ui_redesign_casual_2026q1.md`
+  - `docs/ui_qa_checklist_casual_2026q1.md`
+- Updated screens in this cycle:
+  - `lib/features/home/casual_home_dashboard.dart`
+  - `lib/features/more/more_page.dart`
+  - `lib/features/account/account_page.dart`
+  - `lib/main.dart` (home tab switch)
+- Legacy home dashboards are now marked deprecated to reduce accidental reuse:
+  - `lib/features/home/home_dashboard.dart`
+  - `lib/features/home/figma_home_dashboard.dart`
+  - `lib/features/home/improved_home_dashboard.dart`
+
 ## Cross-Screen Themes
 - Visual language split between Figma-inspired tabs and standard Material pages.
   Align typography, card elevation, and icon style to reduce cognitive shifts.

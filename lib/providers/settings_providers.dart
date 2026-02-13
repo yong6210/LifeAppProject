@@ -7,6 +7,7 @@ import 'package:life_app/providers/db_provider.dart';
 import 'package:life_app/providers/remote_config_providers.dart';
 import 'package:life_app/repositories/settings_repository.dart';
 import 'package:life_app/services/audio/sleep_sound_catalog.dart';
+import 'package:life_app/services/remote_config/remote_config_service.dart';
 
 /// Isar가 열릴 때까지 정상적으로 기다리는 리포지토리
 final settingsRepoProvider = FutureProvider<SettingsRepository>((ref) async {
@@ -29,21 +30,21 @@ final sleepSoundCatalogProvider = FutureProvider<SleepSoundCatalog>((
 
 final settingsMutationControllerProvider =
     AsyncNotifierProvider.autoDispose<SettingsMutationController, void>(
-      SettingsMutationController.new,
-    );
+  SettingsMutationController.new,
+);
 
 class SettingsMutationController extends AsyncNotifier<void> {
   @override
   FutureOr<void> build() {}
 
   Future<void> savePreset(Map<String, int> data) => _mutate((repo) async {
-    await repo.update((s) {
-      if (data.containsKey('focus')) s.focusMinutes = data['focus']!;
-      if (data.containsKey('rest')) s.restMinutes = data['rest']!;
-      if (data.containsKey('workout')) s.workoutMinutes = data['workout']!;
-      if (data.containsKey('sleep')) s.sleepMinutes = data['sleep']!;
-    });
-  });
+        await repo.update((s) {
+          if (data.containsKey('focus')) s.focusMinutes = data['focus']!;
+          if (data.containsKey('rest')) s.restMinutes = data['rest']!;
+          if (data.containsKey('workout')) s.workoutMinutes = data['workout']!;
+          if (data.containsKey('sleep')) s.sleepMinutes = data['sleep']!;
+        });
+      });
 
   Future<void> saveLastMode(String mode) =>
       _mutate((repo) async => repo.update((s) => s.lastMode = mode));
@@ -87,8 +88,8 @@ class SettingsMutationController extends AsyncNotifier<void> {
   }
 
   Future<void> completeOnboarding() => _mutate(
-    (repo) async => repo.update((s) => s.hasCompletedOnboarding = true),
-  );
+        (repo) async => repo.update((s) => s.hasCompletedOnboarding = true),
+      );
 
   Future<void> updateSleepSmartAlarm(SleepSmartAlarmInput input) =>
       _mutate((repo) async {
@@ -119,29 +120,68 @@ class SettingsMutationController extends AsyncNotifier<void> {
   }
 }
 
-enum PaywallVariant { focusValue, backupSecurity }
+enum PaywallVariant { focusValue, backupSecurity, coachMomentum }
 
-final paywallVariantProvider = FutureProvider<PaywallVariant>((ref) async {
-  final remoteConfigAsync = ref.watch(remoteConfigProvider);
-  final remoteVariantString = remoteConfigAsync.maybeWhen(
-    data: (config) => config.paywallVariant,
-    orElse: () => null,
-  );
-  if (remoteVariantString != null) {
-    switch (remoteVariantString) {
-      case 'focus_value':
-        return PaywallVariant.focusValue;
-      case 'backup_security':
-        return PaywallVariant.backupSecurity;
-    }
+class PaywallExperimentConfig {
+  const PaywallExperimentConfig({
+    required this.variant,
+    required this.experimentId,
+    required this.emphasizeAnnualPlan,
+  });
+
+  final PaywallVariant variant;
+  final String experimentId;
+  final bool emphasizeAnnualPlan;
+}
+
+final paywallExperimentProvider = FutureProvider<PaywallExperimentConfig>((
+  ref,
+) async {
+  RemoteConfigSnapshot? remoteConfig;
+  try {
+    remoteConfig = await ref.watch(remoteConfigProvider.future);
+  } catch (_) {
+    remoteConfig = null;
   }
 
+  final remoteVariantString = remoteConfig?.paywallVariant;
+  final remoteVariant = switch (remoteVariantString) {
+    'focus_value' => PaywallVariant.focusValue,
+    'backup_security' => PaywallVariant.backupSecurity,
+    'coach_momentum' => PaywallVariant.coachMomentum,
+    _ => null,
+  };
+
+  final variant = remoteVariant ?? await _resolveVariantByDeviceHash(ref);
+  final experimentId =
+      (remoteConfig?.paywallExperimentId?.trim().isNotEmpty ?? false)
+          ? remoteConfig!.paywallExperimentId!.trim()
+          : 'baseline_2026q1';
+  final emphasizeAnnualPlan = remoteConfig?.paywallAnnualEmphasis ?? true;
+
+  return PaywallExperimentConfig(
+    variant: variant,
+    experimentId: experimentId,
+    emphasizeAnnualPlan: emphasizeAnnualPlan,
+  );
+});
+
+Future<PaywallVariant> _resolveVariantByDeviceHash(Ref ref) async {
   final settings = await ref.watch(settingsFutureProvider.future);
-  final hash = settings.deviceId.hashCode;
-  final bucket = hash.abs() % 2;
-  return bucket == 0
-      ? PaywallVariant.focusValue
-      : PaywallVariant.backupSecurity;
+  final hash = settings.deviceId.hashCode.abs();
+  switch (hash % 3) {
+    case 0:
+      return PaywallVariant.focusValue;
+    case 1:
+      return PaywallVariant.backupSecurity;
+    default:
+      return PaywallVariant.coachMomentum;
+  }
+}
+
+final paywallVariantProvider = FutureProvider<PaywallVariant>((ref) async {
+  final config = await ref.watch(paywallExperimentProvider.future);
+  return config.variant;
 });
 
 class SleepSmartAlarmInput {

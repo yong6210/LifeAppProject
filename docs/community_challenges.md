@@ -12,11 +12,11 @@ Proposed data model:
 - `challenges/{id}` summary: `ownerId`, `memberIds`, `privacy`, `template`
 
 Checklist:
-- [ ] Create a `UserProfile` model and repository
-- [ ] Update `ChallengeMember` to include `avatarUrl` and `premiumTier`
+- [x] Create a `UserProfile` model and repository
+- [x] Update `ChallengeMember` to include `avatarUrl` and `premiumTier`
 - [ ] Migrate Firestore writes to store member data in sub-collection
 - [ ] Update challenge list UI to read profile snapshots
-- [ ] Add security rules for read/write access
+- [x] Add baseline security rules for read/write access
 - [ ] Add indexing for `memberIds` + `ownerId` queries
 
 ## Premium Rewards
@@ -38,3 +38,8 @@ Checklist:
 - Keep backward compatibility by reading legacy `members` arrays and writing
   to new sub-collections.
 - Provide a one-time backfill job for existing challenges.
+
+## Current Implementation Notes
+- User profile now supports optional `avatarUrl`, `timezone`, and `premiumTier`.
+- Member snapshots include `avatarUrl` and `premiumTier` on challenge create/join.
+- Firestore rules now include challenge read/write gates for owner/member/public.

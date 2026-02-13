@@ -2,6 +2,10 @@
   "@@locale": "ko",
   "app_title": "Life App",
   "tab_home": "홈",
+  "tab_tasks": "할일",
+  "tab_focus": "집중",
+  "tab_record": "기록",
+  "tab_my": "내정보",
   "tab_more": "더보기",
   "tab_profile": "프로필",
   "more_title": "더보기",
@@ -14,6 +18,48 @@
   "more_item_journal": "저널",
   "more_item_stats": "통계",
   "more_item_backup": "백업",
+  "schedule_page_title": "오늘의 실행",
+  "schedule_add_block": "할 일 추가",
+  "schedule_edit_block": "할 일 수정",
+  "schedule_empty_state": "아직 등록된 할 일이 없어요.",
+  "schedule_empty_cta": "첫 항목 추가",
+  "schedule_loading_title": "할 일 불러오는 중",
+  "schedule_loading_message": "오늘 실행할 항목을 준비하고 있어요.",
+  "schedule_error_title": "할 일을 불러오지 못했어요",
+  "schedule_error_retry": "다시 시도",
+  "schedule_filter_all": "전체",
+  "schedule_filter_tasks": "할 일",
+  "schedule_filter_routine": "루틴",
+  "schedule_filter_done": "완료",
+  "schedule_section_now_title": "지금 해야 할 일",
+  "schedule_section_routine_title": "루틴",
+  "schedule_section_now_empty": "지금 실행할 할 일이 없습니다.",
+  "schedule_section_routine_empty": "등록된 루틴이 없습니다.",
+  "schedule_status_urgent": "긴급",
+  "schedule_status_normal": "보통",
+  "schedule_status_done": "완료",
+  "schedule_action_edit": "수정",
+  "schedule_action_delete": "삭제",
+  "schedule_default_focus": "기본 집중 세션",
+  "schedule_field_title": "제목",
+  "schedule_field_title_hint": "예: 오전 집중 세션",
+  "schedule_field_title_required": "제목을 입력해주세요.",
+  "schedule_field_start": "시작 시간",
+  "schedule_field_end": "종료 시간",
+  "schedule_field_repeat": "반복",
+  "schedule_repeat_none": "반복 안 함",
+  "schedule_repeat_daily": "매일",
+  "schedule_repeat_weekdays": "주중",
+  "schedule_repeat_weekend": "주말",
+  "schedule_field_routine_type": "루틴 유형",
+  "schedule_routine_type_builtIn": "기본 루틴",
+  "schedule_routine_type_custom": "사용자 루틴",
+  "schedule_field_select_custom": "사용자 루틴 선택",
+  "schedule_field_built_in_label": "기본 루틴",
+  "schedule_field_built_in_helper": "기본 루틴은 자동 추천 기준으로 사용됩니다.",
+  "schedule_field_notes": "메모",
+  "schedule_field_notes_hint": "필요한 메모를 남겨보세요.",
+  "schedule_field_notes_helper": "세부 조건이나 알림 내용을 적어두면 좋아요.",
   "home_greeting": "오늘도 반가워요",
   "home_routine_focus_title": "집중 루틴",
   "home_routine_focus_body": "일·휴식 사이 균형을 잡아주는 포모도로 패턴입니다.",
@@ -99,6 +145,48 @@
   "account_logout_button": "로그아웃",
   "account_processing": "처리 중...",
   "account_upgrade_hint": "향후 이메일 연동 등 업그레이드 옵션을 추가할 수 있습니다.",
+  "account_casual_subtitle": "계정, 구독, 데이터 안전을 한곳에서 관리하세요.",
+  "account_casual_badge": "계정 허브",
+  "account_profile_guest": "게스트 사용자",
+  "account_profile_anonymous": "익명 사용자",
+  "account_profile_user": "사용자",
+  "account_sync_connected": "클라우드 연결됨",
+  "account_sync_local": "로컬 모드",
+  "account_backup_none": "백업 기록 없음",
+  "account_backup_fresh": "백업 최신",
+  "account_backup_days_ago": "백업 {days}일 전",
+  "@account_backup_days_ago": {
+    "placeholders": {
+      "days": {}
+    }
+  },
+  "account_safety_needs_check": "백업 점검 필요",
+  "account_safety_good": "데이터 보호 양호",
+  "account_manage_plan": "플랜 관리",
+  "account_plan_badge_premium": "프리미엄",
+  "account_plan_badge_standard": "스탠다드",
+  "account_checklist_title": "관리 체크리스트",
+  "account_checklist_risk_high_title": "주의 필요",
+  "account_checklist_risk_high_body": "백업이 오래되어 데이터 손실 위험이 커지고 있습니다.",
+  "account_checklist_risk_medium_title": "점검 권장",
+  "account_checklist_risk_medium_body": "백업 주기를 조금 더 짧게 가져가면 안정성이 높아집니다.",
+  "account_checklist_risk_low_title": "안정 상태",
+  "account_checklist_risk_low_body": "현재 계정 데이터 보호 상태가 양호합니다.",
+  "account_checklist_backup_action": "백업",
+  "account_checklist_task_backup_title": "백업 상태 확인",
+  "account_checklist_task_backup_done": "최근 백업이 완료되어 데이터가 안전한 상태입니다.",
+  "account_checklist_task_backup_pending": "백업이 오래됐어요. 지금 업데이트하세요.",
+  "account_checklist_task_policy_title": "데이터 정책 점검",
+  "account_checklist_task_policy_subtitle": "이 기기의 보관/동기화 기본값을 확인하세요.",
+  "account_checklist_task_plan_title": "플랜 확인",
+  "account_checklist_task_plan_premium": "프리미엄이 활성화되어 있습니다.",
+  "account_checklist_task_plan_free": "업그레이드하면 고급 기능을 사용할 수 있습니다.",
+  "account_section_identity_title": "계정 & 플랜",
+  "account_section_identity_subtitle": "로그인 상태, 구독, 관리 체크리스트를 점검하세요.",
+  "account_section_preferences_title": "환경설정 & 정책",
+  "account_section_preferences_subtitle": "언어, 개인화, 접근성, 정책 정보를 조정하세요.",
+  "account_section_safety_title": "데이터 & 보안",
+  "account_section_safety_subtitle": "백업 기록, 진단, 계정 삭제를 관리하세요.",
   "account_language_title": "앱 언어",
   "account_language_description": "언제든 언어를 바꿀 수 있어요. 화면이 즉시 갱신됩니다.",
   "account_language_system": "시스템 기본값",
@@ -906,6 +994,22 @@
   "timer_button_start": "시작",
   "timer_button_pause": "일시정지",
   "timer_button_reset": "리셋",
+  "timer_advanced_controls_title": "고급 제어",
+  "timer_advanced_controls_subtitle": "사운드, 루틴 타임라인, 빠른 프리셋을 조정할 수 있습니다.",
+  "timer_advanced_controls_show": "열기",
+  "timer_advanced_controls_hide": "닫기",
+  "timer_section_switch_title": "제어 레벨",
+  "timer_section_switch_subtitle": "기본 동선과 고급 설정 화면을 전환하세요.",
+  "timer_section_basic_label": "기본",
+  "timer_section_advanced_label": "고급",
+  "timer_mode_mascot_focus_title": "집중 세션 준비",
+  "timer_mode_mascot_sleep_title": "수면 루틴 준비",
+  "timer_mode_mascot_workout_title": "운동 세션 준비",
+  "timer_mode_mascot_default_title": "타이머 준비",
+  "timer_mode_mascot_focus_subtitle": "원하는 루틴을 골라 바로 시작하세요.",
+  "timer_mode_mascot_sleep_subtitle": "수면 시간과 기상 알림을 확인하세요.",
+  "timer_mode_mascot_workout_subtitle": "코스와 목표를 확인하고 출발해요.",
+  "timer_mode_mascot_default_subtitle": "모드를 선택해 타이머를 시작하세요.",
   "timer_sound_switch_title": "백그라운드 사운드",
   "timer_sound_switch_enabled": "현재 프로필: {profile}",
   "timer_sound_switch_disabled": "사운드 끔",
@@ -1101,6 +1205,78 @@
   "stats_trend_toggle_table": "표로 보기",
   "stats_table_period": "기간",
   "stats_table_total": "총합",
+  "stats_casual_subtitle": "실행 품질과 루틴 균형을 한눈에 확인하세요.",
+  "stats_casual_lifetime": "누적 합계",
+  "stats_casual_level": "일관성 레벨",
+  "stats_casual_best_focus_title": "이번 주 최고 집중일",
+  "stats_casual_best_focus_empty": "이번 주 집중 기록이 아직 없습니다.",
+  "stats_casual_trend_title": "최근 실행 추이",
+  "stats_casual_no_trend": "아직 추이 데이터가 없습니다. 세션을 완료해 추적을 시작하세요.",
+  "stats_casual_share_label": "영역별 비중",
+  "stats_casual_open_advanced": "고급 분석 열기",
+  "analytics_dashboard_title": "통합 분석",
+  "analytics_dashboard_export": "PDF 내보내기",
+  "analytics_dashboard_loading_title": "통합 분석을 준비하고 있어요",
+  "analytics_dashboard_loading_message": "집중, 수면, 기분 데이터를 모으는 중입니다.",
+  "analytics_dashboard_error_title": "분석 데이터를 불러오지 못했어요",
+  "analytics_dashboard_range_label": "기간",
+  "analytics_dashboard_range_7": "7일",
+  "analytics_dashboard_range_14": "14일",
+  "analytics_dashboard_range_30": "30일",
+  "analytics_dashboard_last_updated": "마지막 업데이트: {date}",
+  "analytics_dashboard_avg_focus": "평균 집중",
+  "analytics_dashboard_avg_sleep": "평균 수면",
+  "analytics_dashboard_avg_mood": "평균 기분",
+  "analytics_dashboard_summary_minutes": "{minutes}분",
+  "analytics_dashboard_sleep_debt": "수면 부채",
+  "analytics_dashboard_sleep_debt_hours": "{hours}시간",
+  "analytics_dashboard_correlation_focus_sleep": "집중 vs 수면",
+  "analytics_dashboard_correlation_sleep_mood": "수면 vs 기분",
+  "analytics_dashboard_correlation_focus_mood": "집중 vs 기분",
+  "analytics_dashboard_correlation_positive": "양의 상관",
+  "analytics_dashboard_correlation_negative": "음의 상관",
+  "analytics_dashboard_correlation_neutral": "중립/약한 상관",
+  "analytics_dashboard_highlight_focus": "최고 집중일",
+  "analytics_dashboard_highlight_sleep": "최고 수면일",
+  "analytics_dashboard_highlight_mood": "최저 기분일",
+  "analytics_dashboard_highlight_missing": "기록 없음",
+  "analytics_dashboard_chart_label_focus": "집중",
+  "analytics_dashboard_chart_label_sleep": "수면",
+  "analytics_dashboard_chart_label_mood": "기분",
+  "analytics_dashboard_table_header_date": "날짜",
+  "analytics_dashboard_table_header_focus": "집중(분)",
+  "analytics_dashboard_table_header_sleep": "수면(분)",
+  "analytics_dashboard_table_header_mood": "기분",
+  "analytics_dashboard_table_header_journal_sleep": "저널 수면(시간)",
+  "analytics_dashboard_empty_title": "아직 분석 데이터가 없어요",
+  "analytics_dashboard_empty": "세션과 저널 기록을 쌓으면 분석이 표시됩니다.",
+  "analytics_dashboard_export_success": "PDF를 내보냈어요: {path}",
+  "analytics_dashboard_export_error": "내보내기 실패: {error}",
+  "@analytics_dashboard_last_updated": {
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "@analytics_dashboard_summary_minutes": {
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "@analytics_dashboard_sleep_debt_hours": {
+    "placeholders": {
+      "hours": {}
+    }
+  },
+  "@analytics_dashboard_export_success": {
+    "placeholders": {
+      "path": {}
+    }
+  },
+  "@analytics_dashboard_export_error": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "@stats_total_label": {
     "placeholders": {
       "duration": {}
@@ -1180,12 +1356,24 @@
   "paywall_focus_body": "고급 통계와 스마트 알람으로 루틴의 완주율을 높이고 더 오래 집중하세요.",
   "paywall_backup_title": "데이터를 안전하게 지키는 방법",
   "paywall_backup_body": "자동 백업과 교차 기기 권한으로 언제든 손쉽게 복원하고 이어서 사용하세요.",
+  "paywall_coach_title": "연속 기록을 실제 성과로 바꾸세요",
+  "paywall_coach_body": "주간 코칭 리포트와 실행 피드백으로 다음 주 루틴 품질을 끌어올립니다.",
   "paywall_focus_benefit_1": "세션 및 루틴별 상세 통계 제공",
   "paywall_focus_benefit_2": "집중·수면 루틴에 스마트 알람 & 믹서",
   "paywall_focus_benefit_3": "무제한 프리셋 저장 및 기기에 동기화",
   "paywall_backup_benefit_1": "자동 주간 백업 및 복원 히스토리",
   "paywall_backup_benefit_2": "기기간 데이터 이전을 위한 라이트 동기화",
   "paywall_backup_benefit_3": "프리미엄 서포트 및 신규 기능 우선 접근",
+  "paywall_coach_benefit_1": "주간 AI 성과 요약과 습관 이탈 감지",
+  "paywall_coach_benefit_2": "실제 완료 데이터 기반 루틴 조정 제안",
+  "paywall_coach_benefit_3": "취약 영역에 맞춘 가이드 루틴 우선 제공",
+  "paywall_value_section_title": "프리미엄으로 열리는 가치",
+  "paywall_value_section_subtitle": "실행 완주율과 성과 가시성을 함께 강화합니다.",
+  "paywall_plan_section_title": "요금제 선택",
+  "paywall_plan_section_subtitle": "원하는 플랜을 선택하고 바로 결제를 진행하세요.",
+  "paywall_badge_best_value": "가성비 추천",
+  "paywall_checkout_title": "프리미엄 시작 준비 완료",
+  "paywall_checkout_subtitle": "선택한 플랜 정보와 결제 버튼입니다.",
   "paywall_package_semantics_label": "구독 옵션 {product}, 가격 {price}",
   "@paywall_package_semantics_label": {
     "placeholders": {
@@ -1252,6 +1440,7 @@
   "common_open_settings": "설정 열기",
   "common_cancel": "취소",
   "common_save": "저장",
+  "common_retry": "다시 시도",
   "permission_notification_required": "알림 권한을 허용해야 타이머 알림을 받을 수 있어요.",
   "permission_exact_title": "정확한 알람 권한 필요",
   "permission_exact_message": "정확한 알람을 허용하면 예약된 타이머가 정확히 울려요. 설정으로 이동할까요?",
@@ -1768,5 +1957,662 @@
         "type": "String"
       }
     }
-  }
+  },
+  "casual_home_quick_focus": "집중 시작",
+  "casual_home_quick_workout": "운동 루틴",
+  "casual_home_quick_sleep": "수면 루틴",
+  "casual_home_quick_journal": "저널 기록",
+  "casual_home_quick_stats": "통계 보기",
+  "casual_home_quick_guided": "가이드 세션",
+  "casual_home_quick_title": "빠른 이동",
+  "casual_home_quick_subtitle": "자주 쓰는 기능으로 바로 이동하세요.",
+  "casual_home_topbar_streak": "{days}일 연속 루틴",
+  "@casual_home_topbar_streak": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "casual_home_overview_title": "오늘 리듬 요약",
+  "casual_home_overview_subtitle": "집중·운동·수면 진행률을 한 번에 확인하세요.",
+  "casual_home_overview_stats_cta": "상세 통계",
+  "casual_home_hours_value": "{hours}시간",
+  "@casual_home_hours_value": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "casual_home_next_focus_title": "지금은 집중 블록이 우선이에요",
+  "casual_home_next_focus_subtitle": "오늘 목표까지 {minutes}분 남았어요.",
+  "@casual_home_next_focus_subtitle": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "casual_home_next_focus_cta": "집중 시작",
+  "casual_home_next_workout_title": "짧은 운동으로 리듬을 이어가요",
+  "casual_home_next_workout_subtitle": "10~15분 움직임만 해도 컨디션이 올라가요.",
+  "casual_home_next_workout_cta": "운동 열기",
+  "casual_home_next_sleep_title": "수면 준비를 미리 시작해요",
+  "casual_home_next_sleep_subtitle": "취침 전 루틴이 내일 집중력에 직접 연결돼요.",
+  "casual_home_next_sleep_cta": "수면 루틴",
+  "casual_home_next_done_title": "오늘 목표를 모두 달성했어요",
+  "casual_home_next_done_subtitle": "통계와 저널로 하루를 정리해 보세요.",
+  "casual_home_next_done_cta": "통계 보기",
+  "casual_home_signal_streak": "{days}일 연속",
+  "@casual_home_signal_streak": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "casual_home_signal_focus_low": "집중 부족",
+  "casual_home_signal_focus_ok": "집중 안정",
+  "casual_home_signal_workout_low": "움직임 필요",
+  "casual_home_signal_workout_ok": "운동 진행중",
+  "casual_home_signal_sleep_low": "수면 준비 필요",
+  "casual_home_signal_sleep_ok": "수면 리듬 양호",
+  "casual_home_flow_title": "오늘 루틴 플로우",
+  "casual_home_flow_subtitle": "지금 단계에 맞춰 순서대로 진행해 보세요.",
+  "casual_home_flow_done_count": "{done}/{total} 완료",
+  "@casual_home_flow_done_count": {
+    "placeholders": {
+      "done": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "casual_home_flow_done": "목표 완료",
+  "casual_home_flow_focus_title": "집중 세션",
+  "casual_home_flow_focus_progress": "현재 {current}/{goal}분",
+  "@casual_home_flow_focus_progress": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      },
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "casual_home_flow_workout_title": "운동 루틴",
+  "casual_home_flow_workout_progress": "현재 {current}/30분",
+  "@casual_home_flow_workout_progress": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      }
+    }
+  },
+  "casual_home_flow_sleep_title": "수면 루틴",
+  "casual_home_flow_sleep_progress": "현재 {current}/8시간",
+  "@casual_home_flow_sleep_progress": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      }
+    }
+  },
+  "casual_home_flow_journal_title": "하루 기록",
+  "casual_home_flow_journal_after_done": "오늘 루틴 소감 기록하기",
+  "casual_home_flow_journal_before_done": "지금 상태를 짧게 남기기",
+  "casual_home_state_done": "완료",
+  "casual_home_state_ready": "진행",
+  "casual_home_state_suggested": "추천",
+  "casual_home_insight_focus_title": "오늘 인사이트: 집중이 핵심 변수예요",
+  "casual_home_insight_focus_message": "집중이 올라가면 하루 전체 완성도가 가장 빠르게 개선됩니다.",
+  "casual_home_insight_focus_action": "집중 {minutes}분 채우기",
+  "@casual_home_insight_focus_action": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "casual_home_insight_workout_title": "오늘 인사이트: 에너지 밸런스가 부족해요",
+  "casual_home_insight_workout_message": "짧은 운동 루틴이 집중 지속시간과 컨디션을 동시에 올립니다.",
+  "casual_home_insight_workout_action": "운동 {minutes}분 진행",
+  "@casual_home_insight_workout_action": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "casual_home_insight_sleep_title": "오늘 인사이트: 수면 준비가 중요해요",
+  "casual_home_insight_sleep_message": "수면 루틴을 미리 시작하면 내일의 집중력 변동이 줄어듭니다.",
+  "casual_home_insight_sleep_action": "수면 {hours}h 보완",
+  "@casual_home_insight_sleep_action": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "more_hub_title": "Life Hub",
+  "more_hub_subtitle": "루틴 실행, 기록, 백업을 목적별로 관리하세요.",
+  "more_hub_section_now_title": "지금 실행",
+  "more_hub_section_now_subtitle": "오늘 루틴을 바로 시작할 수 있는 기능",
+  "more_hub_section_tracking_title": "기록과 리뷰",
+  "more_hub_section_tracking_subtitle": "하루 기록과 장기 흐름 확인",
+  "more_hub_section_data_title": "데이터 관리",
+  "more_hub_section_data_subtitle": "백업과 데이터 안정성 관리",
+  "more_hub_action_focus_title": "집중 시작",
+  "more_hub_action_focus_subtitle_done": "오늘 목표를 달성했어요",
+  "more_hub_action_focus_subtitle_pending": "바로 타이머 세션 시작",
+  "more_hub_action_workout_title": "운동 루틴",
+  "more_hub_action_workout_subtitle_done": "오늘 운동 목표 완료",
+  "more_hub_action_workout_subtitle_pending": "짧은 움직임으로 컨디션 관리",
+  "more_hub_action_sleep_title": "수면 루틴",
+  "more_hub_action_sleep_subtitle_done": "오늘 수면 목표 달성",
+  "more_hub_action_sleep_subtitle_pending": "취침 전 루틴 진행",
+  "more_hub_action_journal_title": "저널",
+  "more_hub_action_journal_subtitle": "오늘 상태와 생각 기록",
+  "more_hub_action_journal_status": "추천: 3줄 요약",
+  "more_hub_action_stats_title": "통계",
+  "more_hub_action_stats_subtitle": "루틴 추세와 변화 확인",
+  "more_hub_action_stats_status": "완성도 {percent}%",
+  "@more_hub_action_stats_status": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "more_hub_action_backup_title": "백업",
+  "more_hub_action_backup_subtitle": "데이터를 안전하게 저장",
+  "more_hub_action_backup_status_none": "백업 기록 없음",
+  "more_hub_action_backup_status_days": "최근 백업 {days}일 전",
+  "@more_hub_action_backup_status_days": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "more_hub_action_guided_title": "가이드 세션",
+  "more_hub_action_guided_subtitle": "구성된 멀티스텝 루틴을 실행해요.",
+  "more_hub_action_guided_status": "코치 플로우 사용 가능",
+  "more_hub_status_done": "완료",
+  "more_hub_status_minutes_left": "남음 {minutes}분",
+  "@more_hub_status_minutes_left": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "more_hub_status_hours_left": "남음 {hours}시간",
+  "@more_hub_status_hours_left": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "more_hub_tag_now": "즉시",
+  "more_hub_tag_recommended": "추천",
+  "more_hub_tag_evening": "저녁",
+  "more_hub_tag_record": "기록",
+  "more_hub_tag_analysis": "분석",
+  "more_hub_tag_safe": "안전",
+  "more_hub_summary_title": "오늘의 추천 루틴",
+  "more_hub_summary_body_done": "오늘 주요 루틴을 모두 완료했어요. 기록과 리뷰로 마무리하세요.",
+  "more_hub_summary_body_pending": "지금 필요한 루틴부터 빠르게 시작하세요.",
+  "more_hub_summary_chip_focus_done": "집중 완료",
+  "more_hub_summary_chip_focus_left": "집중 {minutes}분 남음",
+  "@more_hub_summary_chip_focus_left": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "more_hub_summary_chip_workout_done": "운동 완료",
+  "more_hub_summary_chip_workout_left": "운동 {minutes}분 남음",
+  "@more_hub_summary_chip_workout_left": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "more_hub_summary_chip_sleep_done": "수면 완료",
+  "more_hub_summary_chip_sleep_left": "수면 {hours}h 남음",
+  "@more_hub_summary_chip_sleep_left": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "more_hub_summary_focus_cta": "집중 시작",
+  "more_hub_summary_stats_cta": "통계 확인",
+  "more_hub_pinned_title": "빠른 바로가기",
+  "guided_sessions_title": "가이드 세션",
+  "guided_sessions_intro": "집중, 에너지, 수면을 위한 멀티스텝 세션 템플릿입니다.",
+  "guided_session_step_item": "{mode} {minutes}분",
+  "@guided_session_step_item": {
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "guided_session_start_button": "지금 시작 ({minutes}분)",
+  "@guided_session_start_button": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "guided_session_focus_boost_title": "포커스 부스트 45",
+  "guided_session_focus_boost_subtitle": "2번의 집중 블록과 1번의 리셋 휴식.",
+  "guided_session_energy_reset_title": "에너지 리셋 스프린트",
+  "guided_session_energy_reset_subtitle": "몸을 먼저 깨우고, 이후 집중으로 전환해요.",
+  "guided_session_sleep_landing_title": "슬립 랜딩",
+  "guided_session_sleep_landing_subtitle": "휴식에서 수면 루틴으로 부드럽게 전환합니다.",
+  "guided_session_badge_focus": "집중",
+  "guided_session_badge_energy": "에너지",
+  "guided_session_badge_night": "야간",
+  "guided_session_voice_step_start": "{step}/{total} 단계. {mode} {minutes}분 진행합니다.",
+  "@guided_session_voice_step_start": {
+    "placeholders": {
+      "step": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      },
+      "mode": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "guided_session_voice_complete": "가이드 세션을 완료했어요. 오늘 흐름이 좋습니다.",
+  "guided_session_progress_title": "가이드 진행 상태",
+  "guided_session_progress_count": "{current}/{total} 단계",
+  "@guided_session_progress_count": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "guided_session_progress_now": "지금: {segment}",
+  "@guided_session_progress_now": {
+    "placeholders": {
+      "segment": {
+        "type": "String"
+      }
+    }
+  },
+  "guided_session_progress_next": "다음: {segment}",
+  "@guided_session_progress_next": {
+    "placeholders": {
+      "segment": {
+        "type": "String"
+      }
+    }
+  },
+  "guided_session_progress_all_done": "마지막 단계를 진행 중입니다",
+  "guided_session_now_badge": "진행 중",
+  "guided_session_complete_title": "가이드 세션 완료",
+  "guided_session_complete_body": "{title} 세션을 완료했어요. 이 흐름을 이어가요.",
+  "@guided_session_complete_body": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "guided_session_complete_summary": "{steps}단계 · {minutes}분",
+  "@guided_session_complete_summary": {
+    "placeholders": {
+      "steps": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "guided_session_complete_restart": "다시 실행",
+  "guided_session_complete_home": "홈으로 이동",
+  "recommendation_focus_title": "추천: 집중부터 보강하세요",
+  "recommendation_focus_message": "집중 목표를 채우면 하루 완성도가 가장 빠르게 개선됩니다.",
+  "recommendation_focus_message_streak": "연속 루틴이 좋습니다. 집중 블록 하나를 더 이어가요.",
+  "recommendation_focus_action": "집중 {minutes}분 추가",
+  "@recommendation_focus_action": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "recommendation_workout_title": "추천: 짧은 움직임을 추가하세요",
+  "recommendation_workout_message": "짧은 운동 루틴은 체력과 집중력을 동시에 높입니다.",
+  "recommendation_workout_action": "운동 {minutes}분 진행",
+  "@recommendation_workout_action": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "recommendation_sleep_title": "추천: 수면 준비를 앞당기세요",
+  "recommendation_sleep_message": "이른 수면 준비가 내일의 집중력 변동을 줄입니다.",
+  "recommendation_sleep_action": "수면 {hours}h 보완",
+  "@recommendation_sleep_action": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "recommendation_dismiss_tooltip": "오늘 추천 숨기기",
+  "paywall_proof_title": "현재 루틴 모멘텀",
+  "paywall_proof_body": "루틴 일관성이 높을수록 프리미엄 기능의 체감 가치가 커집니다.",
+  "paywall_proof_streak": "{days}일 연속",
+  "@paywall_proof_streak": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "paywall_proof_completion": "오늘 완료율 {percent}%",
+  "@paywall_proof_completion": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "paywall_preview_title": "최근 7일 성과 미리보기",
+  "paywall_preview_subtitle": "프리미엄은 현재 패턴을 더 빠른 개선 속도로 연결합니다.",
+  "paywall_preview_weekly_total": "이번 주 누적 {minutes}분",
+  "@paywall_preview_weekly_total": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "paywall_preview_daily_average": "일평균 {minutes}분",
+  "@paywall_preview_daily_average": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "paywall_preview_momentum_score": "모멘텀 점수 {score}/100",
+  "@paywall_preview_momentum_score": {
+    "placeholders": {
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "paywall_preview_next_milestone": "{target}일 연속까지 {days}일 남았습니다",
+  "@paywall_preview_next_milestone": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "paywall_preview_goal_reached": "마일스톤 달성 완료. 현재 흐름을 유지하세요.",
+  "sleep_analysis_privacy_title": "개인정보 안내",
+  "sleep_analysis_privacy_body": "수면 소리 분석은 기기 내에서 처리됩니다. 요약과 녹음 파일은 언제든 삭제할 수 있습니다.",
+  "sleep_analysis_delete_data_tooltip": "로컬 수면 데이터 삭제",
+  "sleep_analysis_delete_data_title": "수면 소리 데이터를 삭제할까요?",
+  "sleep_analysis_delete_data_message": "이 기기에 저장된 최신 분석 요약과 녹음 파일이 삭제됩니다.",
+  "sleep_analysis_delete_data_confirm": "지금 삭제",
+  "sleep_analysis_delete_data_done": "로컬 수면 소리 데이터가 삭제되었습니다.",
+  "onboarding_skip_button": "지금은 건너뛰기",
+  "casual_home_detail_title": "오늘 상세 인사이트",
+  "casual_home_detail_subtitle": "루틴 진행도와 추천 행동을 확인하세요",
+  "timer_focus_quick_routine_title": "빠른 집중 루틴",
+  "timer_focus_quick_preset_25": "25분 포모도로",
+  "timer_focus_quick_preset_45": "45분 딥 워크",
+  "timer_focus_quick_preset_90": "90분 플로우",
+  "timer_workout_overlay_distance_km": "{distance}km",
+  "@timer_workout_overlay_distance_km": {
+    "placeholders": {
+      "distance": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_workout_overlay_estimated_min": "{minutes}분",
+  "@timer_workout_overlay_estimated_min": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_workout_overlay_map_preview_fallback": "지도 미리보기 준비 중",
+  "timer_workout_overlay_session_complete": "세션 완료",
+  "timer_workout_overlay_time_remaining": "남은 시간 {time}",
+  "@timer_workout_overlay_time_remaining": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_workout_overlay_target_distance": "목표 • {distance}km",
+  "@timer_workout_overlay_target_distance": {
+    "placeholders": {
+      "distance": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_workout_overlay_target_duration": "목표 • {minutes}분",
+  "@timer_workout_overlay_target_duration": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_workout_overlay_voice_on": "음성 가이드 • 켜짐",
+  "timer_workout_overlay_voice_off": "음성 가이드 • 꺼짐",
+  "timer_workout_overlay_last_cue": "최근 큐 • {ago}",
+  "@timer_workout_overlay_last_cue": {
+    "placeholders": {
+      "ago": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_workout_overlay_next_cue_in": "다음 큐까지 {time}",
+  "@timer_workout_overlay_next_cue_in": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_workout_overlay_offline_instructions": "오프라인 안내",
+  "timer_workout_overlay_cue_just_now": "방금 전",
+  "timer_workout_overlay_cue_seconds_ago": "{seconds}초 전",
+  "@timer_workout_overlay_cue_seconds_ago": {
+    "placeholders": {
+      "seconds": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_workout_overlay_cue_minutes_ago": "{minutes}분 전",
+  "@timer_workout_overlay_cue_minutes_ago": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_workout_overlay_cue_hours_ago": "{hours}시간 전",
+  "@timer_workout_overlay_cue_hours_ago": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_workout_overlay_cue_hours_minutes_ago": "{hours}시간 {minutes}분 전",
+  "@timer_workout_overlay_cue_hours_minutes_ago": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_duration_hours_short": "{hours}시간",
+  "@timer_duration_hours_short": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_duration_hours_minutes_short": "{hours}시간 {minutes}분",
+  "@timer_duration_hours_minutes_short": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_duration_minutes_short": "{minutes}분",
+  "@timer_duration_minutes_short": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_duration_minutes_seconds_short": "{minutes}분 {seconds}초",
+  "@timer_duration_minutes_seconds_short": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      },
+      "seconds": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_duration_seconds_short": "{seconds}초",
+  "@timer_duration_seconds_short": {
+    "placeholders": {
+      "seconds": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_workout_summary_voice_on": "켜짐",
+  "timer_workout_summary_voice_off": "꺼짐",
+  "timer_workout_summary_checklist_one": "항목 1개",
+  "timer_workout_summary_checklist_many": "항목 {count}개",
+  "@timer_workout_summary_checklist_many": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_workout_summary_target_distance": "{distance}km 거리",
+  "@timer_workout_summary_target_distance": {
+    "placeholders": {
+      "distance": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_workout_summary_target_duration": "{minutes}분 시간",
+  "@timer_workout_summary_target_duration": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_workout_summary_title": "운동 네비게이터 요약",
+  "timer_workout_summary_completed_at": "{time} 완료",
+  "@timer_workout_summary_completed_at": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_workout_summary_badge_duration": "시간 • {duration}",
+  "@timer_workout_summary_badge_duration": {
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_workout_summary_badge_target": "목표 • {target}",
+  "@timer_workout_summary_badge_target": {
+    "placeholders": {
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_workout_summary_badge_voice_guidance": "음성 가이드 • {status}",
+  "@timer_workout_summary_badge_voice_guidance": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "timer_workout_summary_badge_checklist": "체크리스트 • {count}",
+  "@timer_workout_summary_badge_checklist": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "figma_sleep_input_target_minute_hint": "0-59",
+  "figma_sleep_science_tip_room": "🌙 시원하고 어두운 방이 숙면에 좋아요",
+  "figma_sleep_science_tip_screens": "✨ 잠들기 1시간 전엔 화면을 멀리하세요",
+  "figma_sleep_science_tip_consistency": "🌟 일정한 수면 시간이 숙면을 도와요"
 }

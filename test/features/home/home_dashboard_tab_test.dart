@@ -1,152 +1,82 @@
-import 'dart:async';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:life_app/features/home/casual_home_dashboard.dart';
 import 'package:life_app/features/home/home_dashboard.dart';
 import 'package:life_app/l10n/app_localizations.dart';
 import 'package:life_app/models/settings.dart';
-import 'package:life_app/providers/auth_providers.dart';
 import 'package:life_app/providers/session_providers.dart';
 import 'package:life_app/providers/settings_providers.dart';
 import 'package:life_app/providers/stats_providers.dart';
-import 'package:life_app/providers/sync_providers.dart';
-import 'package:life_app/widgets/modern_section.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  group('HomeDashboardTab', () {
-    testWidgets('shows progress section while settings are loading', (
-      tester,
-    ) async {
-      final pendingSettings = Completer<Settings>();
-
-      await _pumpDashboard(tester, settingsFuture: pendingSettings.future);
-
-      expect(find.text("Today's progress"), findsWidgets);
-      expect(find.byType(ModernSkeleton), findsNothing);
+  Future<void> pumpLegacyHomeWrapper(WidgetTester tester) async {
+    final view = tester.view;
+    final originalPhysicalSize = view.physicalSize;
+    final originalDevicePixelRatio = view.devicePixelRatio;
+    view.physicalSize = const Size(1080, 1920);
+    view.devicePixelRatio = 1.0;
+    addTearDown(() {
+      view.physicalSize = originalPhysicalSize;
+      view.devicePixelRatio = originalDevicePixelRatio;
     });
 
-    testWidgets('falls back to defaults when today summary fails', (tester) async {
-      await _pumpDashboard(
-        tester,
-        todaySummaryStream: Stream<TodaySummary>.error('failed'),
-      );
+    final l10n = AppLocalizations.testing(
+      translations: const {
+        'casual_home_quick_guided': 'Guided Sessions',
+      },
+    );
 
-      expect(find.text("Can't load dashboard"), findsNothing);
-      expect(find.text('Retry'), findsNothing);
-      expect(find.text("Today's progress"), findsWidgets);
-    });
-
-    testWidgets('renders progress and premium sections when data is ready', (
-      tester,
-    ) async {
-      await _pumpDashboard(tester);
-
-      expect(find.text("Today's progress"), findsWidgets);
-
-      final verticalScrollable = find.byWidgetPredicate(
-        (widget) =>
-            widget is Scrollable && widget.axisDirection == AxisDirection.down,
-      );
-
-      await tester.scrollUntilVisible(
-        find.byKey(const Key('home_section_routines')),
-        300,
-        scrollable: verticalScrollable,
-      );
-      expect(find.text('Your routines'), findsWidgets);
-
-      await tester.scrollUntilVisible(
-        find.byKey(const Key('home_section_integrations')),
-        300,
-        scrollable: verticalScrollable,
-      );
-      expect(find.text('Integrations'), findsWidgets);
-
-      await tester.scrollUntilVisible(
-        find.byKey(const Key('home_section_premium')),
-        300,
-        scrollable: verticalScrollable,
-      );
-      expect(find.text('Go premium'), findsWidgets);
-    });
-  });
-}
-
-Future<void> _pumpDashboard(
-  WidgetTester tester, {
-  Future<Settings>? settingsFuture,
-  Stream<TodaySummary>? todaySummaryStream,
-  Future<int>? streakFuture,
-}) async {
-  final view = tester.view;
-  final originalPhysicalSize = view.physicalSize;
-  final originalDevicePixelRatio = view.devicePixelRatio;
-  view.physicalSize = const Size(1080, 1920);
-  view.devicePixelRatio = 1.0;
-  addTearDown(() {
-    view.physicalSize = originalPhysicalSize;
-    view.devicePixelRatio = originalDevicePixelRatio;
-  });
-
-  final l10n = AppLocalizations.testing(translations: _testTranslations);
-  final settings = Settings()
-    ..focusMinutes = 30
-    ..restMinutes = 5
-    ..workoutMinutes = 20
-    ..sleepMinutes = 60;
-  final summaryStream =
-      todaySummaryStream ??
-      Stream<TodaySummary>.value(
-        const TodaySummary(focus: 30, workout: 20, sleep: 420),
-      );
-
-  await tester.pumpWidget(
-    ProviderScope(
-      overrides: [
-        settingsFutureProvider.overrideWith(
-          (ref) async => settingsFuture ?? Future.value(settings),
-        ),
-        todaySummaryProvider.overrideWith((ref) => summaryStream),
-        streakCountProvider.overrideWith(
-          (ref) async => streakFuture == null ? 3 : await streakFuture,
-        ),
-        authControllerProvider.overrideWith(() => _FakeAuthController()),
-        syncControllerProvider.overrideWith(() => _FakeSyncController()),
-      ],
-      child: MaterialApp(
-        localizationsDelegates: [
-          _TestLocalizationsDelegate(l10n),
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          settingsFutureProvider
+              .overrideWith((ref) async => Settings()..focusMinutes = 25),
+          todaySummaryProvider.overrideWith(
+            (ref) => Stream.value(
+              const TodaySummary(focus: 10, workout: 5, sleep: 120),
+            ),
+          ),
+          streakCountProvider.overrideWith((ref) async => 2),
         ],
-        supportedLocales: const [Locale('en')],
-        home: const HomeDashboardTab(),
+        child: MaterialApp(
+          localizationsDelegates: [
+            _TestLocalizationsDelegate(l10n),
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [Locale('en')],
+          home: const HomeDashboardTab(),
+        ),
       ),
-    ),
-  );
+    );
 
-  await tester.pump();
-  await tester.pump(const Duration(milliseconds: 600));
-}
-
-class _FakeAuthController extends AuthController {
-  @override
-  Future<User?> build() async => null;
-}
-
-class _FakeSyncController extends SyncController {
-  @override
-  Future<void> build() async {
-    state = const AsyncData(null);
+    await tester.pump();
+    await tester.pumpAndSettle();
   }
+
+  testWidgets('legacy HomeDashboardTab delegates to CasualHomeDashboard',
+      (tester) async {
+    await pumpLegacyHomeWrapper(tester);
+    expect(find.byType(CasualHomeDashboard), findsOneWidget);
+  });
+
+  testWidgets('legacy HomeDashboardTab still exposes guided quick entry',
+      (tester) async {
+    await pumpLegacyHomeWrapper(tester);
+    await tester.scrollUntilVisible(
+      find.text('Guided Sessions'),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(find.text('Guided Sessions'), findsWidgets);
+  });
 }
 
 class _TestLocalizationsDelegate
@@ -166,40 +96,3 @@ class _TestLocalizationsDelegate
   bool shouldReload(covariant LocalizationsDelegate<AppLocalizations> old) =>
       false;
 }
-
-const Map<String, String> _testTranslations = <String, String>{
-  'app_title': 'Life App',
-  'home_dashboard_greeting_morning': 'Good morning',
-  'home_dashboard_greeting_afternoon': 'Good afternoon',
-  'home_dashboard_greeting_evening': 'Good evening',
-  'home_dashboard_greeting_subtitle': "Let's build better habits today",
-  'home_dashboard_quick_start_title': 'Quick start',
-  'timer_mode_focus': 'Focus',
-  'timer_mode_workout': 'Workout',
-  'timer_mode_sleep': 'Sleep',
-  'home_dashboard_card_focus_description': 'Focus description',
-  'home_dashboard_card_workout_description': 'Workout description',
-  'home_dashboard_card_sleep_description': 'Sleep description',
-  'home_dashboard_action_start': 'Start now',
-  'home_dashboard_action_customize': 'Adjust routine',
-  'home_dashboard_action_explore': 'Explore',
-  'home_dashboard_progress_title': "Today's progress",
-  'home_dashboard_routines_title': 'Your routines',
-  'home_dashboard_integrations_title': 'Integrations',
-  'home_dashboard_integrations_wearables_title': 'Wearables',
-  'home_dashboard_integrations_wearables_subtitle': 'Connect devices',
-  'home_dashboard_integrations_backup_title': 'Backup',
-  'home_dashboard_integrations_backup_subtitle': 'Automatic sync enabled',
-  'home_dashboard_premium_title': 'Go premium',
-  'home_dashboard_premium_subtitle': 'Unlock advanced features',
-  'home_dashboard_premium_cta': 'Start trial',
-  'home_dashboard_state_error_title': "Can't load dashboard",
-  'home_dashboard_state_error_message': 'Check your connection and try again.',
-  'home_dashboard_state_retry': 'Retry',
-  'home_dashboard_routine_stat_today': 'Today {value}',
-  'home_dashboard_routine_stat_streak': '{days}-day streak',
-  'home_sync_error': 'Sync error',
-  'home_sync_signed_out': 'Signed out',
-  'home_sync_in_progress': 'Syncing',
-  'duration_minutes_only': '{minutes} min',
-};

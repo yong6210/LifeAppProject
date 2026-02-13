@@ -17,6 +17,7 @@ import 'package:life_app/providers/session_providers.dart';
 import 'package:life_app/providers/settings_providers.dart';
 import 'package:life_app/providers/feature_flags.dart';
 import 'package:life_app/services/analytics/analytics_service.dart';
+import 'package:life_app/services/analytics/growth_kpi_events.dart';
 import 'package:life_app/providers/accessibility_providers.dart';
 import 'package:life_app/services/audio/sleep_sound_catalog.dart';
 import 'package:life_app/services/audio/sleep_sound_analyzer.dart';
@@ -58,6 +59,9 @@ class TimerController extends Notifier<TimerState> {
   final List<_NavigatorCueTrigger> _navigatorCueTriggers = [];
   bool _navigatorVoiceEnabled = true;
   int _navigatorChecklistCheckedCount = 0;
+  String? _activeRoutineSource;
+  String? _activeRoutineSourceId;
+  String? _activeRoutineName;
 
   static const _prefsKey = 'timer_state_v2';
   static const _prefsWorkoutPresetKey = 'workout_light_preset_id';
@@ -127,6 +131,34 @@ class TimerController extends Notifier<TimerState> {
     );
   }
 
+  void _setRoutineContext({
+    String? source,
+    String? sourceId,
+    String? routineName,
+  }) {
+    _activeRoutineSource = source;
+    _activeRoutineSourceId = sourceId;
+    _activeRoutineName = routineName;
+  }
+
+  void _clearRoutineContext() {
+    _activeRoutineSource = null;
+    _activeRoutineSourceId = null;
+    _activeRoutineName = null;
+  }
+
+  bool get _isGuidedRoutineActive =>
+      state.mode == 'custom_routine' && _activeRoutineSource == 'guided';
+
+  String get _activeGuidedTemplateId =>
+      _activeRoutineSourceId ?? 'guided_custom';
+
+  Future<void> clearLastGuidedSessionCompletion() async {
+    if (state.lastGuidedSessionCompletion == null) return;
+    state = state.copyWith(lastGuidedSessionCompletion: null);
+    await _persistState();
+  }
+
   Future<void> selectMode(String mode) async {
     await _loadPlanAndRestore(mode: mode, forceReset: true);
   }
@@ -166,6 +198,8 @@ class TimerController extends Notifier<TimerState> {
     final plan = TimerPlanFactory.createWorkoutLightPlan(preset);
     _currentPlan = plan;
     _clearNavigatorContext();
+    _clearRoutineContext();
+    _clearRoutineContext();
     await _setWorkoutPreset(preset.id);
     unawaited(
       ref
@@ -187,6 +221,9 @@ class TimerController extends Notifier<TimerState> {
   Future<bool> startCustomRoutine({
     required Routine routine,
     bool autoStart = false,
+    String? source,
+    String? sourceId,
+    String? routineName,
   }) async {
     final plan = TimerPlanFactory.createRoutinePlan(routine);
     if (plan == null) {
@@ -201,8 +238,17 @@ class TimerController extends Notifier<TimerState> {
 
     _currentPlan = plan;
     _clearNavigatorContext();
+    _setRoutineContext(
+      source: source,
+      sourceId: sourceId,
+      routineName: routineName ?? routine.name,
+    );
 
-    state = TimerState.idle(plan: plan, soundEnabled: state.isSoundEnabled);
+    state = TimerState.idle(
+      plan: plan,
+      soundEnabled: state.isSoundEnabled,
+      lastGuidedSessionCompletion: null,
+    );
     await _persistState();
 
     if (autoStart && !state.isRunning) {
@@ -225,6 +271,7 @@ class TimerController extends Notifier<TimerState> {
     await _cancelSleepSoundCapture();
     await _foreground.stop();
 
+    _clearRoutineContext();
     _navigatorRoute = route;
     _navigatorTarget = target;
     _navigatorCueTriggers
@@ -293,7 +340,8 @@ class TimerController extends Notifier<TimerState> {
     }
   }
 
-  Future<void> reset() async {
+  Future<void> reset({String reason = 'manual'}) async {
+    await _trackGuidedExitIfNeeded(reason: reason);
     _clearNavigatorContext();
     final previousPresetId = state.workoutPresetId;
     final plan =
@@ -310,7 +358,10 @@ class TimerController extends Notifier<TimerState> {
     await _background.cancelGuard();
     await _cancelSleepSoundCapture();
     await _persistState();
-    await AnalyticsService.logEvent('session_reset', {'mode': state.mode});
+    await AnalyticsService.logEvent('session_reset', {
+      'mode': state.mode,
+      'reason': reason,
+    });
   }
 
   Future<void> skipSegment() async {
@@ -334,8 +385,7 @@ class TimerController extends Notifier<TimerState> {
       return;
     }
     await _stopTicker();
-    final remainingAfter =
-        _remainingSecondsAfter(idx - 1) +
+    final remainingAfter = _remainingSecondsAfter(idx - 1) +
         state.segments[idx - 1].duration.inSeconds;
     state = state.copyWith(
       currentSegmentIndex: idx - 1,
@@ -381,9 +431,8 @@ class TimerController extends Notifier<TimerState> {
     _currentPlan = plan;
     _clearNavigatorContext();
 
-    final restored = forceReset
-        ? false
-        : await _restoreState(plan, persistedState);
+    final restored =
+        forceReset ? false : await _restoreState(plan, persistedState);
     if (!restored) {
       state = TimerState.idle(
         plan: plan,
@@ -437,9 +486,8 @@ class TimerController extends Notifier<TimerState> {
       final hasPersistedKey =
           persistedState?.containsKey('workoutPresetId') ?? false;
       final storedPreset = persistedState?['workoutPresetId'];
-      final candidateId = hasPersistedKey
-          ? storedPreset as String?
-          : _workoutPresetId;
+      final candidateId =
+          hasPersistedKey ? storedPreset as String? : _workoutPresetId;
       final preset = _findWorkoutPreset(candidateId);
       if (preset != null) {
         _workoutPresetId = preset.id;
@@ -465,8 +513,8 @@ class TimerController extends Notifier<TimerState> {
     if (map['mode'] != plan.mode) {
       return false;
     }
-    final segmentsData = (map['segments'] as List<dynamic>? ?? [])
-        .cast<Map<String, dynamic>>();
+    final segmentsData =
+        (map['segments'] as List<dynamic>? ?? []).cast<Map<String, dynamic>>();
     if (!_segmentsMatch(plan.segments, segmentsData)) {
       return false;
     }
@@ -474,8 +522,8 @@ class TimerController extends Notifier<TimerState> {
     final storedPresetId = map['workoutPresetId'];
     final workoutPresetId =
         storedPresetId is String && storedPresetId.isNotEmpty
-        ? storedPresetId
-        : null;
+            ? storedPresetId
+            : null;
     if (workoutPresetId != null) {
       _workoutPresetId = workoutPresetId;
     }
@@ -483,8 +531,7 @@ class TimerController extends Notifier<TimerState> {
     final currentIndex = (map['currentIndex'] as num?)?.toInt() ?? 0;
     final savedRemainingSeconds =
         (map['remainingSeconds'] as num?)?.toInt() ?? plan.totalSeconds;
-    final segmentRemaining =
-        (map['segmentRemaining'] as num?)?.toInt() ??
+    final segmentRemaining = (map['segmentRemaining'] as num?)?.toInt() ??
         plan.segments[currentIndex].duration.inSeconds;
     final isRunning = map['isRunning'] as bool? ?? false;
     final soundEnabled = map['isSoundEnabled'] as bool? ?? false;
@@ -505,10 +552,13 @@ class TimerController extends Notifier<TimerState> {
     }
     final newRemaining = isRunning
         ? computedSegmentRemaining +
-              _remainingSecondsAfter(currentIndex + 1, plan: plan)
+            _remainingSecondsAfter(currentIndex + 1, plan: plan)
         : savedRemainingSeconds;
 
     final navigatorVoiceEnabled = map['navigatorVoiceEnabled'] as bool? ?? true;
+    final routineSource = map['routineSource'] as String?;
+    final routineSourceId = map['routineSourceId'] as String?;
+    final routineName = map['routineName'] as String?;
 
     state = TimerState(
       mode: plan.mode,
@@ -519,9 +569,8 @@ class TimerController extends Notifier<TimerState> {
       segmentRemainingSeconds: computedSegmentRemaining,
       isRunning: isRunning && computedSegmentRemaining > 0,
       sessionStartedAt: sessionStartedAt,
-      segmentStartedAt: isRunning && computedSegmentRemaining > 0
-          ? segmentStartedAt
-          : null,
+      segmentStartedAt:
+          isRunning && computedSegmentRemaining > 0 ? segmentStartedAt : null,
       isSoundEnabled: soundEnabled,
       navigatorRoute: null,
       navigatorTarget: null,
@@ -531,15 +580,19 @@ class TimerController extends Notifier<TimerState> {
 
     final lastCueMessage = map['navigatorLastCueMessage'] as String?;
     final lastCueAtRaw = map['navigatorLastCueAt'] as String?;
-    final lastCueAt = lastCueAtRaw != null
-        ? DateTime.tryParse(lastCueAtRaw)
-        : null;
+    final lastCueAt =
+        lastCueAtRaw != null ? DateTime.tryParse(lastCueAtRaw) : null;
     if (lastCueMessage != null) {
       state = state.copyWith(
         navigatorLastCueMessage: lastCueMessage,
         navigatorLastCueAt: lastCueAt,
       );
     }
+    _setRoutineContext(
+      source: routineSource,
+      sourceId: routineSourceId,
+      routineName: routineName,
+    );
 
     final l10n = await _localizations();
     if (state.isRunning) {
@@ -645,12 +698,18 @@ class TimerController extends Notifier<TimerState> {
     if (state.mode == 'workout') {
       await _maybeSpeakWorkoutCue(state.currentSegment, l10n);
     }
+    if (_isGuidedRoutineActive && existingSessionStart == null) {
+      await _announceGuidedStepStart(
+        segment: state.currentSegment,
+        stepIndex: state.currentSegmentIndex + 1,
+        l10n: l10n,
+      );
+    }
 
     final sessionStartedAt = state.sessionStartedAt ?? now;
     final elapsed = now.difference(sessionStartedAt).inSeconds;
-    final eventName = existingSessionStart == null
-        ? 'session_start'
-        : 'session_resume';
+    final eventName =
+        existingSessionStart == null ? 'session_start' : 'session_resume';
     await AnalyticsService.logEvent(eventName, {
       'mode': state.mode,
       'segment_id': state.currentSegment.id,
@@ -663,6 +722,8 @@ class TimerController extends Notifier<TimerState> {
       'navigator_target_value': _navigatorTarget?.value,
       'navigator_voice_enabled': _navigatorVoiceEnabled,
       'navigator_checklist_checked_count': _navigatorChecklistCheckedCount,
+      'routine_source': _activeRoutineSource,
+      'routine_source_id': _activeRoutineSourceId,
     });
   }
 
@@ -677,9 +738,8 @@ class TimerController extends Notifier<TimerState> {
     await _cancelSleepSoundCapture();
     await _persistState();
     final startedAt = state.sessionStartedAt;
-    final elapsed = startedAt != null
-        ? DateTime.now().difference(startedAt).inSeconds
-        : 0;
+    final elapsed =
+        startedAt != null ? DateTime.now().difference(startedAt).inSeconds : 0;
     await AnalyticsService.logEvent('session_pause', {
       'mode': state.mode,
       'segment_id': state.currentSegment.id,
@@ -712,8 +772,7 @@ class TimerController extends Notifier<TimerState> {
     var segmentRemaining = _segmentEndAt!.difference(now).inSeconds;
     if (segmentRemaining < 0) segmentRemaining = 0;
 
-    final remaining =
-        segmentRemaining +
+    final remaining = segmentRemaining +
         _remainingSecondsAfter(state.currentSegmentIndex + 1);
 
     state = state.copyWith(
@@ -778,6 +837,20 @@ class TimerController extends Notifier<TimerState> {
       await _finalizeSleepSoundCapture(saveSummary: record);
     }
 
+    if (_isGuidedRoutineActive) {
+      final stepIndex = state.currentSegmentIndex + 1;
+      final stepMinutes = segment.duration.inMinutes;
+      unawaited(
+        GrowthKpiEvents.guidedStepComplete(
+          templateId: _activeGuidedTemplateId,
+          stepIndex: stepIndex,
+          totalSteps: state.segments.length,
+          mode: segment.type,
+          durationMinutes: stepMinutes,
+        ),
+      );
+    }
+
     await AnalyticsService.logEvent('segment_complete', {
       'mode': state.mode,
       'segment_id': segment.id,
@@ -786,11 +859,17 @@ class TimerController extends Notifier<TimerState> {
       'duration_sec': segment.duration.inSeconds,
       'navigator_route_id': _navigatorRoute?.id,
       'navigator_voice_enabled': _navigatorVoiceEnabled,
+      'routine_source': _activeRoutineSource,
+      'routine_source_id': _activeRoutineSourceId,
     });
 
     if (state.isLastSegment) {
       if (state.mode == 'workout') {
         await _workoutCues.speakComplete(l10n: l10n);
+      }
+      GuidedSessionCompletion? guidedCompletion;
+      if (_isGuidedRoutineActive) {
+        await _workoutCues.speakGuidedComplete(l10n: l10n);
       }
       await _notifications.showDone(mode: state.mode);
       await _audioService.setEnabled(false);
@@ -798,6 +877,23 @@ class TimerController extends Notifier<TimerState> {
       final elapsed = startedAt != null
           ? now.difference(startedAt).inSeconds
           : _currentPlan?.totalSeconds ?? 0;
+      if (_isGuidedRoutineActive) {
+        guidedCompletion = GuidedSessionCompletion(
+          templateId: _activeGuidedTemplateId,
+          title: _activeRoutineName ?? l10n.tr('guided_sessions_title'),
+          totalSteps: state.segments.length,
+          totalMinutes: (state.totalSeconds / 60).round(),
+          completedAt: now,
+        );
+        unawaited(
+          GrowthKpiEvents.guidedComplete(
+            templateId: _activeGuidedTemplateId,
+            totalSteps: state.segments.length,
+            totalMinutes: (state.totalSeconds / 60).round(),
+            elapsedSeconds: elapsed,
+          ),
+        );
+      }
       await AnalyticsService.logEvent('session_end', {
         'mode': state.mode,
         'duration_sec': elapsed,
@@ -807,6 +903,8 @@ class TimerController extends Notifier<TimerState> {
         'navigator_target_value': _navigatorTarget?.value,
         'navigator_voice_enabled': _navigatorVoiceEnabled,
         'navigator_checklist_checked_count': _navigatorChecklistCheckedCount,
+        'routine_source': _activeRoutineSource,
+        'routine_source_id': _activeRoutineSourceId,
       });
       await AnalyticsService.logEvent('routine_complete', {
         'mode': state.mode,
@@ -815,6 +913,8 @@ class TimerController extends Notifier<TimerState> {
         'navigator_route_id': _navigatorRoute?.id,
         'navigator_voice_enabled': _navigatorVoiceEnabled,
         'navigator_checklist_checked_count': _navigatorChecklistCheckedCount,
+        'routine_source': _activeRoutineSource,
+        'routine_source_id': _activeRoutineSourceId,
       });
       NavigatorCompletionSummary? summary;
       if (_navigatorRoute != null) {
@@ -828,12 +928,17 @@ class TimerController extends Notifier<TimerState> {
           checklistCheckedCount: _navigatorChecklistCheckedCount,
         );
       }
-      await reset();
+      await reset(reason: 'completed');
       if (summary != null) {
         state = state.copyWith(
           navigatorLastSummary: summary,
           navigatorLastCueMessage: null,
           navigatorLastCueAt: null,
+        );
+      }
+      if (guidedCompletion != null) {
+        state = state.copyWith(
+          lastGuidedSessionCompletion: guidedCompletion,
         );
       }
       await _clearPersistedState();
@@ -861,6 +966,13 @@ class TimerController extends Notifier<TimerState> {
 
     if (state.mode == 'workout') {
       await _maybeSpeakWorkoutCue(nextSegment, l10n);
+    }
+    if (_isGuidedRoutineActive) {
+      await _announceGuidedStepStart(
+        segment: nextSegment,
+        stepIndex: nextIndex + 1,
+        l10n: l10n,
+      );
     }
 
     if (state.isRunning) {
@@ -894,6 +1006,37 @@ class TimerController extends Notifier<TimerState> {
     }
 
     await _persistState();
+  }
+
+  Future<void> _trackGuidedExitIfNeeded({required String reason}) async {
+    if (reason == 'completed' || !_isGuidedRoutineActive) {
+      return;
+    }
+    final startedAt = state.sessionStartedAt;
+    if (startedAt == null) {
+      return;
+    }
+    final stepIndex =
+        (state.currentSegmentIndex + 1).clamp(1, state.segments.length).toInt();
+    final elapsedSeconds = DateTime.now().difference(startedAt).inSeconds;
+    final templateId = _activeGuidedTemplateId;
+
+    unawaited(
+      GrowthKpiEvents.guidedExit(
+        templateId: templateId,
+        stepIndex: stepIndex,
+        totalSteps: state.segments.length,
+        elapsedSeconds: elapsedSeconds,
+        reason: reason,
+      ),
+    );
+    await AnalyticsService.logEvent('guided_session_exit', {
+      'template_id': templateId,
+      'step_index': stepIndex,
+      'total_steps': state.segments.length,
+      'elapsed_seconds': elapsedSeconds,
+      'reason': reason,
+    });
   }
 
   Future<void> _maybeSpeakWorkoutCue(
@@ -940,6 +1083,50 @@ class TimerController extends Notifier<TimerState> {
     return state.segments
         .where((segment) => segment.id.startsWith('workout_active_'))
         .length;
+  }
+
+  Future<void> _announceGuidedStepStart({
+    required TimerSegment segment,
+    required int stepIndex,
+    required AppLocalizations l10n,
+  }) async {
+    if (!_isGuidedRoutineActive) return;
+    final totalSteps = state.segments.length;
+    final minutes = segment.duration.inMinutes;
+    final modeLabel = _modeLabelForCue(segment.type, l10n);
+
+    await _workoutCues.speakGuidedStepStart(
+      l10n: l10n,
+      step: stepIndex,
+      totalSteps: totalSteps,
+      mode: modeLabel,
+      minutes: minutes,
+    );
+
+    unawaited(
+      GrowthKpiEvents.guidedStepStart(
+        templateId: _activeGuidedTemplateId,
+        stepIndex: stepIndex,
+        totalSteps: totalSteps,
+        mode: segment.type,
+        durationMinutes: minutes,
+      ),
+    );
+  }
+
+  String _modeLabelForCue(String mode, AppLocalizations l10n) {
+    switch (mode) {
+      case 'focus':
+        return l10n.tr('session_type_focus');
+      case 'rest':
+        return l10n.tr('session_type_rest');
+      case 'workout':
+        return l10n.tr('session_type_workout');
+      case 'sleep':
+        return l10n.tr('session_type_sleep');
+      default:
+        return mode;
+    }
   }
 
   Future<void> _startSleepSoundCaptureIfNeeded(TimerSegment segment) async {
@@ -1058,8 +1245,7 @@ class TimerController extends Notifier<TimerState> {
       0,
       state.segmentTotalSeconds,
     );
-    final totalRemaining =
-        segmentRemaining +
+    final totalRemaining = segmentRemaining +
         _remainingSecondsAfter(state.currentSegmentIndex + 1);
     state = state.copyWith(
       segmentRemainingSeconds: segmentRemaining,
@@ -1184,12 +1370,14 @@ class TimerController extends Notifier<TimerState> {
       'navigatorLastCueMessage': state.navigatorLastCueMessage,
       'navigatorLastCueAt': state.navigatorLastCueAt?.toIso8601String(),
       'workoutPresetId': state.workoutPresetId,
+      'routineSource': _activeRoutineSource,
+      'routineSourceId': _activeRoutineSourceId,
+      'routineName': _activeRoutineName,
     };
     if (state.mode == 'custom_routine') {
       data['customPlan'] = {
-        'segments': state.segments
-            .map(TimerPlanFactory.serializeSegment)
-            .toList(),
+        'segments':
+            state.segments.map(TimerPlanFactory.serializeSegment).toList(),
       };
     }
     await prefs.setString(_prefsKey, jsonEncode(data));
@@ -1231,9 +1419,8 @@ class TimerController extends Notifier<TimerState> {
     }
 
     if (navigatorSegments.isEmpty) {
-      final minutes = route.estimatedMinutes > 1
-          ? route.estimatedMinutes.round()
-          : 20;
+      final minutes =
+          route.estimatedMinutes > 1 ? route.estimatedMinutes.round() : 20;
       navigatorSegments.add(
         TimerSegment(
           id: '${route.id}_main',

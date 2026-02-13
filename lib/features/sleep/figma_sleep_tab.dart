@@ -1263,8 +1263,10 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                             GestureDetector(
                                               onTap: () => _showDirectInputDialog(
                                                 context: context,
-                                                title: '분 입력',
-                                                hintText: '0-59',
+                                                title:
+                                                    l10n.tr('figma_sleep_input_minutes_title'),
+                                                hintText:
+                                                    l10n.tr('figma_sleep_input_target_minute_hint'),
                                                 maxValue: 59,
                                                 currentValue: _targetTime?.minute ?? 0,
                                                 onSubmit: (value) {
@@ -1282,7 +1284,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                                 mainAxisAlignment: MainAxisAlignment.center,
                                                 children: [
                                                   Text(
-                                                    '분',
+                                                    l10n.tr('figma_sleep_picker_minutes'),
                                                     style: theme.textTheme.bodySmall?.copyWith(
                                                       color: isDark
                                                           ? Colors.white.withValues(alpha: 0.5)
@@ -1658,7 +1660,11 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                             ],
                           ),
                           const SizedBox(height: 12),
-                          ...['🌙 Cool, dark room = better sleep', '✨ No screens 1 hour before bed', '🌟 Consistent sleep schedule helps'].map((tip) {
+                          ...[
+                            l10n.tr('figma_sleep_science_tip_room'),
+                            l10n.tr('figma_sleep_science_tip_screens'),
+                            l10n.tr('figma_sleep_science_tip_consistency'),
+                          ].map((tip) {
                             return Padding(
                               padding: const EdgeInsets.only(bottom: 4),
                               child: Text(

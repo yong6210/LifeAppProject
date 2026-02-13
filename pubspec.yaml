@@ -75,6 +75,10 @@ flutter:
     - assets/audio/manifest.json
     - assets/audio/app/
     - assets/maps/
+  fonts:
+    - family: LifeSans
+      fonts:
+        - asset: assets/fonts/NotoSansKR-VF.ttf
 
 msix_config:
   display_name: Life App

@@ -1,7 +1,7 @@
 # Project-level configuration.
 cmake_minimum_required(VERSION 3.14)
 if(CMAKE_VERSION VERSION_GREATER_EQUAL "4.0")
-  set(CMAKE_POLICY_VERSION_MINIMUM 3.5 CACHE STRING "Min policy version for old subprojects" FORCE)
+  set(CMAKE_POLICY_VERSION_MINIMUM 3.10 CACHE STRING "Min policy version for old subprojects" FORCE)
 endif()
 project(life_app LANGUAGES CXX)
 
@@ -12,6 +12,25 @@ set(BINARY_NAME "life_app")
 # Explicitly opt in to modern CMake behaviors to avoid warnings with recent
 # versions of CMake.
 cmake_policy(VERSION 3.14...3.25)
+
+# Some Windows plugins (e.g. flutter_tts) require `nuget.exe` and call
+# `find_program` with the executable name only. Prefer the repo-local tool so
+# builds stay reproducible across machines and don't require global NuGet setup.
+set(PROJECT_LOCAL_NUGET "${CMAKE_CURRENT_SOURCE_DIR}/../tools/nuget/nuget.exe")
+if(EXISTS "${PROJECT_LOCAL_NUGET}")
+  get_filename_component(PROJECT_LOCAL_NUGET_DIR "${PROJECT_LOCAL_NUGET}" DIRECTORY)
+  list(PREPEND CMAKE_PROGRAM_PATH "${PROJECT_LOCAL_NUGET_DIR}")
+  set(NUGET "${PROJECT_LOCAL_NUGET}" CACHE FILEPATH "Path to nuget.exe" FORCE)
+  set(NUGET_EXE "${PROJECT_LOCAL_NUGET}" CACHE FILEPATH "Path to nuget.exe" FORCE)
+  # Also set normal variables in this configure scope for immediate consumers.
+  set(NUGET "${PROJECT_LOCAL_NUGET}")
+  set(NUGET_EXE "${PROJECT_LOCAL_NUGET}")
+  if(WIN32)
+    set(ENV{PATH} "${PROJECT_LOCAL_NUGET_DIR};$ENV{PATH}")
+  else()
+    set(ENV{PATH} "${PROJECT_LOCAL_NUGET_DIR}:$ENV{PATH}")
+  endif()
+endif()
 
 # Define build configuration option.
 get_property(IS_MULTICONFIG GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)

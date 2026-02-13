@@ -7,11 +7,17 @@ class UserProfile {
     required this.uid,
     required this.displayName,
     this.email,
+    this.avatarUrl,
+    this.timezone,
+    this.premiumTier = 'free',
   });
 
   final String uid;
   final String displayName;
   final String? email;
+  final String? avatarUrl;
+  final String? timezone;
+  final String premiumTier;
 
   factory UserProfile.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
@@ -19,6 +25,9 @@ class UserProfile {
       uid: doc.id,
       displayName: data['displayName'] as String,
       email: data['email'] as String?,
+      avatarUrl: data['avatarUrl'] as String?,
+      timezone: data['timezone'] as String?,
+      premiumTier: data['premiumTier'] as String? ?? 'free',
     );
   }
 
@@ -26,6 +35,9 @@ class UserProfile {
     return {
       'displayName': displayName,
       'email': email,
+      'avatarUrl': avatarUrl,
+      'timezone': timezone,
+      'premiumTier': premiumTier,
     };
   }
 }

@@ -5,6 +5,7 @@ import 'package:life_app/l10n/app_localizations.dart';
 import 'package:life_app/providers/cross_domain_analytics_provider.dart';
 import 'package:life_app/services/analytics/cross_domain_analytics_service.dart';
 import 'package:life_app/services/analytics/cross_domain_exporter.dart';
+import 'package:life_app/widgets/app_state_widgets.dart';
 
 class CrossDomainDashboardPage extends ConsumerStatefulWidget {
   const CrossDomainDashboardPage({super.key});
@@ -59,8 +60,22 @@ class _CrossDomainDashboardPageState
           onRangeChanged: _onRangeChanged,
           analytics: analytics,
         ),
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, _) => _ErrorView(message: '$error'),
+        loading: () => Padding(
+          padding: const EdgeInsets.all(24),
+          child: AppLoadingState(
+            title: l10n.tr('analytics_dashboard_loading_title'),
+            message: l10n.tr('analytics_dashboard_loading_message'),
+          ),
+        ),
+        error: (error, _) => Padding(
+          padding: const EdgeInsets.all(24),
+          child: AppErrorState(
+            title: l10n.tr('analytics_dashboard_error_title'),
+            message: '$error',
+            retryLabel: l10n.tr('common_retry'),
+            onRetry: () => ref.invalidate(crossDomainAnalyticsProvider(_range)),
+          ),
+        ),
       ),
     );
   }
@@ -569,8 +584,8 @@ class _MultiMetricChartPainter extends CustomPainter {
       0,
       (maxValue, point) =>
           point.moodScore != null && point.moodScore! > maxValue
-          ? point.moodScore!
-          : maxValue,
+              ? point.moodScore!
+              : maxValue,
     );
 
     final focusScale = focusMax == 0 ? 1 : focusMax.toDouble();
@@ -785,30 +800,12 @@ class _EmptyState extends StatelessWidget {
           _RangeSelector(range: range, onChanged: onRangeChanged),
           const SizedBox(height: 32),
           Expanded(
-            child: Center(
-              child: Text(
-                l10n.tr('analytics_dashboard_empty'),
-                textAlign: TextAlign.center,
-              ),
+            child: AppEmptyState(
+              title: l10n.tr('analytics_dashboard_empty_title'),
+              message: l10n.tr('analytics_dashboard_empty'),
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _ErrorView extends StatelessWidget {
-  const _ErrorView({required this.message});
-
-  final String message;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Text(message, textAlign: TextAlign.center),
       ),
     );
   }

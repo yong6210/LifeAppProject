@@ -28,13 +28,15 @@ This document describes how the app records and analyzes sleep sounds.
 ## Retention & Deletion
 - Only the latest summary is persisted.
 - Users can delete local data by clearing app data or deleting the recording.
-- Add a UI affordance if explicit deletion is required for policy compliance.
+- In-app deletion affordance is available from Sleep Analysis detail:
+  - `lib/features/sleep/sleep_analysis_detail_page.dart`
+  - Deletes both latest summary JSON and local recording file.
 
 ## Permissions
 - Microphone permission is requested only when starting a sleep sound session.
 - The feature does not run in the background unless the user starts it.
 
 ## Open Policy Items
+- [x] Add an in-app disclosure explaining on-device processing
 - [ ] Confirm whether recordings should be retained or deleted after analysis
-- [ ] Add an in-app disclosure explaining on-device processing
 - [ ] Update the public privacy policy to include this feature

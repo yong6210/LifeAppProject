@@ -54,6 +54,24 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
       appBar: AppBar(
         title: Text(l10n.tr('onboarding_appbar_title')),
         automaticallyImplyLeading: false,
+        actions: [
+          TextButton(
+            onPressed: () async {
+              final navigator = Navigator.of(context);
+              await ref
+                  .read(settingsMutationControllerProvider.notifier)
+                  .completeOnboarding();
+              await AnalyticsService.logEvent('onboarding_skipped', {
+                'variant': variant,
+                'duration_sec': DateTime.now().difference(_startedAt).inSeconds,
+              });
+              if (!mounted) return;
+              navigator.pop(true);
+            },
+            child: Text(l10n.tr('onboarding_skip_button')),
+          ),
+          const SizedBox(width: 8),
+        ],
       ),
       body: Column(
         children: [

@@ -13,11 +13,12 @@ class ScheduleEntry {
     required this.routineId,
     this.routineType = ScheduleRoutineType.builtIn,
     this.repeatRule = ScheduleRepeatRule.none,
+    this.isCompleted = false,
     this.notes,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) : createdAt = createdAt ?? DateTime.now().toUtc(),
-       updatedAt = updatedAt ?? DateTime.now().toUtc();
+  })  : createdAt = createdAt ?? DateTime.now().toUtc(),
+        updatedAt = updatedAt ?? DateTime.now().toUtc();
 
   factory ScheduleEntry.fromJson(Map<String, dynamic> json) {
     return ScheduleEntry(
@@ -32,6 +33,7 @@ class ScheduleEntry {
       repeatRule: ScheduleRepeatRule.values.firstWhere(
         (value) => value.name == (json['repeatRule'] as String? ?? 'none'),
       ),
+      isCompleted: json['isCompleted'] as bool? ?? false,
       notes: json['notes'] as String?,
       createdAt: DateTime.tryParse(json['createdAt'] as String? ?? ''),
       updatedAt: DateTime.tryParse(json['updatedAt'] as String? ?? ''),
@@ -45,9 +47,38 @@ class ScheduleEntry {
   final String routineId;
   final ScheduleRoutineType routineType;
   final ScheduleRepeatRule repeatRule;
+  final bool isCompleted;
   final String? notes;
   final DateTime createdAt;
   final DateTime updatedAt;
+
+  ScheduleEntry copyWith({
+    String? id,
+    DateTime? startTime,
+    DateTime? endTime,
+    String? title,
+    String? routineId,
+    ScheduleRoutineType? routineType,
+    ScheduleRepeatRule? repeatRule,
+    bool? isCompleted,
+    String? notes,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return ScheduleEntry(
+      id: id ?? this.id,
+      startTime: startTime ?? this.startTime,
+      endTime: endTime ?? this.endTime,
+      title: title ?? this.title,
+      routineId: routineId ?? this.routineId,
+      routineType: routineType ?? this.routineType,
+      repeatRule: repeatRule ?? this.repeatRule,
+      isCompleted: isCompleted ?? this.isCompleted,
+      notes: notes ?? this.notes,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -58,6 +89,7 @@ class ScheduleEntry {
       'routineId': routineId,
       'routineType': routineType.name,
       'repeatRule': repeatRule.name,
+      'isCompleted': isCompleted,
       'notes': notes,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
@@ -75,8 +107,8 @@ class CustomRoutine {
     this.segments = const [],
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) : createdAt = createdAt ?? DateTime.now().toUtc(),
-       updatedAt = updatedAt ?? DateTime.now().toUtc();
+  })  : createdAt = createdAt ?? DateTime.now().toUtc(),
+        updatedAt = updatedAt ?? DateTime.now().toUtc();
 
   factory CustomRoutine.fromJson(Map<String, dynamic> json) {
     return CustomRoutine(
@@ -85,8 +117,7 @@ class CustomRoutine {
       durationMinutes: (json['durationMinutes'] as num).toInt(),
       description: json['description'] as String?,
       audioAsset: json['audioAsset'] as String?,
-      segments:
-          (json['segments'] as List?)
+      segments: (json['segments'] as List?)
               ?.map(
                 (item) => RoutineSegment.fromJson(
                   Map<String, dynamic>.from(item as Map),

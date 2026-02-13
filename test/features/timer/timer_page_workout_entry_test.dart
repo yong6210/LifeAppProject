@@ -113,7 +113,7 @@ class _FakeTimerController extends TimerController {
   }
 
   @override
-  Future<void> reset() async {
+  Future<void> reset({String reason = 'manual'}) async {
     state = TimerState.idle(
       plan: _planFor(state.mode),
       soundEnabled: state.isSoundEnabled,
@@ -132,8 +132,7 @@ class _FakeTimerController extends TimerController {
 }
 
 class _SilentAnnouncer extends TimerAnnouncer {
-  _SilentAnnouncer()
-      : super(sendAnnouncement: (_, __, ___) async {});
+  _SilentAnnouncer() : super(sendAnnouncement: (_, __, ___) async {});
 }
 
 SleepSoundCatalog _emptyCatalog() {
@@ -226,7 +225,11 @@ void main() {
             timerAnnouncerProvider.overrideWithValue(_SilentAnnouncer()),
             ...extraOverrides,
           ],
-          child: const MaterialApp(
+          child: MaterialApp(
+            theme: ThemeData(
+              useMaterial3: true,
+              splashFactory: InkRipple.splashFactory,
+            ),
             localizationsDelegates: [
               _TestAppLocalizationsDelegate(),
               GlobalMaterialLocalizations.delegate,

@@ -19,6 +19,7 @@ import 'package:life_app/services/accessibility/timer_announcer.dart';
 import 'package:life_app/services/permission_service.dart';
 import 'package:life_app/services/subscription/revenuecat_service.dart';
 import 'package:life_app/services/analytics/analytics_service.dart';
+import 'package:life_app/services/analytics/growth_kpi_events.dart';
 import 'package:life_app/features/backup/backup_page.dart';
 import 'package:life_app/features/community/community_challenges_page.dart';
 import 'package:life_app/features/stats/stats_page.dart';
@@ -44,6 +45,8 @@ const _sleepPresetOrder = <String>[
 const bool _enableDesktopLayout = false;
 
 enum CoachAction { backup, startFocus, openWorkoutNavigator, viewStats, none }
+
+enum TimerDetailSection { basic, advanced }
 
 class CoachNudge {
   CoachNudge({
@@ -88,10 +91,20 @@ class _FocusPresetChips extends ConsumerWidget {
           ),
     ];
     if (options.isEmpty) {
-      options.addAll(const [
-        _FocusPresetOption(label: '25분 포모도로', minutes: 25),
-        _FocusPresetOption(label: '45분 몰입', minutes: 45),
-        _FocusPresetOption(label: '90분 플로우', minutes: 90),
+      final l10n = context.l10n;
+      options.addAll([
+        _FocusPresetOption(
+          label: l10n.tr('timer_focus_quick_preset_25'),
+          minutes: 25,
+        ),
+        _FocusPresetOption(
+          label: l10n.tr('timer_focus_quick_preset_45'),
+          minutes: 45,
+        ),
+        _FocusPresetOption(
+          label: l10n.tr('timer_focus_quick_preset_90'),
+          minutes: 90,
+        ),
       ]);
     }
 
@@ -99,7 +112,7 @@ class _FocusPresetChips extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '빠른 집중 루틴',
+          context.l10n.tr('timer_focus_quick_routine_title'),
           style: theme.textTheme.titleSmall?.copyWith(
             fontWeight: FontWeight.w600,
           ),
@@ -161,17 +174,15 @@ class _WorkoutLightPresetChips extends ConsumerWidget {
         LayoutBuilder(
           builder: (context, constraints) {
             final maxWidth = constraints.maxWidth;
-            final double cardWidth = maxWidth > 560
-                ? math.min(320.0, maxWidth / 2 - 12)
-                : maxWidth;
+            final double cardWidth =
+                maxWidth > 560 ? math.min(320.0, maxWidth / 2 - 12) : maxWidth;
             return Wrap(
               spacing: 16,
               runSpacing: 16,
               children: workoutLightPresets.map((preset) {
                 final selected = state.workoutPresetId == preset.id;
-                final cardColor = selected
-                    ? colorScheme.primaryContainer
-                    : theme.cardColor;
+                final cardColor =
+                    selected ? colorScheme.primaryContainer : theme.cardColor;
                 final onCardColor = selected
                     ? colorScheme.onPrimaryContainer
                     : colorScheme.onSurface;
@@ -332,12 +343,16 @@ class TimerPage extends ConsumerStatefulWidget {
     this.autoStart = false,
     this.useForegroundTask = true,
     this.initialRoutine,
+    this.guidedTemplateId,
+    this.guidedSessionName,
   });
 
   final String? initialMode;
   final bool autoStart;
   final bool useForegroundTask;
   final Routine? initialRoutine;
+  final String? guidedTemplateId;
+  final String? guidedSessionName;
 
   @override
   ConsumerState<TimerPage> createState() => _TimerPageState();
@@ -346,8 +361,13 @@ class TimerPage extends ConsumerStatefulWidget {
 class _TimerPageState extends ConsumerState<TimerPage> {
   bool _initialModeApplied = false;
   bool _showingFocusDndDialog = false;
+  bool _showingGuidedCompletionSheet = false;
+  bool _showAdvancedControls = false;
+  TimerDetailSection _detailSection = TimerDetailSection.basic;
+  DateTime? _lastHandledGuidedCompletionAt;
   TimerAnnouncer? _announcer;
   ProviderSubscription<TimerState>? _focusSubscription;
+  ProviderSubscription<TimerState>? _guidedCompletionSubscription;
 
   @override
   void initState() {
@@ -362,6 +382,18 @@ class _TimerPageState extends ConsumerState<TimerPage> {
         _handleFocusModeEntered();
       }
     });
+    _guidedCompletionSubscription = ref.listenManual<TimerState>(
+      timerControllerProvider,
+      (previous, next) {
+        final completion = next.lastGuidedSessionCompletion;
+        if (completion == null) return;
+        final alreadyHandled =
+            _lastHandledGuidedCompletionAt == completion.completedAt;
+        if (alreadyHandled || _showingGuidedCompletionSheet) return;
+        _lastHandledGuidedCompletionAt = completion.completedAt;
+        unawaited(_showGuidedCompletionSheet(completion));
+      },
+    );
     Future.microtask(() {
       if (!mounted) return;
       final current = ref.read(timerControllerProvider);
@@ -374,6 +406,7 @@ class _TimerPageState extends ConsumerState<TimerPage> {
   @override
   void dispose() {
     _focusSubscription?.close();
+    _guidedCompletionSubscription?.close();
     _announcer?.reset();
     super.dispose();
   }
@@ -393,6 +426,9 @@ class _TimerPageState extends ConsumerState<TimerPage> {
         final started = await controller.startCustomRoutine(
           routine: widget.initialRoutine!,
           autoStart: widget.autoStart,
+          source: widget.guidedTemplateId == null ? null : 'guided',
+          sourceId: widget.guidedTemplateId,
+          routineName: widget.guidedSessionName ?? widget.initialRoutine!.name,
         );
         if (!mounted) return;
         if (!started) {
@@ -485,6 +521,144 @@ class _TimerPageState extends ConsumerState<TimerPage> {
     }
   }
 
+  Future<void> _showGuidedCompletionSheet(
+    GuidedSessionCompletion completion,
+  ) async {
+    if (!mounted || _showingGuidedCompletionSheet) return;
+    _showingGuidedCompletionSheet = true;
+    final l10n = context.l10n;
+    final controller = ref.read(timerControllerProvider.notifier);
+
+    unawaited(
+      GrowthKpiEvents.guidedCompletionAction(
+        templateId: completion.templateId,
+        action: 'shown',
+      ),
+    );
+
+    final action = await showModalBottomSheet<String>(
+      context: context,
+      isDismissible: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (sheetContext) {
+        final theme = Theme.of(sheetContext);
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(18, 18, 18, 18),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.tr('guided_session_complete_title'),
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  l10n.tr('guided_session_complete_body', {
+                    'title': completion.title,
+                  }),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primaryContainer,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    l10n.tr('guided_session_complete_summary', {
+                      'steps': '${completion.totalSteps}',
+                      'minutes': '${completion.totalMinutes}',
+                    }),
+                    style: theme.textTheme.labelLarge?.copyWith(
+                      color: theme.colorScheme.onPrimaryContainer,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 14),
+                Row(
+                  children: [
+                    Expanded(
+                      child: FilledButton(
+                        onPressed: widget.initialRoutine == null
+                            ? null
+                            : () => Navigator.of(sheetContext).pop('restart'),
+                        child: Text(
+                          l10n.tr('guided_session_complete_restart'),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () => Navigator.of(sheetContext).pop('home'),
+                        child: Text(
+                          l10n.tr('guided_session_complete_home'),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    await controller.clearLastGuidedSessionCompletion();
+
+    if (!mounted) {
+      _showingGuidedCompletionSheet = false;
+      return;
+    }
+
+    if (action == 'restart' && widget.initialRoutine != null) {
+      unawaited(
+        GrowthKpiEvents.guidedCompletionAction(
+          templateId: completion.templateId,
+          action: 'restart',
+        ),
+      );
+      await controller.startCustomRoutine(
+        routine: widget.initialRoutine!,
+        autoStart: true,
+        source: widget.guidedTemplateId == null ? null : 'guided',
+        sourceId: widget.guidedTemplateId,
+        routineName: widget.guidedSessionName ?? widget.initialRoutine!.name,
+      );
+    } else if (action == 'home') {
+      unawaited(
+        GrowthKpiEvents.guidedCompletionAction(
+          templateId: completion.templateId,
+          action: 'home',
+        ),
+      );
+      Navigator.of(context).maybePop();
+    } else {
+      unawaited(
+        GrowthKpiEvents.guidedCompletionAction(
+          templateId: completion.templateId,
+          action: 'dismissed',
+        ),
+      );
+    }
+    _showingGuidedCompletionSheet = false;
+  }
+
   CoachNudge? _buildCoachNudge({
     required AppLocalizations l10n,
     required Settings settings,
@@ -492,9 +666,8 @@ class _TimerPageState extends ConsumerState<TimerPage> {
   }) {
     final now = DateTime.now();
     final lastBackup = settings.lastBackupAt;
-    final backupDays = lastBackup == null
-        ? 7
-        : now.difference(lastBackup).inDays;
+    final backupDays =
+        lastBackup == null ? 7 : now.difference(lastBackup).inDays;
 
     final workoutGoal = settings.workoutMinutes.clamp(10, 120);
     if (summary == null || summary.workout < workoutGoal) {
@@ -628,8 +801,7 @@ class _TimerPageState extends ConsumerState<TimerPage> {
     final segmentProgress = currentSegment.duration.inSeconds == 0
         ? 0.0
         : 1 -
-              (state.segmentRemainingSeconds /
-                  currentSegment.duration.inSeconds);
+            (state.segmentRemainingSeconds / currentSegment.duration.inSeconds);
     final featuredRoute = workoutNavigatorRoutes.first;
 
     final permissionTiles = permissionStatus.when<Widget?>(
@@ -752,6 +924,18 @@ class _TimerPageState extends ConsumerState<TimerPage> {
             ..add(const _WorkoutLightPresetChips())
             ..add(const SizedBox(height: 16));
           break;
+        case 'custom_routine':
+          modeHeader
+            ..add(
+              _GuidedSessionProgressCard(
+                state: state,
+                title: widget.guidedSessionName ??
+                    widget.initialRoutine?.name ??
+                    l10n.tr('guided_sessions_title'),
+              ),
+            )
+            ..add(const SizedBox(height: 16));
+          break;
         default:
           modeHeader
             ..add(_FocusQuickCard(settings: settings))
@@ -763,6 +947,7 @@ class _TimerPageState extends ConsumerState<TimerPage> {
     } else {
       modeHeader.add(const SizedBox(height: 4));
     }
+    final isBasicSection = _detailSection == TimerDetailSection.basic;
 
     Widget buildTimerScaffold() {
       return Scaffold(
@@ -817,37 +1002,6 @@ class _TimerPageState extends ConsumerState<TimerPage> {
                   padding: const EdgeInsets.all(16),
                   children: [
                     ...modeHeader,
-                    if (permissionTiles != null) ...[
-                      const SizedBox(height: 12),
-                      permissionTiles,
-                    ],
-                    if (coachNudge != null) ...[
-                      const SizedBox(height: 16),
-                      _CoachCard(
-                        nudge: coachNudge,
-                        onAction: (action) => _handleCoachAction(action),
-                      ),
-                    ],
-                    if (state.mode == 'sleep') ...[
-                      const SizedBox(height: 16),
-                      _SleepSmartAlarmCard(
-                        onUpdated: controller.refreshCurrentPlan,
-                        isPremium: isPremium,
-                        onRequestPremium: () async {
-                          AnalyticsService.logEvent('premium_gate', {
-                            'feature': 'sleep_sound_mixer',
-                          });
-                          await Navigator.push<void>(
-                            context,
-                            MaterialPageRoute<void>(
-                              builder: (_) => const PaywallPage(),
-                            ),
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      const SleepAnalysisResultCard(),
-                    ],
                     const SizedBox(height: 16),
                     _TimerStatusCard(
                       segment: currentSegment,
@@ -856,6 +1010,30 @@ class _TimerPageState extends ConsumerState<TimerPage> {
                       state: state,
                       l10n: l10n,
                     ),
+                    const SizedBox(height: 16),
+                    _TimerDetailSectionSwitcher(
+                      section: _detailSection,
+                      l10n: l10n,
+                      onChanged: (next) {
+                        setState(() {
+                          _detailSection = next;
+                          if (next == TimerDetailSection.advanced) {
+                            _showAdvancedControls = true;
+                          }
+                        });
+                      },
+                    ),
+                    if (permissionTiles != null) ...[
+                      const SizedBox(height: 12),
+                      permissionTiles,
+                    ],
+                    if (coachNudge != null && isBasicSection) ...[
+                      const SizedBox(height: 16),
+                      _CoachCard(
+                        nudge: coachNudge,
+                        onAction: (action) => _handleCoachAction(action),
+                      ),
+                    ],
                     if (state.mode == 'workout' &&
                         state.navigatorRoute != null) ...[
                       const SizedBox(height: 16),
@@ -867,16 +1045,50 @@ class _TimerPageState extends ConsumerState<TimerPage> {
                         summary: state.navigatorLastSummary!,
                       ),
                     ],
-                    const SizedBox(height: 16),
-                    _SoundControlsCard(
-                      isSoundEnabled: state.isSoundEnabled,
-                      currentProfile: currentSegment.playSoundProfile,
-                      onToggle: controller.toggleSound,
-                    ),
-                    const SizedBox(height: 16),
-                    _SegmentTimelineCard(state: state),
-                    const SizedBox(height: 16),
-                    const _QuickPresetEditor(),
+                    if (!isBasicSection) ...[
+                      if (state.mode == 'sleep') ...[
+                        const SizedBox(height: 16),
+                        _SleepSmartAlarmCard(
+                          onUpdated: controller.refreshCurrentPlan,
+                          isPremium: isPremium,
+                          onRequestPremium: () async {
+                            AnalyticsService.logEvent('premium_gate', {
+                              'feature': 'sleep_sound_mixer',
+                            });
+                            await Navigator.push<void>(
+                              context,
+                              MaterialPageRoute<void>(
+                                builder: (_) => const PaywallPage(),
+                              ),
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        const SleepAnalysisResultCard(),
+                      ],
+                      const SizedBox(height: 16),
+                      _AdvancedControlsCard(
+                        key: const Key('timer-advanced-controls-card'),
+                        isExpanded: _showAdvancedControls,
+                        l10n: l10n,
+                        onToggleExpanded: () {
+                          setState(() {
+                            _showAdvancedControls = !_showAdvancedControls;
+                          });
+                        },
+                        children: [
+                          _SoundControlsCard(
+                            isSoundEnabled: state.isSoundEnabled,
+                            currentProfile: currentSegment.playSoundProfile,
+                            onToggle: controller.toggleSound,
+                          ),
+                          const SizedBox(height: 12),
+                          _SegmentTimelineCard(state: state),
+                          const SizedBox(height: 12),
+                          const _QuickPresetEditor(),
+                        ],
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -886,8 +1098,8 @@ class _TimerPageState extends ConsumerState<TimerPage> {
                 onToggle: () async {
                   final granted =
                       await TimerPermissionService.ensureTimerPermissions(
-                        context,
-                      );
+                    context,
+                  );
                   ref.invalidate(timerPermissionStatusProvider);
                   if (!granted) return;
                   await controller.toggleStartStop();
@@ -907,6 +1119,188 @@ class _TimerPageState extends ConsumerState<TimerPage> {
       return scaffold;
     }
     return WithForegroundTask(child: scaffold);
+  }
+}
+
+class _AdvancedControlsCard extends StatelessWidget {
+  const _AdvancedControlsCard({
+    super.key,
+    required this.isExpanded,
+    required this.l10n,
+    required this.onToggleExpanded,
+    required this.children,
+  });
+
+  final bool isExpanded;
+  final AppLocalizations l10n;
+  final VoidCallback onToggleExpanded;
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.tr('timer_advanced_controls_title'),
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        l10n.tr('timer_advanced_controls_subtitle'),
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                TextButton.icon(
+                  onPressed: onToggleExpanded,
+                  icon: Icon(
+                    isExpanded
+                        ? Icons.keyboard_arrow_up
+                        : Icons.keyboard_arrow_down,
+                  ),
+                  label: Text(
+                    isExpanded
+                        ? l10n.tr('timer_advanced_controls_hide')
+                        : l10n.tr('timer_advanced_controls_show'),
+                  ),
+                ),
+              ],
+            ),
+            AnimatedCrossFade(
+              firstChild: Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: children,
+                ),
+              ),
+              secondChild: const SizedBox.shrink(),
+              crossFadeState: isExpanded
+                  ? CrossFadeState.showFirst
+                  : CrossFadeState.showSecond,
+              duration: const Duration(milliseconds: 180),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _TimerDetailSectionSwitcher extends StatelessWidget {
+  const _TimerDetailSectionSwitcher({
+    required this.section,
+    required this.l10n,
+    required this.onChanged,
+  });
+
+  final TimerDetailSection section;
+  final AppLocalizations l10n;
+  final ValueChanged<TimerDetailSection> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final isBasic = section == TimerDetailSection.basic;
+
+    Widget buildOption({
+      required TimerDetailSection value,
+      required String label,
+      required bool selected,
+      required IconData icon,
+    }) {
+      final buttonKey = value == TimerDetailSection.basic
+          ? const Key('timer-detail-basic-button')
+          : const Key('timer-detail-advanced-button');
+      return Expanded(
+        child: Semantics(
+          button: true,
+          selected: selected,
+          label: label,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: 48),
+            child: FilledButton.tonalIcon(
+              key: buttonKey,
+              onPressed: () => onChanged(value),
+              icon: Icon(icon, size: 18),
+              label: Text(label),
+              style: FilledButton.styleFrom(
+                backgroundColor: selected
+                    ? scheme.primaryContainer
+                    : scheme.surfaceContainerHighest.withValues(alpha: 0.35),
+                foregroundColor: selected
+                    ? scheme.onPrimaryContainer
+                    : scheme.onSurfaceVariant,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Card(
+      key: const Key('timer-detail-switcher'),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l10n.tr('timer_section_switch_title'),
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              l10n.tr('timer_section_switch_subtitle'),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: scheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                buildOption(
+                  value: TimerDetailSection.basic,
+                  label: l10n.tr('timer_section_basic_label'),
+                  selected: isBasic,
+                  icon: Icons.touch_app_outlined,
+                ),
+                const SizedBox(width: 8),
+                buildOption(
+                  value: TimerDetailSection.advanced,
+                  label: l10n.tr('timer_section_advanced_label'),
+                  selected: !isBasic,
+                  icon: Icons.tune_rounded,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -1044,8 +1438,8 @@ class _FocusQuickCard extends ConsumerWidget {
     final primaryLabel = isRunning
         ? l10n.tr('timer_focus_card_view')
         : hasProgress
-        ? l10n.tr('timer_focus_card_resume')
-        : l10n.tr('timer_focus_card_start');
+            ? l10n.tr('timer_focus_card_resume')
+            : l10n.tr('timer_focus_card_start');
 
     Future<void> startOrResume() async {
       await controller.selectMode('focus');
@@ -1335,10 +1729,11 @@ class _ModeMascotState extends State<_ModeMascot>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
+    final l10n = context.l10n;
     final icon = _iconFor(widget.mode);
     final baseColor = _colorFor(scheme, widget.mode);
-    final title = _titleFor(widget.mode);
-    final subtitle = _subtitleFor(widget.mode);
+    final title = _titleFor(widget.mode, l10n);
+    final subtitle = _subtitleFor(widget.mode, l10n);
     final gradient = LinearGradient(
       colors: [
         baseColor.withValues(alpha: 0.2),
@@ -1433,29 +1828,29 @@ class _ModeMascotState extends State<_ModeMascot>
     }
   }
 
-  String _titleFor(String mode) {
+  String _titleFor(String mode, AppLocalizations l10n) {
     switch (mode) {
       case 'focus':
-        return '집중 세션 준비';
+        return l10n.tr('timer_mode_mascot_focus_title');
       case 'sleep':
-        return '수면 루틴 준비';
+        return l10n.tr('timer_mode_mascot_sleep_title');
       case 'workout':
-        return '운동 세션 준비';
+        return l10n.tr('timer_mode_mascot_workout_title');
       default:
-        return '타이머 준비';
+        return l10n.tr('timer_mode_mascot_default_title');
     }
   }
 
-  String _subtitleFor(String mode) {
+  String _subtitleFor(String mode, AppLocalizations l10n) {
     switch (mode) {
       case 'focus':
-        return '원하는 루틴을 골라 바로 시작하세요.';
+        return l10n.tr('timer_mode_mascot_focus_subtitle');
       case 'sleep':
-        return '수면 시간과 기상 알림을 확인하세요.';
+        return l10n.tr('timer_mode_mascot_sleep_subtitle');
       case 'workout':
-        return '코스와 목표를 확인하고 출발해요.';
+        return l10n.tr('timer_mode_mascot_workout_subtitle');
       default:
-        return '모드를 선택해 타이머를 시작하세요.';
+        return l10n.tr('timer_mode_mascot_default_subtitle');
     }
   }
 }
@@ -1583,6 +1978,7 @@ class _WorkoutNavigatorOverlay extends StatelessWidget {
   Widget build(BuildContext context) {
     final route = state.navigatorRoute!;
     final theme = Theme.of(context);
+    final l10n = context.l10n;
     final now = DateTime.now();
     final elapsed = state.sessionStartedAt != null
         ? now.difference(state.sessionStartedAt!)
@@ -1635,12 +2031,16 @@ class _WorkoutNavigatorOverlay extends StatelessWidget {
                   children: [
                     _InfoBadge(
                       icon: Icons.social_distance_outlined,
-                      label: '${route.distanceKm.toStringAsFixed(1)} km',
+                      label: l10n.tr('timer_workout_overlay_distance_km', {
+                        'distance': route.distanceKm.toStringAsFixed(1),
+                      }),
                     ),
                     const SizedBox(height: 8),
                     _InfoBadge(
                       icon: Icons.schedule_outlined,
-                      label: '${route.estimatedMinutes.round()} min',
+                      label: l10n.tr('timer_workout_overlay_estimated_min', {
+                        'minutes': '${route.estimatedMinutes.round()}',
+                      }),
                     ),
                   ],
                 ),
@@ -1660,7 +2060,7 @@ class _WorkoutNavigatorOverlay extends StatelessWidget {
                     alignment: Alignment.center,
                     color: theme.colorScheme.surfaceContainerHighest,
                     child: Text(
-                      'Map preview coming soon',
+                      l10n.tr('timer_workout_overlay_map_preview_fallback'),
                       style: theme.textTheme.bodyMedium,
                     ),
                   ),
@@ -1672,16 +2072,24 @@ class _WorkoutNavigatorOverlay extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               remaining.isNegative
-                  ? 'Session complete'
-                  : 'Time remaining ${_formatRemaining(remaining)}',
+                  ? l10n.tr('timer_workout_overlay_session_complete')
+                  : l10n.tr('timer_workout_overlay_time_remaining', {
+                      'time': _formatRemaining(remaining, l10n),
+                    }),
               style: theme.textTheme.bodySmall,
             ),
             if (state.navigatorTarget != null) ...[
               const SizedBox(height: 12),
               Text(
                 state.navigatorTarget!.type == WorkoutTargetType.distance
-                    ? 'Target • ${state.navigatorTarget!.value.toStringAsFixed(1)} km'
-                    : 'Target • ${state.navigatorTarget!.value.toStringAsFixed(0)} min',
+                    ? l10n.tr('timer_workout_overlay_target_distance', {
+                        'distance':
+                            state.navigatorTarget!.value.toStringAsFixed(1),
+                      })
+                    : l10n.tr('timer_workout_overlay_target_duration', {
+                        'minutes':
+                            state.navigatorTarget!.value.toStringAsFixed(0),
+                      }),
                 style: theme.textTheme.bodyMedium,
               ),
             ],
@@ -1692,8 +2100,8 @@ class _WorkoutNavigatorOverlay extends StatelessWidget {
                 const SizedBox(width: 6),
                 Text(
                   state.navigatorVoiceEnabled
-                      ? 'Voice guidance • On'
-                      : 'Voice guidance • Off',
+                      ? l10n.tr('timer_workout_overlay_voice_on')
+                      : l10n.tr('timer_workout_overlay_voice_off'),
                   style: theme.textTheme.bodySmall,
                 ),
               ],
@@ -1713,7 +2121,9 @@ class _WorkoutNavigatorOverlay extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Last cue • ${_formatCueAgo(lastCueAgo)}',
+                      l10n.tr('timer_workout_overlay_last_cue', {
+                        'ago': _formatCueAgo(lastCueAgo, l10n),
+                      }),
                       style: theme.textTheme.bodySmall?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -1727,7 +2137,9 @@ class _WorkoutNavigatorOverlay extends StatelessWidget {
             if (nextCue != null) ...[
               const SizedBox(height: 12),
               Text(
-                'Next cue in ${_formatRemaining(nextCue.offset - elapsed)}',
+                l10n.tr('timer_workout_overlay_next_cue_in', {
+                  'time': _formatRemaining(nextCue.offset - elapsed, l10n),
+                }),
                 style: theme.textTheme.bodySmall?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
@@ -1753,7 +2165,8 @@ class _WorkoutNavigatorOverlay extends StatelessWidget {
                   );
                 },
                 icon: const Icon(Icons.offline_pin_outlined),
-                label: const Text('Offline instructions'),
+                label:
+                    Text(l10n.tr('timer_workout_overlay_offline_instructions')),
               ),
             ),
           ],
@@ -1762,25 +2175,34 @@ class _WorkoutNavigatorOverlay extends StatelessWidget {
     );
   }
 
-  String _formatCueAgo(Duration? duration) {
+  String _formatCueAgo(Duration? duration, AppLocalizations l10n) {
     if (duration == null || duration.isNegative || duration.inSeconds <= 1) {
-      return 'Just now';
+      return l10n.tr('timer_workout_overlay_cue_just_now');
     }
     if (duration.inMinutes == 0) {
-      return '${duration.inSeconds}s ago';
+      return l10n.tr('timer_workout_overlay_cue_seconds_ago', {
+        'seconds': '${duration.inSeconds}',
+      });
     }
     if (duration.inHours == 0) {
-      return '${duration.inMinutes}m ago';
+      return l10n.tr('timer_workout_overlay_cue_minutes_ago', {
+        'minutes': '${duration.inMinutes}',
+      });
     }
     final hours = duration.inHours;
     final minutes = duration.inMinutes.remainder(60);
     if (minutes == 0) {
-      return '${hours}h ago';
+      return l10n.tr('timer_workout_overlay_cue_hours_ago', {
+        'hours': '$hours',
+      });
     }
-    return '${hours}h ${minutes}m ago';
+    return l10n.tr('timer_workout_overlay_cue_hours_minutes_ago', {
+      'hours': '$hours',
+      'minutes': '$minutes',
+    });
   }
 
-  String _formatRemaining(Duration duration) {
+  String _formatRemaining(Duration duration, AppLocalizations l10n) {
     if (duration.isNegative) {
       return '0:00';
     }
@@ -1789,7 +2211,10 @@ class _WorkoutNavigatorOverlay extends StatelessWidget {
     if (minutes >= 60) {
       final hours = duration.inHours;
       final remainingMinutes = minutes.remainder(60);
-      return '${hours}h ${remainingMinutes}m';
+      return l10n.tr('timer_duration_hours_minutes_short', {
+        'hours': '$hours',
+        'minutes': '$remainingMinutes',
+      });
     }
     return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
@@ -1803,6 +2228,7 @@ class _NavigatorSummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = context.l10n;
     WorkoutNavigatorRoute? matchedRoute;
     for (final route in workoutNavigatorRoutes) {
       if (route.id == summary.routeId) {
@@ -1812,16 +2238,24 @@ class _NavigatorSummaryCard extends StatelessWidget {
     }
 
     final duration = Duration(seconds: summary.elapsedSeconds);
-    final durationLabel = _formatDuration(duration);
-    final voiceLabel = summary.voiceGuidanceEnabled ? 'On' : 'Off';
+    final durationLabel = _formatDuration(duration, l10n);
+    final voiceLabel = summary.voiceGuidanceEnabled
+        ? l10n.tr('timer_workout_summary_voice_on')
+        : l10n.tr('timer_workout_summary_voice_off');
     final checklistLabel = summary.checklistCheckedCount == 1
-        ? '1 item'
-        : '${summary.checklistCheckedCount} items';
+        ? l10n.tr('timer_workout_summary_checklist_one')
+        : l10n.tr('timer_workout_summary_checklist_many', {
+            'count': '${summary.checklistCheckedCount}',
+          });
     String? targetLabel;
     if (summary.targetType != null && summary.targetValue != null) {
       targetLabel = summary.targetType == WorkoutTargetType.distance
-          ? '${summary.targetValue!.toStringAsFixed(1)} km distance'
-          : '${summary.targetValue!.toStringAsFixed(0)} min duration';
+          ? l10n.tr('timer_workout_summary_target_distance', {
+              'distance': summary.targetValue!.toStringAsFixed(1),
+            })
+          : l10n.tr('timer_workout_summary_target_duration', {
+              'minutes': summary.targetValue!.toStringAsFixed(0),
+            });
     }
     final completedTime = TimeOfDay.fromDateTime(summary.completedAt);
 
@@ -1839,14 +2273,16 @@ class _NavigatorSummaryCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Workout navigator summary',
+                      l10n.tr('timer_workout_summary_title'),
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Completed at ${completedTime.format(context)}',
+                      l10n.tr('timer_workout_summary_completed_at', {
+                        'time': completedTime.format(context),
+                      }),
                       style: theme.textTheme.bodySmall,
                     ),
                   ],
@@ -1869,20 +2305,28 @@ class _NavigatorSummaryCard extends StatelessWidget {
               children: [
                 _InfoBadge(
                   icon: Icons.schedule_outlined,
-                  label: 'Duration • $durationLabel',
+                  label: l10n.tr('timer_workout_summary_badge_duration', {
+                    'duration': durationLabel,
+                  }),
                 ),
                 if (targetLabel != null)
                   _InfoBadge(
                     icon: Icons.flag_outlined,
-                    label: 'Target • $targetLabel',
+                    label: l10n.tr('timer_workout_summary_badge_target', {
+                      'target': targetLabel,
+                    }),
                   ),
                 _InfoBadge(
                   icon: Icons.record_voice_over_outlined,
-                  label: 'Voice guidance • $voiceLabel',
+                  label: l10n.tr('timer_workout_summary_badge_voice_guidance', {
+                    'status': voiceLabel,
+                  }),
                 ),
                 _InfoBadge(
                   icon: Icons.checklist_rtl_outlined,
-                  label: 'Checklist • $checklistLabel',
+                  label: l10n.tr('timer_workout_summary_badge_checklist', {
+                    'count': checklistLabel,
+                  }),
                 ),
               ],
             ),
@@ -1892,20 +2336,32 @@ class _NavigatorSummaryCard extends StatelessWidget {
     );
   }
 
-  String _formatDuration(Duration value) {
+  String _formatDuration(Duration value, AppLocalizations l10n) {
     if (value.inHours > 0) {
       final hours = value.inHours;
       final minutes = value.inMinutes.remainder(60);
-      if (minutes == 0) return '${hours}h';
-      return '${hours}h ${minutes}m';
+      if (minutes == 0) {
+        return l10n.tr('timer_duration_hours_short', {'hours': '$hours'});
+      }
+      return l10n.tr('timer_duration_hours_minutes_short', {
+        'hours': '$hours',
+        'minutes': '$minutes',
+      });
     }
     if (value.inMinutes > 0) {
       final minutes = value.inMinutes;
       final seconds = value.inSeconds.remainder(60);
-      if (seconds == 0) return '${minutes}m';
-      return '${minutes}m ${seconds}s';
+      if (seconds == 0) {
+        return l10n.tr('timer_duration_minutes_short', {'minutes': '$minutes'});
+      }
+      return l10n.tr('timer_duration_minutes_seconds_short', {
+        'minutes': '$minutes',
+        'seconds': '$seconds',
+      });
     }
-    return '${value.inSeconds}s';
+    return l10n.tr('timer_duration_seconds_short', {
+      'seconds': '${value.inSeconds}',
+    });
   }
 }
 
@@ -1955,6 +2411,85 @@ class _InfoBadge extends StatelessWidget {
   }
 }
 
+class _GuidedSessionProgressCard extends StatelessWidget {
+  const _GuidedSessionProgressCard({
+    required this.state,
+    required this.title,
+  });
+
+  final TimerState state;
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+    final currentStep = state.currentSegmentIndex + 1;
+    final totalSteps = state.segments.length;
+    final progress = totalSteps == 0 ? 0.0 : currentStep / totalSteps;
+    final currentSegment = state.currentSegment;
+    final nextLabel = currentStep < totalSteps
+        ? state.segments[currentStep].labelFor(l10n)
+        : l10n.tr('guided_session_progress_all_done');
+
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l10n.tr('guided_session_progress_title'),
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            const SizedBox(height: 3),
+            Text(
+              title,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 10),
+            LinearProgressIndicator(
+              value: progress.clamp(0.0, 1.0),
+              borderRadius: BorderRadius.circular(999),
+              minHeight: 8,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              l10n.tr('guided_session_progress_count', {
+                'current': '$currentStep',
+                'total': '$totalSteps',
+              }),
+              style: theme.textTheme.labelMedium?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: 10),
+            _InfoBadge(
+              icon: Icons.play_circle_outline,
+              label: l10n.tr('guided_session_progress_now', {
+                'segment': currentSegment.labelFor(l10n),
+              }),
+            ),
+            const SizedBox(height: 8),
+            _InfoBadge(
+              icon: Icons.upcoming_outlined,
+              label: l10n.tr('guided_session_progress_next', {
+                'segment': nextLabel,
+              }),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _SegmentTimelineCard extends StatelessWidget {
   const _SegmentTimelineCard({required this.state});
 
@@ -1986,12 +2521,19 @@ class _SegmentTimelineCard extends StatelessWidget {
                 final tileColor = completed
                     ? theme.colorScheme.secondaryContainer
                     : isCurrent
-                    ? theme.colorScheme.primaryContainer
-                    : theme.colorScheme.surface;
+                        ? theme.colorScheme.primaryContainer
+                        : theme.colorScheme.surface;
                 return Container(
                   decoration: BoxDecoration(
                     color: tileColor.withValues(alpha: 0.6),
                     borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: isCurrent
+                          ? theme.colorScheme.primary.withValues(alpha: 0.6)
+                          : theme.colorScheme.outlineVariant
+                              .withValues(alpha: 0.2),
+                      width: isCurrent ? 1.6 : 1,
+                    ),
                   ),
                   child: ListTile(
                     selected: isCurrent,
@@ -1999,20 +2541,35 @@ class _SegmentTimelineCard extends StatelessWidget {
                       completed
                           ? Icons.check_circle
                           : isCurrent
-                          ? Icons.play_arrow
-                          : Icons.circle_outlined,
+                              ? Icons.play_arrow
+                              : Icons.circle_outlined,
                       color: isCurrent
                           ? theme.colorScheme.primary
                           : completed
-                          ? Colors.green
-                          : theme.colorScheme.onSurfaceVariant,
+                              ? Colors.green
+                              : theme.colorScheme.onSurfaceVariant,
                     ),
                     title: Text(segment.labelFor(l10n)),
                     subtitle: Text(
-                      '${_segmentTypeLabel(segment.type, l10n)} • ${l10n.tr('session_duration_minutes', {'minutes': '${segment.duration.inMinutes}'})}',
+                      '${_segmentTypeLabel(segment.type, l10n)} • ${l10n.tr('session_duration_minutes', {
+                            'minutes': '${segment.duration.inMinutes}'
+                          })}',
                     ),
                     trailing: isCurrent
-                        ? Text(_formatTime(state.segmentRemainingSeconds))
+                        ? Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                l10n.tr('guided_session_now_badge'),
+                                style: theme.textTheme.labelSmall?.copyWith(
+                                  color: theme.colorScheme.primary,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              Text(_formatTime(state.segmentRemainingSeconds)),
+                            ],
+                          )
                         : Text(
                             l10n.tr('session_duration_minutes', {
                               'minutes': '${segment.duration.inMinutes}',
@@ -2050,70 +2607,158 @@ class _TimerControlBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Widget buildButton({
+      required String label,
+      required IconData icon,
+      required VoidCallback? onPressed,
+      required bool filled,
+      required double minHeight,
+      required String semanticsLabel,
+    }) {
+      final child = SizedBox(
+        height: minHeight,
+        child: filled
+            ? FilledButton.icon(
+                onPressed: onPressed,
+                icon: Icon(icon),
+                label: Text(label),
+              )
+            : OutlinedButton.icon(
+                onPressed: onPressed,
+                icon: Icon(icon),
+                label: Text(label),
+              ),
+      );
+      return Semantics(button: true, label: semanticsLabel, child: child);
+    }
+
+    final previousLabel = l10n.tr('timer_button_previous');
+    final startPauseLabel = state.isRunning
+        ? l10n.tr('timer_button_pause')
+        : l10n.tr('timer_button_start');
+    final resetLabel = l10n.tr('timer_button_reset');
+    final nextLabel = l10n.tr('timer_button_next');
+
     return SafeArea(
       top: false,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
-        child: Wrap(
-          spacing: 12,
-          runSpacing: 12,
-          alignment: WrapAlignment.center,
-          children: [
-            SizedBox(
-              width: 140,
-              child: Semantics(
-                button: true,
-                label: l10n.tr('timer_button_previous'),
-                child: OutlinedButton.icon(
-                  onPressed: onPrevious,
-                  icon: const Icon(Icons.skip_previous),
-                  label: Text(l10n.tr('timer_button_previous')),
-                ),
-              ),
-            ),
-            SizedBox(
-              width: 180,
-              child: Semantics(
-                button: true,
-                label: state.isRunning
-                    ? l10n.tr('timer_button_pause')
-                    : l10n.tr('timer_button_start'),
-                child: FilledButton.icon(
-                  onPressed: onToggle,
-                  icon: Icon(state.isRunning ? Icons.pause : Icons.play_arrow),
-                  label: Text(
-                    state.isRunning
-                        ? l10n.tr('timer_button_pause')
-                        : l10n.tr('timer_button_start'),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final narrow = constraints.maxWidth < 520;
+            if (narrow) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: buildButton(
+                          label: startPauseLabel,
+                          icon:
+                              state.isRunning ? Icons.pause : Icons.play_arrow,
+                          onPressed: onToggle,
+                          filled: true,
+                          minHeight: 52,
+                          semanticsLabel: startPauseLabel,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: buildButton(
+                          label: nextLabel,
+                          icon: Icons.skip_next,
+                          onPressed: onSkip,
+                          filled: false,
+                          minHeight: 52,
+                          semanticsLabel: nextLabel,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: buildButton(
+                          label: resetLabel,
+                          icon: Icons.restart_alt,
+                          onPressed: onReset,
+                          filled: false,
+                          minHeight: 48,
+                          semanticsLabel: resetLabel,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: buildButton(
+                          label: previousLabel,
+                          icon: Icons.skip_previous,
+                          onPressed: onPrevious,
+                          filled: false,
+                          minHeight: 48,
+                          semanticsLabel: previousLabel,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              );
+            }
+
+            return Wrap(
+              spacing: 12,
+              runSpacing: 12,
+              alignment: WrapAlignment.center,
+              children: [
+                SizedBox(
+                  width: 140,
+                  child: buildButton(
+                    label: previousLabel,
+                    icon: Icons.skip_previous,
+                    onPressed: onPrevious,
+                    filled: false,
+                    minHeight: 44,
+                    semanticsLabel: previousLabel,
                   ),
                 ),
-              ),
-            ),
-            SizedBox(
-              width: 140,
-              child: Semantics(
-                button: true,
-                label: l10n.tr('timer_button_reset'),
-                child: OutlinedButton.icon(
-                  onPressed: onReset,
-                  icon: const Icon(Icons.restart_alt),
-                  label: Text(l10n.tr('timer_button_reset')),
+                SizedBox(
+                  width: 190,
+                  child: buildButton(
+                    label: startPauseLabel,
+                    icon: state.isRunning ? Icons.pause : Icons.play_arrow,
+                    onPressed: onToggle,
+                    filled: true,
+                    minHeight: 44,
+                    semanticsLabel: startPauseLabel,
+                  ),
                 ),
-              ),
-            ),
-            SizedBox(
-              width: 140,
-              child: Semantics(
-                button: true,
-                label: l10n.tr('timer_button_next'),
-                child: OutlinedButton.icon(
-                  onPressed: onSkip,
-                  icon: const Icon(Icons.skip_next),
-                  label: Text(l10n.tr('timer_button_next')),
+                SizedBox(
+                  width: 140,
+                  child: buildButton(
+                    label: nextLabel,
+                    icon: Icons.skip_next,
+                    onPressed: onSkip,
+                    filled: false,
+                    minHeight: 44,
+                    semanticsLabel: nextLabel,
+                  ),
                 ),
-              ),
-            ),
-          ],
+                SizedBox(
+                  width: 140,
+                  child: buildButton(
+                    label: resetLabel,
+                    icon: Icons.restart_alt,
+                    onPressed: onReset,
+                    filled: false,
+                    minHeight: 44,
+                    semanticsLabel: resetLabel,
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
@@ -2176,8 +2821,7 @@ class SleepPresetSummary extends StatelessWidget {
     final theme = Theme.of(context);
     final presetId = settings.sleepMixerPresetId;
     final presetName = _sleepPresetLabel(l10n, presetId);
-    final totalLevel =
-        settings.sleepMixerWhiteLevel +
+    final totalLevel = settings.sleepMixerWhiteLevel +
         settings.sleepMixerPinkLevel +
         settings.sleepMixerBrownLevel;
 
@@ -2331,8 +2975,8 @@ class _SleepSmartAlarmCard extends ConsumerWidget {
                 const SizedBox(height: 4),
                 Text(
                   l10n.tr('timer_sleep_interval', {
-                    'minutes': settings.sleepSmartAlarmIntervalMinutes
-                        .toString(),
+                    'minutes':
+                        settings.sleepSmartAlarmIntervalMinutes.toString(),
                   }),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
@@ -2485,8 +3129,8 @@ class _SleepSmartAlarmCard extends ConsumerWidget {
                           },
                           semanticFormatterCallback: (sliderValue) =>
                               sheetL10n.tr('session_duration_minutes', {
-                                'minutes': '${sliderValue.round()}',
-                              }),
+                            'minutes': '${sliderValue.round()}',
+                          }),
                         ),
                         const SizedBox(height: 12),
                         Text(
@@ -2505,15 +3149,15 @@ class _SleepSmartAlarmCard extends ConsumerWidget {
                           onChanged: (v) {
                             setState(() {
                               intervalMinutes = v.round().clamp(
-                                1,
-                                windowMinutes,
-                              );
+                                    1,
+                                    windowMinutes,
+                                  );
                             });
                           },
                           semanticFormatterCallback: (sliderValue) =>
                               sheetL10n.tr('session_duration_minutes', {
-                                'minutes': '${sliderValue.round()}',
-                              }),
+                            'minutes': '${sliderValue.round()}',
+                          }),
                         ),
                         _buildSwitchTile(
                           reducedMotion: reducedMotion,
@@ -2580,7 +3224,9 @@ class _SleepSmartAlarmCard extends ConsumerWidget {
                           padding: const EdgeInsets.only(top: 8),
                           child: Text(
                             sheetL10n.tr('timer_sleep_edit_mix_locked'),
-                            style: Theme.of(context).textTheme.bodySmall
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodySmall
                                 ?.copyWith(color: Colors.grey.shade600),
                           ),
                         ),
@@ -2967,12 +3613,10 @@ class _TimerDesktopLayoutState extends ConsumerState<_TimerDesktopLayout> {
 
     final focusMinutes = _focusMinutes ?? settings?.focusMinutes ?? 25;
     final sleepMinutes = _sleepMinutes ?? settings?.sleepMinutes ?? 60;
-    final defaultPresetId =
-        _workoutPresetId ??
+    final defaultPresetId = _workoutPresetId ??
         state.workoutPresetId ??
         (workoutLightPresets.isNotEmpty ? workoutLightPresets.first.id : null);
-    final sleepSmartEnabled =
-        _sleepSmartWindowEnabled ??
+    final sleepSmartEnabled = _sleepSmartWindowEnabled ??
         (settings?.sleepSmartAlarmWindowMinutes ?? 0) > 0;
 
     final totalProgress = state.totalSeconds == 0
@@ -2981,8 +3625,8 @@ class _TimerDesktopLayoutState extends ConsumerState<_TimerDesktopLayout> {
     final segmentProgress = state.currentSegment.duration.inSeconds == 0
         ? 0.0
         : 1 -
-              (state.segmentRemainingSeconds /
-                  state.currentSegment.duration.inSeconds);
+            (state.segmentRemainingSeconds /
+                state.currentSegment.duration.inSeconds);
 
     return Scaffold(
       appBar: AppBar(
@@ -3047,8 +3691,8 @@ class _TimerDesktopLayoutState extends ConsumerState<_TimerDesktopLayout> {
                             unawaited(
                               ref
                                   .read(
-                                    settingsMutationControllerProvider.notifier,
-                                  )
+                                settingsMutationControllerProvider.notifier,
+                              )
                                   .savePreset({'focus': value}),
                             );
                           },
@@ -3087,8 +3731,8 @@ class _TimerDesktopLayoutState extends ConsumerState<_TimerDesktopLayout> {
                             unawaited(
                               ref
                                   .read(
-                                    settingsMutationControllerProvider.notifier,
-                                  )
+                                settingsMutationControllerProvider.notifier,
+                              )
                                   .savePreset({'sleep': value}),
                             );
                           },
@@ -3118,18 +3762,17 @@ class _TimerDesktopLayoutState extends ConsumerState<_TimerDesktopLayout> {
 
                     return Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children:
-                          cards
-                              .map(
-                                (card) => Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(right: 16),
-                                    child: card,
-                                  ),
-                                ),
-                              )
-                              .toList()
-                            ..last = Expanded(child: cards.last),
+                      children: cards
+                          .map(
+                            (card) => Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 16),
+                                child: card,
+                              ),
+                            ),
+                          )
+                          .toList()
+                        ..last = Expanded(child: cards.last),
                     );
                   },
                 ),
@@ -3148,9 +3791,8 @@ class _TimerDesktopLayoutState extends ConsumerState<_TimerDesktopLayout> {
       return;
     }
     setState(() => _sleepSmartWindowEnabled = enabled);
-    final windowMinutes = enabled
-        ? current.sleepSmartAlarmWindowMinutes.clamp(15, 120)
-        : 0;
+    final windowMinutes =
+        enabled ? current.sleepSmartAlarmWindowMinutes.clamp(15, 120) : 0;
     await ref
         .read(settingsMutationControllerProvider.notifier)
         .updateSleepSmartAlarm(
@@ -3533,8 +4175,7 @@ class _DesktopStatusCard extends StatelessWidget {
               subtitle: Text(
                 state.isSoundEnabled
                     ? l10n.tr('timer_sound_switch_enabled', {
-                        'profile':
-                            state.currentSegment.playSoundProfile ??
+                        'profile': state.currentSegment.playSoundProfile ??
                             l10n.tr('timer_sound_profile_default'),
                       })
                     : l10n.tr('timer_sound_switch_disabled'),

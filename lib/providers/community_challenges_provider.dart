@@ -9,8 +9,8 @@ import 'package:life_app/models/community_challenge.dart';
 import 'package:life_app/providers/auth_providers.dart';
 import 'package:life_app/providers/remote_config_providers.dart';
 
-final communityChallengesProvider =
-    AsyncNotifierProvider<CommunityChallengesNotifier, List<CommunityChallenge>>(
+final communityChallengesProvider = AsyncNotifierProvider<
+    CommunityChallengesNotifier, List<CommunityChallenge>>(
   CommunityChallengesNotifier.new,
 );
 
@@ -108,6 +108,8 @@ class CommunityChallengesNotifier
 
     final userProfile = await ref.read(userProfileProvider.future);
     final displayName = userProfile?.displayName ?? 'You';
+    final avatarUrl = userProfile?.avatarUrl;
+    final premiumTier = userProfile?.premiumTier ?? 'free';
 
     final repo = ref.read(communityRepositoryProvider);
     final now = DateTime.now();
@@ -131,6 +133,8 @@ class CommunityChallengesNotifier
         ChallengeMember(
           id: user.uid,
           displayName: displayName,
+          avatarUrl: avatarUrl,
+          premiumTier: premiumTier,
           focusMinutes: 0,
           joinedAt: start,
         ),
@@ -188,10 +192,14 @@ class CommunityChallengesNotifier
 
     final userProfile = await ref.read(userProfileProvider.future);
     final displayName = userProfile?.displayName ?? 'You';
+    final avatarUrl = userProfile?.avatarUrl;
+    final premiumTier = userProfile?.premiumTier ?? 'free';
 
     final member = ChallengeMember(
       id: user.uid,
       displayName: displayName,
+      avatarUrl: avatarUrl,
+      premiumTier: premiumTier,
       joinedAt: DateTime.now(),
     );
 

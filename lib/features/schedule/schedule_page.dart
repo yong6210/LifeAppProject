@@ -6,6 +6,9 @@ import 'package:uuid/uuid.dart';
 import 'package:life_app/l10n/app_localizations.dart';
 import 'package:life_app/providers/schedule_providers.dart';
 import 'package:life_app/services/schedule/schedule_models.dart';
+import 'package:life_app/widgets/app_state_widgets.dart';
+
+enum _ScheduleFilter { all, tasks, routine, done }
 
 class SchedulePage extends ConsumerStatefulWidget {
   const SchedulePage({super.key});
@@ -16,20 +19,25 @@ class SchedulePage extends ConsumerStatefulWidget {
 
 class _SchedulePageState extends ConsumerState<SchedulePage> {
   final _uuid = const Uuid();
+  _ScheduleFilter _filter = _ScheduleFilter.all;
 
   @override
   Widget build(BuildContext context) {
     final scheduleState = ref.watch(scheduleControllerProvider);
     final l10n = context.l10n;
-    final entries = scheduleState.entries;
-    final grouped = _groupEntriesByDay(entries);
+    final entries = [...scheduleState.entries]
+      ..sort((a, b) => a.startTime.compareTo(b.startTime));
+    final filteredEntries = _applyFilter(entries);
+    final taskEntries = filteredEntries.where(_isTaskEntry).toList();
+    final routineEntries = filteredEntries.where(_isRoutineEntry).toList();
+    final hasVisibleItems = taskEntries.isNotEmpty || routineEntries.isNotEmpty;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.tr('schedule_page_title')),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(Icons.refresh_rounded),
             onPressed: () =>
                 ref.read(scheduleControllerProvider.notifier).refresh(),
           ),
@@ -44,43 +52,128 @@ class _SchedulePageState extends ConsumerState<SchedulePage> {
         },
       ),
       body: scheduleState.isLoading && entries.isEmpty
-          ? const Center(child: CircularProgressIndicator())
-          : RefreshIndicator(
-              onRefresh: () =>
-                  ref.read(scheduleControllerProvider.notifier).refresh(),
-              child: grouped.isEmpty
-                  ? ListView(
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      children: [
-                        const SizedBox(height: 120),
-                        Center(
-                          child: Text(
-                            l10n.tr('schedule_empty_state'),
-                            style: Theme.of(context).textTheme.bodyLarge,
-                          ),
+          ? Center(
+              child: AppLoadingState(
+                title: l10n.tr('schedule_loading_title'),
+                message: l10n.tr('schedule_loading_message'),
+              ),
+            )
+          : scheduleState.error != null && entries.isEmpty
+              ? Center(
+                  child: AppErrorState(
+                    title: l10n.tr('schedule_error_title'),
+                    message: '${scheduleState.error}',
+                    retryLabel: l10n.tr('schedule_error_retry'),
+                    onRetry: () =>
+                        ref.read(scheduleControllerProvider.notifier).refresh(),
+                  ),
+                )
+              : RefreshIndicator(
+                  onRefresh: () =>
+                      ref.read(scheduleControllerProvider.notifier).refresh(),
+                  child: ListView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 104),
+                    children: [
+                      _ScheduleFilterRow(
+                        selected: _filter,
+                        onChanged: (value) {
+                          setState(() {
+                            _filter = value;
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      if (!hasVisibleItems)
+                        AppEmptyState(
+                          title: l10n.tr('schedule_empty_state'),
+                          message: l10n.tr('schedule_loading_message'),
+                          actionLabel: l10n.tr('schedule_empty_cta'),
+                          onAction: () => _showEntryEditor(context, l10n),
+                          icon: Icons.checklist_outlined,
+                        )
+                      else ...[
+                        _ScheduleSectionHeader(
+                          title: l10n.tr('schedule_section_now_title'),
+                          count: taskEntries.length,
                         ),
+                        const SizedBox(height: 8),
+                        if (taskEntries.isEmpty)
+                          _ScheduleSectionPlaceholder(
+                            text: l10n.tr('schedule_section_now_empty'),
+                          ),
+                        for (final entry in taskEntries)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: _ScheduleExecutionTile(
+                              entry: entry,
+                              onEdit: () => _showEntryEditor(context, l10n,
+                                  existing: entry),
+                              onDelete: () => ref
+                                  .read(scheduleControllerProvider.notifier)
+                                  .deleteEntry(entry.id),
+                              onToggleDone: (nextValue) =>
+                                  _toggleCompletion(entry, nextValue),
+                            ),
+                          ),
+                        const SizedBox(height: 16),
+                        _ScheduleSectionHeader(
+                          title: l10n.tr('schedule_section_routine_title'),
+                          count: routineEntries.length,
+                        ),
+                        const SizedBox(height: 8),
+                        if (routineEntries.isEmpty)
+                          _ScheduleSectionPlaceholder(
+                            text: l10n.tr('schedule_section_routine_empty'),
+                          ),
+                        for (final entry in routineEntries)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: _ScheduleExecutionTile(
+                              entry: entry,
+                              onEdit: () => _showEntryEditor(context, l10n,
+                                  existing: entry),
+                              onDelete: () => ref
+                                  .read(scheduleControllerProvider.notifier)
+                                  .deleteEntry(entry.id),
+                              onToggleDone: (nextValue) =>
+                                  _toggleCompletion(entry, nextValue),
+                            ),
+                          ),
                       ],
-                    )
-                  : ListView.separated(
-                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 80),
-                      itemCount: grouped.length,
-                      separatorBuilder: (context, index) =>
-                          const SizedBox(height: 24),
-                      itemBuilder: (context, index) {
-                        final group = grouped[index];
-                        return _ScheduleDaySection(
-                          date: group.date,
-                          entries: group.entries,
-                          onEdit: (entry) =>
-                              _showEntryEditor(context, l10n, existing: entry),
-                          onDelete: (entry) => ref
-                              .read(scheduleControllerProvider.notifier)
-                              .deleteEntry(entry.id),
-                        );
-                      },
-                    ),
-            ),
+                    ],
+                  ),
+                ),
     );
+  }
+
+  List<ScheduleEntry> _applyFilter(List<ScheduleEntry> entries) {
+    switch (_filter) {
+      case _ScheduleFilter.all:
+        return entries;
+      case _ScheduleFilter.tasks:
+        return entries.where(_isTaskEntry).toList();
+      case _ScheduleFilter.routine:
+        return entries.where(_isRoutineEntry).toList();
+      case _ScheduleFilter.done:
+        return entries.where((entry) => entry.isCompleted).toList();
+    }
+  }
+
+  bool _isTaskEntry(ScheduleEntry entry) {
+    return entry.repeatRule == ScheduleRepeatRule.none &&
+        entry.routineType == ScheduleRoutineType.custom;
+  }
+
+  bool _isRoutineEntry(ScheduleEntry entry) => !_isTaskEntry(entry);
+
+  Future<void> _toggleCompletion(ScheduleEntry entry, bool nextValue) async {
+    await ref.read(scheduleControllerProvider.notifier).addOrUpdateEntry(
+          entry.copyWith(
+            isCompleted: nextValue,
+            updatedAt: DateTime.now().toUtc(),
+          ),
+        );
   }
 
   Future<void> _showEntryEditor(
@@ -99,8 +192,6 @@ class _SchedulePageState extends ConsumerState<SchedulePage> {
     var endTime = initialEnd;
     var repeatRule = existing?.repeatRule ?? ScheduleRepeatRule.none;
     var routineType = existing?.routineType ?? ScheduleRoutineType.builtIn;
-    // TODO(schedule-data): Replace fallback routine metadata with repository-backed defaults.
-    // 현재 기본 루틴 ID와 라벨이 코드 상수로 고정되어 사용자 설정/DB 값과 동기화되지 않습니다.
     var routineId =
         existing?.routineId ?? routines.firstOrNull?.id ?? 'focus_default';
     var routineLabel = existing?.title ?? l10n.tr('schedule_default_focus');
@@ -179,9 +270,10 @@ class _SchedulePageState extends ConsumerState<SchedulePage> {
                       controller: titleController,
                       decoration: InputDecoration(
                         labelText: l10n.tr('schedule_field_title'),
-                        hintText: 'e.g. Morning Focus Session',
-                        errorText: titleController.text.trim().isEmpty && titleController.text.isNotEmpty
-                            ? 'Title cannot be empty'
+                        hintText: l10n.tr('schedule_field_title_hint'),
+                        errorText: titleController.text.trim().isEmpty &&
+                                titleController.text.isNotEmpty
+                            ? l10n.tr('schedule_field_title_required')
                             : null,
                       ),
                       maxLength: 100,
@@ -232,9 +324,8 @@ class _SchedulePageState extends ConsumerState<SchedulePage> {
                         for (final type in ScheduleRoutineType.values)
                           DropdownMenuEntry(
                             value: type,
-                            label: l10n.tr(
-                              'schedule_routine_type_${type.name}',
-                            ),
+                            label:
+                                l10n.tr('schedule_routine_type_${type.name}'),
                           ),
                       ],
                       onSelected: (value) {
@@ -249,11 +340,11 @@ class _SchedulePageState extends ConsumerState<SchedulePage> {
                         initialSelection: routines.isEmpty
                             ? null
                             : routines
-                                  .firstWhere(
-                                    (routine) => routine.id == routineId,
-                                    orElse: () => routines.first,
-                                  )
-                                  .id,
+                                .firstWhere(
+                                  (routine) => routine.id == routineId,
+                                  orElse: () => routines.first,
+                                )
+                                .id,
                         label: Text(l10n.tr('schedule_field_select_custom')),
                         dropdownMenuEntries: [
                           for (final routine in routines)
@@ -274,13 +365,12 @@ class _SchedulePageState extends ConsumerState<SchedulePage> {
                         },
                       )
                     else
-                      TextField(
-                        controller: TextEditingController(text: routineLabel),
-                        readOnly: true,
+                      InputDecorator(
                         decoration: InputDecoration(
                           labelText: l10n.tr('schedule_field_built_in_label'),
                           helperText: l10n.tr('schedule_field_built_in_helper'),
                         ),
+                        child: Text(routineLabel),
                       ),
                     const SizedBox(height: 12),
                     TextField(
@@ -289,8 +379,8 @@ class _SchedulePageState extends ConsumerState<SchedulePage> {
                       maxLength: 500,
                       decoration: InputDecoration(
                         labelText: l10n.tr('schedule_field_notes'),
-                        hintText: 'Optional notes about this schedule block',
-                        helperText: 'Add any relevant details or reminders',
+                        hintText: l10n.tr('schedule_field_notes_hint'),
+                        helperText: l10n.tr('schedule_field_notes_helper'),
                       ),
                       textCapitalization: TextCapitalization.sentences,
                     ),
@@ -308,8 +398,10 @@ class _SchedulePageState extends ConsumerState<SchedulePage> {
                             final title = titleController.text.trim();
                             if (title.isEmpty) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Title is required'),
+                                SnackBar(
+                                  content: Text(
+                                    l10n.tr('schedule_field_title_required'),
+                                  ),
                                   backgroundColor: Colors.red,
                                 ),
                               );
@@ -324,11 +416,11 @@ class _SchedulePageState extends ConsumerState<SchedulePage> {
                                 routineId: routineId,
                                 routineType: routineType,
                                 repeatRule: repeatRule,
+                                isCompleted: existing?.isCompleted ?? false,
                                 notes: notesController.text.trim().isEmpty
                                     ? null
                                     : notesController.text.trim(),
-                                createdAt:
-                                    existing?.createdAt ??
+                                createdAt: existing?.createdAt ??
                                     DateTime.now().toUtc(),
                                 updatedAt: DateTime.now().toUtc(),
                               ),
@@ -355,97 +447,258 @@ class _SchedulePageState extends ConsumerState<SchedulePage> {
       },
     );
   }
-
-  List<_ScheduleEntryGroup> _groupEntriesByDay(List<ScheduleEntry> entries) {
-    final Map<DateTime, List<ScheduleEntry>> grouped = {};
-    for (final entry in entries) {
-      final dateKey = DateTime(
-        entry.startTime.year,
-        entry.startTime.month,
-        entry.startTime.day,
-      );
-      grouped.putIfAbsent(dateKey, () => []).add(entry);
-    }
-    final groups =
-        grouped.entries
-            .map(
-              (entry) => _ScheduleEntryGroup(
-                date: entry.key,
-                entries: entry.value
-                  ..sort((a, b) => a.startTime.compareTo(b.startTime)),
-              ),
-            )
-            .toList()
-          ..sort((a, b) => a.date.compareTo(b.date));
-    return groups;
-  }
 }
 
-class _ScheduleEntryGroup {
-  const _ScheduleEntryGroup({required this.date, required this.entries});
-
-  final DateTime date;
-  final List<ScheduleEntry> entries;
-}
-
-class _ScheduleDaySection extends StatelessWidget {
-  const _ScheduleDaySection({
-    required this.date,
-    required this.entries,
-    required this.onEdit,
-    required this.onDelete,
+class _ScheduleFilterRow extends StatelessWidget {
+  const _ScheduleFilterRow({
+    required this.selected,
+    required this.onChanged,
   });
 
-  final DateTime date;
-  final List<ScheduleEntry> entries;
-  final ValueChanged<ScheduleEntry> onEdit;
-  final ValueChanged<ScheduleEntry> onDelete;
+  final _ScheduleFilter selected;
+  final ValueChanged<_ScheduleFilter> onChanged;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final theme = Theme.of(context);
-    final dateLabel = DateFormat.yMMMMEEEEd().format(date);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    final items = [
+      (_ScheduleFilter.all, l10n.tr('schedule_filter_all')),
+      (_ScheduleFilter.tasks, l10n.tr('schedule_filter_tasks')),
+      (_ScheduleFilter.routine, l10n.tr('schedule_filter_routine')),
+      (_ScheduleFilter.done, l10n.tr('schedule_filter_done')),
+    ];
+
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
       children: [
-        Text(
-          dateLabel,
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w600,
+        for (final (filter, label) in items)
+          FilterChip(
+            selected: selected == filter,
+            label: Text(label),
+            onSelected: (_) => onChanged(filter),
           ),
-        ),
-        const SizedBox(height: 16),
-        ...entries.map((entry) {
-          final timeLabel =
-              '${DateFormat.Hm().format(entry.startTime)} – '
-              '${DateFormat.Hm().format(entry.endTime)}';
-          return Card(
-            margin: const EdgeInsets.only(bottom: 12),
-            child: ListTile(
-              leading: const Icon(Icons.schedule_outlined),
-              title: Text(entry.title),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(timeLabel),
-                  Text(l10n.tr('schedule_repeat_${entry.repeatRule.name}')),
-                  if (entry.notes != null && entry.notes!.isNotEmpty)
-                    Text(entry.notes!),
-                ],
-              ),
-              onTap: () => onEdit(entry),
-              trailing: IconButton(
-                icon: const Icon(Icons.delete_outline),
-                onPressed: () => onDelete(entry),
-              ),
-            ),
-          );
-        }),
       ],
     );
   }
 }
+
+class _ScheduleSectionHeader extends StatelessWidget {
+  const _ScheduleSectionHeader({
+    required this.title,
+    required this.count,
+  });
+
+  final String title;
+  final int count;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            title,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+        Text(
+          '$count',
+          style: theme.textTheme.labelMedium?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _ScheduleSectionPlaceholder extends StatelessWidget {
+  const _ScheduleSectionPlaceholder({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color:
+            theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.35),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Text(
+        text,
+        style: theme.textTheme.bodyMedium?.copyWith(
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
+      ),
+    );
+  }
+}
+
+class _ScheduleExecutionTile extends StatelessWidget {
+  const _ScheduleExecutionTile({
+    required this.entry,
+    required this.onEdit,
+    required this.onDelete,
+    required this.onToggleDone,
+  });
+
+  final ScheduleEntry entry;
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
+  final ValueChanged<bool> onToggleDone;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = context.l10n;
+    final status = _entryStatus(entry);
+    final statusText = switch (status) {
+      _EntryStatus.urgent => l10n.tr('schedule_status_urgent'),
+      _EntryStatus.normal => l10n.tr('schedule_status_normal'),
+      _EntryStatus.done => l10n.tr('schedule_status_done'),
+    };
+    final statusColor = switch (status) {
+      _EntryStatus.urgent => theme.colorScheme.error,
+      _EntryStatus.normal => theme.colorScheme.secondary,
+      _EntryStatus.done => theme.colorScheme.primary,
+    };
+    final localeTag = Localizations.localeOf(context).toLanguageTag();
+    final start = entry.startTime.toLocal();
+    final end = entry.endTime.toLocal();
+    final timeLabel = '${DateFormat.Md(localeTag).format(start)} · '
+        '${DateFormat.Hm(localeTag).format(start)} - '
+        '${DateFormat.Hm(localeTag).format(end)}';
+    final repeatIcon = entry.repeatRule == ScheduleRepeatRule.none
+        ? Icons.flag_outlined
+        : Icons.repeat_rounded;
+
+    return Card(
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: onEdit,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Checkbox(
+                value: entry.isCompleted,
+                onChanged: (value) {
+                  if (value == null) return;
+                  onToggleDone(value);
+                },
+              ),
+              const SizedBox(width: 4),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      entry.title,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        decoration: entry.isCompleted
+                            ? TextDecoration.lineThrough
+                            : null,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      timeLabel,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    if (entry.notes != null && entry.notes!.isNotEmpty) ...[
+                      const SizedBox(height: 6),
+                      Text(
+                        entry.notes!,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: statusColor.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                    child: Text(
+                      statusText,
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: statusColor,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Icon(
+                    repeatIcon,
+                    size: 18,
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                  PopupMenuButton<_TileAction>(
+                    icon: const Icon(Icons.more_horiz),
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        value: _TileAction.edit,
+                        child: Text(l10n.tr('schedule_action_edit')),
+                      ),
+                      PopupMenuItem(
+                        value: _TileAction.delete,
+                        child: Text(l10n.tr('schedule_action_delete')),
+                      ),
+                    ],
+                    onSelected: (value) {
+                      switch (value) {
+                        case _TileAction.edit:
+                          onEdit();
+                          break;
+                        case _TileAction.delete:
+                          onDelete();
+                          break;
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  _EntryStatus _entryStatus(ScheduleEntry entry) {
+    if (entry.isCompleted) return _EntryStatus.done;
+    final remaining = entry.startTime.difference(DateTime.now()).inMinutes;
+    if (remaining <= 60) return _EntryStatus.urgent;
+    return _EntryStatus.normal;
+  }
+}
+
+enum _EntryStatus { urgent, normal, done }
+
+enum _TileAction { edit, delete }
 
 class _TimeField extends StatelessWidget {
   const _TimeField({

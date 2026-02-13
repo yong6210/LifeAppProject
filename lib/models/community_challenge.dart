@@ -11,6 +11,8 @@ class ChallengeMember extends Equatable {
   const ChallengeMember({
     required this.id,
     required this.displayName,
+    this.avatarUrl,
+    this.premiumTier = 'free',
     this.focusMinutes = 0,
     this.restMinutes = 0,
     this.joinedAt,
@@ -19,6 +21,8 @@ class ChallengeMember extends Equatable {
 
   final String id;
   final String displayName;
+  final String? avatarUrl;
+  final String premiumTier;
   final int focusMinutes;
   final int restMinutes;
   final DateTime? joinedAt;
@@ -28,6 +32,8 @@ class ChallengeMember extends Equatable {
     return ChallengeMember(
       id: data['id'] as String,
       displayName: data['displayName'] as String,
+      avatarUrl: data['avatarUrl'] as String?,
+      premiumTier: data['premiumTier'] as String? ?? 'free',
       focusMinutes: data['focusMinutes'] as int? ?? 0,
       restMinutes: data['restMinutes'] as int? ?? 0,
       joinedAt: (data['joinedAt'] as Timestamp?)?.toDate(),
@@ -39,6 +45,8 @@ class ChallengeMember extends Equatable {
     return {
       'id': id,
       'displayName': displayName,
+      'avatarUrl': avatarUrl,
+      'premiumTier': premiumTier,
       'focusMinutes': focusMinutes,
       'restMinutes': restMinutes,
       'joinedAt': joinedAt != null ? Timestamp.fromDate(joinedAt!) : null,
@@ -47,6 +55,8 @@ class ChallengeMember extends Equatable {
   }
 
   ChallengeMember copyWith({
+    String? avatarUrl,
+    String? premiumTier,
     int? focusMinutes,
     int? restMinutes,
     bool? completed,
@@ -54,6 +64,8 @@ class ChallengeMember extends Equatable {
     return ChallengeMember(
       id: id,
       displayName: displayName,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
+      premiumTier: premiumTier ?? this.premiumTier,
       focusMinutes: focusMinutes ?? this.focusMinutes,
       restMinutes: restMinutes ?? this.restMinutes,
       joinedAt: joinedAt,
@@ -65,6 +77,8 @@ class ChallengeMember extends Equatable {
   List<Object?> get props => [
         id,
         displayName,
+        avatarUrl,
+        premiumTier,
         focusMinutes,
         restMinutes,
         joinedAt,
@@ -103,7 +117,8 @@ class CommunityChallenge extends Equatable {
   final String? inviteCode;
   final List<String> memberIds;
 
-  factory CommunityChallenge.fromFirestore(String id, Map<String, dynamic> data) {
+  factory CommunityChallenge.fromFirestore(
+      String id, Map<String, dynamic> data) {
     return CommunityChallenge(
       id: id,
       title: data['title'] as String,

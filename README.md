@@ -50,6 +50,21 @@ devices, and ready for future subscription and wearable integrations.
 - `TODO.md` - Active checklist for upcoming work
 - `docs/release_readiness.md` - Release checklist, signing, and CI guidance
 - `docs/product_features.md` - Product feature roadmap
+- `docs/growth_strategy_2026_h1.md` - Market fit and growth strategy baseline
+- `docs/global_scaling_masterplan_2026_2027.md` - Product completion, monetization, and global expansion plan
+- `docs/execution_status_gap_audit_2026-02-13.md` - Unified audit of completed, pending, and undocumented gaps
+- `docs/master_execution_checklist_2026q1.md` - Master implementation checklist with done definitions
+- `docs/analytics_kpi_dashboard.md` - KPI event schema and dashboard mapping
+- `docs/sql/kpi_funnel_daily.sql` - BigQuery template for KPI funnel table
+- `docs/sql/kpi_weekly_growth_snapshot.sql` - Weekly growth KPI snapshot query
+- `docs/ops/growth_operations_playbook.md` - Remote config + KPI + QA ops runbook
+- `docs/architecture_screen_ownership.md` - Canonical screen ownership map
+- `docs/product_sector_status_2026-02-13.md` - Sector-by-sector redesign and completion matrix
+- `docs/executive_assistant_next_actions_2026-02-13.md` - Now/Next/Later execution board
+- `docs/notion/notion_setup_ready_2026-02-13.md` - Notion import setup guide and operating model
+- `docs/notion/roadmap_db_2026q1.csv` - Notion Roadmap DB import file
+- `docs/notion/execution_checklist_db_2026q1.csv` - Notion Execution Checklist DB import file
+- `docs/notion/risk_register_db_2026q1.csv` - Notion Risk Register DB import file
 - `docs/community_challenges.md` - Community challenges expansion plan
 - `docs/privacy_sleep_sound.md` - Sleep sound analysis privacy notes
 - `docs/design_review.md` - UI/UX review notes

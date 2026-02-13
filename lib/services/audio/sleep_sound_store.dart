@@ -11,8 +11,8 @@ import 'package:life_app/services/audio/sleep_sound_analyzer.dart';
 /// can surface the latest analysis result even after the app restarts.
 class SleepSoundSummaryStore {
   SleepSoundSummaryStore({Future<Directory> Function()? documentsDirBuilder})
-    : _documentsDirBuilder =
-          documentsDirBuilder ?? getApplicationDocumentsDirectory;
+      : _documentsDirBuilder =
+            documentsDirBuilder ?? getApplicationDocumentsDirectory;
 
   final Future<Directory> Function() _documentsDirBuilder;
 
@@ -53,6 +53,24 @@ class SleepSoundSummaryStore {
     final file = await _latestFile();
     final payload = json.encode(summary.toJson());
     await file.writeAsString(payload);
+  }
+
+  Future<void> clearLatest() async {
+    final file = await _latestFile();
+    if (await file.exists()) {
+      await file.delete();
+    }
+  }
+
+  Future<void> deleteSummaryAndRecording(SleepSoundSummary summary) async {
+    final recordingPath = summary.recordingPath;
+    if (recordingPath != null && recordingPath.isNotEmpty) {
+      final recording = File(recordingPath);
+      if (await recording.exists()) {
+        await recording.delete();
+      }
+    }
+    await clearLatest();
   }
 }
 

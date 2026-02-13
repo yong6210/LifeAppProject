@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 /// Life Buddy design system - Inspired by Figma design
 /// Mindful Lab Palette with iOS aesthetics
 class AppTheme {
+  static const _appFontFamily = 'LifeSans';
+
   // iOS Light/Dark backgrounds
   static const _surfaceBackgroundLight = Color(0xFFF2F2F7); // iOS Light BG
   static const _surfaceBackgroundDark = Color(0xFF0F1419); // Midnight Blue
@@ -44,85 +46,85 @@ class AppTheme {
   static const accentOrange = lime; // Journal
 
   static ColorScheme get _fallbackLightScheme => const ColorScheme(
-    brightness: Brightness.light,
-    // Life Buddy primary - Eucalyptus/Teal blend
-    primary: eucalyptus, // #52C9A5
-    onPrimary: Colors.white,
-    primaryContainer: Color(0xFFD4F4E9), // Light eucalyptus tint
-    onPrimaryContainer: Color(0xFF064E3B),
-    // Secondary - Teal accent
-    secondary: teal, // #4ECDC4
-    onSecondary: Colors.white,
-    secondaryContainer: Color(0xFFD4F4F2), // Light teal tint
-    onSecondaryContainer: Color(0xFF0A3836),
-    // Tertiary - Coral for energy
-    tertiary: coral, // #FF6B6B
-    onTertiary: Colors.white,
-    tertiaryContainer: Color(0xFFFFE5E5),
-    onTertiaryContainer: Color(0xFF7F1D1D),
-    // Error - Using coral
-    error: coral, // #FF6B6B
-    onError: Colors.white,
-    errorContainer: Color(0xFFFFE5E5),
-    onErrorContainer: Color(0xFF7F1D1D),
-    // iOS-style surface colors
-    surface: Colors.white, // #FFFFFF
-    onSurface: Colors.black, // #000000
-    surfaceBright: Colors.white,
-    surfaceContainerLowest: _surfaceBackgroundLight, // #F2F2F7
-    surfaceContainerHighest: Color(0xFFE5E5EA), // iOS secondary bg
-    onSurfaceVariant: Color(0xFF8E8E93), // iOS gray
-    outline: Color(0xFFC6C6C8), // iOS separator
-    shadow: Colors.black,
-    inverseSurface: Color(0xFF1C1C1E),
-    onInverseSurface: Colors.white,
-    inversePrimary: eucalyptusLight,
-    surfaceTint: Colors.transparent,
-  ).harmonized();
+        brightness: Brightness.light,
+        // Life Buddy primary - Eucalyptus/Teal blend
+        primary: eucalyptus, // #52C9A5
+        onPrimary: Colors.white,
+        primaryContainer: Color(0xFFD4F4E9), // Light eucalyptus tint
+        onPrimaryContainer: Color(0xFF064E3B),
+        // Secondary - Teal accent
+        secondary: teal, // #4ECDC4
+        onSecondary: Colors.white,
+        secondaryContainer: Color(0xFFD4F4F2), // Light teal tint
+        onSecondaryContainer: Color(0xFF0A3836),
+        // Tertiary - Coral for energy
+        tertiary: coral, // #FF6B6B
+        onTertiary: Colors.white,
+        tertiaryContainer: Color(0xFFFFE5E5),
+        onTertiaryContainer: Color(0xFF7F1D1D),
+        // Error - Using coral
+        error: coral, // #FF6B6B
+        onError: Colors.white,
+        errorContainer: Color(0xFFFFE5E5),
+        onErrorContainer: Color(0xFF7F1D1D),
+        // iOS-style surface colors
+        surface: Colors.white, // #FFFFFF
+        onSurface: Colors.black, // #000000
+        surfaceBright: Colors.white,
+        surfaceContainerLowest: _surfaceBackgroundLight, // #F2F2F7
+        surfaceContainerHighest: Color(0xFFE5E5EA), // iOS secondary bg
+        onSurfaceVariant: Color(0xFF8E8E93), // iOS gray
+        outline: Color(0xFFC6C6C8), // iOS separator
+        shadow: Colors.black,
+        inverseSurface: Color(0xFF1C1C1E),
+        onInverseSurface: Colors.white,
+        inversePrimary: eucalyptusLight,
+        surfaceTint: Colors.transparent,
+      ).harmonized();
 
   static ColorScheme get _fallbackDarkScheme => const ColorScheme(
-    brightness: Brightness.dark,
-    // Life Buddy dark mode - Lighter eucalyptus
-    primary: eucalyptusLight, // #6FD4B3
-    onPrimary: Color(0xFF064E3B),
-    primaryContainer: Color(0xFF0A6B53), // Darker eucalyptus
-    onPrimaryContainer: eucalyptusLight,
-    // Dark mode secondary - Light teal
-    secondary: tealLight, // #6FD9D1
-    onSecondary: Color(0xFF0A3836),
-    secondaryContainer: Color(0xFF0F4D4A),
-    onSecondaryContainer: tealLight,
-    // Dark mode tertiary - Light coral
-    tertiary: coralLight, // #FF8585
-    onTertiary: Color(0xFF7F1D1D),
-    tertiaryContainer: Color(0xFF991B1B),
-    onTertiaryContainer: coralLight,
-    // Dark mode error
-    error: coralLight, // #FF8585
-    onError: Color(0xFF7F1D1D),
-    errorContainer: Color(0xFF991B1B),
-    onErrorContainer: coralLight,
-    // Dark gradient surfaces - matching Figma
-    surface: Color(0xFF111318), // Dark card bg
-    onSurface: Colors.white,
-    surfaceDim: Color(0xFF0A0E14), // Darkest gradient
-    surfaceContainerLowest: _surfaceBackgroundDark, // #0F1419
-    surfaceContainerHighest: Color(0xFF1C1C1E), // Lighter dark surface
-    onSurfaceVariant: Color(0xFFA1A8B5),
-    outline: Color(0xFF4B5563),
-    shadow: Colors.black,
-    inverseSurface: Color(0xFFF2F2F7),
-    onInverseSurface: Colors.black,
-    inversePrimary: eucalyptus,
-    surfaceTint: Colors.transparent,
-  ).harmonized();
+        brightness: Brightness.dark,
+        // Life Buddy dark mode - Lighter eucalyptus
+        primary: eucalyptusLight, // #6FD4B3
+        onPrimary: Color(0xFF064E3B),
+        primaryContainer: Color(0xFF0A6B53), // Darker eucalyptus
+        onPrimaryContainer: eucalyptusLight,
+        // Dark mode secondary - Light teal
+        secondary: tealLight, // #6FD9D1
+        onSecondary: Color(0xFF0A3836),
+        secondaryContainer: Color(0xFF0F4D4A),
+        onSecondaryContainer: tealLight,
+        // Dark mode tertiary - Light coral
+        tertiary: coralLight, // #FF8585
+        onTertiary: Color(0xFF7F1D1D),
+        tertiaryContainer: Color(0xFF991B1B),
+        onTertiaryContainer: coralLight,
+        // Dark mode error
+        error: coralLight, // #FF8585
+        onError: Color(0xFF7F1D1D),
+        errorContainer: Color(0xFF991B1B),
+        onErrorContainer: coralLight,
+        // Dark gradient surfaces - matching Figma
+        surface: Color(0xFF111318), // Dark card bg
+        onSurface: Colors.white,
+        surfaceDim: Color(0xFF0A0E14), // Darkest gradient
+        surfaceContainerLowest: _surfaceBackgroundDark, // #0F1419
+        surfaceContainerHighest: Color(0xFF1C1C1E), // Lighter dark surface
+        onSurfaceVariant: Color(0xFFA1A8B5),
+        outline: Color(0xFF4B5563),
+        shadow: Colors.black,
+        inverseSurface: Color(0xFFF2F2F7),
+        onInverseSurface: Colors.black,
+        inversePrimary: eucalyptus,
+        surfaceTint: Colors.transparent,
+      ).harmonized();
 
   static ThemeData lightTheme({ColorScheme? dynamicColor}) {
-    final scheme = (dynamicColor?.harmonized() ?? _fallbackLightScheme)
-        .copyWith(
-          surface: Colors.white,
-          surfaceContainerLowest: _surfaceBackgroundLight,
-        );
+    final scheme =
+        (dynamicColor?.harmonized() ?? _fallbackLightScheme).copyWith(
+      surface: Colors.white,
+      surfaceContainerLowest: _surfaceBackgroundLight,
+    );
 
     final base = ThemeData(
       colorScheme: scheme,
@@ -133,7 +135,7 @@ class AppTheme {
     // iOS Typography system
     final textTheme = base.textTheme
         .apply(
-          fontFamily: 'Pretendard',
+          fontFamily: _appFontFamily,
           displayColor: scheme.onSurface,
           bodyColor: scheme.onSurface,
         )
@@ -384,7 +386,10 @@ class AppTheme {
         thickness: 1,
         space: 1,
       ),
-      splashFactory: InkSparkle.splashFactory,
+      // InkSparkle depends on a shader manifest that can fail on some
+      // Windows test runtimes. Use InkRipple to keep interaction feedback
+      // stable across CI/dev hosts.
+      splashFactory: InkRipple.splashFactory,
     );
   }
 
@@ -403,7 +408,7 @@ class AppTheme {
     // iOS Typography system - Dark mode
     final textTheme = base.textTheme
         .apply(
-          fontFamily: 'Pretendard',
+          fontFamily: _appFontFamily,
           displayColor: scheme.onSurface,
           bodyColor: scheme.onSurface,
         )
@@ -662,7 +667,9 @@ class AppTheme {
         thickness: 1,
         space: 1,
       ),
-      splashFactory: InkSparkle.splashFactory,
+      // Keep dark theme splash behavior aligned with light theme for
+      // cross-platform widget-test stability.
+      splashFactory: InkRipple.splashFactory,
     );
   }
 }

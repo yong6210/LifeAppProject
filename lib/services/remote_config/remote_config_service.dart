@@ -6,6 +6,8 @@ import 'package:life_app/services/analytics/analytics_service.dart';
 class RemoteConfigSnapshot {
   const RemoteConfigSnapshot({
     this.paywallVariant,
+    this.paywallExperimentId,
+    this.paywallAnnualEmphasis,
     this.onboardingVariant,
     this.telemetryDefault,
     this.fetchedAt,
@@ -14,6 +16,8 @@ class RemoteConfigSnapshot {
   });
 
   final String? paywallVariant;
+  final String? paywallExperimentId;
+  final bool? paywallAnnualEmphasis;
   final String? onboardingVariant;
   final bool? telemetryDefault;
   final DateTime? fetchedAt;
@@ -41,6 +45,8 @@ class RemoteConfigService {
       }
       return RemoteConfigSnapshot(
         paywallVariant: data['paywall_variant'] as String?,
+        paywallExperimentId: data['paywall_experiment_id'] as String?,
+        paywallAnnualEmphasis: data['paywall_annual_emphasis'] as bool?,
         onboardingVariant: data['onboarding_variant'] as String?,
         telemetryDefault: data['telemetry_default'] as bool?,
         fetchedAt: DateTime.now().toUtc(),

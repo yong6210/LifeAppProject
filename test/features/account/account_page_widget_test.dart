@@ -109,6 +109,18 @@ void main() {
     await tester.pumpAndSettle();
   }
 
+  Future<void> scrollUntilVisible(
+    WidgetTester tester,
+    Finder finder,
+  ) async {
+    await tester.scrollUntilVisible(
+      finder,
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+  }
+
   testWidgets('shows backup and diagnostics premium upsells for free users', (
     tester,
   ) async {
@@ -121,6 +133,11 @@ void main() {
       status: nonPremiumStatus,
       samples: [sample],
       settings: settings,
+    );
+
+    await scrollUntilVisible(
+      tester,
+      find.text('Timer accuracy samples', skipOffstage: false),
     );
 
     expect(
@@ -151,6 +168,11 @@ void main() {
       settings: settings,
     );
 
+    await scrollUntilVisible(
+      tester,
+      find.text('Timer accuracy samples', skipOffstage: false),
+    );
+
     expect(
       find.text('Timer accuracy samples', skipOffstage: false),
       findsOneWidget,
@@ -171,6 +193,11 @@ void main() {
       samples: const [],
       settings: settings,
       accessibilityController: accessibilityStub,
+    );
+
+    await scrollUntilVisible(
+      tester,
+      find.text('Reduce motion & haptics', skipOffstage: false),
     );
 
     final switchFinder = find.widgetWithText(

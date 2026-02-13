@@ -20,6 +20,7 @@ class TimerState {
     this.navigatorLastCueAt,
     this.navigatorLastSummary,
     this.workoutPresetId,
+    this.lastGuidedSessionCompletion,
   });
 
   final String mode;
@@ -39,6 +40,7 @@ class TimerState {
   final DateTime? navigatorLastCueAt;
   final NavigatorCompletionSummary? navigatorLastSummary;
   final String? workoutPresetId;
+  final GuidedSessionCompletion? lastGuidedSessionCompletion;
 
   TimerSegment get currentSegment => segments[currentSegmentIndex];
 
@@ -56,6 +58,7 @@ class TimerState {
     bool navigatorVoiceEnabled = true,
     NavigatorCompletionSummary? navigatorLastSummary,
     String? workoutPresetId,
+    GuidedSessionCompletion? lastGuidedSessionCompletion,
   }) {
     return TimerState(
       mode: plan.mode,
@@ -75,6 +78,7 @@ class TimerState {
       navigatorLastCueAt: null,
       navigatorLastSummary: navigatorLastSummary,
       workoutPresetId: workoutPresetId,
+      lastGuidedSessionCompletion: lastGuidedSessionCompletion,
     );
   }
 
@@ -96,6 +100,7 @@ class TimerState {
     Object? navigatorLastCueAt = _sentinel,
     Object? navigatorLastSummary = _sentinel,
     Object? workoutPresetId = _sentinel,
+    Object? lastGuidedSessionCompletion = _sentinel,
   }) {
     final effectiveSegments = segments ?? this.segments;
     final effectiveIndex = currentSegmentIndex ?? this.currentSegmentIndex;
@@ -131,6 +136,9 @@ class TimerState {
       workoutPresetId: workoutPresetId == _sentinel
           ? this.workoutPresetId
           : workoutPresetId as String?,
+      lastGuidedSessionCompletion: lastGuidedSessionCompletion == _sentinel
+          ? this.lastGuidedSessionCompletion
+          : lastGuidedSessionCompletion as GuidedSessionCompletion?,
     );
   }
 }
@@ -155,4 +163,20 @@ class NavigatorCompletionSummary {
   final double? targetValue;
   final bool voiceGuidanceEnabled;
   final int checklistCheckedCount;
+}
+
+class GuidedSessionCompletion {
+  const GuidedSessionCompletion({
+    required this.templateId,
+    required this.title,
+    required this.totalSteps,
+    required this.totalMinutes,
+    required this.completedAt,
+  });
+
+  final String templateId;
+  final String title;
+  final int totalSteps;
+  final int totalMinutes;
+  final DateTime completedAt;
 }
