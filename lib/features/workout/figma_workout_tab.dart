@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:life_app/design/app_theme.dart';
+import 'package:life_app/design/ui_tokens.dart';
 import 'package:life_app/features/timer/timer_controller.dart';
 import 'package:life_app/features/workout/workout_light_presets.dart';
 import 'package:life_app/features/workout/models/workout_navigator_models.dart';
@@ -149,7 +150,9 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
           fontWeight: FontWeight.w600,
           color: isSelected
               ? Colors.white
-              : (isDark ? AppTheme.coral.withValues(alpha: 0.9) : AppTheme.coral),
+              : (isDark
+                  ? AppTheme.coral.withValues(alpha: 0.9)
+                  : AppTheme.coral),
         ),
       ),
     );
@@ -173,12 +176,12 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
         isWorkoutRunning ? timerState.currentSegment.labelFor(l10n) : null;
     final workoutProgress =
         isWorkoutRunning && timerState.segmentTotalSeconds > 0
-        ? ((timerState.segmentTotalSeconds -
-                      timerState.segmentRemainingSeconds) /
-                  timerState.segmentTotalSeconds *
-                  100)
-              .clamp(0, 100)
-        : 0.0;
+            ? ((timerState.segmentTotalSeconds -
+                        timerState.segmentRemainingSeconds) /
+                    timerState.segmentTotalSeconds *
+                    100)
+                .clamp(0, 100)
+            : 0.0;
 
     // Get today's workout minutes from actual database
     final todaySummaryAsync = ref.watch(todaySummaryProvider);
@@ -188,7 +191,8 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
     );
     final settingsAsync = ref.watch(settingsFutureProvider);
     final workoutGoalMinutes = settingsAsync.maybeWhen(
-      data: (settings) => settings.workoutMinutes > 0 ? settings.workoutMinutes : 30,
+      data: (settings) =>
+          settings.workoutMinutes > 0 ? settings.workoutMinutes : 30,
       orElse: () => 30,
     );
     final progressPercent =
@@ -367,14 +371,15 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      l10n.tr('figma_workout_energy_bank_title'),
-                                      style: theme.textTheme.titleLarge
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.w700,
-                                            color: isDark
-                                                ? Colors.white
-                                                : theme.colorScheme.onSurface,
-                                          ),
+                                      l10n.tr(
+                                          'figma_workout_energy_bank_title'),
+                                      style:
+                                          theme.textTheme.titleLarge?.copyWith(
+                                        fontWeight: FontWeight.w700,
+                                        color: isDark
+                                            ? Colors.white
+                                            : theme.colorScheme.onSurface,
+                                      ),
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
@@ -385,15 +390,15 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                           'target': '$workoutGoalMinutes',
                                         },
                                       ),
-                                      style: theme.textTheme.bodyMedium
-                                          ?.copyWith(
-                                            color: isDark
-                                                ? AppTheme.coral.withValues(
-                                                  alpha: 0.8,
-                                                )
-                                                : AppTheme.coral,
-                                            fontWeight: FontWeight.w600,
-                                          ),
+                                      style:
+                                          theme.textTheme.bodyMedium?.copyWith(
+                                        color: isDark
+                                            ? AppTheme.coral.withValues(
+                                                alpha: 0.8,
+                                              )
+                                            : AppTheme.coral,
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -445,8 +450,7 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                         return Container(
                                           decoration: BoxDecoration(
                                             color: Colors.white.withValues(
-                                              alpha:
-                                                  0.2 +
+                                              alpha: 0.2 +
                                                   _energyController.value * 0.1,
                                             ),
                                             borderRadius: BorderRadius.circular(
@@ -504,22 +508,22 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                 Expanded(
                                   child: Text(
                                     l10n.tr('figma_workout_in_progress'),
-                                    style: theme.textTheme.titleMedium
-                                        ?.copyWith(
-                                          fontWeight: FontWeight.w700,
-                                          color: isDark
-                                              ? Colors.white
-                                              : theme.colorScheme.onSurface,
-                                        ),
+                                    style:
+                                        theme.textTheme.titleMedium?.copyWith(
+                                      fontWeight: FontWeight.w700,
+                                      color: isDark
+                                          ? Colors.white
+                                          : theme.colorScheme.onSurface,
+                                    ),
                                   ),
                                 ),
                                 Text(
                                   '${(timerState.segmentRemainingSeconds / 60).floor()}:${(timerState.segmentRemainingSeconds % 60).toString().padLeft(2, '0')}',
-                                  style: theme.textTheme.headlineSmall
-                                      ?.copyWith(
-                                        fontWeight: FontWeight.w700,
-                                        color: AppTheme.coral,
-                                      ),
+                                  style:
+                                      theme.textTheme.headlineSmall?.copyWith(
+                                    fontWeight: FontWeight.w700,
+                                    color: AppTheme.coral,
+                                  ),
                                 ),
                               ],
                             ),
@@ -550,9 +554,9 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                       ),
                                       style:
                                           theme.textTheme.labelLarge?.copyWith(
-                                            color: AppTheme.coral,
-                                            fontWeight: FontWeight.w700,
-                                          ),
+                                        color: AppTheme.coral,
+                                        fontWeight: FontWeight.w700,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -599,11 +603,11 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                           l10n.tr('timer_button_pause'),
                                           style: theme.textTheme.titleSmall
                                               ?.copyWith(
-                                                fontWeight: FontWeight.w600,
-                                                color: isDark
-                                                    ? Colors.white
-                                                    : AppTheme.coral,
-                                              ),
+                                            fontWeight: FontWeight.w600,
+                                            color: isDark
+                                                ? Colors.white
+                                                : AppTheme.coral,
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -633,11 +637,11 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                           l10n.tr('figma_workout_stop_button'),
                                           style: theme.textTheme.titleSmall
                                               ?.copyWith(
-                                                fontWeight: FontWeight.w600,
-                                                color: isDark
-                                                    ? Colors.white
-                                                    : AppTheme.coral,
-                                              ),
+                                            fontWeight: FontWeight.w600,
+                                            color: isDark
+                                                ? Colors.white
+                                                : AppTheme.coral,
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -661,28 +665,40 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                 _buildFilterChip(
                                   label: l10n.tr('figma_workout_filter_all'),
                                   isSelected: _selectedIntensity == null,
-                                  onTap: () => setState(() => _selectedIntensity = null),
+                                  onTap: () =>
+                                      setState(() => _selectedIntensity = null),
                                   isDark: isDark,
                                 ),
                                 const SizedBox(width: 8),
                                 _buildFilterChip(
                                   label: l10n.tr('figma_workout_filter_light'),
-                                  isSelected: _selectedIntensity == WorkoutIntensity.light,
-                                  onTap: () => setState(() => _selectedIntensity = WorkoutIntensity.light),
+                                  isSelected: _selectedIntensity ==
+                                      WorkoutIntensity.light,
+                                  onTap: () => setState(() =>
+                                      _selectedIntensity =
+                                          WorkoutIntensity.light),
                                   isDark: isDark,
                                 ),
                                 const SizedBox(width: 8),
                                 _buildFilterChip(
-                                  label: l10n.tr('figma_workout_filter_moderate'),
-                                  isSelected: _selectedIntensity == WorkoutIntensity.moderate,
-                                  onTap: () => setState(() => _selectedIntensity = WorkoutIntensity.moderate),
+                                  label:
+                                      l10n.tr('figma_workout_filter_moderate'),
+                                  isSelected: _selectedIntensity ==
+                                      WorkoutIntensity.moderate,
+                                  onTap: () => setState(() =>
+                                      _selectedIntensity =
+                                          WorkoutIntensity.moderate),
                                   isDark: isDark,
                                 ),
                                 const SizedBox(width: 8),
                                 _buildFilterChip(
-                                  label: l10n.tr('figma_workout_filter_vigorous'),
-                                  isSelected: _selectedIntensity == WorkoutIntensity.vigorous,
-                                  onTap: () => setState(() => _selectedIntensity = WorkoutIntensity.vigorous),
+                                  label:
+                                      l10n.tr('figma_workout_filter_vigorous'),
+                                  isSelected: _selectedIntensity ==
+                                      WorkoutIntensity.vigorous,
+                                  onTap: () => setState(() =>
+                                      _selectedIntensity =
+                                          WorkoutIntensity.vigorous),
                                   isDark: isDark,
                                 ),
                               ],
@@ -755,25 +771,23 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                           name,
                                           style: theme.textTheme.titleLarge
                                               ?.copyWith(
-                                                fontWeight: FontWeight.w700,
-                                                color: isDark
-                                                    ? Colors.white
-                                                    : theme
-                                                          .colorScheme
-                                                          .onSurface,
-                                              ),
+                                            fontWeight: FontWeight.w700,
+                                            color: isDark
+                                                ? Colors.white
+                                                : theme.colorScheme.onSurface,
+                                          ),
                                         ),
                                         const SizedBox(height: 4),
                                         Text(
                                           description,
                                           style: theme.textTheme.bodyMedium
                                               ?.copyWith(
-                                                color: isDark
-                                                    ? AppTheme.coral.withValues(
-                                                        alpha: 0.8,
-                                                      )
-                                                    : AppTheme.coral,
-                                              ),
+                                            color: isDark
+                                                ? AppTheme.coral.withValues(
+                                                    alpha: 0.8,
+                                                  )
+                                                : AppTheme.coral,
+                                          ),
                                         ),
                                         const SizedBox(height: 12),
                                         // Stats badges
@@ -784,9 +798,9 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                             Container(
                                               padding:
                                                   const EdgeInsets.symmetric(
-                                                    horizontal: 12,
-                                                    vertical: 6,
-                                                  ),
+                                                horizontal: 12,
+                                                vertical: 6,
+                                              ),
                                               decoration: BoxDecoration(
                                                 color: AppTheme.coral
                                                     .withValues(alpha: 0.15),
@@ -808,13 +822,12 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                                       {'calories': '$calories'},
                                                     ),
                                                     style: theme
-                                                        .textTheme
-                                                        .labelSmall
+                                                        .textTheme.labelSmall
                                                         ?.copyWith(
-                                                          color: AppTheme.coral,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                        ),
+                                                      color: AppTheme.coral,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
                                                   ),
                                                 ],
                                               ),
@@ -822,9 +835,9 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                             Container(
                                               padding:
                                                   const EdgeInsets.symmetric(
-                                                    horizontal: 12,
-                                                    vertical: 6,
-                                                  ),
+                                                horizontal: 12,
+                                                vertical: 6,
+                                              ),
                                               decoration: BoxDecoration(
                                                 color: AppTheme.coral
                                                     .withValues(alpha: 0.15),
@@ -840,13 +853,11 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                                   },
                                                 ),
                                                 style: theme
-                                                    .textTheme
-                                                    .labelSmall
+                                                    .textTheme.labelSmall
                                                     ?.copyWith(
-                                                      color: AppTheme.coral,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                    ),
+                                                  color: AppTheme.coral,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
                                               ),
                                             ),
                                             Text(
@@ -868,8 +879,8 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                                   right: index < 4 ? 4 : 0,
                                                 ),
                                                 decoration: BoxDecoration(
-                                                  gradient:
-                                                      index < intensityLevel
+                                                  gradient: index <
+                                                          intensityLevel
                                                       ? const LinearGradient(
                                                           colors: [
                                                             AppTheme.coral,
@@ -881,14 +892,14 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                                       : null,
                                                   color: index >= intensityLevel
                                                       ? isDark
-                                                            ? Colors.white
-                                                                  .withValues(
-                                                                    alpha: 0.1,
-                                                                  )
-                                                            : AppTheme.coral
-                                                                  .withValues(
-                                                                    alpha: 0.2,
-                                                                  )
+                                                          ? Colors.white
+                                                              .withValues(
+                                                              alpha: 0.1,
+                                                            )
+                                                          : AppTheme.coral
+                                                              .withValues(
+                                                              alpha: 0.2,
+                                                            )
                                                       : null,
                                                   borderRadius:
                                                       BorderRadius.circular(3),
@@ -913,7 +924,8 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                       Color(0xFFFFA726),
                                     ],
                                   ),
-                                  borderRadius: BorderRadius.circular(16),
+                                  borderRadius:
+                                      BorderRadius.circular(UiRadii.lg),
                                   boxShadow: [
                                     BoxShadow(
                                       color: AppTheme.coral.withValues(
@@ -928,7 +940,8 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                   color: Colors.transparent,
                                   child: InkWell(
                                     onTap: () => _handleStartWorkout(preset),
-                                    borderRadius: BorderRadius.circular(16),
+                                    borderRadius:
+                                        BorderRadius.circular(UiRadii.lg),
                                     child: Center(
                                       child: Row(
                                         mainAxisAlignment:
@@ -941,12 +954,13 @@ class _FigmaWorkoutTabState extends ConsumerState<FigmaWorkoutTab>
                                           ),
                                           const SizedBox(width: 8),
                                           Text(
-                                            l10n.tr('figma_workout_start_button'),
+                                            l10n.tr(
+                                                'figma_workout_start_button'),
                                             style: theme.textTheme.titleMedium
                                                 ?.copyWith(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w700,
-                                                ),
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w700,
+                                            ),
                                           ),
                                         ],
                                       ),

@@ -22,6 +22,7 @@ expectations for Life App.
 - Execution audit: `docs/execution_status_gap_audit_2026-02-13.md`
 - Master checklist: `docs/master_execution_checklist_2026q1.md`
 - QA checklist: `docs/ui_qa_checklist_casual_2026q1.md`
+- Device execution sheet: `docs/ui_qa_device_execution_sheet_2026-02-13.md`
 - Latest run report: `docs/ui_qa_run_casual_2026-02-13.md`
 - Gap report: `docs/reports/stitch_figma_flutter_gap_report_2026-02-13.md`
 - Risk register source: `docs/notion/risk_register_db_2026q1.csv`

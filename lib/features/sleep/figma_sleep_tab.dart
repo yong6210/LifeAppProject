@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:life_app/design/app_theme.dart';
+import 'package:life_app/design/ui_tokens.dart';
 import 'package:life_app/l10n/app_localizations.dart';
 import 'package:life_app/models/session.dart';
 import 'package:life_app/providers/session_providers.dart';
@@ -104,8 +105,10 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
     // Initialize picker controllers
     final durationHours = _duration ~/ 60;
     final durationMinutes = _duration % 60;
-    _durationHourController = FixedExtentScrollController(initialItem: durationHours);
-    _durationMinuteController = FixedExtentScrollController(initialItem: durationMinutes ~/ 5);
+    _durationHourController =
+        FixedExtentScrollController(initialItem: durationHours);
+    _durationMinuteController =
+        FixedExtentScrollController(initialItem: durationMinutes ~/ 5);
 
     // Set target time to current time
     final now = TimeOfDay.now();
@@ -116,8 +119,10 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
     if (hour12 == 0) hour12 = 12; // 0시 → 12시
     _isAM = now.hour < 12;
 
-    _targetHourController = FixedExtentScrollController(initialItem: hour12 - 1); // 1-12 → 0-11
-    _targetMinuteController = FixedExtentScrollController(initialItem: now.minute);
+    _targetHourController =
+        FixedExtentScrollController(initialItem: hour12 - 1); // 1-12 → 0-11
+    _targetMinuteController =
+        FixedExtentScrollController(initialItem: now.minute);
     _amPmController = FixedExtentScrollController(initialItem: _isAM ? 0 : 1);
     _previousMinute = now.minute; // Initialize previous minute
 
@@ -286,7 +291,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
 
     final now = DateTime.now();
     // 초 단위를 0으로 설정하여 분 단위로만 계산
-    final currentTime = DateTime(now.year, now.month, now.day, now.hour, now.minute);
+    final currentTime =
+        DateTime(now.year, now.month, now.day, now.hour, now.minute);
     var target = DateTime(
       currentTime.year,
       currentTime.month,
@@ -369,7 +375,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
     );
   }
 
-  void _showSoundSelectionModal(BuildContext context, ThemeData theme, bool isDark) {
+  void _showSoundSelectionModal(
+      BuildContext context, ThemeData theme, bool isDark) {
     final l10n = context.l10n;
     showModalBottomSheet<void>(
       context: context,
@@ -405,7 +412,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                       l10n.tr('figma_sleep_sound_modal_title'),
                       style: theme.textTheme.headlineSmall?.copyWith(
                         fontWeight: FontWeight.w700,
-                        color: isDark ? Colors.white : theme.colorScheme.onSurface,
+                        color:
+                            isDark ? Colors.white : theme.colorScheme.onSurface,
                       ),
                     ),
                   ],
@@ -445,7 +453,9 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                   sound.label(l10n),
                                   style: theme.textTheme.titleMedium?.copyWith(
                                     fontWeight: FontWeight.w700,
-                                    color: isDark ? Colors.white : theme.colorScheme.onSurface,
+                                    color: isDark
+                                        ? Colors.white
+                                        : theme.colorScheme.onSurface,
                                   ),
                                 ),
                                 const SizedBox(height: 2),
@@ -454,7 +464,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                   style: theme.textTheme.bodySmall?.copyWith(
                                     color: isDark
                                         ? Colors.white.withValues(alpha: 0.7)
-                                        : theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                                        : theme.colorScheme.onSurface
+                                            .withValues(alpha: 0.7),
                                   ),
                                 ),
                               ],
@@ -562,8 +573,10 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
             ),
             // Animated stars
             ...List.generate(20, (index) {
-              final top = random.nextDouble() * MediaQuery.of(context).size.height;
-              final left = random.nextDouble() * MediaQuery.of(context).size.width;
+              final top =
+                  random.nextDouble() * MediaQuery.of(context).size.height;
+              final left =
+                  random.nextDouble() * MediaQuery.of(context).size.width;
               return Positioned(
                 top: top,
                 left: left,
@@ -574,7 +587,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                       width: 3,
                       height: 3,
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: _starAnimations[index].value * 0.7),
+                        color: Colors.white.withValues(
+                            alpha: _starAnimations[index].value * 0.7),
                         shape: BoxShape.circle,
                       ),
                     );
@@ -598,7 +612,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                           child: Icon(
                             Icons.arrow_back_ios_new,
                             size: 20,
-                            color: isDark ? Colors.white : AppTheme.electricViolet,
+                            color:
+                                isDark ? Colors.white : AppTheme.electricViolet,
                           ),
                         ),
                         const Spacer(),
@@ -607,7 +622,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                     const SizedBox(height: 16),
                     // Header badge
                     GlassCard(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
                       margin: const EdgeInsets.only(bottom: 16),
                       borderRadius: 20,
                       child: Row(
@@ -623,7 +639,9 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                             l10n.tr('figma_sleep_badge_label'),
                             style: theme.textTheme.titleSmall?.copyWith(
                               fontWeight: FontWeight.w600,
-                              color: isDark ? Colors.white : AppTheme.electricViolet,
+                              color: isDark
+                                  ? Colors.white
+                                  : AppTheme.electricViolet,
                             ),
                           ),
                           const SizedBox(width: 4),
@@ -696,21 +714,27 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                   children: [
                                     Text(
                                       l10n.tr('figma_sleep_dream_bank_title'),
-                                      style: theme.textTheme.titleLarge?.copyWith(
+                                      style:
+                                          theme.textTheme.titleLarge?.copyWith(
                                         fontWeight: FontWeight.w700,
-                                        color: isDark ? Colors.white : theme.colorScheme.onSurface,
+                                        color: isDark
+                                            ? Colors.white
+                                            : theme.colorScheme.onSurface,
                                       ),
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
-                                      l10n.tr('figma_sleep_dream_bank_progress', {
+                                      l10n.tr(
+                                          'figma_sleep_dream_bank_progress', {
                                         'hours': '$sleepHours',
                                         'minutes': '$sleepMins',
                                         'target': '8',
                                       }),
-                                      style: theme.textTheme.bodyMedium?.copyWith(
+                                      style:
+                                          theme.textTheme.bodyMedium?.copyWith(
                                         color: isDark
-                                            ? AppTheme.electricViolet.withValues(alpha: 0.8)
+                                            ? AppTheme.electricViolet
+                                                .withValues(alpha: 0.8)
                                             : AppTheme.electricViolet,
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -740,7 +764,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                   decoration: BoxDecoration(
                                     color: isDark
                                         ? Colors.white.withValues(alpha: 0.1)
-                                        : AppTheme.electricViolet.withValues(alpha: 0.15),
+                                        : AppTheme.electricViolet
+                                            .withValues(alpha: 0.15),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                 ),
@@ -778,14 +803,18 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                               Icon(
                                 Icons.nightlight_round,
                                 size: 18,
-                                color: isDark ? Colors.white : AppTheme.electricViolet,
+                                color: isDark
+                                    ? Colors.white
+                                    : AppTheme.electricViolet,
                               ),
                               const SizedBox(width: 8),
                               Text(
                                 l10n.tr('figma_sleep_duration_title'),
                                 style: theme.textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.w700,
-                                  color: isDark ? Colors.white : theme.colorScheme.onSurface,
+                                  color: isDark
+                                      ? Colors.white
+                                      : theme.colorScheme.onSurface,
                                 ),
                               ),
                             ],
@@ -796,9 +825,11 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                             children: [
                               Expanded(
                                 child: GestureDetector(
-                                  onTap: () => setState(() => _useTargetTime = false),
+                                  onTap: () =>
+                                      setState(() => _useTargetTime = false),
                                   child: Container(
-                                    padding: const EdgeInsets.symmetric(vertical: 12),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 12),
                                     decoration: BoxDecoration(
                                       gradient: !_useTargetTime
                                           ? const LinearGradient(
@@ -810,8 +841,10 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                           : null,
                                       color: _useTargetTime
                                           ? isDark
-                                              ? Colors.white.withValues(alpha: 0.1)
-                                              : Colors.white.withValues(alpha: 0.5)
+                                              ? Colors.white
+                                                  .withValues(alpha: 0.1)
+                                              : Colors.white
+                                                  .withValues(alpha: 0.5)
                                           : null,
                                       borderRadius: BorderRadius.circular(12),
                                     ),
@@ -819,7 +852,9 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                       l10n.tr('figma_sleep_mode_duration'),
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                        color: !_useTargetTime ? Colors.white : AppTheme.electricViolet,
+                                        color: !_useTargetTime
+                                            ? Colors.white
+                                            : AppTheme.electricViolet,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
@@ -829,9 +864,11 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                               const SizedBox(width: 12),
                               Expanded(
                                 child: GestureDetector(
-                                  onTap: () => setState(() => _useTargetTime = true),
+                                  onTap: () =>
+                                      setState(() => _useTargetTime = true),
                                   child: Container(
-                                    padding: const EdgeInsets.symmetric(vertical: 12),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 12),
                                     decoration: BoxDecoration(
                                       gradient: _useTargetTime
                                           ? const LinearGradient(
@@ -843,8 +880,10 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                           : null,
                                       color: !_useTargetTime
                                           ? isDark
-                                              ? Colors.white.withValues(alpha: 0.1)
-                                              : Colors.white.withValues(alpha: 0.5)
+                                              ? Colors.white
+                                                  .withValues(alpha: 0.1)
+                                              : Colors.white
+                                                  .withValues(alpha: 0.5)
                                           : null,
                                       borderRadius: BorderRadius.circular(12),
                                     ),
@@ -852,7 +891,9 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                       l10n.tr('figma_sleep_mode_target'),
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                        color: _useTargetTime ? Colors.white : AppTheme.electricViolet,
+                                        color: _useTargetTime
+                                            ? Colors.white
+                                            : AppTheme.electricViolet,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
@@ -867,7 +908,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                             // iOS-style scrollable picker for duration
                             Container(
                               height: 200,
-                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -889,22 +931,29 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                             onSubmit: (value) {
                                               setState(() {
                                                 final minutes = _duration % 60;
-                                                _duration = (value * 60) + minutes;
-                                                _durationHourController.jumpToItem(value);
+                                                _duration =
+                                                    (value * 60) + minutes;
+                                                _durationHourController
+                                                    .jumpToItem(value);
                                               });
                                             },
                                           ),
                                           child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: [
                                               Text(
                                                 l10n.tr(
                                                   'figma_sleep_picker_hours',
                                                 ),
-                                                style: theme.textTheme.bodySmall?.copyWith(
+                                                style: theme.textTheme.bodySmall
+                                                    ?.copyWith(
                                                   color: isDark
-                                                      ? Colors.white.withValues(alpha: 0.5)
-                                                      : AppTheme.electricViolet.withValues(alpha: 0.5),
+                                                      ? Colors.white.withValues(
+                                                          alpha: 0.5)
+                                                      : AppTheme.electricViolet
+                                                          .withValues(
+                                                              alpha: 0.5),
                                                 ),
                                               ),
                                               const SizedBox(width: 4),
@@ -912,8 +961,10 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                                 Icons.edit_rounded,
                                                 size: 12,
                                                 color: isDark
-                                                    ? Colors.white.withValues(alpha: 0.3)
-                                                    : AppTheme.electricViolet.withValues(alpha: 0.3),
+                                                    ? Colors.white
+                                                        .withValues(alpha: 0.3)
+                                                    : AppTheme.electricViolet
+                                                        .withValues(alpha: 0.3),
                                               ),
                                             ],
                                           ),
@@ -921,30 +972,41 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                         const SizedBox(height: 8),
                                         Expanded(
                                           child: CupertinoPicker(
-                                            scrollController: _durationHourController,
+                                            scrollController:
+                                                _durationHourController,
                                             itemExtent: 50,
                                             onSelectedItemChanged: (index) {
                                               setState(() {
-                                                final minutes = (_duration % 60);
-                                                _duration = (index * 60) + minutes;
+                                                final minutes =
+                                                    (_duration % 60);
+                                                _duration =
+                                                    (index * 60) + minutes;
                                               });
                                             },
                                             selectionOverlay: Container(
                                               decoration: BoxDecoration(
                                                 border: Border.symmetric(
                                                   horizontal: BorderSide(
-                                                    color: AppTheme.electricViolet.withValues(alpha: 0.3),
+                                                    color: AppTheme
+                                                        .electricViolet
+                                                        .withValues(alpha: 0.3),
                                                     width: 2,
                                                   ),
                                                 ),
                                               ),
                                             ),
-                                            children: List.generate(25, (index) {
+                                            children:
+                                                List.generate(25, (index) {
                                               return Center(
                                                 child: Text(
                                                   '$index',
-                                                  style: theme.textTheme.headlineSmall?.copyWith(
-                                                    color: isDark ? Colors.white : AppTheme.electricViolet,
+                                                  style: theme
+                                                      .textTheme.headlineSmall
+                                                      ?.copyWith(
+                                                    color: isDark
+                                                        ? Colors.white
+                                                        : AppTheme
+                                                            .electricViolet,
                                                     fontWeight: FontWeight.w700,
                                                   ),
                                                 ),
@@ -973,25 +1035,34 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                             currentValue: _duration % 60,
                                             onSubmit: (value) {
                                               // Round to nearest 5
-                                              final roundedValue = (value / 5).round() * 5;
+                                              final roundedValue =
+                                                  (value / 5).round() * 5;
                                               setState(() {
                                                 final hours = _duration ~/ 60;
-                                                _duration = (hours * 60) + roundedValue;
-                                                _durationMinuteController.jumpToItem(roundedValue ~/ 5);
+                                                _duration =
+                                                    (hours * 60) + roundedValue;
+                                                _durationMinuteController
+                                                    .jumpToItem(
+                                                        roundedValue ~/ 5);
                                               });
                                             },
                                           ),
                                           child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: [
                                               Text(
                                                 l10n.tr(
                                                   'figma_sleep_picker_minutes',
                                                 ),
-                                                style: theme.textTheme.bodySmall?.copyWith(
+                                                style: theme.textTheme.bodySmall
+                                                    ?.copyWith(
                                                   color: isDark
-                                                      ? Colors.white.withValues(alpha: 0.5)
-                                                      : AppTheme.electricViolet.withValues(alpha: 0.5),
+                                                      ? Colors.white.withValues(
+                                                          alpha: 0.5)
+                                                      : AppTheme.electricViolet
+                                                          .withValues(
+                                                              alpha: 0.5),
                                                 ),
                                               ),
                                               const SizedBox(width: 4),
@@ -999,8 +1070,10 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                                 Icons.edit_rounded,
                                                 size: 12,
                                                 color: isDark
-                                                    ? Colors.white.withValues(alpha: 0.3)
-                                                    : AppTheme.electricViolet.withValues(alpha: 0.3),
+                                                    ? Colors.white
+                                                        .withValues(alpha: 0.3)
+                                                    : AppTheme.electricViolet
+                                                        .withValues(alpha: 0.3),
                                               ),
                                             ],
                                           ),
@@ -1008,31 +1081,41 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                         const SizedBox(height: 8),
                                         Expanded(
                                           child: CupertinoPicker(
-                                            scrollController: _durationMinuteController,
+                                            scrollController:
+                                                _durationMinuteController,
                                             itemExtent: 50,
                                             onSelectedItemChanged: (index) {
                                               setState(() {
                                                 final hours = (_duration ~/ 60);
-                                                _duration = (hours * 60) + (index * 5);
+                                                _duration =
+                                                    (hours * 60) + (index * 5);
                                               });
                                             },
                                             selectionOverlay: Container(
                                               decoration: BoxDecoration(
                                                 border: Border.symmetric(
                                                   horizontal: BorderSide(
-                                                    color: AppTheme.electricViolet.withValues(alpha: 0.3),
+                                                    color: AppTheme
+                                                        .electricViolet
+                                                        .withValues(alpha: 0.3),
                                                     width: 2,
                                                   ),
                                                 ),
                                               ),
                                             ),
-                                            children: List.generate(12, (index) {
+                                            children:
+                                                List.generate(12, (index) {
                                               final minute = index * 5;
                                               return Center(
                                                 child: Text(
                                                   '$minute',
-                                                  style: theme.textTheme.headlineSmall?.copyWith(
-                                                    color: isDark ? Colors.white : AppTheme.electricViolet,
+                                                  style: theme
+                                                      .textTheme.headlineSmall
+                                                      ?.copyWith(
+                                                    color: isDark
+                                                        ? Colors.white
+                                                        : AppTheme
+                                                            .electricViolet,
                                                     fontWeight: FontWeight.w700,
                                                   ),
                                                 ),
@@ -1052,7 +1135,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                               children: [
                                 Container(
                                   height: 200,
-                                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -1063,31 +1147,44 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                           children: [
                                             Text(
                                               '',
-                                              style: theme.textTheme.bodySmall?.copyWith(
+                                              style: theme.textTheme.bodySmall
+                                                  ?.copyWith(
                                                 color: isDark
-                                                    ? Colors.white.withValues(alpha: 0.5)
-                                                    : AppTheme.electricViolet.withValues(alpha: 0.5),
+                                                    ? Colors.white
+                                                        .withValues(alpha: 0.5)
+                                                    : AppTheme.electricViolet
+                                                        .withValues(alpha: 0.5),
                                               ),
                                             ),
                                             const SizedBox(height: 8),
                                             Expanded(
                                               child: CupertinoPicker(
-                                                scrollController: _amPmController,
+                                                scrollController:
+                                                    _amPmController,
                                                 itemExtent: 50,
                                                 onSelectedItemChanged: (index) {
                                                   setState(() {
                                                     _isAM = index == 0;
                                                     // 시간 다이얼의 현재 위치를 읽어옴
-                                                    final hour12 = _targetHourController.selectedItem + 1;
+                                                    final hour12 =
+                                                        _targetHourController
+                                                                .selectedItem +
+                                                            1;
 
                                                     // 12시간 → 24시간 변환
                                                     final hour24 = _isAM
-                                                        ? (hour12 == 12 ? 0 : hour12)
-                                                        : (hour12 == 12 ? 12 : hour12 + 12);
+                                                        ? (hour12 == 12
+                                                            ? 0
+                                                            : hour12)
+                                                        : (hour12 == 12
+                                                            ? 12
+                                                            : hour12 + 12);
 
                                                     _targetTime = TimeOfDay(
                                                       hour: hour24,
-                                                      minute: _targetTime?.minute ?? 0,
+                                                      minute:
+                                                          _targetTime?.minute ??
+                                                              0,
                                                     );
                                                   });
                                                 },
@@ -1095,7 +1192,10 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                                   decoration: BoxDecoration(
                                                     border: Border.symmetric(
                                                       horizontal: BorderSide(
-                                                        color: AppTheme.electricViolet.withValues(alpha: 0.3),
+                                                        color: AppTheme
+                                                            .electricViolet
+                                                            .withValues(
+                                                                alpha: 0.3),
                                                         width: 2,
                                                       ),
                                                     ),
@@ -1107,9 +1207,15 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                                       l10n.tr(
                                                         'figma_sleep_picker_am',
                                                       ),
-                                                      style: theme.textTheme.titleMedium?.copyWith(
-                                                        color: isDark ? Colors.white : AppTheme.electricViolet,
-                                                        fontWeight: FontWeight.w700,
+                                                      style: theme
+                                                          .textTheme.titleMedium
+                                                          ?.copyWith(
+                                                        color: isDark
+                                                            ? Colors.white
+                                                            : AppTheme
+                                                                .electricViolet,
+                                                        fontWeight:
+                                                            FontWeight.w700,
                                                       ),
                                                     ),
                                                   ),
@@ -1118,9 +1224,15 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                                       l10n.tr(
                                                         'figma_sleep_picker_pm',
                                                       ),
-                                                      style: theme.textTheme.titleMedium?.copyWith(
-                                                        color: isDark ? Colors.white : AppTheme.electricViolet,
-                                                        fontWeight: FontWeight.w700,
+                                                      style: theme
+                                                          .textTheme.titleMedium
+                                                          ?.copyWith(
+                                                        color: isDark
+                                                            ? Colors.white
+                                                            : AppTheme
+                                                                .electricViolet,
+                                                        fontWeight:
+                                                            FontWeight.w700,
                                                       ),
                                                     ),
                                                   ),
@@ -1136,7 +1248,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                         child: Column(
                                           children: [
                                             GestureDetector(
-                                              onTap: () => _showDirectInputDialog(
+                                              onTap: () =>
+                                                  _showDirectInputDialog(
                                                 context: context,
                                                 title: l10n.tr(
                                                   'figma_sleep_input_target_hour_title',
@@ -1145,39 +1258,63 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                                   'figma_sleep_input_target_hour_hint',
                                                 ),
                                                 maxValue: 12,
-                                                currentValue: (_targetTime?.hour ?? 0) % 12 == 0 ? 12 : (_targetTime?.hour ?? 0) % 12,
+                                                currentValue:
+                                                    (_targetTime?.hour ?? 0) %
+                                                                12 ==
+                                                            0
+                                                        ? 12
+                                                        : (_targetTime?.hour ??
+                                                                0) %
+                                                            12,
                                                 onSubmit: (value) {
-                                                  if (value >= 1 && value <= 12) {
+                                                  if (value >= 1 &&
+                                                      value <= 12) {
                                                     setState(() {
                                                       // 12시간 → 24시간 변환
                                                       int hour24;
                                                       if (_isAM) {
                                                         // 오전: 12시 = 0, 1-11시 = 1-11
-                                                        hour24 = value == 12 ? 0 : value;
+                                                        hour24 = value == 12
+                                                            ? 0
+                                                            : value;
                                                       } else {
                                                         // 오후: 12시 = 12, 1-11시 = 13-23
-                                                        hour24 = value == 12 ? 12 : value + 12;
+                                                        hour24 = value == 12
+                                                            ? 12
+                                                            : value + 12;
                                                       }
                                                       _targetTime = TimeOfDay(
                                                         hour: hour24,
-                                                        minute: _targetTime?.minute ?? 0,
+                                                        minute: _targetTime
+                                                                ?.minute ??
+                                                            0,
                                                       );
-                                                      _targetHourController.jumpToItem(value - 1);
+                                                      _targetHourController
+                                                          .jumpToItem(
+                                                              value - 1);
                                                     });
                                                   }
                                                 },
                                               ),
                                               child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
                                                 children: [
                                                   Text(
                                                     l10n.tr(
                                                       'figma_sleep_picker_hour_unit',
                                                     ),
-                                                    style: theme.textTheme.bodySmall?.copyWith(
+                                                    style: theme
+                                                        .textTheme.bodySmall
+                                                        ?.copyWith(
                                                       color: isDark
-                                                          ? Colors.white.withValues(alpha: 0.5)
-                                                          : AppTheme.electricViolet.withValues(alpha: 0.5),
+                                                          ? Colors.white
+                                                              .withValues(
+                                                                  alpha: 0.5)
+                                                          : AppTheme
+                                                              .electricViolet
+                                                              .withValues(
+                                                                  alpha: 0.5),
                                                     ),
                                                   ),
                                                   const SizedBox(width: 4),
@@ -1185,8 +1322,13 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                                     Icons.edit_rounded,
                                                     size: 12,
                                                     color: isDark
-                                                        ? Colors.white.withValues(alpha: 0.3)
-                                                        : AppTheme.electricViolet.withValues(alpha: 0.3),
+                                                        ? Colors.white
+                                                            .withValues(
+                                                                alpha: 0.3)
+                                                        : AppTheme
+                                                            .electricViolet
+                                                            .withValues(
+                                                                alpha: 0.3),
                                                   ),
                                                 ],
                                               ),
@@ -1194,38 +1336,60 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                             const SizedBox(height: 8),
                                             Expanded(
                                               child: CupertinoPicker(
-                                                scrollController: _targetHourController,
+                                                scrollController:
+                                                    _targetHourController,
                                                 itemExtent: 50,
                                                 looping: true,
                                                 onSelectedItemChanged: (index) {
                                                   setState(() {
-                                                    final hour12 = index + 1; // 0-11 → 1-12
+                                                    final hour12 = index +
+                                                        1; // 0-11 → 1-12
 
                                                     // 이전 시간 값 구하기
-                                                    final currentHour12 = ((_targetTime?.hour ?? 0) % 12) == 0
-                                                        ? 12
-                                                        : ((_targetTime?.hour ?? 0) % 12);
+                                                    final currentHour12 =
+                                                        ((_targetTime?.hour ??
+                                                                        0) %
+                                                                    12) ==
+                                                                0
+                                                            ? 12
+                                                            : ((_targetTime
+                                                                        ?.hour ??
+                                                                    0) %
+                                                                12);
 
                                                     // 11↔12 경계를 넘을 때 AM/PM 전환
-                                                    if (currentHour12 == 11 && hour12 == 12) {
+                                                    if (currentHour12 == 11 &&
+                                                        hour12 == 12) {
                                                       // 11→12: AM↔PM 전환
                                                       _isAM = !_isAM;
-                                                      _amPmController.jumpToItem(_isAM ? 0 : 1);
-                                                    } else if (currentHour12 == 12 && hour12 == 11) {
+                                                      _amPmController
+                                                          .jumpToItem(
+                                                              _isAM ? 0 : 1);
+                                                    } else if (currentHour12 ==
+                                                            12 &&
+                                                        hour12 == 11) {
                                                       // 12→11 (역방향): AM↔PM 전환
                                                       _isAM = !_isAM;
-                                                      _amPmController.jumpToItem(_isAM ? 0 : 1);
+                                                      _amPmController
+                                                          .jumpToItem(
+                                                              _isAM ? 0 : 1);
                                                     }
 
                                                     // 12시간 → 24시간 변환
                                                     final hour24 = _isAM
                                                         // 오전: 12시 = 0, 1-11시 = 1-11
-                                                        ? (hour12 == 12 ? 0 : hour12)
+                                                        ? (hour12 == 12
+                                                            ? 0
+                                                            : hour12)
                                                         // 오후: 12시 = 12, 1-11시 = 13-23
-                                                        : (hour12 == 12 ? 12 : hour12 + 12);
+                                                        : (hour12 == 12
+                                                            ? 12
+                                                            : hour12 + 12);
                                                     _targetTime = TimeOfDay(
                                                       hour: hour24,
-                                                      minute: _targetTime?.minute ?? 0,
+                                                      minute:
+                                                          _targetTime?.minute ??
+                                                              0,
                                                     );
                                                   });
                                                 },
@@ -1233,19 +1397,29 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                                   decoration: BoxDecoration(
                                                     border: Border.symmetric(
                                                       horizontal: BorderSide(
-                                                        color: AppTheme.electricViolet.withValues(alpha: 0.3),
+                                                        color: AppTheme
+                                                            .electricViolet
+                                                            .withValues(
+                                                                alpha: 0.3),
                                                         width: 2,
                                                       ),
                                                     ),
                                                   ),
                                                 ),
-                                                children: List.generate(12, (index) {
+                                                children:
+                                                    List.generate(12, (index) {
                                                   return Center(
                                                     child: Text(
                                                       '${index + 1}', // 1-12
-                                                      style: theme.textTheme.headlineSmall?.copyWith(
-                                                        color: isDark ? Colors.white : AppTheme.electricViolet,
-                                                        fontWeight: FontWeight.w700,
+                                                      style: theme.textTheme
+                                                          .headlineSmall
+                                                          ?.copyWith(
+                                                        color: isDark
+                                                            ? Colors.white
+                                                            : AppTheme
+                                                                .electricViolet,
+                                                        fontWeight:
+                                                            FontWeight.w700,
                                                       ),
                                                     ),
                                                   );
@@ -1261,34 +1435,48 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                         child: Column(
                                           children: [
                                             GestureDetector(
-                                              onTap: () => _showDirectInputDialog(
+                                              onTap: () =>
+                                                  _showDirectInputDialog(
                                                 context: context,
-                                                title:
-                                                    l10n.tr('figma_sleep_input_minutes_title'),
-                                                hintText:
-                                                    l10n.tr('figma_sleep_input_target_minute_hint'),
+                                                title: l10n.tr(
+                                                    'figma_sleep_input_minutes_title'),
+                                                hintText: l10n.tr(
+                                                    'figma_sleep_input_target_minute_hint'),
                                                 maxValue: 59,
-                                                currentValue: _targetTime?.minute ?? 0,
+                                                currentValue:
+                                                    _targetTime?.minute ?? 0,
                                                 onSubmit: (value) {
                                                   setState(() {
                                                     _targetTime = TimeOfDay(
-                                                      hour: _targetTime?.hour ?? 0,
+                                                      hour: _targetTime?.hour ??
+                                                          0,
                                                       minute: value,
                                                     );
-                                                    _targetMinuteController.jumpToItem(value);
-                                                    _previousMinute = value; // Update previous minute
+                                                    _targetMinuteController
+                                                        .jumpToItem(value);
+                                                    _previousMinute =
+                                                        value; // Update previous minute
                                                   });
                                                 },
                                               ),
                                               child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
                                                 children: [
                                                   Text(
-                                                    l10n.tr('figma_sleep_picker_minutes'),
-                                                    style: theme.textTheme.bodySmall?.copyWith(
+                                                    l10n.tr(
+                                                        'figma_sleep_picker_minutes'),
+                                                    style: theme
+                                                        .textTheme.bodySmall
+                                                        ?.copyWith(
                                                       color: isDark
-                                                          ? Colors.white.withValues(alpha: 0.5)
-                                                          : AppTheme.electricViolet.withValues(alpha: 0.5),
+                                                          ? Colors.white
+                                                              .withValues(
+                                                                  alpha: 0.5)
+                                                          : AppTheme
+                                                              .electricViolet
+                                                              .withValues(
+                                                                  alpha: 0.5),
                                                     ),
                                                   ),
                                                   const SizedBox(width: 4),
@@ -1296,8 +1484,13 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                                     Icons.edit,
                                                     size: 12,
                                                     color: isDark
-                                                        ? Colors.white.withValues(alpha: 0.3)
-                                                        : AppTheme.electricViolet.withValues(alpha: 0.3),
+                                                        ? Colors.white
+                                                            .withValues(
+                                                                alpha: 0.3)
+                                                        : AppTheme
+                                                            .electricViolet
+                                                            .withValues(
+                                                                alpha: 0.3),
                                                   ),
                                                 ],
                                               ),
@@ -1305,7 +1498,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                             const SizedBox(height: 8),
                                             Expanded(
                                               child: CupertinoPicker(
-                                                scrollController: _targetMinuteController,
+                                                scrollController:
+                                                    _targetMinuteController,
                                                 itemExtent: 50,
                                                 looping: true,
                                                 onSelectedItemChanged: (index) {
@@ -1314,10 +1508,13 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                                     var hourAdjustment = 0;
 
                                                     // Detect minute boundary crossing
-                                                    if (_previousMinute == 59 && newMinute == 0) {
+                                                    if (_previousMinute == 59 &&
+                                                        newMinute == 0) {
                                                       // 59 → 0: increment hour
                                                       hourAdjustment = 1;
-                                                    } else if (_previousMinute == 0 && newMinute == 59) {
+                                                    } else if (_previousMinute ==
+                                                            0 &&
+                                                        newMinute == 59) {
                                                       // 0 → 59: decrement hour
                                                       hourAdjustment = -1;
                                                     }
@@ -1326,28 +1523,51 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
 
                                                     // Calculate new hour if needed
                                                     if (hourAdjustment != 0) {
-                                                      final currentHour24 = _targetTime?.hour ?? 0;
-                                                      final currentHour12 = (currentHour24 % 12) == 0
-                                                          ? 12
-                                                          : (currentHour24 % 12);
-                                                      final newHour12Raw = currentHour12 + hourAdjustment;
+                                                      final currentHour24 =
+                                                          _targetTime?.hour ??
+                                                              0;
+                                                      final currentHour12 =
+                                                          (currentHour24 %
+                                                                      12) ==
+                                                                  0
+                                                              ? 12
+                                                              : (currentHour24 %
+                                                                  12);
+                                                      final newHour12Raw =
+                                                          currentHour12 +
+                                                              hourAdjustment;
 
                                                       // 먼저 AM/PM 전환 체크 (11↔12 경계)
-                                                      final shouldToggleAmPm = (currentHour12 == 11 && newHour12Raw == 12) ||
-                                                          (currentHour12 == 12 && newHour12Raw == 11);
+                                                      final shouldToggleAmPm =
+                                                          (currentHour12 ==
+                                                                      11 &&
+                                                                  newHour12Raw ==
+                                                                      12) ||
+                                                              (currentHour12 ==
+                                                                      12 &&
+                                                                  newHour12Raw ==
+                                                                      11);
                                                       if (shouldToggleAmPm) {
                                                         _isAM = !_isAM;
                                                       }
 
                                                       // Handle hour boundary wrapping
-                                                      final newHour12 = newHour12Raw == 0
-                                                          ? 12
-                                                          : (newHour12Raw == 13 ? 1 : newHour12Raw);
+                                                      final newHour12 =
+                                                          newHour12Raw == 0
+                                                              ? 12
+                                                              : (newHour12Raw ==
+                                                                      13
+                                                                  ? 1
+                                                                  : newHour12Raw);
 
                                                       // 12시간 → 24시간 변환
                                                       final hour24 = _isAM
-                                                          ? (newHour12 == 12 ? 0 : newHour12)
-                                                          : (newHour12 == 12 ? 12 : newHour12 + 12);
+                                                          ? (newHour12 == 12
+                                                              ? 0
+                                                              : newHour12)
+                                                          : (newHour12 == 12
+                                                              ? 12
+                                                              : newHour12 + 12);
 
                                                       _targetTime = TimeOfDay(
                                                         hour: hour24,
@@ -1356,13 +1576,19 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
 
                                                       // Update pickers (이게 onSelectedItemChanged를 트리거함)
                                                       // 하지만 이미 _targetTime을 설정했으므로 괜찮음
-                                                      _targetHourController.jumpToItem(newHour12 - 1);
+                                                      _targetHourController
+                                                          .jumpToItem(
+                                                              newHour12 - 1);
                                                       if (shouldToggleAmPm) {
-                                                        _amPmController.jumpToItem(_isAM ? 0 : 1);
+                                                        _amPmController
+                                                            .jumpToItem(
+                                                                _isAM ? 0 : 1);
                                                       }
                                                     } else {
                                                       _targetTime = TimeOfDay(
-                                                        hour: _targetTime?.hour ?? 0,
+                                                        hour:
+                                                            _targetTime?.hour ??
+                                                                0,
                                                         minute: newMinute,
                                                       );
                                                     }
@@ -1372,19 +1598,29 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                                   decoration: BoxDecoration(
                                                     border: Border.symmetric(
                                                       horizontal: BorderSide(
-                                                        color: AppTheme.electricViolet.withValues(alpha: 0.3),
+                                                        color: AppTheme
+                                                            .electricViolet
+                                                            .withValues(
+                                                                alpha: 0.3),
                                                         width: 2,
                                                       ),
                                                     ),
                                                   ),
                                                 ),
-                                                children: List.generate(60, (index) {
+                                                children:
+                                                    List.generate(60, (index) {
                                                   return Center(
                                                     child: Text(
                                                       '$index',
-                                                      style: theme.textTheme.headlineSmall?.copyWith(
-                                                        color: isDark ? Colors.white : AppTheme.electricViolet,
-                                                        fontWeight: FontWeight.w700,
+                                                      style: theme.textTheme
+                                                          .headlineSmall
+                                                          ?.copyWith(
+                                                        color: isDark
+                                                            ? Colors.white
+                                                            : AppTheme
+                                                                .electricViolet,
+                                                        fontWeight:
+                                                            FontWeight.w700,
                                                       ),
                                                     ),
                                                   );
@@ -1404,7 +1640,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                   style: theme.textTheme.titleMedium?.copyWith(
                                     fontWeight: FontWeight.w600,
                                     color: isDark
-                                        ? AppTheme.electricViolet.withValues(alpha: 0.8)
+                                        ? AppTheme.electricViolet
+                                            .withValues(alpha: 0.8)
                                         : AppTheme.electricViolet,
                                   ),
                                 ),
@@ -1417,7 +1654,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                     const SizedBox(height: 24),
                     // Sound selection button
                     GlassCard(
-                      onTap: () => _showSoundSelectionModal(context, theme, isDark),
+                      onTap: () =>
+                          _showSoundSelectionModal(context, theme, isDark),
                       padding: const EdgeInsets.all(20),
                       borderRadius: 20,
                       child: Row(
@@ -1427,7 +1665,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 colors: [
-                                  AppTheme.electricViolet.withValues(alpha: 0.3),
+                                  AppTheme.electricViolet
+                                      .withValues(alpha: 0.3),
                                   Colors.pink.withValues(alpha: 0.3),
                                 ],
                               ),
@@ -1435,7 +1674,9 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                             ),
                             child: Icon(
                               Icons.volume_up_rounded,
-                              color: isDark ? Colors.white : AppTheme.electricViolet,
+                              color: isDark
+                                  ? Colors.white
+                                  : AppTheme.electricViolet,
                               size: 24,
                             ),
                           ),
@@ -1449,7 +1690,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                   style: theme.textTheme.titleSmall?.copyWith(
                                     color: isDark
                                         ? Colors.white.withValues(alpha: 0.7)
-                                        : theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                                        : theme.colorScheme.onSurface
+                                            .withValues(alpha: 0.7),
                                   ),
                                 ),
                                 const SizedBox(height: 4),
@@ -1457,7 +1699,9 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                   '${_selectedSound.emoji} ${_selectedSound.label(l10n)}',
                                   style: theme.textTheme.titleMedium?.copyWith(
                                     fontWeight: FontWeight.w700,
-                                    color: isDark ? Colors.white : theme.colorScheme.onSurface,
+                                    color: isDark
+                                        ? Colors.white
+                                        : theme.colorScheme.onSurface,
                                   ),
                                 ),
                               ],
@@ -1468,7 +1712,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                             size: 16,
                             color: isDark
                                 ? Colors.white.withValues(alpha: 0.5)
-                                : theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                                : theme.colorScheme.onSurface
+                                    .withValues(alpha: 0.5),
                           ),
                         ],
                       ),
@@ -1488,14 +1733,19 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                   Icon(
                                     Icons.volume_up_rounded,
                                     size: 18,
-                                    color: isDark ? Colors.white : AppTheme.electricViolet,
+                                    color: isDark
+                                        ? Colors.white
+                                        : AppTheme.electricViolet,
                                   ),
                                   const SizedBox(width: 8),
                                   Text(
                                     l10n.tr('figma_sleep_volume_title'),
-                                    style: theme.textTheme.titleMedium?.copyWith(
+                                    style:
+                                        theme.textTheme.titleMedium?.copyWith(
                                       fontWeight: FontWeight.w700,
-                                      color: isDark ? Colors.white : theme.colorScheme.onSurface,
+                                      color: isDark
+                                          ? Colors.white
+                                          : theme.colorScheme.onSurface,
                                     ),
                                   ),
                                 ],
@@ -1515,14 +1765,17 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                               activeTrackColor: AppTheme.electricViolet,
                               inactiveTrackColor: isDark
                                   ? Colors.white.withValues(alpha: 0.1)
-                                  : AppTheme.electricViolet.withValues(alpha: 0.2),
+                                  : AppTheme.electricViolet
+                                      .withValues(alpha: 0.2),
                               thumbColor: AppTheme.electricViolet,
-                              overlayColor: AppTheme.electricViolet.withValues(alpha: 0.2),
+                              overlayColor: AppTheme.electricViolet
+                                  .withValues(alpha: 0.2),
                               trackHeight: 6,
                             ),
                             child: Slider(
                               value: _volume,
-                              onChanged: (value) => setState(() => _volume = value),
+                              onChanged: (value) =>
+                                  setState(() => _volume = value),
                               min: 0,
                               max: 100,
                             ),
@@ -1534,7 +1787,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                 l10n.tr('figma_sleep_volume_min'),
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: isDark
-                                      ? AppTheme.electricViolet.withValues(alpha: 0.6)
+                                      ? AppTheme.electricViolet
+                                          .withValues(alpha: 0.6)
                                       : AppTheme.electricViolet,
                                   fontSize: 11,
                                 ),
@@ -1543,7 +1797,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                 l10n.tr('figma_sleep_volume_max'),
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: isDark
-                                      ? AppTheme.electricViolet.withValues(alpha: 0.6)
+                                      ? AppTheme.electricViolet
+                                          .withValues(alpha: 0.6)
                                       : AppTheme.electricViolet,
                                   fontSize: 11,
                                 ),
@@ -1571,10 +1826,12 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                   Colors.pink,
                                 ],
                               ),
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(UiRadii.lg),
                         boxShadow: [
                           BoxShadow(
-                            color: (_isPlaying ? Colors.grey : AppTheme.electricViolet)
+                            color: (_isPlaying
+                                    ? Colors.grey
+                                    : AppTheme.electricViolet)
                                 .withValues(alpha: 0.4),
                             blurRadius: 16,
                             offset: const Offset(0, 8),
@@ -1585,7 +1842,7 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                         color: Colors.transparent,
                         child: InkWell(
                           onTap: _handleStartSleep,
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(UiRadii.lg),
                           child: Center(
                             child: Text(
                               _isPlaying
@@ -1639,18 +1896,24 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                   children: [
                                     Text(
                                       l10n.tr('figma_sleep_science_title'),
-                                      style: theme.textTheme.titleMedium?.copyWith(
+                                      style:
+                                          theme.textTheme.titleMedium?.copyWith(
                                         fontWeight: FontWeight.w700,
-                                        color: isDark ? Colors.white : theme.colorScheme.onSurface,
+                                        color: isDark
+                                            ? Colors.white
+                                            : theme.colorScheme.onSurface,
                                       ),
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
                                       l10n.tr('figma_sleep_science_body'),
-                                      style: theme.textTheme.bodyMedium?.copyWith(
+                                      style:
+                                          theme.textTheme.bodyMedium?.copyWith(
                                         color: isDark
-                                            ? Colors.white.withValues(alpha: 0.7)
-                                            : theme.colorScheme.onSurfaceVariant,
+                                            ? Colors.white
+                                                .withValues(alpha: 0.7)
+                                            : theme
+                                                .colorScheme.onSurfaceVariant,
                                         height: 1.5,
                                       ),
                                     ),
@@ -1671,7 +1934,8 @@ class _FigmaSleepTabState extends ConsumerState<FigmaSleepTab>
                                 tip,
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: isDark
-                                      ? AppTheme.electricViolet.withValues(alpha: 0.8)
+                                      ? AppTheme.electricViolet
+                                          .withValues(alpha: 0.8)
                                       : AppTheme.electricViolet,
                                   fontSize: 11,
                                 ),
