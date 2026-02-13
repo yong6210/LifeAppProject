@@ -641,13 +641,40 @@ class AccountPage extends ConsumerWidget {
                 children: [
                   Text(l10n.tr('dialog_delete_body')),
                   const SizedBox(height: 16),
-                  CheckboxListTile(
-                    contentPadding: EdgeInsets.zero,
-                    value: acknowledged,
-                    onChanged: (value) => setState(() {
-                      acknowledged = value ?? false;
-                    }),
-                    title: Text(l10n.tr('dialog_delete_checkbox')),
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(12),
+                      onTap: () => setState(() {
+                        acknowledged = !acknowledged;
+                      }),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: UiBorders.subtle),
+                        ),
+                        child: Row(
+                          children: [
+                            Checkbox(
+                              value: acknowledged,
+                              onChanged: (value) => setState(() {
+                                acknowledged = value ?? false;
+                              }),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                l10n.tr('dialog_delete_checkbox'),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
