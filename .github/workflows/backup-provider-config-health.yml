@@ -1,0 +1,143 @@
+name: Backup Provider Config Health
+
+on:
+  workflow_dispatch:
+    inputs:
+      project_id:
+        description: "GCP project id (optional; falls back to repo variable)"
+        required: false
+        type: string
+      dataset:
+        description: "BigQuery dataset (optional; defaults to analytics_<project>)"
+        required: false
+        type: string
+      bq_location:
+        description: "BigQuery location (optional; e.g. US, asia-northeast3)"
+        required: false
+        type: string
+      dry_run:
+        description: "Skip webhook send (true/false)"
+        required: false
+        default: "true"
+        type: choice
+        options:
+          - "true"
+          - "false"
+  schedule:
+    - cron: "5 * * * *"
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      PROJECT_ID_INPUT: ${{ github.event.inputs.project_id }}
+      DATASET_INPUT: ${{ github.event.inputs.dataset }}
+      BQ_LOCATION_INPUT: ${{ github.event.inputs.bq_location }}
+      DRY_RUN_INPUT: ${{ github.event.inputs.dry_run }}
+      PROJECT_ID_DEFAULT: ${{ vars.BACKUP_HEALTH_GCP_PROJECT }}
+      DATASET_DEFAULT: ${{ vars.BACKUP_HEALTH_BQ_DATASET }}
+      BQ_LOCATION_DEFAULT: ${{ vars.BACKUP_HEALTH_BQ_LOCATION }}
+      DRY_RUN_DEFAULT: ${{ vars.BACKUP_HEALTH_DRY_RUN }}
+      SLACK_WEBHOOK_URL: ${{ secrets.BACKUP_HEALTH_SLACK_WEBHOOK_URL }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve runtime inputs
+        id: resolve
+        shell: bash
+        run: |
+          set -euo pipefail
+          project_id="${PROJECT_ID_INPUT:-}"
+          if [[ -z "${project_id}" ]]; then
+            project_id="${PROJECT_ID_DEFAULT:-}"
+          fi
+
+          dataset="${DATASET_INPUT:-}"
+          if [[ -z "${dataset}" ]]; then
+            dataset="${DATASET_DEFAULT:-}"
+          fi
+
+          bq_location="${BQ_LOCATION_INPUT:-}"
+          if [[ -z "${bq_location}" ]]; then
+            bq_location="${BQ_LOCATION_DEFAULT:-}"
+          fi
+
+          dry_run="${DRY_RUN_INPUT:-}"
+          if [[ -z "${dry_run}" ]]; then
+            dry_run="${DRY_RUN_DEFAULT:-false}"
+          fi
+
+          if [[ -z "${project_id}" ]]; then
+            echo "Missing project id. Set workflow input project_id or repo variable BACKUP_HEALTH_GCP_PROJECT." >&2
+            exit 1
+          fi
+
+          echo "project_id=${project_id}" >> "${GITHUB_OUTPUT}"
+          echo "dataset=${dataset}" >> "${GITHUB_OUTPUT}"
+          echo "bq_location=${bq_location}" >> "${GITHUB_OUTPUT}"
+          echo "dry_run=${dry_run}" >> "${GITHUB_OUTPUT}"
+
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ steps.resolve.outputs.project_id }}
+
+      - name: Run health check
+        id: run_check
+        shell: bash
+        run: |
+          set +e
+          markdown_path="${RUNNER_TEMP}/backup_provider_health.md"
+          json_path="${RUNNER_TEMP}/backup_provider_health.json"
+
+          args=(
+            --project "${{ steps.resolve.outputs.project_id }}"
+            --markdown "${markdown_path}"
+            --json "${json_path}"
+          )
+
+          if [[ -n "${{ steps.resolve.outputs.dataset }}" ]]; then
+            args+=(--dataset "${{ steps.resolve.outputs.dataset }}")
+          fi
+
+          if [[ -n "${{ steps.resolve.outputs.bq_location }}" ]]; then
+            args+=(--location "${{ steps.resolve.outputs.bq_location }}")
+          fi
+
+          if [[ "${{ steps.resolve.outputs.dry_run }}" == "true" ]]; then
+            args+=(--dry-run)
+          fi
+
+          if [[ -n "${SLACK_WEBHOOK_URL}" ]]; then
+            args+=(--webhook-url "${SLACK_WEBHOOK_URL}")
+          fi
+
+          tool/ops/check_backup_provider_config_health.sh "${args[@]}"
+          exit_code=$?
+          echo "exit_code=${exit_code}" >> "${GITHUB_OUTPUT}"
+          echo "markdown_path=${markdown_path}" >> "${GITHUB_OUTPUT}"
+          echo "json_path=${json_path}" >> "${GITHUB_OUTPUT}"
+          exit 0
+
+      - name: Upload health-check artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: backup-provider-health-${{ github.run_id }}
+          path: |
+            ${{ steps.run_check.outputs.markdown_path }}
+            ${{ steps.run_check.outputs.json_path }}
+
+      - name: Fail workflow when thresholds are breached
+        if: ${{ steps.run_check.outputs.exit_code != '0' }}
+        shell: bash
+        run: |
+          echo "Health check breached threshold. exit_code=${{ steps.run_check.outputs.exit_code }}"
+          exit 1
