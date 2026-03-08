@@ -123,6 +123,83 @@ float_percent() {
   awk -v x="${ratio}" 'BEGIN { printf "%.2f", (x+0) * 100 }'
 }
 
+write_failure_outputs() {
+  local error_message="$1"
+  local error_details="$2"
+
+  if [[ -n "${JSON_OUT}" ]]; then
+    mkdir -p "$(dirname "${JSON_OUT}")"
+    jq -n \
+      --arg status "error" \
+      --arg project "${PROJECT_ID}" \
+      --arg dataset "${DATASET}" \
+      --arg location "${BQ_LOCATION:-auto}" \
+      --arg error "${error_message}" \
+      --arg details "${error_details}" \
+      '{
+        status: $status,
+        project: $project,
+        dataset: $dataset,
+        location: $location,
+        error: $error,
+        details: $details
+      }' > "${JSON_OUT}"
+    echo "Wrote JSON metrics: ${JSON_OUT}"
+  fi
+
+  if [[ -n "${MARKDOWN_OUT}" ]]; then
+    mkdir -p "$(dirname "${MARKDOWN_OUT}")"
+    cat > "${MARKDOWN_OUT}" <<EOF
+# Backup Provider Config Health Check
+
+- Project: \`${PROJECT_ID}\`
+- Dataset: \`${DATASET}\`
+- Window End: \`unknown\`
+- Severity: \`error\`
+- Reason: ${error_message}
+
+## Error
+
+\`\`\`
+${error_details}
+\`\`\`
+EOF
+    echo "Wrote Markdown report: ${MARKDOWN_OUT}"
+  fi
+}
+
+write_no_data_outputs() {
+  if [[ -n "${JSON_OUT}" ]]; then
+    mkdir -p "$(dirname "${JSON_OUT}")"
+    jq -n \
+      --arg status "no_data" \
+      --arg project "${PROJECT_ID}" \
+      --arg dataset "${DATASET}" \
+      --arg location "${BQ_LOCATION:-auto}" \
+      '{
+        status: $status,
+        project: $project,
+        dataset: $dataset,
+        location: $location
+      }' > "${JSON_OUT}"
+    echo "Wrote JSON metrics: ${JSON_OUT}"
+  fi
+
+  if [[ -n "${MARKDOWN_OUT}" ]]; then
+    mkdir -p "$(dirname "${MARKDOWN_OUT}")"
+    cat > "${MARKDOWN_OUT}" <<EOF
+# Backup Provider Config Health Check
+
+- Project: \`${PROJECT_ID}\`
+- Dataset: \`${DATASET}\`
+- Window End: \`unknown\`
+- Severity: \`no_data\`
+- Reason: No metric rows returned
+EOF
+    echo "Wrote Markdown report: ${MARKDOWN_OUT}"
+  fi
+}
+
 SQL_QUERY="$(sed "s/<project_id>/${PROJECT_ID}/g" "${SQL_PATH}")"
 SQL_QUERY="${SQL_QUERY//analytics_${PROJECT_ID}/$DATASET}"
 
@@ -144,10 +221,12 @@ bq_exit_code=$?
 set -e
 
 if [[ "${bq_exit_code}" -ne 0 ]]; then
+  bq_error_excerpt="$(sed -n '1,120p' "${bq_err_file}" || true)"
   echo "BigQuery query failed." >&2
   echo "project=${PROJECT_ID} dataset=${DATASET} location=${BQ_LOCATION:-auto}" >&2
-  sed -n '1,120p' "${bq_err_file}" >&2
+  printf '%s\n' "${bq_error_excerpt}" >&2
   echo "Tip: run tool/ops/discover_backup_health_bq_source.sh --project ${PROJECT_ID}" >&2
+  write_failure_outputs "BigQuery query failed" "${bq_error_excerpt}"
   rm -f "${bq_err_file}"
   exit 1
 fi
@@ -155,6 +234,7 @@ rm -f "${bq_err_file}"
 
 if [[ "$(jq 'length' <<< "${RESULT_JSON}")" -eq 0 ]]; then
   echo "No metric rows returned."
+  write_no_data_outputs
   exit 0
 fi
 
